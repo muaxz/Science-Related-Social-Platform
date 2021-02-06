@@ -14,6 +14,7 @@ module.exports=(req,res,next)=>{
      //burada request objesine yeni bir eleman tanımlayailiyoruz
 
      jwt.verify(beareToken,"secretkey",(err,authdata)=>{
+         
         if(err){
 
             return res.json("unauthanticated");

@@ -56,10 +56,4 @@ const User =sequlize.define("User",{
 })
 
 
-
-
-
-
-
-
 module.exports=User;
