@@ -1,8 +1,7 @@
 const Sequlize=require("sequelize");
 const sequlize=require("../database/base");
 
-const UserContent=sequlize.define("UserContent",{
-    
+const UserContent=sequlize.define("UserContent",{   
     UserId:{
         type:Sequlize.INTEGER,
     },
