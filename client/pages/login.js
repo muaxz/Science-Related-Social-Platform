@@ -107,6 +107,7 @@ const Global=createGlobalStyle`
 const Login=()=>{
 
     const[currenturl,setcurrent]=useState("led.jpg");
+    const[inputs,setinputs]=useState({});
 
     useEffect(()=>{
 
