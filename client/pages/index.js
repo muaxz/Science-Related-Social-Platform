@@ -4,10 +4,12 @@ import styled from "styled-components";
 const Div=styled.div`
 background-color:red
 `
-export default function index() {
+const Home=()=>{
     return (
        <Div>
            sa
        </Div>
     )
 }
+
+export default Home;
