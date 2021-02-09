@@ -13,14 +13,7 @@ const Content=sequlize.define("Content",{
         allownull:false,      
     },
     content:{
-         type:Sequlize.STRING,
-         allownull:false,  
-         get:()=>{
-             return this.getDataValue("content").split(";")
-         } ,
-         set:(value)=>{
-             return this.setDataValue("content",value).join(";")
-         }
+         type:Sequlize.TEXT,
     },
     Process:{
         type:Sequlize.ENUM,
@@ -43,6 +36,7 @@ const Content=sequlize.define("Content",{
 
 Content.belongsToMany(User,{through:"UserContent",as:"preference"})
 User.belongsToMany(Content,{through:"UserContent",as:"preference"})
-Content.belongsTo(User,{as:"personal"});
+Content.belongsTo(User,{as:"personal",foreignKey:"UserId"});
+User.hasMany(Content,{as:"personal",foreignKey:"UserId"})
 
 module.exports=Content;

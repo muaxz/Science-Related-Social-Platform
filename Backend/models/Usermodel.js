@@ -49,8 +49,7 @@ const User =sequlize.define("User",{
         set:function(value){
             return this.setDataValue("Notification",JSON.stringify(value));
         },
-
-        //bir obje olucak ve içeriği :{likepost:true,sharepost:false:,like:comment}
+              //bir obje olucak ve içeriği :{likepost:true,sharepost:false:,like:comment}
     }
     
 })

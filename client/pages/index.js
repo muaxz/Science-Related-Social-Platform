@@ -1,14 +1,15 @@
-import React from 'react'
-import styled from "styled-components";
+import React,{useEffect,useState,useContext,useReducer,useCallback} from 'react'
+import {createusercontext} from "../context/Usercontext";
+import Trail from "../components/trial";
 
-const Div=styled.div`
-background-color:red
-`
+
+
 const Home=()=>{
+    console.log("HOME RENDERED")
     return (
-       <Div>
-           sa
-       </Div>
+       <div>
+          <Trail></Trail>
+       </div>
     )
 }
 

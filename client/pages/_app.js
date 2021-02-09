@@ -1,8 +1,12 @@
 import React from 'react'
+import Context from "../context/Usercontext";
 
 const Myapp=({Component})=>{
-    console.log("app.js");
-    return <Component/>
+    return (
+        <Context>
+            <Component/>
+        </Context>
+   )
 }
 
 export default Myapp;

@@ -1,7 +1,11 @@
-import React,{useEffect,useState} from 'react'
+import React,{useEffect,useState,useContext,useReducer} from 'react'
+import {createusercontext} from "../context/Usercontext";
 import styled,{createGlobalStyle} from "styled-components";
+import {useRouter} from "next/router"
 import Head from "next/head";
-import axioss from "axios";
+import {loginreq,resigterreq} from "../Api/Api";
+
+
 
 
 
@@ -47,7 +51,7 @@ align-items:center;
 text-align:center;
 width:400px;
 height:550px;
-background-color: rgba(0, 0, 0, 0.6);
+background-color: rgba(0, 0, 0, 0.5);
 transition:0.5s;
 transform:rotate(0deg);
 &:hover {
@@ -87,7 +91,7 @@ margin-left:10px;
 
 const Iconsecure=styled.i`
 position:absolute;
-border:1px solid white;
+border:1px solid grey;
 background-color:black;
 padding:7px;
 left:-15px;
@@ -115,8 +119,14 @@ const Global=createGlobalStyle`
 `
 
 const Login=()=>{
-
+    
+    const router=useRouter();
+    const{setlogged,setuserdata}=useContext(createusercontext);
     const[currenturl,setcurrent]=useState("");
+    const[wrongemail,setwrongemail]=useState(false);
+    const[wrongapass,setwrongpass]=useState(false);
+    const[errormsg,seterror]=useState(false);
+    const[register,setregister]=useState("Login");
     const[inputs,setinputs]=useState({
         Login:{
             Eposta:{
@@ -158,9 +168,6 @@ const Login=()=>{
                 icon:"fas fa-unlock-alt"
         }
     }});
-
-    const[account,setaccount]=useState(false);
-    const[register,setregister]=useState("Login");
     
 
     useEffect(()=>{
@@ -182,13 +189,44 @@ const Login=()=>{
  
     },[])
 
-    
+    const Submithandler=()=>{
+
+        const currentinput={...inputs};
+        const ourdata={};
+        for (const key in currentinput[register]) {
+            ourdata[key]=currentinput[register][key].value;
+        }        
+
+        switch(register){
+            case "Login":
+                loginreq({
+                     setlogged:setlogged,
+                     userdata:ourdata,
+                     router:router,
+                     setuserdata:setuserdata,
+                     setwrongemail:setwrongemail,
+                     setwrongpass:setwrongpass,
+                     seterrmsg:seterror,
+                 })
+                break;
+            case "Register":  
+                Register({
+
+                })
+                
+        } 
+    }
+       
 
     const changehandler=(e,type,value)=>{
          const inputsget={...inputs};
          inputsget[type][value].value=e.target.value;
          setinputs(inputsget);
          console.log(e.target.value)
+    }
+    
+    if(errormsg){
+        return <h2>Something Went Wrong...</h2>
     }
     
     return (
@@ -213,8 +251,8 @@ const Login=()=>{
                         </InputHolder>
                         ))
                     }   
-                    <Button>Giriş Yap <Icon className="fas fa-chevron-right"></Icon></Button>    
-                    <Button onClick={()=>setregister("Register")}>Hesap Oluştur</Button>        
+                    <Button onClick={register == "Login" ? ()=> Submithandler : ()=>setregister("Login")} >Giriş Yap <Icon className="fas fa-chevron-right"></Icon></Button>    
+                    <Button onClick={register == "Login" ? ()=> setregister("Register") : Submithandler}>{register == "Login" ? "Hesap Oluştur" : "Kayıt ol"}</Button>        
                 </div>         
            </WindowDiv>
        </ImageDiv>

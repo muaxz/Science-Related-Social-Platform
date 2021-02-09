@@ -24,7 +24,7 @@ exports.login=async (req,res)=>{
             imageurl:user.imageurl,
           }
          
-         await bcrypt.compare(password,user.password,(err,result)=>{
+          await bcrypt.compare(password,user.password,(err,result)=>{
    
             if(result == true){
               
