@@ -73,8 +73,12 @@ export default function MyEditor () {
           <Global></Global>
           <div style={{display:"flex"}}>
             <InputHolder>
+                <h4 style={{marginBottom:"10px",color:"red"}}>Başlık</h4>
+                <Input onChange={(event)=>changehandler(event,"","title")} placeholder="Başlık..."></Input>
+            </InputHolder>
+            <InputHolder>
                 <h4 style={{marginBottom:"10px"}}>Yazı Türü</h4>
-                <select style={{width:"100%",padding:"8x",border:"none",outline:"none"}} id="cars">
+                <select style={{width:"100%",padding:"8px",border:"none",outline:"none"}} id="cars">
                   <option value="volvo">Volvo</option>
                   <option value="saab">Saab</option>
                   <option value="opel">Opel</option>
@@ -82,16 +86,12 @@ export default function MyEditor () {
                 </select>
             </InputHolder>
             <InputHolder>
-                <h4 style={{marginBottom:"10px"}}>Başlık</h4>
-                <Input onChange={(event)=>changehandler(event,"","title")} placeholder="Başlık..."></Input>
-            </InputHolder>
-            <InputHolder>
             <h4 style={{marginBottom:"10px"}}>Tahmini Yayınlanma Süresi</h4>
-                <Input style={{padding:"6px"}}  value="2013-01-08" type="date"  sonChange={(event)=>changehandler(event,"","title")} placeholder="Başlık..."></Input>
+                <Input style={{padding:"6px"}}  value="2013-01-08" type="date"  onChange={(event)=>changehandler(event,"","title")} placeholder="Başlık..."></Input>
             </InputHolder>
           </div>
           <InputHolder>
-          <h4 style={{marginBottom:"10px"}}>Alt Başlık</h4>
+          <h4 style={{marginBottom:"10px",color:"red"}}>Alt Başlık</h4>
               <textarea   onChange={(event)=>changehandler(event,"","subtitle")} style={{padding:"10px",outline:"none",display:"block",border:"none"}} rows="8" cols="60" placeholder="Alt Başlık..."></textarea>
           </InputHolder>
           <Ckeholder >
