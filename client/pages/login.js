@@ -4,6 +4,7 @@ import styled,{createGlobalStyle} from "styled-components";
 import {useRouter} from "next/router"
 import Head from "next/head";
 import {loginreq,resigterreq} from "../Api/Api";
+import Window from "../components/UI/window";
 
 
 
@@ -36,7 +37,6 @@ background:transparent;
 }
 &:focus{
     background-color: rgba(0, 0, 0, 0.5);
-    
 }
 `
 
@@ -49,7 +49,7 @@ padding-top:20px;
 flex-direction:column;
 align-items:center;
 text-align:center;
-width:400px;
+width:450px;
 height:550px;
 background-color: rgba(0, 0, 0, 0.5);
 transition:0.5s;
@@ -80,7 +80,7 @@ background:transparent;
 transition:0.3s;
 border:1px solid white;
 &:hover {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 1);
     cursor:pointer;
 }
 `
@@ -123,10 +123,10 @@ const Login=()=>{
     const router=useRouter();
     const{setlogged,setuserdata}=useContext(createusercontext);
     const[currenturl,setcurrent]=useState("");
-    const[wrongemail,setwrongemail]=useState(false);
-    const[wrongapass,setwrongpass]=useState(false);
+    const[backenderror,setbackenderror]=useState("")
     const[errormsg,seterror]=useState(false);
     const[register,setregister]=useState("Login");
+    const[windowactive,setactive]=useState(false);
     const[inputs,setinputs]=useState({
         Login:{
             Eposta:{
@@ -190,13 +190,13 @@ const Login=()=>{
     },[])
 
     const Submithandler=()=>{
-
+        console.log("submit");
         const currentinput={...inputs};
         const ourdata={};
         for (const key in currentinput[register]) {
             ourdata[key]=currentinput[register][key].value;
         }        
-
+         console.log(ourdata);
         switch(register){
             case "Login":
                 loginreq({
@@ -204,14 +204,17 @@ const Login=()=>{
                      userdata:ourdata,
                      router:router,
                      setuserdata:setuserdata,
-                     setwrongemail:setwrongemail,
-                     setwrongpass:setwrongpass,
                      seterrmsg:seterror,
+                     setbackenderror:setbackenderror,
+                     setactive:setactive,
                  })
                 break;
             case "Register":  
-                Register({
-
+                resigterreq({
+                    setbackenderror:setbackenderror,
+                    userdata:ourdata,
+                    seterrmsg:seterror,
+                    setactive:setactive,
                 })
                 
         } 
@@ -222,25 +225,36 @@ const Login=()=>{
          const inputsget={...inputs};
          inputsget[type][value].value=e.target.value;
          setinputs(inputsget);
-         console.log(e.target.value)
     }
-    
+
+    var backenderrormessage="";
     if(errormsg){
         return <h2>Something Went Wrong...</h2>
     }
+
+    if(backenderror == "EXİST"){
+      backenderrormessage="Girdğiniz email zaten kullanımda!"
+    }
+    else if(backenderror == "WP"){
+      backenderrormessage="Girdiğiniz şifre yanlış!"
+    }
+    else if(backenderror == "WE"){
+      backenderrormessage="Girdiğiniz e-posta yanlış!"
+    }
     
     return (
-       <ImageDiv urlget={currenturl}>
+       <ImageDiv urlget={currenturl} aktif={true}>
            <Global/>
             <Head>
               <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossOrigin="anonymous" />
               <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Font+Name"/>
             </Head>
+           <Window active={windowactive} type="error">{backenderrormessage}</Window>
            <WindowDiv>     
                <div style={{flex:3}}>
                   <Logo></Logo>
                </div>
-               <p  style={{color:"white",display:register == "Register" ? "none" : "block",flex:4}}>Hakikatin temsilcisinin en az olduğu zaman, onu dile getirmenin tehlikeli olduğu zaman değil, can sıkıcı olduğu zamandır.</p>
+               <p  style={{color:"white",display:register == "Register" ? "none" : "block",flex:4,wordWrap:"break-word"}}>Hakikatin temsilcisinin en az olduğu zaman, onu dile getirmenin tehlikeli olduğu zaman değil, can sıkıcı olduğu zamandır.</p>
                
                <div style={{width:"80%",flex:6}}>
                    {
@@ -251,7 +265,7 @@ const Login=()=>{
                         </InputHolder>
                         ))
                     }   
-                    <Button onClick={register == "Login" ? ()=> Submithandler : ()=>setregister("Login")} >Giriş Yap <Icon className="fas fa-chevron-right"></Icon></Button>    
+                    <Button onClick={Submithandler} >Giriş Yap <Icon className="fas fa-chevron-right"></Icon></Button>    
                     <Button onClick={register == "Login" ? ()=> setregister("Register") : Submithandler}>{register == "Login" ? "Hesap Oluştur" : "Kayıt ol"}</Button>        
                 </div>         
            </WindowDiv>

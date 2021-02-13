@@ -8,7 +8,7 @@ const Home=()=>{
     console.log("HOME RENDERED")
     return (
        <div>
-          <Trail></Trail>
+          Main page!
        </div>
     )
 }

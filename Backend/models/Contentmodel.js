@@ -17,11 +17,12 @@ const Content=sequlize.define("Content",{
     },
     Process:{
         type:Sequlize.ENUM,
-        values:["Checked","Waiting","Published","NotAllowed"]
+        values:["Checked","Waiting","Published","NotAllowed"],
+        defaultValue:"Waiting"
     },
     catagories:{
-    type:Sequlize.ENUM,
-    values:["History","Science","Music"]
+        type:Sequlize.ENUM,
+        values:["History","Science","Music"]
     },
     allowPublish:{
         type:Sequlize.BOOLEAN,
@@ -37,6 +38,6 @@ const Content=sequlize.define("Content",{
 Content.belongsToMany(User,{through:"UserContent",as:"preference"})
 User.belongsToMany(Content,{through:"UserContent",as:"preference"})
 Content.belongsTo(User,{as:"personal",foreignKey:"UserId"});
-User.hasMany(Content,{as:"personal",foreignKey:"UserId"})
+User.hasMany(Content,{as:"personal",foreignKey:"UserId"})//tek bir column oluşturuyor forignkey aynı olunca
 
 module.exports=Content;

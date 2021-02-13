@@ -5,19 +5,30 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        *{
+            box-sizing:border-box;
+        }
+       .dış{
+           display:flex;
+           background-color: aqua;
+           height: 200px;
+           padding: 20px;;
+        
+       }
+       .iç{
+           background-color: red;
+           width:50%;
+           word-wrap: break-word;
+           text-align: center;
+       }
+    </style>
 </head>
 <body>
-    <script>
-    
-    const obj={
-        name:"sadık",
-        surname:"özer"
-    }
-    const {get,surname}=obj;
-    const [one,two,...rest]=["asd","asd","s","s"];
-    console.log(rest);
-    
-    
-    </script>
+    <div class="dış">
+          <div class="iç">sasasadasdasdasdasdasd</div>
+          <div class="iç" style="background-color: royalblue;">sasa</div>
+          <div class="iç" style="background-color: purple;">sasa</div>
+    </div>
 </body>
 </html>

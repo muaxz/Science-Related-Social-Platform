@@ -5,7 +5,6 @@ export const createusercontext=createContext();
 const Usercontext=({children})=>{
     const[logged,setlogged]=useState(false);
     const[userdata,setuserdata]=useState(null);
-    console.log("contex rendered");
     return (
       <createusercontext.Provider
        value={{
