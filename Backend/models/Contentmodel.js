@@ -1,6 +1,8 @@
 const Sequlize=require("sequelize");
 const sequlize=require("../database/base");
 const User=require("./Usermodel");
+const Comment=require("./Commentmodel");
+
 
 const Content=sequlize.define("Content",{
     id:{
@@ -8,21 +10,29 @@ const Content=sequlize.define("Content",{
         autoIncrement: true,
         primaryKey: true,
     },
+    titleimage:{
+         type:Sequlize.STRING,
+    },
     title:{
         type:Sequlize.STRING,
-        allownull:false,      
+        allowNull:false,      
+    },
+    subtitle:{
+        type:Sequlize.TEXT,
     },
     content:{
          type:Sequlize.TEXT,
+         allowNull:false,
     },
     Process:{
         type:Sequlize.ENUM,
         values:["Checked","Waiting","Published","NotAllowed"],
-        defaultValue:"Waiting"
+        defaultValue:"Waiting",
     },
     catagories:{
         type:Sequlize.ENUM,
-        values:["History","Science","Music"]
+        values:["Felsefe","Uzay","Metafizik","Biyoloji"],
+        allowNull:false,
     },
     allowPublish:{
         type:Sequlize.BOOLEAN,
@@ -31,13 +41,20 @@ const Content=sequlize.define("Content",{
     },
     Message:{
         type:Sequlize.STRING,
+        defaultValue:"",
     },
 
 })
 
-Content.belongsToMany(User,{through:"UserContent",as:"preference"})
-User.belongsToMany(Content,{through:"UserContent",as:"preference"})
-Content.belongsTo(User,{as:"personal",foreignKey:"UserId"});
-User.hasMany(Content,{as:"personal",foreignKey:"UserId"})//tek bir column oluşturuyor forignkey aynı olunca
+Content.belongsToMany(User,{through:"UserContent",as:"Like"})
+User.belongsToMany(Content,{through:"UserContent",as:"Like"})
+Content.belongsToMany(User,{through:"UserContent",as:"Readlater"})
+User.belongsToMany(Content,{through:"UserContent",as:"Readlater"})
+Content.belongsToMany(User,{through:"UserContent",as:"Retweet"})
+User.belongsToMany(Content,{through:"UserContent",as:"Retweet"})
+
+Content.belongsTo(User,{as:"personal",foreignKey:"UserforuserId"});
+User.hasMany(Content,{as:"personal",foreignKey:"UserforcontentId"})//tek bir column oluşturuyor forignkey aynı olunca
+Content.hasMany(Comment,{as:"allcomments"});
 
 module.exports=Content;

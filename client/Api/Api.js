@@ -2,6 +2,16 @@ import axios from "axios";
 
 axios.defaults.baseURL="http://localhost:3001";
 
+const Errorhandler=({data,seterrmsg,setwindow})=>{
+   if(data.state == "success"){
+      return true;
+   }
+   else{
+     seterrmsg(true)
+     setwindow(true);
+     return false;
+   }
+}
 export const loginreq=async({setlogged,setuserdata,userdata,router,seterrmsg,setbackenderror,setactive})=>{
 
     try{
@@ -51,19 +61,41 @@ export const resigterreq=async({setbackenderror,userdata,setactive,seterrmsg})=>
   }
 }
 
-export const producereq=async({contentdata,seterrmsg,router})=>{
-
+export const producereq=async({contentdata,seterrmsg,setwindow,router})=>{
   try{
-    const{data}=await axios.post("/post/produce",{contentdata:contentdata})
+    const{data}=await axios.post("/content/produce",{contentdata:contentdata})
     
-    if(data.state == "success"){
-        setbackenderror("EXİST")
-        setactive(true)
+    if(Errorhandler({data,setwindow,seterrmsg})){
+        setwindow(true);
+        router.push("/profile/content")
+        //we route işlemi
     }
     else{ 
-        seterrmsg(true);
+       return ;
     }
   }catch(err){
       seterrmsg(true)
+      console.log("burada")
+  }
+}
+
+export const Homereq=async({contentdata,seterrmsg,currentdata,setwindow,setcontentdata,order})=>{
+  try {
+
+    const{data}=await axios.get(`content/gethome/${order}`,{contentdata:contentdata})
+    console.log(data.data);
+
+    if(Errorhandler({data,seterrmsg,setwindow})){
+
+      const Current=[...currentdata];
+      const Mydata=[...data.data];
+      setcontentdata(Current.concat(Mydata));
+    }    
+    else{
+      return;
+    }
+  
+  } catch (error) {
+       seterrmsg(true);
   }
 }

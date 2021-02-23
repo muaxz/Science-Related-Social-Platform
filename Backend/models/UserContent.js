@@ -9,9 +9,9 @@ const UserContent=sequlize.define("UserContent",{
         type:Sequlize.INTEGER,
     },
     attribute:{
-       type:Sequlize.STRING,
+       type:Sequlize.ENUM,
        values:["Like","Readlater"],
     }
-})
+},{tableName:"UserContent"})
 
 module.exports=UserContent;

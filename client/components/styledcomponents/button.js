@@ -22,7 +22,7 @@ export const Global=createGlobalStyle`
      box-sizing:border-box;
      margin:0px;
      padding:0px;
-     font-family: 'Slabo 27px', serif;
+     font-family: 'Tinos', serif;
  }
 `
 

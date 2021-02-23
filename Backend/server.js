@@ -9,46 +9,43 @@ const Commentmodel=require("./models/Commentmodel");
 const Usercontent=require("./models/UserContent");
 const Loginrouter=require("./routes/loginregister");
 const User=require("./models/Usermodel");
-
+const Contentrouter=require("./routes/Contentrouter");
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(bodyparser.json());
 app.use(cors());
-
+console.log()
 DB.sync()
 .then(()=>{
-    User.count()
-    .then(count=>{
-        if(count<2){
-            User.bulkCreate([{
-                firstname:"sadık",imageurl:"asasdasd",lastname:"özer",email:"bexsd@hotmail.com",password:"21312313",Role:"User",Banned:false,Personaltext:"I like football",Notification:{whenfollow:true}
-            },{
-                firstname:"emre",imageurl:"asasdasd",lastname:"yılmaz",email:"bexsd@hotmail.com",password:"21312313",Role:"User",Banned:false,Personaltext:"I like football",Notification:{whenfollow:true}
-            }])
-            .then(()=>{
-                Contentmodel.bulkCreate([{
-                    title:"Ottoman",content:"text",process:"Checked",catagories:"History",Message:"wrong",personalId:1,UserId:1
-                },{
-                    title:"Terminal",content:"text",process:"Checked",catagories:"History",Message:"wrong",personalId:1,UserId:1
-                }])
-            })
-        }
-       
-    })
-    .then(()=>{
-        Contentmodel.findAll({
-            include:{model:User,as:"personal"}
-        })
-        .then((res)=>{
-            console.log(res[1].personal)
-        })
-    })
-    
 
- 
+    Usercontent.bulkCreate([{
+        UserId:2,
+        ContentId:4,
+        attribute:"Like"
+    }]) 
     
-    console.log("added to table");
+    User.bulkCreate([
+        {firstname:"sadık",imageurl:"image",lastname:"özer",email:"bexsd@hotmail.com",password:"890890890q",Personaltext:"SA",Notification:{follow:true}}
+    ])
+    Contentmodel.count()
+    .then((count)=>{
+           if(count<5){
+            Contentmodel.bulkCreate([
+                {titleimage:"image",title:"Ottoman Empire",subtitle:"culture",content:"content...",catagories:"Uzay"}, 
+                {titleimage:"image2",title:"Ottoman Empire",subtitle:"culture2",content:"content...",catagories:"Felsefe"},
+                {titleimage:"image3",title:"Ottoman Empire",subtitle:"culture2",content:"content...",catagories:"Felsefe"},
+              ])
+             .then(()=>{
+                 Commentmodel.bulkCreate([
+                     {Message:"Güzel bir post",ContentId:1},
+                     {Message:"Güzel bir post",ContentId:1},
+                     {Message:"Güzel bir post",ContentId:3}
+                 ])
+             })
+           }
+    })
 })
 
 app.use(Loginrouter);
+app.use("/content",Contentrouter);
 
 app.listen("3001",()=>{console.log("server started")})
