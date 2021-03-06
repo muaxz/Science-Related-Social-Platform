@@ -1,5 +1,6 @@
 const Content=require("../models/Contentmodel");
 const User=require("../models/Usermodel");
+const Usercontent=require("../models/UserContent");
 const Comment=require("../models/Commentmodel");
 const Sequlize=require("sequelize");
 const db=require("../database/base");
@@ -36,6 +37,7 @@ exports.gethome=async(req,res)=>{
   var defaultnum=10;
   const {number}=req.params;
 
+
   if(number)
   defautnum=number;
 
@@ -43,7 +45,7 @@ exports.gethome=async(req,res)=>{
     //beğenenler,yorumlar
     const Contents=await Content.findAll({
       //dizi[1].preferences[0].usercontent.attribute
-      attributes:["id","titleimage","title","subtitle","content"],
+      attributes:["id","titleimage","title","subtitle","content","createdAt","updatedAt"],
       limit:defaultnum,
       offset:defaultnum-10,
       include:[
@@ -61,7 +63,7 @@ exports.gethome=async(req,res)=>{
           as:"Retweet",
           attirbutes:["id","firstname","lastname","imageurl","Role"],
           through:{
-            where:{attribute:"Retweet"},
+            where:{attribute:"Reshow"},
             attributes:["attribute"]
           }
         },
@@ -82,13 +84,47 @@ exports.gethome=async(req,res)=>{
 
   } catch(error) {
     console.log(error);
-     res.json("")
+     res.json({state:"error"})
   }
 }
 
-exports.delete=(req,res)=>{
+exports.createrelation=async (req,res)=>{
+ 
+  try {
 
-    const id=req.params.id; 
+    const {UserId,PostId,attribute}=req.body; 
+
+    await Usercontent.create({
+      UserId:UserId,
+      PostId:PostId,
+      attribute:attribute,
+    })
+
+    res.json({state:"success"})
+
+  }catch (error) {
+
+    res.json({state:"error"})
+
+  }
+}
+
+exports.destroyrelation=async()=>{
+  try {
+
+    const {UserId,PostId,attribute}=req.body; 
+
+    await Usercontent.destroy({
+      where:{UserId:UserId,PostId:PostId,attribute:attribute}
+    })
+
+    res.json({state:"success"})
+
+  }catch (error) {
+
+    res.json({state:"error"})
+
+  }
 }
 
 exports.getflow=(req,res)=>{

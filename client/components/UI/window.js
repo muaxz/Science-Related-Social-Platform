@@ -1,13 +1,7 @@
 import React from 'react'
 import styled from "styled-components";
+import {Black} from "../styledcomponents/button";
 
-const Black=styled.div`
-position:fixed;
-width:100%;
-height:100%;
-z-index:${({aktif})=>aktif ? "40" : "-300"};
-background:rgba(0, 0, 0, ${({aktif})=>aktif ? "0.7" : "0"});
-`
 const External=styled.div`
 position:absolute;
 left:50%;
@@ -36,16 +30,17 @@ const Window=({children,active,type})=>{
        icon=<i className="fas fa-check-circle fa-2x" style={{color:"green",marginBottom:"10px"}}></i>
     }
     return (
-     <Black aktif={active}>
-        <External aktif={active}>
-           <Textbox>
-              {icon}
-               <p style={{textAlign:'center',wordWrap:'break-word',lineHeight:"25px"}}>
-                   {children}
-               </p>
-           </Textbox>
-       </External>
-     </Black>
+       <div>
+         <Black aktif={active}/>
+         <External aktif={active}>
+            <Textbox>
+               {icon}
+                  <p style={{textAlign:'center',wordWrap:'break-word',lineHeight:"25px"}}>
+                     {children}
+                  </p>
+            </Textbox>
+         </External>
+       </div>
     )
 }
 

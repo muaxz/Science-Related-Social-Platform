@@ -1,18 +1,29 @@
-import React,{useState} from 'react'
-import styled from "styled-components";
+import React,{useState,useEffect,useContext} from 'react'
+import styled,{keyframes} from "styled-components";
+import {createusercontext} from "../../context/Usercontext";
 
+
+
+const Likeanimaton=keyframes`
+0% {font-size:18px}
+30% {font-size:19px}
+50% {font-size:21px}
+70% {font-size:22px}
+100% {font-size:18px}
+`
 const Outsidediv=styled.div`
-
-cursor:pointer;
 position:relative;
-display:flex;
+margin:auto;
 margin-bottom:15px;
-width:650px;
-height:150px;
-background-color:lightgrey;
+width:100%;
+
+background-color:white;
+box-shadow: 0 3px 3px rgba(0,0,0,0.2);
 `
 const Imagediv=styled.div`
-padding:5px;
+
+padding-left:5px;
+
 `
 const Imageholder=styled.div`
 flex:1;
@@ -20,46 +31,43 @@ flex:1;
 const Contentholder=styled.div`
 flex:2;
 display:flex;
+padding-left:15px;
 flex-direction:column;
-background-color:lightgrey;
+background-color:white;
 justify-content:space-between;
 `
 const Contentdiv=styled.div`
-padding:10px;
+
 
 `
 const Toolbar=styled.div`
-padding:5px;
 display:flex;
 
 `
 
 const Img=styled.img`
 width:100%;
-height:140px;
+height:150px;
 object-fit:cover;
 
 `
 
 const İconholder=styled.div`
-margin-left:10px;
+margin-right:10px;
 display:flex;
 align-items:center;
 `
 
 const Profilediv=styled.div`
-position:absolute;
-top:0px;
 width:100%;
-height:50px;
+height:40px;
 transition:all 0.3s;
-background: linear-gradient(rgba(0,0,0,0.9),rgb(100,100,100,0.0));
-opacity:${({active})=>active ? "1" : "0"}
 `
 
 const Porfileimage=styled.div`
-width:40px;
-height:40px;
+width:30px;
+height:30px;
+cursor:pointer;
 background-color:white;
 border-radius:50%;
 background-image:url(${({profile})=> profile});
@@ -68,35 +76,123 @@ background-repeat: no-repeat;
 background-position: center; 
 `
 
-export default function Contentcard({profileimage,titleimage,title,subtitle,username,usersurname,date,comment,retweet,like,showwindow}){
+const Icons=styled.i`
+font-size:16px;
+cursor:pointer;
+color:${({ismarked,color})=>ismarked ? color : "grey" };
+animation-name:${({ismarked})=>ismarked ? Likeanimaton : ""};
+animation-duration:0.08s;
+`
+
+const Infocard=styled.div`
+
+position:absolute;
+top:0px;
+right:0px;
+padding:15px;
+width:430px;
+color:white;
+height:150px;
+background-color:grey;
+z-index:200;
+transition:all 0.3s;
+`
+
+const Labeloftheinfo=styled.div`
+font-size:13px;
+width:200px;
+padding:5px;
+text-align:center;
+border-radius:10px;
+`
+
+//içerik sayısı,takipçi sayısı,
+export default function Contentcard({profileimage,titleimage,title,subtitle,username,usersurname,date,comment,retweet,like,showwindow,createrelation}){
+   
+    const[elements,setelements]=useState({
+        like:{
+            number:like.length,
+            ismarked:false,
+        },
+        retweet:{
+            number:retweet.length,
+            ismarked:false
+        },
+        readlater:{
+            ismarked:false,
+            number:0,
+        }
+    });
     const[active,setactive]=useState(false);
+    const {userdata} = useContext(createusercontext);
+
+    useEffect(() =>{
+       /*
+       like.foreach((user)=>{
+         if(userdata.UserId == user.id){//eğer burada herhangi bir eşitlik bulunursa kullanıcı postu beğendi demek
+            setlike(true);
+         }
+       })
+       */
+    },[])
+    
+    const Countplus=(elementtype)=>{
+
+        const currentelements={...elements};
+        console.log("burada");
+       
+        if(currentelements[elementtype].ismarked==false){
+            console.log("burada");
+            currentelements[elementtype].ismarked=true;
+            currentelements[elementtype].number= currentelements[elementtype].number+1;
+        }
+        else{
+
+            currentelements[elementtype].ismarked=false;
+            currentelements[elementtype].number= currentelements[elementtype].number-1;
+        }
+
+        setelements(currentelements);
+       
+    }
+
     return (
        <Outsidediv onMouseLeave={()=>setactive(false)} onMouseOver={()=>setactive(true)}>
-           <Profilediv active={active}>
-               <div style={{display:'flex',alignItems:"center",height:"100%",marginLeft:"10px"}}>
+           <Profilediv>
+               <div style={{display:'flex',alignItems:"center",height:"100%",marginLeft:"5px"}}>
                   <Porfileimage profile={profileimage}></Porfileimage>
-                  <div style={{marginLeft:"10px"}}><p style={{color:"white"}}>{username+" "+usersurname}</p></div>
-                  <div style={{marginLeft:"auto",marginRight:"10px",color:"white"}}><span>{date}</span></div>
+                  <div style={{marginLeft:"10px",fontSize:"15px"}}><p style={{color:"black"}}>{username+" "+usersurname}</p></div>
+                  <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"black"}}><span>{date}</span></div>
                </div>
            </Profilediv>
-           <Imageholder>
-               <Imagediv>
-                    <Img src={titleimage}></Img>
-               </Imagediv>
-           </Imageholder>
-           <Contentholder>
-               <Contentdiv>
-                  <h3 style={{marginBottom:"10px",paddingTop:"7px",color:"#A70909"}}>{title}</h3>
-                  <p>{subtitle}</p> 
-               </Contentdiv>
-               <div></div>
-               <Toolbar>
-                 <İconholder onClick={()=>showwindow(retweet)} style={{flex:1}}><i className="fas fa-retweet fa-sm"></i><span style={{marginLeft:"5px"}}>{retweet.length}</span></İconholder>
-                 <İconholder onClick={()=>showwindow(like)} style={{flex:1}}><i  style={{color:"black"}} className="fas fa-heart fa-sm"></i><span style={{marginLeft:"5px",color:""}}>{like.length}</span></İconholder>
-                 <İconholder style={{flex:1}}><i  style={{color:"black"}} className="fas fa-comment-alt fa-sm"></i><span style={{marginLeft:"5px",color:""}}>{comment.length}</span></İconholder>
-                 <İconholder style={{flex:4,display:"flex",justifyContent:"flex-end",color:"grey"}}><i className="fas fa-bookmark"></i></İconholder>  
-               </Toolbar>
-           </Contentholder>
+           <div style={{display:"flex"}}>
+                <Imageholder>
+                    <Imagediv>
+                            <Img src={titleimage}></Img>
+                    </Imagediv>
+                </Imageholder>
+                <Contentholder>
+                    <Contentdiv>
+                        <h3 style={{marginBottom:"10px",color:"#A70909"}}>{title}</h3>
+                        <p>How do I scroll to the top of the page using JavaScript? The scrollbar instantly...</p> 
+                    </Contentdiv>
+                   
+                    <Toolbar>
+                        <İconholder style={{flex:1}}>
+                            <Icons  ismarked={elements.retweet.ismarked} color={"green"}  onClick={()=>Countplus("retweet")}  className="fas fa-retweet fa-sm"></Icons><span   onClick={()=>showwindow(retweet)} style={{marginLeft:"5px"}}>{elements.retweet.number}</span>
+                        </İconholder>
+                        <İconholder style={{flex:1}}>
+                            <Icons  ismarked={elements.like.ismarked} color={"#C72121"}  onClick={()=>Countplus("like")} className="fas fa-heart fa-sm"></Icons><span  onClick={()=>showwindow(like)} style={{marginLeft:"5px"}}>{elements.like.number}</span>
+                        </İconholder>
+                        <İconholder style={{flex:1}}>
+                            <Icons className="fas fa-comment-alt fa-sm"></Icons><span style={{marginLeft:"5px",color:""}}>{comment.length}</span>
+                        </İconholder>
+                        <İconholder style={{flex:4,display:"flex",justifyContent:"flex-end",color:"grey"}}>
+                            <Icons  ismarked={elements.readlater.ismarked} color={"black"} onClick={()=>Countplus("readlater")}  className="fas fa-bookmark"></Icons>
+                        </İconholder>  
+                    </Toolbar>
+                </Contentholder>
+           </div>
        </Outsidediv>
     )
 }

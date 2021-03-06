@@ -231,7 +231,7 @@ const Login=()=>{
     if(errormsg){
         return <h2>Something Went Wrong...</h2>
     }
-
+    
     if(backenderror == "EXİST"){
       backenderrormessage="Girdğiniz email zaten kullanımda!"
     }

@@ -71,7 +71,7 @@ export const producereq=async({contentdata,seterrmsg,setwindow,router})=>{
         //we route işlemi
     }
     else{ 
-       return ;
+       return;
     }
   }catch(err){
       seterrmsg(true)
@@ -89,6 +89,7 @@ export const Homereq=async({contentdata,seterrmsg,currentdata,setwindow,setconte
 
       const Current=[...currentdata];
       const Mydata=[...data.data];
+      //push metodu bir diziyi bir dizinin içine pushluyor fakat concat elemanları
       setcontentdata(Current.concat(Mydata));
     }    
     else{
@@ -98,4 +99,28 @@ export const Homereq=async({contentdata,seterrmsg,currentdata,setwindow,setconte
   } catch (error) {
        seterrmsg(true);
   }
+}
+
+
+export const Createrelationreq=async(UserId,PostId,attribute)=>{
+
+  try {
+
+    const{data}=await axios.post(`content/createrelation`,{
+      UserId:UserId,
+      PostId:PostId,
+      attribute:attribute
+    })
+
+    if(Errorhandler({data,seterrmsg,setwindow})){ 
+        //...
+    }    
+    else{
+      return;
+    }
+  
+  } catch (error) {
+       seterrmsg(true);
+  }
+
 }

@@ -1,0 +1,5 @@
+Yapılacaklar
+
+-Like ve retweet görüntülenme penceresi
+-Kod düzenlemesi
+-Route guard belli rotalar için

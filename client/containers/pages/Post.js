@@ -37,10 +37,10 @@ background-color:#E4E8CD;
 const Iconsecure=styled.i`
 position:absolute;
 background-color:#329297;
-padding:7px;
-left:-16px;
+padding:9px;
+left:-17px;
 color:white;
-top:73%;
+top:74%;
 transform:translate(50%,-50%);
 `
 
@@ -62,6 +62,7 @@ position:absolute;
 right:10px;
 background-color:black;
 width:300px;
+height:200px;
 padding:10px;
 color:white;
 z-index:200;
@@ -72,8 +73,8 @@ margin-bottom:7px;
 
 const Labelimage=styled.label`
 display:block;
-padding:8px;
-padding-left:40px;
+padding:6px;
+padding-left:45px;
 background-color:white;
 cursor:pointer;
 color:black;
@@ -127,8 +128,8 @@ export default function MyEditor () {
         <div style={{flex:1,backgroundColor:"#8a8888",height:"400px",position:"sticky",top:"0px"}}> 
             <InputHolder>
                 <p style={{marginBottom:"10px",color:"white"}}>Yazı Türü</p>
-                <select onChange={(event)=>changehandler(event,"","catagories")} style={{width:"100%",padding:"8px",border:"none",outline:"none"}} id="cars">
-                        <option hidden disabled selected value="Yazı Türü">Yazı Türü...</option>
+                <select value={contentpart.catagories} onChange={(event)=>changehandler(event,"","catagories")} style={{width:"100%",padding:"8px",border:"none",outline:"none"}} id="cars">
+                        <option hidden value="Yazı Türü">Yazı Türü...</option>
                         <option value="Felsefe">Felsefe</option>
                         <option value="Uzay">Uzay</option>
                         <option value="Metafizik">Metafizik</option>
@@ -159,9 +160,9 @@ export default function MyEditor () {
                   <Input onChange={(event)=>changehandler(event,"","subtitle")} placeholder="Alt Başlık..."></Input>
               </InputHolder>
               <InputHolder>
-                  <Labelimage  for="file">Başlık Fotoğrafı Seç</Labelimage>
+                  <Labelimage  htmlFor="file">Başlık Fotoğrafı Seç</Labelimage>
                   <Input style={{display:"none"}} id="file" type="file"></Input>
-                  <Iconsecure style={{top:"50%",left:"-18px",height:"100%",lineHeight:"25px"}} className="far fa-images"></Iconsecure>
+                  <Iconsecure style={{top:"50%",left:"-18px",height:"100%",lineHeight:"20px"}} className="fas fa-images"></Iconsecure>
               </InputHolder>
             </div>
             <Ckeholder >

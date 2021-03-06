@@ -10,7 +10,7 @@ const UserContent=sequlize.define("UserContent",{
     },
     attribute:{
        type:Sequlize.ENUM,
-       values:["Like","Readlater"],
+       values:["Like","Readlater","Reshow"],
     }
 },{tableName:"UserContent"})
 
