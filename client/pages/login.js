@@ -64,7 +64,6 @@ width:100%;
 border-bottom:1px solid white;
 padding:5px;
 margin-bottom:20px;
-
 `
 const Button=styled.button`
 

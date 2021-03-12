@@ -3,7 +3,7 @@ import Context from "../context/Usercontext";
 import Head from "next/head"
 
 const Myapp=({Component,pageProps})=>{
-
+    console.log("rendered app")
     const Layout=Component.layout || React.Fragment;
     
     return (

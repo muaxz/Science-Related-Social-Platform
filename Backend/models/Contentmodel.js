@@ -11,7 +11,7 @@ const Content=sequlize.define("Content",{
         primaryKey: true,
     },
     titleimage:{
-         type:Sequlize.STRING,
+         type:Sequlize.TEXT,
     },
     title:{
         type:Sequlize.STRING,

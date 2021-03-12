@@ -127,6 +127,22 @@ exports.destroyrelation=async()=>{
   }
 }
 
-exports.getflow=(req,res)=>{
+exports.getcontent=async (req,res)=>{
 
+  const {id}=req.params;
+
+  try {
+    //TODO including comments and users (with nested include)
+    const Mycontent=await Content.findOne({
+      where:{id:id},
+      attributes:["id","titleimage","title","subtitle","content","catagories"],
+    })
+
+    res.json({state:"success",data:Mycontent})
+
+  }catch (error) {
+    console.log("heree eroorrr");
+    res.json({state:"error"})
+
+  }
 }

@@ -1,5 +1,6 @@
 Yapılacaklar
 
--Like ve retweet görüntülenme penceresi
--Kod düzenlemesi
+-Like ve retweet görüntülenme penceresi +
+-Arka transparant siyah ekran comp.
+*Windowu değiştir.
 -Route guard belli rotalar için

@@ -10,10 +10,10 @@ const Usercontent=require("./models/UserContent");
 const Loginrouter=require("./routes/loginregister");
 const User=require("./models/Usermodel");
 const Contentrouter=require("./routes/Contentrouter");
-app.use(bodyparser.urlencoded({extended:false}));
-app.use(bodyparser.json());
+const Upload=require("./routes/upload");
+app.use(express.urlencoded({extended:false}));
+app.use(express.json());
 app.use(cors());
-console.log()
 DB.sync()
 .then(()=>{
    
@@ -49,5 +49,6 @@ DB.sync()
 
 app.use(Loginrouter);
 app.use("/content",Contentrouter);
+app.use("/upload",Upload);
 
 app.listen("3001",()=>{console.log("server started")})

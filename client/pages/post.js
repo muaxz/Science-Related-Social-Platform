@@ -1,6 +1,7 @@
 import React,{useRef,useState,useEffect} from 'react'
 import CKE from "../containers/pages/Post";
 import Head from "next/head";
+import Mainlayout from "../containers/Layout/mainlayout";
 
 
 export default function MyEditor(){
@@ -15,5 +16,9 @@ export default function MyEditor(){
       </React.Fragment>
     )
 }
+
+MyEditor.layout=Mainlayout;
+
+
 
 

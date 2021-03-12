@@ -21,8 +21,12 @@ export const Global=createGlobalStyle`
  *{
      box-sizing:border-box;
      margin:0px;
-     padding:0px;
      font-family: 'Shippori Mincho', serif;
+ }
+
+ body {
+    background-color:#EAEAEA;
+    height:100%;
  }
 `
 

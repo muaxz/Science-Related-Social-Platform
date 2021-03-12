@@ -5,8 +5,7 @@ import {Homereq,Createrelationreq} from "../../Api/Api";
 import Usercard from "../../components/shared/Usercard";
 import {Black} from "../../components/styledcomponents/button"
 import {createusercontext} from "../../context/Usercontext";
-import Lefttoolbar from "../../components/pages/Main/Lefttoolbar";
-import Navigationbar from "../../components/shared/Navigation";
+
 
 
 
@@ -27,8 +26,6 @@ background-color:white;
 height:100%;
 border-radius:5px;
 overflow:auto;
-`
-const Flexdiv=styled.div`
 `
 
 export default function Home(){
@@ -65,9 +62,10 @@ export default function Home(){
         })
     }
    
+   
 
     return (
-        <div style={{backgroundColor:"#C7C7C7",paddingTop:"100px",paddingLeft:"300px"}}> 
+        <div> 
             <div style={{height:`${list.length > 0 ? "100vh" : "100%"}`,overflow:"hidden"}}>
                 { list.length > 0 ?
                 <div>
@@ -75,7 +73,7 @@ export default function Home(){
                 <Rtlikewindow>
                     <div style={{height:"40px",width:"95%",margin:"auto",display:"flex",alignItems:"center",justifyContent:"flex-end"}}>
                       
-                        <i style={{color:"white",cursor:"pointer"}} class="fas fa-times-circle fa-lg"></i>
+                        <i style={{color:"white",cursor:"pointer"}} className="fas fa-times-circle fa-lg"></i>
                        
                     </div>
                     <Innerwindow>
@@ -92,19 +90,21 @@ export default function Home(){
                 : null
                 }
 
-                <div style={{maxWidth:"650px"}}>
+                <div style={{maxWidth:"650px",margin:"auto"}}>
                     {
                     console.log(contentdata),
                     contentdata.length > 0 ?
                     contentdata.map((item,index)=>(
                         <Contentcard 
+                        postId={item.id}
+                        content={item.content}
                         createrelation={createrelation}
                         showwindow={(stateoflist)=>setlist(stateoflist)}
                         like={item.Like}//bu bir obje array
                         retweet={item.Retweet}
                         comment={item.allcomments}
                         key={index}//key numarası
-                        profileimage={"car.jpg"}
+                        profileimage={"/black.jpg"}
                         title={item.title}
                         titleimage={"yaprak.jpg"}
                         username={"Duhan"}

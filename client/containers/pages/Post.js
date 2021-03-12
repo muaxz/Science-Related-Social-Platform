@@ -96,7 +96,7 @@ export default function MyEditor () {
       subtitle:"",
       catagories:"",
     });
-  
+ 
     useEffect(()=>{
         const {CKEditor}=require( '@ckeditor/ckeditor5-react' )
         editorRef.current = {
@@ -125,7 +125,7 @@ export default function MyEditor () {
     return (
       <div style={{display:"flex"}}>
          <Window active={windowactive} type="confirm">İçeriğiniz Editöre Gönderildi.</Window>
-        <div style={{flex:1,backgroundColor:"#8a8888",height:"400px",position:"sticky",top:"0px"}}> 
+        <div style={{flex:1,backgroundColor:"#8a8888",height:"400px",position:"sticky",top:"65px"}}> 
             <InputHolder>
                 <p style={{marginBottom:"10px",color:"white"}}>Yazı Türü</p>
                 <select value={contentpart.catagories} onChange={(event)=>changehandler(event,"","catagories")} style={{width:"100%",padding:"8px",border:"none",outline:"none"}} id="cars">
@@ -172,11 +172,14 @@ export default function MyEditor () {
                       <CKE 
                         config={
                             { 
+                              ckfinder:{
+                                 uploadUrl:"http://localhost:3001/upload"
+                              },
                               placeholder: "Placeholder text...",
                               //toolbar:['heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList']
                             }
                           } 
-                        editor={ ClassicEditor }
+                        editor={ClassicEditor}
                         onChange={(event,editör)=>changehandler(event,editör,"content")}
                         data={contentpart["content"]}
                       />

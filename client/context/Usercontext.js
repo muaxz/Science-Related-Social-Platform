@@ -5,6 +5,8 @@ export const createusercontext=createContext();
 const Usercontext=({children})=>{
     const[logged,setlogged]=useState(false);
     const[userdata,setuserdata]=useState(null);
+    const[currentpostId,setcurrentpostId]=useState(null);
+    const[currentuserId,setcurrentuserId]=useState(null);
     return (
       <createusercontext.Provider
        value={{

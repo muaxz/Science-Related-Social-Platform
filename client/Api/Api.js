@@ -124,3 +124,26 @@ export const Createrelationreq=async(UserId,PostId,attribute)=>{
   }
 
 }
+
+export const Contentreq=async({contentId,setcontent,seterrmsg,setwindow})=>{
+
+  try {
+
+    const{data}=await axios.get(`content/${contentId}`);
+    
+    if(Errorhandler({data,seterrmsg,setwindow})){ 
+
+       setcontent(data.data)
+       console.log("buradaaaaaaaa");
+
+    }    
+    else{
+      return;
+    }
+  
+  } catch (error) {
+       seterrmsg(true);
+       
+  }
+
+}

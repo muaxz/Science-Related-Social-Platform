@@ -1,16 +1,20 @@
-import React from 'react'
+import React,{useRef,useState} from 'react'
 import styled from 'styled-components';
 import {Porfileimage} from "../../styledcomponents/button";
+import Icon from "../../UI/Icon";
+
+
 
 const ExteriorDiv=styled.div`
 position:fixed;
 top:0;
+overflow:hidden;
 left:0;
 height:100vh;
-width:220px;
-z-index:101;
-background-color:#E0E2E1;
-//box-shadow:2px 5px 5px grey;
+z-index:150;
+background-color:#3B4058;
+transition:all 0.2s;
+width:${({active})=>active ? "200px" : "70px"}
 `
 const InnerDiv=styled.div`
 display:flex;
@@ -21,43 +25,27 @@ height:100%;
 `
 
 const ImageDiv=styled.div`
-padding:10px;
 display:flex;
-width:100%;
-justify-content:flex-start;
+border-bottom:1px solid white;
+flex-direction:column;
 align-items:center;
 `
 
 const NavigationDiv=styled.div`
 background-coloyor:yellow;
-margin-top:px;
+margin-top:30px;
 width:96%;
 `
 const Li=styled.li`
-position:relative;
-border-radius:15px;
-text-align:center;
-background-color:white;
-padding:10px;
 list-style-type:none;
-margin:10px auto;
-color:black;
-font-size:13px;s
-width:96%;
-box-shadow: 0 3px 3px rgba(0,0,0,0.2);
-&:hover{
-    box-shadow: 0 3px 3px rgba(0,0,0,0.2);
-    cursor:pointer;
-}
+margin-top:20px;
+display:flex;
+align-items:center;
 `
 
-const Icon=styled.i`
-position:absolute;
-left:9px;
-top:50%;
-transform:translateY(-50%);
-color:${({color})=>color}
-`
+//const Icon=styled.i`
+//color:#C70039;
+//`
 const Closeopen=styled.div`
 width:100%;
 height:30px;
@@ -66,25 +54,31 @@ text-align:right;
 `
 
 const Lefttoolbar=()=>{
+    const {current}=useRef([{icon:"fas fa-bookmark",desc:"Kaydedilenler"},{icon:"fas fa-thumbs-up",desc:"Beğenilenler"},{icon:"fas fa-retweet",desc:"Retweet"}])
+    const [open,setopen]=useState(false);
     return (
-        <ExteriorDiv>
+        <ExteriorDiv active={open}>
             <InnerDiv>
                 {/*  <Closeopen>
                  <i style={{color:"black"}} className="far fa-times-circle fa-lg"></i>
                </Closeopen>*/}
                <ImageDiv>
-                 <Porfileimage profile="black.jpg"  width="50px" height="50px"></Porfileimage>
-                 <span style={{marginLeft:"20px",color:"black",fontSize:"15px"}}>Emre Özer</span>
+               <Icon activefunc={()=>setopen(!open)} className="fas fa-angle-double-right" Iconconfig={{width:"35px",height:"35px",lineheight:"35px",color:"white",rotate:open ? true : false}}></Icon>
+                <div style={{paddingBottom:"15px"}}>
+                   <Porfileimage profile={"/car.jpg"}  width={open ? "80px" : "50px"} height={open ? "80px" : "50px"}/>
+                   <div style={{marginTop:"10px",color:"white"}}><span style={{display:open ? "block" : "none"}}>Emre Özer</span></div>
+                </div>      
                </ImageDiv>
                <NavigationDiv>
-                    <ul style={{width:"100%"}}>
-                        <Li><Icon className="fas fa-bookmark"></Icon>Kaydedilen Postlar</Li>
-                        <Li><Icon color="#F92323" className="fas fa-thumbs-up"></Icon>Beğenilen Postlar</Li>
-                        <Li><Icon color="#337DF1" className="fas fa-share"></Icon> Retweet</Li>
-                        <Li><Icon className="fas fa-users"></Icon>Tartışmalarım</Li>
-                        <Li><Icon className="fas fa-pencil-alt"></Icon>İçerik Üret</Li>
-                        <Li><Icon className="fas fa-book-open"></Icon>Yazılarım</Li>
-                        <Li  style={{position:"relative",top:"260px"}} ><Icon className="fas fa-cog fa-lg"></Icon>Profil Ayarları</Li>
+                    <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:open ? "flex-start" : "center"}}>
+                        {current.map((item)=>(
+                             <Li>
+                                 <Icon className={item.icon} Iconconfig={{width:"35px",height:"35px",lineheight:"35px",backcolor:"#CFCFCF",color:"#E84040"}}></Icon>   
+                                 <span style={{display:open ? "block" : "none",fontSize:"14px",marginLeft:"10px"}}>{item.desc}</span> 
+                            </Li>
+                             
+                        ))}
+                       
                     </ul>
                </NavigationDiv>
             </InnerDiv>

@@ -1,6 +1,8 @@
 import React,{useState,useEffect,useContext} from 'react'
 import styled,{keyframes} from "styled-components";
 import {createusercontext} from "../../context/Usercontext";
+import Link from "next/link";
+import Parser from "react-html-parser"
 
 
 
@@ -14,6 +16,7 @@ const Likeanimaton=keyframes`
 const Outsidediv=styled.div`
 position:relative;
 margin:auto;
+border-radius:5px;
 margin-bottom:15px;
 width:100%;
 
@@ -31,25 +34,24 @@ flex:1;
 const Contentholder=styled.div`
 flex:2;
 display:flex;
-padding-left:15px;
 flex-direction:column;
 background-color:white;
-justify-content:space-between;
+
 `
 const Contentdiv=styled.div`
-
-
+padding-left:15px;
+padding-right:15px;
+flex:1;
 `
 const Toolbar=styled.div`
 display:flex;
-
+padding-left:15px;
 `
 
 const Img=styled.img`
 width:100%;
 height:150px;
 object-fit:cover;
-
 `
 
 const İconholder=styled.div`
@@ -107,7 +109,7 @@ border-radius:10px;
 `
 
 //içerik sayısı,takipçi sayısı,
-export default function Contentcard({profileimage,titleimage,title,subtitle,username,usersurname,date,comment,retweet,like,showwindow,createrelation}){
+export default function Contentcard({profileimage,content,titleimage,title,subtitle,username,usersurname,date,comment,retweet,like,showwindow,createrelation,postId}){
    
     const[elements,setelements]=useState({
         like:{
@@ -174,9 +176,10 @@ export default function Contentcard({profileimage,titleimage,title,subtitle,user
                 <Contentholder>
                     <Contentdiv>
                         <h3 style={{marginBottom:"10px",color:"#A70909"}}>{title}</h3>
-                        <p>How do I scroll to the top of the page using JavaScript? The scrollbar instantly...</p> 
-                    </Contentdiv>
-                   
+                        <Link href="/content/[id]" as={`/content/${postId}`}>
+                            <p style={{textAlign:"left",wordBreak:"bre"}}>While the Crypto Professors may set specific requirements for some of their homework tasks we would...</p> 
+                        </Link>
+                    </Contentdiv>    
                     <Toolbar>
                         <İconholder style={{flex:1}}>
                             <Icons  ismarked={elements.retweet.ismarked} color={"green"}  onClick={()=>Countplus("retweet")}  className="fas fa-retweet fa-sm"></Icons><span   onClick={()=>showwindow(retweet)} style={{marginLeft:"5px"}}>{elements.retweet.number}</span>
