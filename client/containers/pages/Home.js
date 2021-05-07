@@ -5,30 +5,25 @@ import {Homereq,Createrelationreq} from "../../Api/Api";
 import Usercard from "../../components/shared/Usercard";
 import {Black} from "../../components/styledcomponents/button"
 import {createusercontext} from "../../context/Usercontext";
+import io from "socket.io-client";
+import {FormControl,InputLabel,Select,MenuItem,Button} from "@material-ui/core"
+import {makeStyles} from "@material-ui/core/styles"
+import Showfollower from "../../components/pages/Main/Showfoller";
+import Leaderboard from '../../components/pages/Main/Leaderboard';
 
 
 
-
-const Rtlikewindow=styled.div`
-position:absolute;
-width:500px;
-height:350px;
-border-radius:5px;
-background-color:#c83349;
-z-index:100;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-`
-const Innerwindow=styled.div`
-padding:10px;
-background-color:white;
-height:100%;
-border-radius:5px;
-overflow:auto;
-`
+const CssTextField = makeStyles({
+    root: {
+      '& .MuiSelect-root': {
+        color: "black"
+      }
+    }
+  });
 
 export default function Home(){
+   
+    const usestyles=CssTextField();
     const {userdata} = useContext(createusercontext)
     const[contentdata,setcontentdata]=useState([]);
     const[order,setorder]=useState(10);
@@ -36,7 +31,7 @@ export default function Home(){
     const[activelike,setactivelike]=useState()
     const[list,setlist]=useState([]);
     const[windowactive,setactive]=useState(false);
-
+    
     useEffect(()=>{
         Homereq({
             currentdata:contentdata,
@@ -54,7 +49,7 @@ export default function Home(){
     })
 
     const createrelation=(postId,attribute)=>{
-
+        
         Createrelation({
             UserId:userdata.UserId,
             PostId:postId,
@@ -66,31 +61,13 @@ export default function Home(){
 
     return (
         <div> 
-            <div style={{height:`${list.length > 0 ? "100vh" : "100%"}`,overflow:"hidden"}}>
+            <div>
                 { list.length > 0 ?
-                <div>
-                <Black onClick={()=>setlist([])}  aktif={true}></Black>
-                <Rtlikewindow>
-                    <div style={{height:"40px",width:"95%",margin:"auto",display:"flex",alignItems:"center",justifyContent:"flex-end"}}>
-                      
-                        <i style={{color:"white",cursor:"pointer"}} className="fas fa-times-circle fa-lg"></i>
-                       
-                    </div>
-                    <Innerwindow>
-                        {[{name:"Sadık",image:"car.jpg"},{name:"Aadık",image:"black.jpg"},{name:"Musa",image:"yaprak.jpg"},{name:"Selman",image:"led.jpg"},{name:"Ahmet",image:"rocket.jpg"},{name:"Duhan",image:"car.jpg"},{name:"Sadık",image:"car.jpg"},{name:"Sadık",image:"car.jpg"}].map(item=>(
-                            <Usercard 
-                            firstname={item.name}
-                            imageurl={item.image}
-                            ></Usercard>
-                        ))}
-                    </Innerwindow>
-                </Rtlikewindow> 
-                </div>
-                
+                 <Showfollower></Showfollower>
                 : null
                 }
-
-                <div style={{maxWidth:"650px",margin:"auto"}}>
+                <Leaderboard></Leaderboard>
+                <div style={{padding:"10px",maxWidth:"650px",margin:"auto",height:`${list.length > 0 ? "100vh" : "100%"}`,overflow:"hidden"}}>
                     {
                     console.log(contentdata),
                     contentdata.length > 0 ?
@@ -121,3 +98,33 @@ export default function Home(){
        
     )
 }
+
+
+
+/*<Sectionpart>
+<div style={{width:"40%",marginRight:"15px"}}>
+    <FormControl size="small" variant="standard" style={{width:"100%"}}>
+        <InputLabel>Gönderi Türü</InputLabel>
+        <Select className={usestyles.root}>
+            <MenuItem value="Felsefe">Felsefe</MenuItem>
+            <MenuItem value="Tarih">Tarih</MenuItem> 
+            <MenuItem value="Biyoloji">Tarih</MenuItem>   
+        </Select>
+    </FormControl>
+</div>
+
+<div style={{width:"40%"}}>
+    <FormControl size="small" variant="standard" style={{width:"100%"}}>
+        <InputLabel>Sıralama Ölçütü</InputLabel>
+        <Select>
+            <MenuItem value="Like">Beğeni Sayısı</MenuItem>
+            <MenuItem value="Date">Yüklenme Tarihi</MenuItem> 
+            <MenuItem value="Retweet">Retweet Sayısı</MenuItem>   
+        </Select>
+    </FormControl>
+</div>
+<div style={{marginLeft:"auto"}}>
+    <Button endIcon={<SearhIcon></SearhIcon>} variant="contained" color="secondary">Ara</Button>
+</div>
+</Sectionpart>
+*/

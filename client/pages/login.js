@@ -5,13 +5,37 @@ import {useRouter} from "next/router"
 import Head from "next/head";
 import {loginreq,resigterreq} from "../Api/Api";
 import Window from "../components/UI/window";
+import {TextField,Button,InputAdornment} from '@material-ui/core';
+import {withStyles,makeStyles} from '@material-ui/core/styles';
+import {Global} from "../components/styledcomponents/button"
+import {AccountCircle,EmailOutlined,Lock,ArrowRight, ArrowLeft,SupervisorAccount,SupervisedUserCircleSharp, SupervisorAccountRounded, SupervisorAccountSharp, AccountCircleSharp, AccountCircleRounded, Person, Home} from "@material-ui/icons"
 
 
 
-
+const CssTextField = makeStyles({
+    root: {
+      '& .MuiInputLabel-root': {
+        color: 'grey',
+      },
+      '& .MuiInput-underline:after': {
+        borderBottomColor: 'green',
+      },
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: 'white',
+        },
+        '&:hover fieldset': {
+          borderColor: 'white',
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: '#3FBEA7',
+        },
+      },
+    },
+  });
 
 const ImageDiv = styled.div`
-background-image:url("https://images.pexels.com/photos/4256852/pexels-photo-4256852.jpeg");
+background-image:url("/led.jpg");
 background-size: cover;
 background-repeat: no-repeat;
 background-position: center; 
@@ -35,12 +59,10 @@ background:transparent;
 ::placeholder {
     color:white
 }
-&:focus{
-    background-color: rgba(0, 0, 0, 0.5);
-}
 `
 
 const WindowDiv=styled.div`
+position:relative;
 border:1px solid white;
 display:flex;
 padding-right:20px;
@@ -49,23 +71,20 @@ padding-top:20px;
 flex-direction:column;
 align-items:center;
 text-align:center;
-width:450px;
+width:600px;
 height:550px;
-background-color: rgba(0, 0, 0, 0.5);
+background-color: rgba(0, 0, 0, 0.3);
 transition:0.5s;
 transform:rotate(0deg);
-&:hover {
-    
-}
+
 `
 const InputHolder=styled.div`
 position:relative;
-width:100%;
-border-bottom:1px solid white;
+width:${({checkregister})=>checkregister ? "50%" : "100%"};
 padding:5px;
 margin-bottom:20px;
 `
-const Button=styled.button`
+const Buttons=styled.button`
 
 margin-top:10px;
 margin-left:10px;
@@ -85,7 +104,7 @@ border:1px solid white;
 `
 const Icon=styled.i`
 margin-left:10px;
-
+font-size:10px;
 `
 
 const Iconsecure=styled.i`
@@ -103,68 +122,90 @@ const Logo=styled.div`
 width:100px;
 height:100px;
 border-radius:50%;
-background-image:url("https://evrimagaci.org/public/images/logo-v3.svg?v=1");
+background-image:url("/way.jpg");
 background-size: cover;
 background-repeat: no-repeat;
 background-position: center; 
 `
 
-const Global=createGlobalStyle`
- *{
-     margin:0px;
-     padding:0px;
-     font-family: 'Oswald', sans-serif;
- }
+const Registerloginholder=styled.div`
+cursor:pointer;
+position:absolute;
+top:15px;
+right:15px;
+background-color:#f50057;
+width:40px;
+height:40px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+transition:0.09s ease-in;
+&:hover {
+color:#f50057;
+width:45px;
+height:45px;
+}
 `
+
+
 
 const Login=()=>{
     
-    const router=useRouter();
+    const stylesget=CssTextField();
     const{setlogged,setuserdata}=useContext(createusercontext);
     const[currenturl,setcurrent]=useState("");
     const[backenderror,setbackenderror]=useState("")
     const[errormsg,seterror]=useState(false);
     const[register,setregister]=useState("Login");
     const[windowactive,setactive]=useState(false);
+    const router=useRouter();
     const[inputs,setinputs]=useState({
+
         Login:{
-            Eposta:{
+            email:{
                 placeholder:"E-posta",
                 func:"Login",
                 value:"",
-                icon:"far fa-envelope"
+                icon:"far fa-envelope",
+                focused:false,
             },
-            Şifre:{
+            password:{
                 placeholder:"Şifre",
                 func:"Login",
                 value:"",
-                icon:"fas fa-unlock-alt"
+                icon:"fas fa-unlock-alt",
+                focused:false
             }
         },
         Register:{
-            İsim:{
+            name:{
                placeholder:"İsim",
                func:"Register",
                value:"",
-               icon:"fas fa-user"
+               icon:"fas fa-user",
+               focused:false,
             },
-            Soyisim:{
+            surname:{
                 placeholder:"Soy İsim",
                 func:"Register",
                 value:"",
                 icon:"fas fa-user",
+                focused:false,
             },
-            Eposta:{
+            email:{
                 placeholder:"E-posta",
                 func:"Register",
                 value:"",
-                icon:"far fa-envelope"
+                icon:"far fa-envelope",
+                focused:false,
             },
-            Şifre:{
+            password:{
                 placeholder:"Şifre",
                 func:"Register",
                 value:"",
-                icon:"fas fa-unlock-alt"
+                icon:"fas fa-unlock-alt",
+                focused:false,
         }
     }});
     
@@ -188,14 +229,30 @@ const Login=()=>{
  
     },[])
 
+    const Rendericon=(item)=>{
+
+          switch(item){
+              case "email":
+                  return <EmailOutlined style={{color:"white"}}></EmailOutlined>
+              case "password":
+                  return <Lock style={{color:"white"}}></Lock>
+              case "name":
+              case "surname":
+                  return <AccountCircle style={{color:"white"}}></AccountCircle>        
+          }
+    }
+
     const Submithandler=()=>{
+
         console.log("submit");
+
         const currentinput={...inputs};
         const ourdata={};
         for (const key in currentinput[register]) {
-            ourdata[key]=currentinput[register][key].value;
+            ourdata[key]=currentinput[register][key].value.trim();
         }        
-         console.log(ourdata);
+        
+
         switch(register){
             case "Login":
                 loginreq({
@@ -219,11 +276,17 @@ const Login=()=>{
         } 
     }
        
+    const chekciffocus=(typeoffocus,type)=>{
+        
+        const inputsget={...inputs};
+        inputsget[register][type].focused=typeoffocus == "focus" ? true : false;
+        setinputs(inputsget);
+    }
 
-    const changehandler=(e,type,value)=>{
-         const inputsget={...inputs};
-         inputsget[type][value].value=e.target.value;
-         setinputs(inputsget);
+    const changehandler=(e,type,section)=>{
+        const inputsget={...inputs};
+        inputsget[type][section].value=e.target.value;
+        setinputs(inputsget);
     }
 
     var backenderrormessage="";
@@ -243,30 +306,78 @@ const Login=()=>{
     
     return (
        <ImageDiv urlget={currenturl} aktif={true}>
-           <Global/>
             <Head>
               <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossOrigin="anonymous" />
-              <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Font+Name"/>
+             
             </Head>
-           <Window active={windowactive} type="error">{backenderrormessage}</Window>
-           <WindowDiv>     
-               <div style={{flex:3}}>
+            <Global></Global>
+           <Window closefunction={()=>setactive(false)} active={windowactive} type="error">E-posta veya şifre yanlış!</Window>
+           <WindowDiv>    
+               <Registerloginholder onClick={register == "Login" ? ()=>setregister("Register") : ()=>setregister("Login")}>
+                   {
+                       register == "Login" ?
+                       <SupervisorAccountSharp  style={{color:"white",borderRadius:"50%",fontSize:"30px"}}></SupervisorAccountSharp>
+                       :
+                       <Person style={{color:"white",borderRadius:"50%",fontSize:"30px"}}></Person>
+                   }       
+               </Registerloginholder> 
+               <div style={{flex:4}}>
                   <Logo></Logo>
                </div>
-               <p  style={{color:"white",display:register == "Register" ? "none" : "block",flex:4,wordWrap:"break-word"}}>Hakikatin temsilcisinin en az olduğu zaman, onu dile getirmenin tehlikeli olduğu zaman değil, can sıkıcı olduğu zamandır.</p>
-               
-               <div style={{width:"80%",flex:6}}>
+               <p  style={{color:"white",flex:4,wordWrap:"break-word"}}>Hakikatin temsilcisinin en az olduğu zaman, onu dile getirmenin tehlikeli olduğu zaman değil, can sıkıcı olduğu zamandır.</p>
+              
+               <div style={{width:register == "Register" ? "100%" : "70%",boxSizing:"border-box",flex:7,display:register == "Register" ? "flex" : "block",flexWrap:"wrap"}}>
                    {
                         Object.keys(inputs[register]).map(item=>
-                        (<InputHolder key={item}>
-                            <Iconsecure className={inputs[register][item]["icon"]}></Iconsecure>
-                            <Input value={inputs[register][item]["value"]} onChange={(e)=>changehandler(e,register,item)}  placeholder={inputs[register][item]["placeholder"]}></Input>
+                        (<InputHolder  checkregister={register == "Register" ? true:false} key={item}>
+                           <TextField 
+                            InputProps={{
+                                style:{color:"white"},
+                                endAdornment: <InputAdornment position="end">{Rendericon(item)}</InputAdornment>,
+                            }}
+                            className={stylesget.root} 
+                            type={item == "password" ? "password" : ""}
+                            onChange={(e)=>changehandler(e,register,item)} 
+                            onFocus={()=>chekciffocus("focus",item)}     
+                            onBlur={()=>chekciffocus("remove",item)} 
+                            value={inputs[register][item].value}
+                            focused={inputs[register][item].value !== "" || inputs[register][item].focused == true ? true : false} 
+                            size="small"   
+                            label={inputs[register][item].placeholder} 
+                            variant='outlined'></TextField>
                         </InputHolder>
                         ))
                     }   
-                    <Button onClick={Submithandler} >Giriş Yap <Icon className="fas fa-chevron-right"></Icon></Button>    
-                    <Button onClick={register == "Login" ? ()=> setregister("Register") : Submithandler}>{register == "Login" ? "Hesap Oluştur" : "Kayıt ol"}</Button>        
-                </div>         
+                    {
+                        register == "Login" ? <p style={{color:"#EB3232"}}>Şifreni mi unuttun?</p> : ""
+                    }
+                </div>    
+                <div style={{display:"flex",flex:"3",width:"100%"}}> 
+                        <InputHolder>
+                            {
+                                register == "Login" ?
+                                <Button  
+                                    style={{width:"50%"}}
+                                    inputProps={{style:{color:"red"}}}   
+                                    variant="contained"
+                                    endIcon={<Home style={{fontSize:"30px"}}></Home>}
+                                    onClick={register == "Login" ? Submithandler : ()=>setregister("Login")}>
+                                    Giriş Yap 
+                                </Button>  
+                                :  
+                                <Button  
+                                    style={{width:"50%"}}
+                                    inputProps={{style:{color:"red"}}}   
+                                    variant="contained"
+                                    color="secondary"
+                                    endIcon={<SupervisorAccount style={{fontSize:"30px"}}></SupervisorAccount>}
+                                    onClick={Submithandler}>
+                                    Kayıt Ol
+                                </Button> 
+                            }
+                        </InputHolder>      
+                </div>
+                        
            </WindowDiv>
        </ImageDiv>
     )

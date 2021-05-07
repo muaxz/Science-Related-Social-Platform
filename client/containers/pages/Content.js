@@ -10,6 +10,8 @@ import Parser from "react-html-parser";
 const Exteriorcontent=styled.div`
 background-color:white;
 max-width:950px;
+height:700px;
+margin:auto;
 width:100%
 `
 const ImageDiv=styled.div`
@@ -41,8 +43,8 @@ background-color:white;
 const Attributeholder=styled.div`
 display:flex;
 align-items:center;
+border-radius:7px;
 padding:5px;
-border-bottom:1px solid lightgrey;
 &:hover{
  background-color:#E2E3E3;
  cursor:pointer;
@@ -50,23 +52,26 @@ border-bottom:1px solid lightgrey;
 `
 //todo map array to create attribute list
 
-export default function Content(){
+export default function Content({id}){
 
     const {current}=useRef([{icon:"fas fa-bookmark",desc:"Gönderiyi Kaydet"},{icon:"fas fa-thumbs-up",desc:"Gönderiyi Beğen"},{icon:"fas fa-retweet",desc:"Gönderiyi Profil Sayfamda Göster"}])
     const [content,setcontent]=useState({});
     const [active,setactive]=useState(false);
     const [errmsg,seterrmsg]=useState(false);
     const router=useRouter();
-    const {id}=router.query;
+    //const {id}=router.query;
     console.log(id);
     
     useEffect(()=>{
+
         Contentreq({
             contentId:id,
             setcontent:setcontent,
             seterrmsg:seterrmsg,
         });
+        
     },[])
+
     return (
         <Exteriorcontent>
             <div>
@@ -76,7 +81,7 @@ export default function Content(){
                     <Attribute active={active}>
                         {current.map(item=>(
                         <Attributeholder key={item.icon}>
-                             <Icon className={item.icon} Iconconfig={{width:"28px",height:"28px",rotate:true}}></Icon>
+                             <Icon className={item.icon} Iconconfig={{width:"28px",height:"28px"}}></Icon>
                              <span style={{marginLeft:"5px",fontSize:"13px"}}>{item.desc}</span>
                          </Attributeholder>  
                         ))}
@@ -85,15 +90,14 @@ export default function Content(){
                 <ProfileDiv>
                     <Porfileimage profile="/black.jpg" width="40px" height="40px"></Porfileimage>
                     <div style={{marginLeft:"10px"}}><span>Duhan Öztürk</span></div>
-                    <div style={{marginLeft:"auto"}}><span style={{backgroundColor:"#DE3C3C",color:"white",padding:"4px",borderRadius:"6px"}}>Yayınlanma tarihi: 12/08/2020</span></div>
+                    <div style={{marginLeft:"auto"}}><span style={{backgroundColor:"#DE3C3C",color:"white",padding:"4px",borderRadius:"5px"}}>Yayınlanma tarihi: 12/08/2020</span></div>
                 </ProfileDiv>
-                
                 <ContentDiv>
                     <h2>{content.title}</h2>
                     <h3>{content.subtitle}</h3>
                     <div>
                         <p>
-                          {content.content}
+                          {Parser(content.content)}
                         </p>
                     </div>
                 </ContentDiv>

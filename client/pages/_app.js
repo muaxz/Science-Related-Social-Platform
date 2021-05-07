@@ -1,20 +1,23 @@
 import React from 'react'
-import Context from "../context/Usercontext";
+import ContextProvider from "../context/Usercontext";
 import Head from "next/head"
+import {useRouter} from "next/router"
 
 const Myapp=({Component,pageProps})=>{
-    console.log("rendered app")
+   
     const Layout=Component.layout || React.Fragment;
+    const router =useRouter();
+    console.log(router.pathname)
     
     return (
-        <Context>
+        <ContextProvider>
             <Head>
-              <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Slabo+27px&display=swap&family=Domine&display=swap&family=Rajdhani:wght@500&display=swap&family=Tinos:ital@1&display=swap&family=Libre+Baskerville&display=swap&family=Shippori+Mincho:wght@600&display=swap" rel="stylesheet"></link>
+              <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Slabo+27px&display=swap&family=Domine&display=swap&family=Rajdhani:wght@500&display=swap&family=Tinos:ital@1&display=swap&family=IBM+Plex+Serif:wght@500&display=swap" rel="stylesheet"></link>
             </Head>
             <Layout>
                <Component {...pageProps}/>
             </Layout>
-        </Context>
+        </ContextProvider>
    )
 }
 

@@ -4,7 +4,7 @@ const jwt=require("jsonwebtoken");
 module.exports=(req,res,next)=>{
 
     const bearerHeader=req.headers["authorization"];
-
+    console.log("verfyyyyyyyyyyyyyy"+bearerHeader);
     if(typeof bearerHeader !== "undefined"){
      
      const bearer=bearerHeader.split(" ");
@@ -17,14 +17,15 @@ module.exports=(req,res,next)=>{
          
         if(err){
 
-            return res.json("unauthanticated");
-
+            return res.json("Unauthorized");
+            //burada kullanıcı outlogin ediiyor
         }
         else{
             
             req.userdata=authdata;
 
             next();
+            return;
 
         }
      })
@@ -32,5 +33,6 @@ module.exports=(req,res,next)=>{
     }
     else{
        return res.json("warning")
+       //burada kullanıcı outlogin ediliyor
     }
 }

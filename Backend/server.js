@@ -11,10 +11,47 @@ const Loginrouter=require("./routes/loginregister");
 const User=require("./models/Usermodel");
 const Contentrouter=require("./routes/Contentrouter");
 const Upload=require("./routes/upload");
-app.use(express.urlencoded({extended:false}));
+const socketio = require("socket.io");
+const server=require("http").createServer(app);
+const io=socketio(server);
+const Userrouter=require("./routes/userrouter");
+
+io.on("connection",socket=>{
+    console.log("connection...");
+    socket.emit
+})
+
+app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(cors());
 DB.sync()
+.then(()=>{
+    console.log("deleted");
+})
+
+app.use(Loginrouter);
+app.use("/content",Contentrouter);
+app.use("/upload",Upload);
+app.use("/user",Userrouter);
+console.log("node js readed")
+//default error handler
+app.use((error,req,res,next)=>{
+
+    return res.status(500).json({error:"Somethingwentwrong!"})
+})
+
+app.listen("3001",()=>{console.log("server started")})
+
+
+
+
+
+
+
+
+
+
+/*DB.sync()
 .then(()=>{
    
     Contentmodel.count()
@@ -46,9 +83,4 @@ DB.sync()
            }
     })
 })
-
-app.use(Loginrouter);
-app.use("/content",Contentrouter);
-app.use("/upload",Upload);
-
-app.listen("3001",()=>{console.log("server started")})
+*/

@@ -2,7 +2,6 @@ import React,{useState,useEffect,useContext} from 'react'
 import styled,{keyframes} from "styled-components";
 import {createusercontext} from "../../context/Usercontext";
 import Link from "next/link";
-import Parser from "react-html-parser"
 
 
 
@@ -16,12 +15,13 @@ const Likeanimaton=keyframes`
 const Outsidediv=styled.div`
 position:relative;
 margin:auto;
-border-radius:5px;
 margin-bottom:15px;
 width:100%;
-
 background-color:white;
 box-shadow: 0 3px 3px rgba(0,0,0,0.2);
+&: hover{
+    box-shadow: 0 3px 3px rgba(52, 213, 203,0.2);
+}
 `
 const Imagediv=styled.div`
 
@@ -177,7 +177,7 @@ export default function Contentcard({profileimage,content,titleimage,title,subti
                     <Contentdiv>
                         <h3 style={{marginBottom:"10px",color:"#A70909"}}>{title}</h3>
                         <Link href="/content/[id]" as={`/content/${postId}`}>
-                            <p style={{textAlign:"left",wordBreak:"bre"}}>While the Crypto Professors may set specific requirements for some of their homework tasks we would...</p> 
+                            <p style={{textAlign:"left",wordBreak:"bre",cursor:"pointer"}}>While the Crypto Professors may set specific requirements for some of their homework tasks we would...</p> 
                         </Link>
                     </Contentdiv>    
                     <Toolbar>

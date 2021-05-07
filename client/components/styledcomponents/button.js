@@ -21,12 +21,14 @@ export const Global=createGlobalStyle`
  *{
      box-sizing:border-box;
      margin:0px;
-     font-family: 'Shippori Mincho', serif;
+     font-family: 'IBM Plex Serif', serif;
  }
 
  body {
+    
     background-color:#EAEAEA;
     height:100%;
+   
  }
 `
 
@@ -48,8 +50,11 @@ position:fixed;
 top:0;
 left:0;
 width:100%;
+transition:background 0.4s;
 height:100%;
 z-index:${({aktif})=>aktif ? "40" : "-300"};
 background:rgba(0, 0, 0, ${({aktif})=>aktif ? "0.7" : "0"});
 `
+
+
 

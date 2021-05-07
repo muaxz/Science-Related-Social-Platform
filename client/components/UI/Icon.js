@@ -8,7 +8,6 @@ left:${left};
 right:${right};
 bottom:${bottom};
 border-radius:50%;
-transition:0.3s;
 display:block;
 line-height:${lineheight};
 width:${width};

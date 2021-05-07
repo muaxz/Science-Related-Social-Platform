@@ -1,10 +1,10 @@
+import axios from 'axios';
 import React,{useRef,useState,useEffect} from 'react'
 import styled from "styled-components";
 import {producereq} from "../../Api/Api";
 import {Button,Global} from "../../components/styledcomponents/button";
 import Window from "../../components/UI/window";
-import HTMLparser,{parse} from "node-html-parser"
-import Reactparser from "react-html-parser";
+
 
 
 
@@ -90,6 +90,9 @@ export default function MyEditor () {
       title:false,
       subtitle:false,
     });
+    const[file,setfile]=useState();
+    const[filename,setfilename]=useState("");
+    const[uploaded,setuploaded]=useState(false);
     const [contentpart,setcontentpart]=useState({
       content:"",
       title:"",
@@ -111,6 +114,26 @@ export default function MyEditor () {
        muteted[value]=value == "content" ? editör.getData() : event.target.value;
        setcontentpart(muteted);
        console.log(muteted);
+    }
+
+    const filechange=(event)=>{
+       setfile(event.target.files[0])
+       setfilename(event.target.files[0].name);
+       console.log(event.target.files[0].name);
+    }
+    
+    const submitfile=async ()=>{
+
+      const formData=new FormData();
+
+      formData.append("upload",file);
+
+      try{
+         await axios.post("/upload",formData);
+      }catch(err){
+         return console.log("UPLOAD ERRORRRRRRR");
+      }
+      return setuploaded(true);
     }
 
     const Submitpost=()=>{
@@ -161,9 +184,17 @@ export default function MyEditor () {
               </InputHolder>
               <InputHolder>
                   <Labelimage  htmlFor="file">Başlık Fotoğrafı Seç</Labelimage>
-                  <Input style={{display:"none"}} id="file" type="file"></Input>
-                  <Iconsecure style={{top:"50%",left:"-18px",height:"100%",lineHeight:"20px"}} className="fas fa-images"></Iconsecure>
+                  <Input onChange={filechange} style={{display:"none"}} id="file" type="file" name="upload"></Input>
+                  <Iconsecure style={{top:"50%",left:"-18px",height:"100%",lineHeight:"20px"}} className="fas fa-images"></Iconsecure>  
               </InputHolder>
+              <InputHolder>
+                <Button onClick={submitfile} backcolor="blue" color="white">Upload</Button>
+              </InputHolder>    
+              <div>
+                {
+                   uploaded ? <img src={`${filename}`}></img> : null
+                }
+              </div>
             </div>
             <Ckeholder >
              <Labeltitle>İçerik</Labeltitle>
@@ -180,8 +211,12 @@ export default function MyEditor () {
                             }
                           } 
                         editor={ClassicEditor}
+                        onInit={(editor) => {
+                          //
+                        }}
                         onChange={(event,editör)=>changehandler(event,editör,"content")}
                         data={contentpart["content"]}
+                       
                       />
                     ) : (
                       <div>Editor loading</div>

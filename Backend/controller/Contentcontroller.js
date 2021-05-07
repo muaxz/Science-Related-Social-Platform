@@ -25,9 +25,8 @@ exports.produce=async (req,res)=>{
     })
       return res.json({state:"success"});
   }catch(err){
-      console.log(err);
-      return res.json({state:"error"});
-
+      next();
+      return;
   }
 }
 
@@ -52,7 +51,7 @@ exports.gethome=async(req,res)=>{
         {
           model:User,
           as:"Like",
-          attirbutes:["id","firstname","lastname","imageurl","Role"],
+          attributes:["id","firstname","lastname","imageurl","Role"],
           through:{
             where:{attribute:"Like"},
             attributes:["attribute"]
@@ -61,7 +60,7 @@ exports.gethome=async(req,res)=>{
         {
           model:User,
           as:"Retweet",
-          attirbutes:["id","firstname","lastname","imageurl","Role"],
+          attributes:["id","firstname","lastname","imageurl","Role"],
           through:{
             where:{attribute:"Reshow"},
             attributes:["attribute"]
@@ -84,7 +83,8 @@ exports.gethome=async(req,res)=>{
 
   } catch(error) {
     console.log(error);
-     res.json({state:"error"})
+    next();
+    return;
   }
 }
 
@@ -103,28 +103,27 @@ exports.createrelation=async (req,res)=>{
     res.json({state:"success"})
 
   }catch (error) {
-
-    res.json({state:"error"})
-
+    next();
   }
 }
 
 exports.destroyrelation=async()=>{
-  try {
 
-    const {UserId,PostId,attribute}=req.body; 
+    try {
 
-    await Usercontent.destroy({
-      where:{UserId:UserId,PostId:PostId,attribute:attribute}
-    })
+      const {UserId,PostId,attribute}=req.body; 
 
-    res.json({state:"success"})
+      await Usercontent.destroy({
+        where:{UserId:UserId,PostId:PostId,attribute:attribute}
+      })
 
-  }catch (error) {
+      res.json({state:"success"})
 
-    res.json({state:"error"})
+    }catch (error){
+       next();
+       return;
+    }
 
-  }
 }
 
 exports.getcontent=async (req,res)=>{
@@ -141,8 +140,7 @@ exports.getcontent=async (req,res)=>{
     res.json({state:"success",data:Mycontent})
 
   }catch (error) {
-    console.log("heree eroorrr");
-    res.json({state:"error"})
-
+    next();
+    return;
   }
 }

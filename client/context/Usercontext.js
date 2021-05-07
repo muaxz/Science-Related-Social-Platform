@@ -1,12 +1,28 @@
-import React,{createContext,useState} from 'react'
+import React,{createContext,useState,useEffect} from 'react'
+import {Contextdata} from "../Api/Api";
 
 export const createusercontext=createContext();
 
 const Usercontext=({children})=>{
+
     const[logged,setlogged]=useState(false);
-    const[userdata,setuserdata]=useState(null);
+    const[userdata,setuserdata]=useState({});
+    const[spinner,setspinner]=useState(false);
     const[currentpostId,setcurrentpostId]=useState(null);
     const[currentuserId,setcurrentuserId]=useState(null);
+
+    
+    useEffect(()=>{
+        const token=localStorage.getItem("TOKEN");   
+        Contextdata({
+            Token:token,
+            setcontextdata:setuserdata,
+            setlogged:setlogged,
+            setspinner:setspinner,
+        })
+
+    },[]);
+
     return (
       <createusercontext.Provider
        value={{
@@ -14,6 +30,8 @@ const Usercontext=({children})=>{
            setlogged:setlogged,
            userdata:userdata,
            setuserdata:setuserdata,
+           spinner:spinner,
+           setspinner,setspinner
        }}
       >
           {children}

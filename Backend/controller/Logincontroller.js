@@ -2,37 +2,32 @@ const jwt=require("jsonwebtoken");
 const User=require("../models/Usermodel");
 const bcrypt=require("bcrypt");
 
-exports.login=async (req,res)=>{
+exports.login=async (req,res,next)=>{
 
    try{
 
-      const {Eposta,Şifre}=req.body.userdata;
-      console.log(Eposta);
-      
-   
-      const user=await User.findOne({where:{email:Eposta}});
-         
-       
+      const {email,password}=req.body.userdata;
      
-      if(user){
-   
-           const willbesend={
-            userid:user.id,
-            fistname:user.firstname,
-            lastname:user.lastname,
-            Role:user.Role,
-            imageurl:user.imageurl,
-          }
+      const user=await User.findOne({where:{email:email}});
          
-          await bcrypt.compare(Şifre,user.password,(err,result)=>{
-   
+      const mydata={
+         Username:user.firstname,
+         Usersurname:user.surname,
+         Userrole:user.role,
+         Userimage:user.imageurl,
+      }
+      
+      if(user){
+         
+          await bcrypt.compare(password,user.password,(err,result)=>{
+            console.log(result);
             if(result == true){
-              
-   
-               jwt.sign({User:willbesend},"secretkey",(err,token)=>{
+               
+                //ToDo redis to store tokens
+                //ToDorefresh token
+               jwt.sign({UserId:user.id},"secretkey",(err,token)=>{
                   //public key or private key
-   
-                   return res.json({Userdata:willbesend,token:token,auth:true});
+                   return res.json({Userdata:mydata,token:token,auth:true});
                })
                
             }  
@@ -44,31 +39,36 @@ exports.login=async (req,res)=>{
    
       }
       else{
-   
-         return res.json({wrong:"WE"})
+         return res.json({wrong:"WE"});
       }
 
    }
    catch(err){
-
+        //server error
+        next();
+        return;
    }
 }
 
 //---------------------------------------------------------------------------------
 
-exports.register= async (req,res)=>{
+exports.register=async (req,res)=>{
 
-  const  {name,surname,email,password}=req.body;
+  const  {name,surname,email,password}=req.body.userdata;
+   console.log(email);
+
   try{
+
       const user=await User.findOne({where:{email:email}});
    
       if(user){
-   
-         return res.json({warning:"exist"})
+
+         return res.json({warning:"exist"});
+
       }
       else{
-   
-         const hashedpassword= await bcrypt.hash(password,10)
+
+         const hashedpassword= await bcrypt.hash(password,10);
    
          await User.create({
             firstname:name,
@@ -87,7 +87,9 @@ exports.register= async (req,res)=>{
       }
   }
   catch(err){
-     console.log(err);
+      
+     next();
+     return;
   }
 
 }

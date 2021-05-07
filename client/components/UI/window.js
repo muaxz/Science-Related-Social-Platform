@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from "styled-components";
 import {Black} from "../styledcomponents/button";
+import {Button} from "@material-ui/core"
+import {Error} from "@material-ui/icons"
 
 const External=styled.div`
 position:absolute;
@@ -8,20 +10,22 @@ left:50%;
 transform:translate(-50%,-50%);
 width:300px;
 height:200px;
-transition:0.5s;
-top:${({aktif})=>aktif ? "50%" : "-200px"};
+text-align:center;
+transition:top 0.4s;
+top:${({aktif})=>aktif ? "50%" : "200px"};
+z-index:${({aktif})=>aktif ? "50" : "-200"};
 background-color:white;
-z-index:25;
 border-radius:10px;
 `
 
 const Textbox=styled.div`
 width:80%;
-margin:50px auto;
+margin:30px auto;
 text-align:center;
+
 `
 
-const Window=({children,active,type})=>{
+const Window=({children,active,type,closefunction})=>{
     var icon= null;
     if(type == "error"){
        icon=<i className="fas fa-exclamation-circle fa-2x" style={{color:"red",marginBottom:"10px"}}></i>
@@ -31,14 +35,17 @@ const Window=({children,active,type})=>{
     }
     return (
        <div>
-         <Black aktif={active}/>
+         <Black onClick={closefunction} aktif={active}/>
          <External aktif={active}>
             <Textbox>
-               {icon}
+                  <Error style={{fontSize:"40px"}} color="error"></Error>
                   <p style={{textAlign:'center',wordWrap:'break-word',lineHeight:"25px"}}>
                      {children}
                   </p>
             </Textbox>
+            <div style={{paddingTop:"15px"}}>
+              <Button onClick={closefunction} variant="contained">OK</Button>
+            </div>
          </External>
        </div>
     )
