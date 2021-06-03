@@ -2,14 +2,14 @@ import React, {useEffect,useState,useContext} from 'react'
 import Contentcard from "../../components/shared/Contentcard";
 import styled from "styled-components";
 import {Homereq,Createrelationreq} from "../../Api/Api";
-import Usercard from "../../components/shared/Usercard";
-import {Black} from "../../components/styledcomponents/button"
 import {createusercontext} from "../../context/Usercontext";
 import io from "socket.io-client";
 import {FormControl,InputLabel,Select,MenuItem,Button} from "@material-ui/core"
 import {makeStyles} from "@material-ui/core/styles"
 import Showfollower from "../../components/pages/Main/Showfoller";
 import Leaderboard from '../../components/pages/Main/Leaderboard';
+import useScroll from "../../hooks/Scroll";
+import {Spinner} from "../../components/styledcomponents/button"
 
 
 
@@ -19,41 +19,66 @@ const CssTextField = makeStyles({
         color: "black"
       }
     }
-  });
+});
+
+const Flexdiv=styled.div`
+display:flex;
+justify-content:space-between;
+max-width:1250px;
+width:100%;
+`
+
+const ContentDiv=styled.div`
+
+`
+
 
 export default function Home(){
    
-    const usestyles=CssTextField();
+    const {bottom}=useScroll();
     const {userdata} = useContext(createusercontext)
     const[contentdata,setcontentdata]=useState([]);
     const[order,setorder]=useState(10);
     const[errormsg,seterror]=useState(false);
     const[activelike,setactivelike]=useState()
     const[list,setlist]=useState([]);
-    const[windowactive,setactive]=useState(false);
-    
+    const [stoprequesting,setstopreq]=useState(false);
+    const [spinner,setspinner]=useState(false);
+  
     useEffect(()=>{
-        Homereq({
-            currentdata:contentdata,
-            setcontentdata:setcontentdata,
-            order:order,
-            seterrmsg:seterror,
-        })
+
+        if(!stoprequesting){
+            
+            setspinner(true);
+            Homereq({
+                currentdata:contentdata,
+                setcontentdata:setcontentdata,
+                order:order,
+                setspinner:setspinner,
+                seterrmsg:seterror,
+                setstopreq:setstopreq,
+            })
+
+        }
+
     },[order])
 
     useEffect(()=>{
-       /*document.addEventListener("scroll",()=>{
-           window.scrollTo({top:0,behavior:"auto"})
-       })
-       */
-    })
-
-    const createrelation=(postId,attribute)=>{
         
-        Createrelation({
+        if(bottom)
+        setorder(prev=>prev+10);
+
+    },[bottom])
+
+    const createrelation=(postId,attribute,typeofrelation)=>{
+        
+        console.log(attribute,postId)
+
+        Createrelationreq({
             UserId:userdata.UserId,
             PostId:postId,
             attribute:attribute,
+            relationtype:typeofrelation
         })
     }
    
@@ -61,38 +86,49 @@ export default function Home(){
 
     return (
         <div> 
-            <div>
-                { list.length > 0 ?
-                 <Showfollower></Showfollower>
-                : null
-                }
-                <Leaderboard></Leaderboard>
-                <div style={{padding:"10px",maxWidth:"650px",margin:"auto",height:`${list.length > 0 ? "100vh" : "100%"}`,overflow:"hidden"}}>
+            <div style={{paddingLeft:"115px"}}>
+                <div style={{textAlign:"center",display:"flex",justifyContent:"center"}}>
                     {
-                    console.log(contentdata),
-                    contentdata.length > 0 ?
-                    contentdata.map((item,index)=>(
-                        <Contentcard 
-                        postId={item.id}
-                        content={item.content}
-                        createrelation={createrelation}
-                        showwindow={(stateoflist)=>setlist(stateoflist)}
-                        like={item.Like}//bu bir obje array
-                        retweet={item.Retweet}
-                        comment={item.allcomments}
-                        key={index}//key numarası
-                        profileimage={"/black.jpg"}
-                        title={item.title}
-                        titleimage={"yaprak.jpg"}
-                        username={"Duhan"}
-                        usersurname={"Öztürk"}//bir obje props
-                        subtitle={item.subtitle}
-                        date={"8 dakika önce"}
-                        />
-                    ))
-                    : "Loading..."
+                        spinner ? <Spinner></Spinner> : null
                     }
                 </div>
+                { list.length > 0 ?
+
+                  <Showfollower setlist={()=>setlist([])} list={list}></Showfollower>
+
+                : null
+                
+                }
+                <Flexdiv>
+                    <ContentDiv style={{padding:"10px",maxWidth:"650px",height:`${list.length > 0 ? "100vh" : "100%"}`,overflow:"hidden"}}>
+                        {
+                    
+                        contentdata.length > 0 ?
+                        contentdata.map((item,index)=>(
+                            <Contentcard 
+                            postId={item.id}
+                            content={item.content}
+                            createrelationforsmh={createrelation}
+                            showwindow={(stateoflist)=>setlist(stateoflist)}
+                            like={item.Like}//bu bir obje array
+                            retweet={item.Retweet}
+                            comment={item.allcomments}
+                            readlater={item.Readlater}
+                            key={index}//key numarası
+                            profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
+                            title={item.title}
+                            titleimage={"yaprak.jpg"}
+                            username={"Duhan"}
+                            usersurname={"Öztürk"}//bir obje props
+                            subtitle={item.subtitle}
+                            date={item.createdAt}
+                            />
+                        ))
+                        : null
+                        }
+                    </ContentDiv>
+                    <Leaderboard></Leaderboard>
+                </Flexdiv>
            </div>
         </div>
        

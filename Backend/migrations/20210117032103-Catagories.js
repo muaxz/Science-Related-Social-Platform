@@ -7,5 +7,5 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
      return queryInterface.renameColumn("users","name","firstname")
   }
-
+  
 };

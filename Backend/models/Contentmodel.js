@@ -6,7 +6,7 @@ const Comment=require("./Commentmodel");
 
 const Content=sequlize.define("Content",{
     id:{
-        type: Sequlize.INTEGER,
+        type:Sequlize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
     },
@@ -52,7 +52,6 @@ Content.belongsToMany(User,{through:"UserContent",as:"Readlater"})
 User.belongsToMany(Content,{through:"UserContent",as:"Readlater"})
 Content.belongsToMany(User,{through:"UserContent",as:"Retweet"})
 User.belongsToMany(Content,{through:"UserContent",as:"Retweet"})
-
 Content.belongsTo(User,{as:"personal",foreignKey:"UserforuserId"});
 User.hasMany(Content,{as:"personal",foreignKey:"UserforcontentId"})//tek bir column oluşturuyor forignkey aynı olunca
 Content.hasMany(Comment,{as:"allcomments"});

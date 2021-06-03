@@ -8,7 +8,7 @@ import Window from "../components/UI/window";
 import {TextField,Button,InputAdornment} from '@material-ui/core';
 import {withStyles,makeStyles} from '@material-ui/core/styles';
 import {Global} from "../components/styledcomponents/button"
-import {AccountCircle,EmailOutlined,Lock,ArrowRight, ArrowLeft,SupervisorAccount,SupervisedUserCircleSharp, SupervisorAccountRounded, SupervisorAccountSharp, AccountCircleSharp, AccountCircleRounded, Person, Home} from "@material-ui/icons"
+import {AccountCircle,EmailOutlined,Lock,ArrowRight, ArrowLeft,SupervisorAccount,SupervisedUserCircleSharp, SupervisorAccountRounded, SupervisorAccountSharp, AccountCircleSharp, AccountCircleRounded, Person, Home, ArrowRightAltRounded, ChevronRight, Assignment} from "@material-ui/icons"
 
 
 
@@ -153,7 +153,7 @@ height:45px;
 const Login=()=>{
     
     const stylesget=CssTextField();
-    const{setlogged,setuserdata}=useContext(createusercontext);
+    const{setlogged,setuserdata,setspinner}=useContext(createusercontext);
     const[currenturl,setcurrent]=useState("");
     const[backenderror,setbackenderror]=useState("")
     const[errormsg,seterror]=useState(false);
@@ -263,6 +263,7 @@ const Login=()=>{
                      seterrmsg:seterror,
                      setbackenderror:setbackenderror,
                      setactive:setactive,
+                     setspinner:setspinner,
                  })
                 break;
             case "Register":  
@@ -316,7 +317,9 @@ const Login=()=>{
                <Registerloginholder onClick={register == "Login" ? ()=>setregister("Register") : ()=>setregister("Login")}>
                    {
                        register == "Login" ?
-                       <SupervisorAccountSharp  style={{color:"white",borderRadius:"50%",fontSize:"30px"}}></SupervisorAccountSharp>
+                       <div style={{display:"flex"}}>
+                           <Assignment style={{color:"white",borderRadius:"50%",fontSize:"30px"}}></Assignment>
+                       </div>
                        :
                        <Person style={{color:"white",borderRadius:"50%",fontSize:"30px"}}></Person>
                    }       
@@ -360,7 +363,7 @@ const Login=()=>{
                                     style={{width:"50%"}}
                                     inputProps={{style:{color:"red"}}}   
                                     variant="contained"
-                                    endIcon={<Home style={{fontSize:"30px"}}></Home>}
+                                    endIcon={<ChevronRight style={{fontSize:"30px"}}></ChevronRight>}
                                     onClick={register == "Login" ? Submithandler : ()=>setregister("Login")}>
                                     Giriş Yap 
                                 </Button>  

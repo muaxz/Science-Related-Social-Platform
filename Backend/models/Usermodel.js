@@ -1,6 +1,5 @@
 const Sequlize=require("sequelize");
 const sequlize=require("../database/base");
-const Content=require("./Contentmodel");
 const Comment=require("./Commentmodel");
 
 const User =sequlize.define("User",{
@@ -54,5 +53,7 @@ const User =sequlize.define("User",{
     
 })
 
+Comment.belongsTo(User);
+User.hasMany(Comment);
 
 module.exports=User;

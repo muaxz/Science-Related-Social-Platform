@@ -23,21 +23,22 @@ border-radius:5px;
 overflow:auto;
 `
 
-export default function Showfollower() {
+export default function Showfollower({list,setlist}) {
     return (
         <div>
-                <Black onClick={()=>setlist([])}  aktif={true}></Black>
+                <Black onClick={setlist} aktif={true}></Black>
                 <Rtlikewindow>
                     <div style={{height:"40px",width:"95%",margin:"auto",display:"flex",alignItems:"center",justifyContent:"flex-end"}}>
                       
-                        <i style={{color:"white",cursor:"pointer"}} className="fas fa-times-circle fa-lg"></i>
+                        <i onClick={setlist}  style={{color:"white",cursor:"pointer"}} className="fas fa-times-circle fa-lg"></i>
                        
                     </div>
                     <Innerwindow>
-                        {[{name:"Sadık",image:"car.jpg"},{name:"Aadık",image:"black.jpg"},{name:"Musa",image:"yaprak.jpg"},{name:"Selman",image:"led.jpg"},{name:"Ahmet",image:"rocket.jpg"},{name:"Duhan",image:"car.jpg"},{name:"Sadık",image:"car.jpg"},{name:"Sadık",image:"car.jpg"}].map(item=>(
+                        {list.map(item=>(
                             <Usercard 
-                            firstname={item.name}
-                            imageurl={item.image}
+                            optionforbutton={true}
+                            firstname={item.firstname}
+                            imageurl={item.surname}
                             ></Usercard>
                         ))}
                     </Innerwindow>

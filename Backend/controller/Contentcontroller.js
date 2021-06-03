@@ -2,15 +2,12 @@ const Content=require("../models/Contentmodel");
 const User=require("../models/Usermodel");
 const Usercontent=require("../models/UserContent");
 const Comment=require("../models/Commentmodel");
-const Sequlize=require("sequelize");
-const db=require("../database/base");
-const {Op}=require("sequelize");
 
 
-
-exports.produce=async (req,res)=>{
+exports.produce=async (req,res,next)=>{
  
-  const {contentdata:{title,content,subtitle,catagories}} =req.body;
+  const {contentdata:{title,content,subtitle,catagories}}=req.body;
+
   console.log(content);
 
   try {  
@@ -31,22 +28,20 @@ exports.produce=async (req,res)=>{
 }
 
 
-exports.gethome=async(req,res)=>{
+exports.gethome=async(req,res,next)=>{
 
-  var defaultnum=10;
+
   const {number}=req.params;
 
-
-  if(number)
-  defautnum=number;
+  var newnum=parseInt(number);//paramstand string olarak alıyoruz
 
   try {
     //beğenenler,yorumlar
     const Contents=await Content.findAll({
       //dizi[1].preferences[0].usercontent.attribute
       attributes:["id","titleimage","title","subtitle","content","createdAt","updatedAt"],
-      limit:defaultnum,
-      offset:defaultnum-10,
+      limit:newnum,
+      offset:newnum-10,
       include:[
         {
           model:User,
@@ -54,6 +49,15 @@ exports.gethome=async(req,res)=>{
           attributes:["id","firstname","lastname","imageurl","Role"],
           through:{
             where:{attribute:"Like"},
+            attributes:["attribute"]
+          }
+        },
+        {
+          model:User,
+          as:"Readlater",
+          attributes:["id"],
+          through:{
+            where:{attribute:"Readlater"},
             attributes:["attribute"]
           }
         },
@@ -88,55 +92,114 @@ exports.gethome=async(req,res)=>{
   }
 }
 
-exports.createrelation=async (req,res)=>{
- 
+exports.createrelation=async (req,res,next)=>{
+
   try {
 
-    const {UserId,PostId,attribute}=req.body; 
+    const {UserId,PostId,attribute,relationtype}=req.body; 
+   
+   
+    if(relationtype == "Destroy"){
 
-    await Usercontent.create({
-      UserId:UserId,
-      PostId:PostId,
-      attribute:attribute,
-    })
+      await Usercontent.destroy({
+        where:
+        {UserId:UserId,
+        ContentId:PostId,
+        attribute:attribute}
+      })
+      
+    }
+    else{
+
+      await Usercontent.create({
+        UserId:UserId,
+        ContentId:PostId,
+        attribute:attribute,
+      })
+
+    } 
 
     res.json({state:"success"})
 
   }catch (error) {
     next();
+    console.log(error);
   }
 }
 
-exports.destroyrelation=async()=>{
+exports.getusercontent=async(req,res,next)=>{
 
-    try {
+  const {catagory,id}=req.params;
+  
+  var latestparams="";
 
-      const {UserId,PostId,attribute}=req.body; 
+  switch (catagory) {
+    case "Readlater":
+        latestparams="Readlater"
+        break;
+    case "Like":
+        latestparams="Like"
+        break;
+    case "Reshow":
+        latestparams="Retweet"
+        break;       
+  }
 
-      await Usercontent.destroy({
-        where:{UserId:UserId,PostId:PostId,attribute:attribute}
-      })
+  try {
 
-      res.json({state:"success"})
+    const includeuser=await User.findOne({
+      where:{id:id},
+      attributes:["firstname"],
+      include:{
+        model:Content,
+        as:latestparams,
+        through:{
+          where:{attribute:catagory}
+        }
+      }
+    })
+   
+    res.json({data:includeuser})
 
-    }catch (error){
-       next();
-       return;
-    }
-
+  } catch (error){
+    console.log(error);
+    return;
+  }
 }
 
-exports.getcontent=async (req,res)=>{
+
+exports.getcontent=async (req,res,next)=>{
 
   const {id}=req.params;
+ 
 
   try {
     //TODO including comments and users (with nested include)
     const Mycontent=await Content.findOne({
       where:{id:id},
       attributes:["id","titleimage","title","subtitle","content","catagories"],
-    })
+      include:[
+        {
+          model:Comment,
+          include:[
 
+            {
+              model:User,
+              attributes:["id","firstname","lastname","imageurl","Role"]
+            }
+
+          ],
+          as:"allcomments"
+        },
+        
+        {
+          model:User,
+          as:"personal",
+          attributes:["id","firstname","lastname","imageurl","Role"],
+        }
+      ]
+    })
+    
     res.json({state:"success",data:Mycontent})
 
   }catch (error) {

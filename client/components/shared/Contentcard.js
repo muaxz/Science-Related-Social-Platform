@@ -1,8 +1,12 @@
 import React,{useState,useEffect,useContext} from 'react'
 import styled,{keyframes} from "styled-components";
 import {createusercontext} from "../../context/Usercontext";
+import {Porfileimage} from "../styledcomponents/button";
 import Link from "next/link";
-
+import Icon from "../UI/Icon"
+import {feed, Feedback} from "@material-ui/icons"
+import {calculatedate} from "../../utilsfunc"
+import useClickoutside from "../../hooks/Clikcoutisde";
 
 
 const Likeanimaton=keyframes`
@@ -15,16 +19,14 @@ const Likeanimaton=keyframes`
 const Outsidediv=styled.div`
 position:relative;
 margin:auto;
-margin-bottom:15px;
+margin-bottom:30px;
 width:100%;
-background-color:white;
+background-color:${({iscomment})=>!iscomment ? "white": "white"};
+border-radius:7px;
 box-shadow: 0 3px 3px rgba(0,0,0,0.2);
-&: hover{
-    box-shadow: 0 3px 3px rgba(52, 213, 203,0.2);
-}
 `
 const Imagediv=styled.div`
-
+padding-right:5px;
 padding-left:5px;
 
 `
@@ -35,17 +37,18 @@ const Contentholder=styled.div`
 flex:2;
 display:flex;
 flex-direction:column;
-background-color:white;
 
 `
 const Contentdiv=styled.div`
+padding: ${({iscomment})=>iscomment ? "15px": "0px"};
 padding-left:15px;
 padding-right:15px;
 flex:1;
 `
 const Toolbar=styled.div`
-display:flex;
+display:${({foruser})=>foruser ? "none" : "flex"};
 padding-left:15px;
+border-radius:5px;
 `
 
 const Img=styled.img`
@@ -62,21 +65,12 @@ align-items:center;
 
 const Profilediv=styled.div`
 width:100%;
-height:40px;
+padding-top:10px;
+padding-bottom:10px;
 transition:all 0.3s;
 `
 
-const Porfileimage=styled.div`
-width:30px;
-height:30px;
-cursor:pointer;
-background-color:white;
-border-radius:50%;
-background-image:url(${({profile})=> profile});
-background-size: cover;
-background-repeat: no-repeat;
-background-position: center; 
-`
+
 
 const Icons=styled.i`
 font-size:16px;
@@ -85,73 +79,114 @@ color:${({ismarked,color})=>ismarked ? color : "grey" };
 animation-name:${({ismarked})=>ismarked ? Likeanimaton : ""};
 animation-duration:0.08s;
 `
-
-const Infocard=styled.div`
-
+const Optionwindow=styled.div`
+display:${({active})=>active ? "block" : "none"};
+width:350px;
+padding:5px;
 position:absolute;
-top:0px;
-right:0px;
-padding:15px;
-width:430px;
-color:white;
-height:150px;
-background-color:grey;
-z-index:200;
-transition:all 0.3s;
+top:35px;
+right:25px; 
+border-radius:7px;
+box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+background-color:white;
+z-index:1000;
+`
+const Optionholder=styled.div`
+display:flex;
+position:relative;
+align-items:center;
+padding:10px;
+border-radius:6px;
+&:hover{
+    background-color:#EBEBEB;
+    cursor:pointer;
+}
 `
 
-const Labeloftheinfo=styled.div`
-font-size:13px;
-width:200px;
-padding:5px;
-text-align:center;
-border-radius:10px;
+const Profileimageholder=styled.div`
+position:${({iscomment})=>iscomment ? "absolute" : "relative"};
+left:${({iscomment})=>iscomment ? "-60px" : "0px"};;
 `
 
 //içerik sayısı,takipçi sayısı,
-export default function Contentcard({profileimage,content,titleimage,title,subtitle,username,usersurname,date,comment,retweet,like,showwindow,createrelation,postId}){
-   
+export default function Contentcard({readlater,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum}){
+    
     const[elements,setelements]=useState({
-        like:{
+        Like:{
             number:like.length,
             ismarked:false,
         },
-        retweet:{
+        reshow:{
             number:retweet.length,
             ismarked:false
         },
-        readlater:{
+        Readlater:{
             ismarked:false,
             number:0,
         }
     });
-    const[active,setactive]=useState(false);
+    const {ref,visible,setvisible} = useClickoutside();
     const {userdata} = useContext(createusercontext);
 
+    var textforopiton="";
+    switch (foruseroption) {
+        case "Readlater":
+            textforopiton="Kaydedilen gönderilerden kaldır";
+            break;
+        case "Like":
+            textforopiton="Beğenilen Gönderilerden kaldır"
+            break;        
+    }
+
     useEffect(() =>{
-       /*
-       like.foreach((user)=>{
-         if(userdata.UserId == user.id){//eğer burada herhangi bir eşitlik bulunursa kullanıcı postu beğendi demek
-            setlike(true);
-         }
-       })
-       */
-    },[])
+
+      
+       const currentelements={...elements};
+
+        if(!foruser){
+
+            like.forEach((user)=>{
+                if(userdata.UserId == user.id){//eğer burada herhangi bir eşitlik bulunursa kullanıcı postu beğendi demek
+                currentelements["Like"].ismarked=true;
+                }
+            })
+    
+            retweet.forEach((user)=>{
+                if(userdata.UserId == user.id){//eğer burada herhangi bir eşitlik bulunursa kullanıcı postu beğendi demek
+                    currentelements["reshow"].ismarked=true;
+                }
+            })
+    
+            readlater.forEach((user)=>{
+                if(userdata.UserId == user.id){//eğer burada herhangi bir eşitlik bulunursa kullanıcı postu beğendi demek
+                    currentelements["Readlater"].ismarked=true;
+                }
+            })
+   
+       }
+       
+       
+       setelements(currentelements);
+
+    },[userdata])
     
     const Countplus=(elementtype)=>{
 
         const currentelements={...elements};
-        console.log("burada");
+  
        
         if(currentelements[elementtype].ismarked==false){
-            console.log("burada");
+         
             currentelements[elementtype].ismarked=true;
             currentelements[elementtype].number= currentelements[elementtype].number+1;
+            createrelationforsmh(postId,elementtype,"Create");
+           
         }
         else{
 
-            currentelements[elementtype].ismarked=false;
-            currentelements[elementtype].number= currentelements[elementtype].number-1;
+            currentelements[elementtype].ismarked = false;
+            currentelements[elementtype].number = currentelements[elementtype].number-1;
+            createrelationforsmh(postId,elementtype,"Destroy");
         }
 
         setelements(currentelements);
@@ -159,39 +194,118 @@ export default function Contentcard({profileimage,content,titleimage,title,subti
     }
 
     return (
-       <Outsidediv onMouseLeave={()=>setactive(false)} onMouseOver={()=>setactive(true)}>
+       <Outsidediv iscomment={iscomment}>
+           {
+              //left arrow
+              iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-6px",top:"8px",color:"white"}}></Icon> : null
+           }
+
+           {
+               
+            !iscomment ?  
+                
+            <div style={{backgroundColor:"red"}} ref={ref}>         
+                <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
+                {
+                    visible ?
+                    <Optionwindow active={true}>
+                        <Optionholder>
+                        <Icon className="fas fa-user-minus" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                        <div style={{marginLeft:"8px",color:"#757575"}}>
+                            <p style={{color:"black"}}>Duhan Öztürk'ü takipten çık</p>
+                            <p style={{fontSize:"13px"}}>Bu kullanıcıdan gelen bildirimleri görme</p>
+                        </div>
+                        </Optionholder>
+                        <Optionholder>
+                        <Icon className="fas fa-link" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                        <div style={{marginLeft:"8px",color:"#757575"}}>
+                            <p style={{color:"black"}}>Paylaş</p>
+                            <p style={{fontSize:"13px"}}>Bağlantı adresini kopyala</p>
+                        </div>
+                        </Optionholder>  
+                        {
+                            foruser ?
+                            <Optionholder onClick={()=>createrelationforsmh(postId,foruseroption,"Destroy",indexnum)}>
+                                <Icon className="fas fa-minus-circle fa-sm" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                <div style={{marginLeft:"8px",color:"#757575"}}>
+                                    <p style={{color:"black"}}>Kaldır</p>
+                                    <p style={{fontSize:"13px"}}>{textforopiton}</p>
+                                </div>
+                            </Optionholder>  
+                            : null
+                        }   
+                    </Optionwindow> 
+                    : null
+                }
+                </div>
+              : 
+              <div ref={ref}>
+                <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-v" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
+                {
+                    visible ?  
+                    <Optionwindow active={true}>
+                        <Optionholder>
+                            <Feedback></Feedback>
+                            <div style={{marginLeft:"8px"}}>
+                                <p>Bildir</p>
+                            </div>
+                        </Optionholder>
+                   </Optionwindow>
+                   : null
+                }
+              </div>
+           }
            <Profilediv>
                <div style={{display:'flex',alignItems:"center",height:"100%",marginLeft:"5px"}}>
-                  <Porfileimage profile={profileimage}></Porfileimage>
-                  <div style={{marginLeft:"10px",fontSize:"15px"}}><p style={{color:"black"}}>{username+" "+usersurname}</p></div>
-                  <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"black"}}><span>{date}</span></div>
+                  <Profileimageholder iscomment={iscomment}>
+                     <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={profileimage}></Porfileimage>
+                  </Profileimageholder>
+                  <div style={{marginLeft:"10px",fontSize:"15px"}}><p style={{color:"black"}}>
+                      <strong>{username+" "+usersurname}</strong></p>
+                      <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{calculatedate(date).time + " " + calculatedate(date).express + " Önce"}</span></div>
+                  </div>           
                </div>
            </Profilediv>
-           <div style={{display:"flex"}}>
-                <Imageholder>
-                    <Imagediv>
-                            <Img src={titleimage}></Img>
-                    </Imagediv>
-                </Imageholder>
-                <Contentholder>
-                    <Contentdiv>
-                        <h3 style={{marginBottom:"10px",color:"#A70909"}}>{title}</h3>
-                        <Link href="/content/[id]" as={`/content/${postId}`}>
-                            <p style={{textAlign:"left",wordBreak:"bre",cursor:"pointer"}}>While the Crypto Professors may set specific requirements for some of their homework tasks we would...</p> 
-                        </Link>
-                    </Contentdiv>    
-                    <Toolbar>
+           <div style={{display:foruser ? "block" : "flex"}}>
+               {
+                   iscomment ? null : 
+
+                    <Imageholder>
+                        <Imagediv>
+                                <Img src={titleimage}></Img>
+                        </Imagediv>
+                    </Imageholder>
+               }
+                <Contentholder iscomment={iscomment}>
+                    {
+                        iscomment ? 
+                        
+                            <Contentdiv iscomment={iscomment}>     
+                                <p style={{textAlign:"left",wordBreak:"bre"}}>{content}</p> 
+                            </Contentdiv>   
+                            : 
+                            <Contentdiv iscomment={iscomment}>
+                            
+                                <h3 style={{marginBottom:"10px",color:"#A70909"}}>{title}</h3>
+                                
+                                <Link href="/content/[id]" as={`/content/${postId}`}>
+                                    <p style={{textAlign:"left",wordBreak:"bre",cursor:"pointer"}}>While the Crypto Professors may set specific requirements for some....</p> 
+                                </Link>
+                            </Contentdiv> 
+                    }
+                      
+                    <Toolbar foruser={foruser}>
                         <İconholder style={{flex:1}}>
-                            <Icons  ismarked={elements.retweet.ismarked} color={"green"}  onClick={()=>Countplus("retweet")}  className="fas fa-retweet fa-sm"></Icons><span   onClick={()=>showwindow(retweet)} style={{marginLeft:"5px"}}>{elements.retweet.number}</span>
+                            <Icons  ismarked={elements.reshow.ismarked} color={"green"}  onClick={()=>Countplus("reshow")}  className="fas fa-retweet fa-sm"></Icons><span   onClick={()=>showwindow(retweet)} style={{marginLeft:"5px"}}>{elements.reshow.number}</span>
                         </İconholder>
                         <İconholder style={{flex:1}}>
-                            <Icons  ismarked={elements.like.ismarked} color={"#C72121"}  onClick={()=>Countplus("like")} className="fas fa-heart fa-sm"></Icons><span  onClick={()=>showwindow(like)} style={{marginLeft:"5px"}}>{elements.like.number}</span>
+                            <Icons  ismarked={elements.Like.ismarked} color={"#C72121"}  onClick={()=>Countplus("Like")} className="fas fa-heart fa-sm"></Icons><span  onClick={()=>showwindow(like)} style={{marginLeft:"5px"}}>{elements.Like.number}</span>
                         </İconholder>
                         <İconholder style={{flex:1}}>
                             <Icons className="fas fa-comment-alt fa-sm"></Icons><span style={{marginLeft:"5px",color:""}}>{comment.length}</span>
                         </İconholder>
                         <İconholder style={{flex:4,display:"flex",justifyContent:"flex-end",color:"grey"}}>
-                            <Icons  ismarked={elements.readlater.ismarked} color={"black"} onClick={()=>Countplus("readlater")}  className="fas fa-bookmark"></Icons>
+                            <Icons  ismarked={elements.Readlater.ismarked} color={"black"} onClick={()=>Countplus("Readlater")}  className="fas fa-bookmark"></Icons>
                         </İconholder>  
                     </Toolbar>
                 </Contentholder>

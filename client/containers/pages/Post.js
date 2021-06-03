@@ -129,24 +129,30 @@ export default function MyEditor () {
       formData.append("upload",file);
 
       try{
+
          await axios.post("/upload",formData);
+
       }catch(err){
+
          return console.log("UPLOAD ERRORRRRRRR");
+         
       }
       return setuploaded(true);
     }
 
     const Submitpost=()=>{
+      
        producereq({
          contentdata:contentpart,
          seterrmsg:seterror, 
          setwindow:setwindowactive, 
        })
+
     }
     //ana başlık kısa tutulacak.
     //alt başlık daha uzun tutlabilir.
     return (
-      <div style={{display:"flex"}}>
+      <div style={{display:"flex",maxWidth:"1000px",width:"100%",margin:"auto"}}>
          <Window active={windowactive} type="confirm">İçeriğiniz Editöre Gönderildi.</Window>
         <div style={{flex:1,backgroundColor:"#8a8888",height:"400px",position:"sticky",top:"65px"}}> 
             <InputHolder>

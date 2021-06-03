@@ -20,17 +20,24 @@ margin-left:auto;
 margin-right:10px;
 `
 export default function Usercard({firstname,surname,imageurl,optionforbutton,children,usernumber}) {
-    var Option = <Button  color="black" backcolor="#CFD9BA"><i style={{marginRight:"8px"}} className="fas fa-user-plus"></i>Takip Et</Button>;
-    if(!optionforbutton)
-    Option=null;
+
+    var Option=null;
+    if(optionforbutton)
+    Option = <Button  color="black" backcolor="#CFD9BA"><i style={{marginRight:"8px"}} className="fas fa-user-plus"></i>Takip Et</Button>;
 
     return (
         <Exterior>
             <Inner>
-               <div style={{marginRight:"5px",color:"#e5383b",width:"25px"}}>{usernumber}.</div>
-               <Porfileimage profile={imageurl} width="40px" height="40px"></Porfileimage>
-               <Name><span style={{color:"black",fontWeight:"bold"}}>{firstname}Emre</span></Name>
+                {
+                    !optionforbutton ?
+
+                    <div style={{color:"#e5383b",width:"25px"}}>{usernumber}.</div>
+                    :null
+                }
+               <Porfileimage profile={"/car.jpg"} width="40px" height="40px"></Porfileimage>
+               <Name><span style={{color:"black"}}>{firstname}</span></Name>
                <Following>{children}</Following>
+               {Option}
             </Inner>
         </Exterior>
     )

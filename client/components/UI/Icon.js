@@ -22,6 +22,7 @@ transform:rotate(${rotate ? "180deg" : "0deg"});
  color:${hovercolor};
 }
 `)
+
 export default function Icon({className,Iconconfig,activefunc}) {
     return (
        <Iconspan onClick={activefunc} {...Iconconfig}>

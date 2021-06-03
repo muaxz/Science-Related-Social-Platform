@@ -19,10 +19,10 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/index.js"
     ],
-    "/[post]": [
+    "/[stuff]": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/[post].js"
+      "static/chunks/pages/[stuff].js"
     ],
     "/_app": [
       "static/chunks/main.js",
@@ -34,10 +34,15 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/login": [
+    "/post": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/login.js"
+      "static/chunks/pages/post.js"
+    ],
+    "/profile/[username]": [
+      "static/chunks/main.js",
+      "static/chunks/webpack.js",
+      "static/chunks/pages/profile/[username].js"
     ]
   },
   "ampFirstPages": []

@@ -8,12 +8,11 @@ const Usercontext=({children})=>{
     const[logged,setlogged]=useState(false);
     const[userdata,setuserdata]=useState({});
     const[spinner,setspinner]=useState(false);
-    const[currentpostId,setcurrentpostId]=useState(null);
-    const[currentuserId,setcurrentuserId]=useState(null);
-
     
     useEffect(()=>{
+        
         const token=localStorage.getItem("TOKEN");   
+        
         Contextdata({
             Token:token,
             setcontextdata:setuserdata,

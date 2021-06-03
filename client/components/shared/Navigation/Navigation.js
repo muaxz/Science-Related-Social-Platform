@@ -126,12 +126,12 @@ export default function Navigation(){
         1:{
           className:"fas fa-plus",
           onoff:false,
-          lineheight:'35px'
+          lineheight:'36px'
         },
         2:{
           className:"fas fa-bell",
           onoff:false,
-          lineheight:'35px'
+          lineheight:'36px'
         },
         3:{
           className:"fas fa-sort-down",

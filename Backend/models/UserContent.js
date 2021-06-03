@@ -1,7 +1,12 @@
 const Sequlize=require("sequelize");
 const sequlize=require("../database/base");
 
-const UserContent=sequlize.define("UserContent",{   
+const UserContent=sequlize.define("UserContent",{ 
+    id:{
+        type: Sequlize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+    },
     UserId:{
         type:Sequlize.INTEGER,
     },
@@ -12,6 +17,7 @@ const UserContent=sequlize.define("UserContent",{
        type:Sequlize.ENUM,
        values:["Like","Readlater","Reshow"],
     }
+
 },{tableName:"UserContent"})
 
 module.exports=UserContent;

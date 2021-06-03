@@ -11,6 +11,7 @@ exports.login=async (req,res,next)=>{
       const user=await User.findOne({where:{email:email}});
          
       const mydata={
+         UserId:user.id,
          Username:user.firstname,
          Usersurname:user.surname,
          Userrole:user.role,

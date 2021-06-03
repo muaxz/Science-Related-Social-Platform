@@ -1,4 +1,4 @@
-import styled,{createGlobalStyle} from "styled-components";
+import styled,{createGlobalStyle,keyframes} from "styled-components";
 
 export const Button=styled.button(({color,backcolor,width,hoverback})=>
 `
@@ -21,12 +21,12 @@ export const Global=createGlobalStyle`
  *{
      box-sizing:border-box;
      margin:0px;
-     font-family: 'IBM Plex Serif', serif;
+     font-family: 'Poppins', sans-serif;
  }
 
  body {
     
-    background-color:#EAEAEA;
+    background-color:#F0F0F0;
     height:100%;
    
  }
@@ -55,6 +55,29 @@ height:100%;
 z-index:${({aktif})=>aktif ? "40" : "-300"};
 background:rgba(0, 0, 0, ${({aktif})=>aktif ? "0.7" : "0"});
 `
+
+
+export const rotate360 = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+export const Spinner = styled.div`
+  animation: ${rotate360} 1s linear infinite;
+  transform: translateZ(0);
+  border-top: 2px solid lightgrey;
+  border-right: 2px solid lightgrey;
+  border-bottom: 2px solid lightgrey;
+  border-left: 2px solid black;
+  background: transparent;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+`;
 
 
 

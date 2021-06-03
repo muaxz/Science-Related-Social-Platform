@@ -2,6 +2,7 @@ import React,{useRef,useState,useContext} from 'react'
 import styled from 'styled-components';
 import {Porfileimage} from "../styledcomponents/button";
 import Icon from "../UI/Icon";
+import Link from "next/link";
 import {createusercontext} from "../../context/Usercontext";
 
 
@@ -41,6 +42,7 @@ const Li=styled.li`
 list-style-type:none;
 margin-top:10px;
 display:flex;
+width:100%;
 border-radius:5px;
 align-items:center;
 padding:7px;
@@ -63,8 +65,8 @@ text-align:right;
 
 const Lefttoolbar=({makeactive,myactive})=>{
 
-    const firstlist=useRef([{icon:"fas fa-bookmark",desc:"Kaydedilenler"},{icon:"fas fa-thumbs-up",desc:"Beğenilenler"},{icon:"fas fa-retweet",desc:"Retweet"}])
-    const secondlist=useRef([{icon:"fas fa-edit",desc:"Gönderilerim"},{icon:"fas fa-users",desc:"Tartışmalarım"}])
+    const firstlist=useRef([{icon:"fas fa-bookmark",desc:"Kaydedilenler",path:"/kaydedilenler"},{icon:"fas fa-thumbs-up",desc:"Beğenilenler",path:"/beğenilenler"}])
+    const secondlist=useRef([{icon:"fas fa-edit",desc:"Gönderilerim",path:"/gönderiler"},{icon:"fas fa-users",desc:"Tartışmalarım",path:"/tartışmalar"}])
     const {userdata:{Username},logged}=useContext(createusercontext);
 
     return (
@@ -89,11 +91,12 @@ const Lefttoolbar=({makeactive,myactive})=>{
                     <hr></hr>
                         <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
                             {firstlist.current.map((item)=>(
-                                <Li>
-                                    <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#ff0a54",color:"white"}}></Icon>   
-                                    <span style={{display:myactive ? "block" : "none",fontSize:"15px",marginLeft:"10px"}}>{item.desc}</span> 
-                                </Li>
-                                
+                                <Link href={`${item.path}`} >
+                                    <Li>
+                                        <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#ff0a54",color:"white"}}></Icon>   
+                                        <span style={{display:myactive ? "block" : "none",fontSize:"15px",marginLeft:"10px"}}>{item.desc}</span> 
+                                    </Li>
+                                </Link>            
                             ))}
                         
                         </ul>
@@ -102,11 +105,12 @@ const Lefttoolbar=({makeactive,myactive})=>{
                     <hr></hr>
                         <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
                             {secondlist.current.map((item)=>(
-                                <Li>
-                                    <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#168aad",color:"white"}}></Icon>   
-                                    <span style={{display:myactive ? "block" : "none",fontSize:"15px",marginLeft:"10px"}}>{item.desc}</span> 
-                                </Li>
-                                
+                                <Link href="/[stuff]" as={`${item.path}`}>
+                                    <Li>
+                                        <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#168aad",color:"white"}}></Icon>   
+                                        <span style={{display:myactive ? "block" : "none",fontSize:"15px",marginLeft:"10px"}}>{item.desc}</span> 
+                                    </Li>
+                                </Link>    
                             ))}        
                         </ul>
                 </NavigationDiv>

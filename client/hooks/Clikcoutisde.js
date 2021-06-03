@@ -1,13 +1,16 @@
 import React,{useEffect,useState,useRef} from 'react'
 
 export default function useClickoutside(){
+    
     const ref=useRef();
-    const [visible,setvisible]=useState(true);
+    const [visible,setvisible]=useState(false);
 
     const handleclick=(event)=>{  
+
         if(ref.current && !ref.current.contains(event.target)){
             setvisible(false);
         }  
+        
     }
 
     useEffect(()=>{

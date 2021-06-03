@@ -1,6 +1,6 @@
 const Sequlize=require("sequelize");
 const sequlize=require("../database/base");
-const Content=require("./Contentmodel");
+const User=require("../models/Usermodel");
 const Comment=sequlize.define("Comment",{
     id:{
         type: Sequlize.INTEGER,
@@ -11,5 +11,8 @@ const Comment=sequlize.define("Comment",{
         type:Sequlize.STRING,
     },
 })
+
+Comment.hasMany(Comment,{as:"subcomments"});
+
 
 module.exports=Comment;

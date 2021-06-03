@@ -1,5 +1,4 @@
 const express=require("express");
-const bodyparser=require("body-parser");
 const app=express();
 const cors=require("cors");
 const DB=require("./database/base");
@@ -10,7 +9,11 @@ const Usercontent=require("./models/UserContent");
 const Loginrouter=require("./routes/loginregister");
 const User=require("./models/Usermodel");
 const Contentrouter=require("./routes/Contentrouter");
+const Commentrouter=require("./routes/Commentrouter");
 const Upload=require("./routes/upload");
+
+
+
 const socketio = require("socket.io");
 const server=require("http").createServer(app);
 const io=socketio(server);
@@ -33,7 +36,9 @@ app.use(Loginrouter);
 app.use("/content",Contentrouter);
 app.use("/upload",Upload);
 app.use("/user",Userrouter);
-console.log("node js readed")
+app.use("/comment",Commentrouter)
+
+
 //default error handler
 app.use((error,req,res,next)=>{
 
