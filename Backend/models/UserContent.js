@@ -1,5 +1,7 @@
 const Sequlize=require("sequelize");
 const sequlize=require("../database/base");
+const User=require("./Usermodel");
+const Content=require("./Contentmodel");
 
 const UserContent=sequlize.define("UserContent",{ 
     id:{
@@ -19,5 +21,9 @@ const UserContent=sequlize.define("UserContent",{
     }
 
 },{tableName:"UserContent"})
+
+UserContent.belongsTo(Content,{foreignKey:"Contentuserid"});
+UserContent.belongsTo(User,{foreignKey:"Useruserid"});
+
 
 module.exports=UserContent;

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {Porfileimage} from "../../components/styledcomponents/button"
 import {Homereq} from "../../Api/Api"
 import Contentcard from "../../components/shared/Contentcard";
+import {Button} from "@material-ui/core"
 
 const Exteriordiv=styled.div`
 max-width:1400px;
@@ -16,8 +17,7 @@ height:100%;
 `
 
 const Imagesection=styled.div`
-position:sticky;
-top:0px;
+position:relative;
 height:250px;
 position:relative;
 `
@@ -33,13 +33,13 @@ background-position: center;
 
 const Contentpart=styled.div`
 display:flex;
-margin-top:80px;
 padding-bottom:20px;
 `
 
 const Usersection=styled.div`
 position:sticky;
 top:250px;
+margin-top:80px;
 align-self:flex-start;
 max-width:400px;
 text-align:center;
@@ -49,6 +49,26 @@ width:100%;
 const Contentsection=styled.div`
 max-width:1000px;
 width:100%;
+`
+const Optionbar=styled.div`
+display:flex;
+justify-content:space-around;
+margin:auto;
+max-width:500px;
+width:100%;
+padding:20px;
+`
+
+const Options=styled.div`
+cursor:pointer;
+transition:all 0.1s;
+border-bottom:${({applyborder})=>applyborder ? "2px solid #d62828" : "2px solid transparent"};
+`
+
+const ButtonHolder=styled.div`
+position:absolute;
+bottom:10px;
+right:10px;
 `
 
 export default function Profile(){
@@ -60,6 +80,20 @@ export default function Profile(){
     const[list,setlist]=useState([]);
     const [stoprequesting,setstopreq]=useState(false);
     const [spinner,setspinner]=useState(false);
+    const [options,setoptions]=useState({
+        Post:{
+            name:"Gönderiler",
+            bottom:false,
+        },
+        Like:{
+            name:"Beğeniler",
+            bottom:false,
+        },
+        Retweet:{
+            name:"İşaretler",
+            bottom:false,
+        } 
+    })
 
     useEffect(()=>{
 
@@ -74,15 +108,30 @@ export default function Profile(){
 
     },[])
 
+    const Handleoptions=(optiontype)=>{
+
+        const optionobj={...options};
+
+        for (const key in optionobj) {
+            optionobj[key].bottom=false;
+        }
+
+        optionobj[optiontype].bottom=true;
+        setoptions(optionobj);
+    }
+
     return (
         <Exteriordiv>
             <Innerdiv>
                 <Imagesection>
-                    <BackgroundImage/>       
+                    <BackgroundImage/> 
+                    <ButtonHolder>
+                       <Button variant="contained" color="secondary">Takip Et</Button>
+                    </ButtonHolder>
                 </Imagesection>
                 <Contentpart>
                      <Usersection>
-                         <Porfileimage style={{position:"absolute",top:"-150px",left:"150px",border:"2px solid white"}} width="120px" height="120px" profile="/led.jpg"></Porfileimage>
+                         <Porfileimage style={{position:"absolute",top:"-150px",left:"140px",border:"2px solid white"}} width="120px" height="120px" profile="/led.jpg"></Porfileimage>
                          <h4>Emre Özer</h4>
                          <span style={{color:"#8B8B8B"}}>UI designer</span>
                          <div style={{display:"flex",marginTop:"10px",marginBottom:"40px",justifyContent:"space-around"}}>
@@ -106,31 +155,38 @@ export default function Profile(){
                          </div>
                      </Usersection>
                      <Contentsection>
-
+                            <Optionbar>
                             {
-                            
-                            contentdata.length > 0 ?
-                            contentdata.map((item,index)=>(
-                                <Contentcard 
-                                postId={item.id}
-                                content={item.content}
-                                showwindow={(stateoflist)=>setlist(stateoflist)}
-                                like={item.Like}//bu bir obje array
-                                retweet={item.Retweet}
-                                comment={item.allcomments}
-                                readlater={item.Readlater}
-                                key={index}//key numarası
-                                profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
-                                title={item.title}
-                                titleimage={"/yaprak.jpg"}
-                                username={"Duhan"}
-                                usersurname={"Öztürk"}//bir obje props
-                                subtitle={item.subtitle}
-                                date={item.createdAt}
-                                />
-                            ))
-                            : null
+                               Object.keys(options).map((item)=>(
+                                      <Options applyborder={options[item].bottom} onClick={()=>Handleoptions(item)}>{options[item].name}</Options>
+                               ))
                             }
+                            </Optionbar>
+                           <div style={{paddingRight:"10px",paddingLeft:"10px",maxWidth:"700px",margin:"auto"}}>
+                            {
+                                contentdata.length > 0 ?
+                                contentdata.map((item,index)=>(
+                                    <Contentcard 
+                                    postId={item.id}
+                                    content={item.content}
+                                    showwindow={(stateoflist)=>setlist(stateoflist)}
+                                    like={item.Like}//bu bir obje array
+                                    retweet={item.Retweet}
+                                    comment={item.allcomments}
+                                    readlater={item.Readlater}
+                                    key={index}//key numarası
+                                    profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
+                                    title={item.title}
+                                    titleimage={"/yaprak.jpg"}
+                                    username={"Duhan"}
+                                    usersurname={"Öztürk"}//bir obje props
+                                    subtitle={item.subtitle}
+                                    date={item.createdAt}
+                                    />
+                                ))
+                                : null
+                                }
+                           </div>
                      </Contentsection>
                 </Contentpart>
             </Innerdiv>

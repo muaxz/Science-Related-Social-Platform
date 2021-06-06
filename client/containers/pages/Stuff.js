@@ -1,9 +1,9 @@
 import React,{useContext, useEffect,useState} from 'react'
 import styled from "styled-components";
 import Contentcard from "../../components/shared/Contentcard";
-import {Getusercontent} from "../../Api/Api"
+import {Getusercontent,Createrelationreq} from "../../Api/Api"
 import {createusercontext} from "../../context/Usercontext"
-import {Createrelationreq} from "../../Api/Api"
+import useScroll from "../../hooks/Scroll";
 const Exteriordiv=styled.div`
 max-width:1200px;
 width:100%;
@@ -22,8 +22,14 @@ padding-right:10px;
 `
 export default function Stuff({params}){
 
+   const {bottom}=useScroll();
    const {userdata}=useContext(createusercontext)
-   const [data,setdata]=useState({});
+   const [data,setdata]=useState([]);
+   const [stopscrolling,setstopscrolling]=useState(false);
+   const [itemcounts,setitemcounts]=useState({
+      Readlater:10,
+      Like:10,
+   });
    const [current,setcurrent]=useState("");
 
     var latestparams="";
@@ -46,11 +52,26 @@ export default function Stuff({params}){
                 params:latestparams,
                 UserId:userdata.UserId,
                 setdata:setdata,
+                order:itemcounts[latestparams],
+                setstopscrolling:setstopscrolling,
+                currentdata:data,
             })
 
        }
     
-    },[userdata,params])
+    },[userdata,params,itemcounts])
+  
+    useEffect(()=>{
+         console.log("buradaa");
+        if(bottom && !stopscrolling){
+
+            const mutated={...itemcounts};
+            mutated[current]+=10;
+            setitemcounts(mutated);
+            console.log("changing");
+        }
+
+    },[bottom])
 
     const Relationreq=(postId,attribute,typeofrelation,index)=>{
 
@@ -68,8 +89,8 @@ export default function Stuff({params}){
 
     const Deleteitem=(index)=>{
          console.log(index);
-         const mydata={...data};
-         mydata[current].splice(index,1);
+         const mydata=[...data];
+         mydata.splice(index,1);
          setdata(mydata);
     }
 
@@ -77,28 +98,28 @@ export default function Stuff({params}){
         <Exteriordiv>
             <h4 style={{paddingBottom:"10px"}}>{current}</h4>
             
-            {console.log(data)}
+          
             <Innerdiv>
                 {
-                    data[current] ?
+                    data.length ?
 
-                    data[current].map((item,index)=>{
+                    data.map((item,index)=>{
                         return (
                         <Contentholder>
                             <Contentcard
                             foruser={true}
-                            postId={item.id}
-                            content={item.content}
+                            postId={item.Content.id}
+                            content={item.Content.content}
                             indexnum={index}
                             createrelationforsmh={Relationreq}
                             key={index}//key numarası
                             profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
-                            title={item.title}
+                            title={item.Content.title}
                             titleimage={"yaprak.jpg"}
                             username={"Duhan"}
                             usersurname={"Öztürk"}//bir obje props
-                            subtitle={item.subtitle}
-                            date={item.createdAt}
+                            subtitle={item.Content.subtitle}
+                            date={item.Content.createdAt}
                             like={[]}//bu bir obje array
                             retweet={[]}
                             comment={[]}

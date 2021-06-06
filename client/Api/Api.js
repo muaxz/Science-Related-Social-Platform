@@ -271,16 +271,24 @@ export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwi
   }
 }
 
-export const Getusercontent=async({UserId,params,setdata,setwindow,seterrmsg})=>{
+export const Getusercontent=async({UserId,params,setdata,setwindow,seterrmsg,order,setstopscrolling,currentdata})=>{
   
   try {
 
-    const{data}=await axios.get(`content/usercontent/${params}/${UserId}`);
+    const{data}=await axios.get(`content/usercontent/${params}/${UserId}/${order}`);
+     console.log(data.data)
     if(Errorhandler({data})){ 
+       
+       if(data.data.length == 0){
+          setstopscrolling(true);
+       } 
+        
 
-       setdata(data.data)
-
-
+       const Current=[...currentdata];
+       const Mydata=[...data.data];
+      //push metodu bir diziyi bir dizinin içine pushluyor fakat concat elemanları
+       setdata(Current.concat(Mydata));
+       
     }    
     else if(data == "Unauthroized"){
        //
@@ -295,4 +303,57 @@ export const Getusercontent=async({UserId,params,setdata,setwindow,seterrmsg})=>
        
   }
 
+}
+
+export const Getuserprofilecontent=async({setdata,catogery,UserId})=>{
+
+  try {
+
+    const{data}=await axios.get(`content/profilecontent/${catogery}/${UserId}`);
+
+    if(Errorhandler({data})){ 
+
+       setdata(data.data)
+
+    }    
+    else if(data == "Unauthroized"){
+       //
+    }
+    else{
+      return;
+    }
+  
+  } catch (error){
+
+       console.log(error);
+       
+  }
+}
+
+export const Getuserprofile=async()=>{
+
+  try {
+
+    const{data}=await axios.get(`user/getuserprofile/${UserId}`);
+
+    if(Errorhandler({data})){ 
+
+       setdata(data.data)
+
+    }    
+    else if(data == "Unauthroized"){
+       //
+    }
+    else{
+
+      return;
+
+    }
+  
+  } catch (error){
+
+       console.log(error);
+       
+  }
+  
 }

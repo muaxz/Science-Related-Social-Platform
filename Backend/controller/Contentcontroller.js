@@ -2,6 +2,8 @@ const Content=require("../models/Contentmodel");
 const User=require("../models/Usermodel");
 const Usercontent=require("../models/UserContent");
 const Comment=require("../models/Commentmodel");
+const Seq=require("sequelize");
+
 
 
 exports.produce=async (req,res,next)=>{
@@ -105,7 +107,10 @@ exports.createrelation=async (req,res,next)=>{
         where:
         {UserId:UserId,
         ContentId:PostId,
-        attribute:attribute}
+        attribute:attribute,
+        Contentuserid:PostId,
+        Useruserid:UserId,
+      }
       })
       
     }
@@ -115,6 +120,8 @@ exports.createrelation=async (req,res,next)=>{
         UserId:UserId,
         ContentId:PostId,
         attribute:attribute,
+        Contentuserid:PostId,
+        Useruserid:UserId,
       })
 
     } 
@@ -129,9 +136,10 @@ exports.createrelation=async (req,res,next)=>{
 
 exports.getusercontent=async(req,res,next)=>{
 
-  const {catagory,id}=req.params;
+  const {catagory,id,order}=req.params;
   
   var latestparams="";
+  var newnum=parseInt(order);
 
   switch (catagory) {
     case "Readlater":
@@ -146,16 +154,16 @@ exports.getusercontent=async(req,res,next)=>{
   }
 
   try {
-
-    const includeuser=await User.findOne({
-      where:{id:id},
-      attributes:["firstname"],
+ 
+    const includeuser=await Usercontent.findAll({
+      where:{
+        UserId:id,
+        attribute:[`${latestparams}`],
+      },
+      limit:newnum,
+      offset:newnum-10,
       include:{
         model:Content,
-        as:latestparams,
-        through:{
-          where:{attribute:catagory}
-        }
       }
     })
    

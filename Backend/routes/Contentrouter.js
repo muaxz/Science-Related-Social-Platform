@@ -6,7 +6,7 @@ router.post("/produce",controller.produce);
 router.post("/createrelation",controller.createrelation);
 router.get("/:id",controller.getcontent);
 router.get("/gethome/:number",controller.gethome);
-router.get("/usercontent/:catagory/:id",controller.getusercontent)
+router.get("/usercontent/:catagory/:id/:order",controller.getusercontent)
 //router.delete("/delete/:id",controller.delete)
 //router.post("/update/:id",controller.delete)
 
