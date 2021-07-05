@@ -1,6 +1,7 @@
 const jwt=require("jsonwebtoken");
 const User=require("../models/Usermodel");
 const bcrypt=require("bcrypt");
+const {v4}=require("uuid");
 
 exports.login=async (req,res,next)=>{
 
@@ -72,6 +73,7 @@ exports.register=async (req,res)=>{
          const hashedpassword= await bcrypt.hash(password,10);
    
          await User.create({
+            id:v4(),
             firstname:name,
             lastname:surname,
             email:email,

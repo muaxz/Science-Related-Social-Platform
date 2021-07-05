@@ -104,12 +104,13 @@ border-radius:6px;
 `
 
 const Profileimageholder=styled.div`
+cursor:pointer; 
 position:${({iscomment})=>iscomment ? "absolute" : "relative"};
 left:${({iscomment})=>iscomment ? "-60px" : "0px"};;
 `
 
 //içerik sayısı,takipçi sayısı,
-export default function Contentcard({readlater,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum}){
+export default function Contentcard({readlater,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid}){
     
     const[elements,setelements]=useState({
         Like:{
@@ -140,7 +141,7 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
 
     useEffect(() =>{
 
-      
+
        const currentelements={...elements};
 
         if(!foruser){
@@ -192,6 +193,7 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
         setelements(currentelements);
        
     }
+    console.log(username);
 
     return (
        <Outsidediv iscomment={iscomment}>
@@ -226,7 +228,7 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
                         {
                             foruser ?
                             <Optionholder onClick={()=>createrelationforsmh(postId,foruseroption,"Destroy",indexnum)}>
-                                <Icon className="fas fa-minus-circle fa-sm" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                <Icon className="fas fa-trash-alt fa-sm" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
                                 <div style={{marginLeft:"8px",color:"#757575"}}>
                                     <p style={{color:"black"}}>Kaldır</p>
                                     <p style={{fontSize:"13px"}}>{textforopiton}</p>
@@ -242,23 +244,27 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
               <div ref={ref}>
                 <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-v" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
                 {
-                    visible ?  
-                    <Optionwindow active={true}>
+                    visible && 
+                    (<Optionwindow active={true}>
                         <Optionholder>
                             <Feedback></Feedback>
                             <div style={{marginLeft:"8px"}}>
                                 <p>Bildir</p>
                             </div>
                         </Optionholder>
-                   </Optionwindow>
-                   : null
+                   </Optionwindow>)
                 }
               </div>
            }
            <Profilediv>
                <div style={{display:'flex',alignItems:"center",height:"100%",marginLeft:"5px"}}>
                   <Profileimageholder iscomment={iscomment}>
-                     <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={profileimage}></Porfileimage>
+                      <Link href={{
+                          pathname:`/profile/${userid}`,
+                          query:{name:"Post"}
+                        }}>
+                        <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={profileimage}></Porfileimage>
+                      </Link>
                   </Profileimageholder>
                   <div style={{marginLeft:"10px",fontSize:"15px"}}><p style={{color:"black"}}>
                       <strong>{username+" "+usersurname}</strong></p>

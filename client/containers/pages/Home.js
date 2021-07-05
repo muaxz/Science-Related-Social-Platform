@@ -62,7 +62,7 @@ export default function Home(){
         }
 
     },[order])
-
+    console.log(contentdata)
     useEffect(()=>{
         
         if(bottom)
@@ -103,7 +103,8 @@ export default function Home(){
                     <ContentDiv style={{padding:"10px",maxWidth:"650px",height:`${list.length > 0 ? "100vh" : "100%"}`,overflow:"hidden"}}>
                         {
                     
-                        contentdata.length > 0 ?
+                        contentdata.length &&
+
                         contentdata.map((item,index)=>(
                             <Contentcard 
                             postId={item.id}
@@ -118,13 +119,13 @@ export default function Home(){
                             profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
                             title={item.title}
                             titleimage={"yaprak.jpg"}
-                            username={"Duhan"}
-                            usersurname={"Öztürk"}//bir obje props
+                            username={item.personal !== null ? item.personal.firstname : "notyet"}
+                            usersurname={item.personal !== null ? item.personal.lastname : "notyet"}//bir obje props
+                            userid={item.personal !== null ? item.personal.id: "notyet"}
                             subtitle={item.subtitle}
                             date={item.createdAt}
                             />
                         ))
-                        : null
                         }
                     </ContentDiv>
                     <Leaderboard></Leaderboard>

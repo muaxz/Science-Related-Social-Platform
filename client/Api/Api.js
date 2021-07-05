@@ -283,11 +283,11 @@ export const Getusercontent=async({UserId,params,setdata,setwindow,seterrmsg,ord
           setstopscrolling(true);
        } 
         
-
+       
        const Current=[...currentdata];
        const Mydata=[...data.data];
       //push metodu bir diziyi bir dizinin içine pushluyor fakat concat elemanları
-       setdata(Current.concat(Mydata));
+       setdata(Mydata);
        
     }    
     else if(data == "Unauthroized"){
@@ -308,7 +308,6 @@ export const Getusercontent=async({UserId,params,setdata,setwindow,seterrmsg,ord
 export const Getuserprofilecontent=async({setdata,catogery,UserId})=>{
 
   try {
-
     const{data}=await axios.get(`content/profilecontent/${catogery}/${UserId}`);
 
     if(Errorhandler({data})){ 
@@ -330,15 +329,17 @@ export const Getuserprofilecontent=async({setdata,catogery,UserId})=>{
   }
 }
 
-export const Getuserprofile=async()=>{
+export const Getuserprofile=async({UserId,setuserdata})=>{
 
   try {
 
     const{data}=await axios.get(`user/getuserprofile/${UserId}`);
 
+    console.log(data)
+    
     if(Errorhandler({data})){ 
 
-       setdata(data.data)
+       setuserdata(data.userdata)
 
     }    
     else if(data == "Unauthroized"){
@@ -356,4 +357,25 @@ export const Getuserprofile=async()=>{
        
   }
   
+}
+
+export const Createuserrelation=async({UserId,FollowedId})=>{
+
+  try {
+
+    const{data}=await axios.post(`user/createuserrelation`,{
+      FollowerId:UserId,
+      FollowedId:FollowedId,
+    })
+
+    if(Errorhandler({data,seterrmsg,setwindow}))
+    return;
+    else
+    return;
+
+  } catch (error) {
+       console.log("relation error")
+       //seterrmsg(true);
+  }
+
 }

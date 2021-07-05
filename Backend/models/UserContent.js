@@ -10,7 +10,7 @@ const UserContent=sequlize.define("UserContent",{
         primaryKey: true,
     },
     UserId:{
-        type:Sequlize.INTEGER,
+        type:Sequlize.UUID,
     },
     ContentId:{
         type:Sequlize.INTEGER,

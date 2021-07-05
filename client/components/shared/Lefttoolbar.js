@@ -1,4 +1,4 @@
-import React,{useRef,useState,useContext} from 'react'
+import React,{useRef,useState,useContext,useEffect} from 'react'
 import styled from 'styled-components';
 import {Porfileimage} from "../styledcomponents/button";
 import Icon from "../UI/Icon";
@@ -65,10 +65,15 @@ text-align:right;
 
 const Lefttoolbar=({makeactive,myactive})=>{
 
-    const firstlist=useRef([{icon:"fas fa-bookmark",desc:"Kaydedilenler",path:"/kaydedilenler"},{icon:"fas fa-thumbs-up",desc:"Beğenilenler",path:"/beğenilenler"}])
+    const {userdata,logged}=useContext(createusercontext);
+    const firstlist=useRef([{icon:"fas fa-bookmark",desc:"Kaydedilenler",path:`saved`},{icon:"fas fa-thumbs-up",desc:"Beğenilenler",path:`liked`}])
     const secondlist=useRef([{icon:"fas fa-edit",desc:"Gönderilerim",path:"/gönderiler"},{icon:"fas fa-users",desc:"Tartışmalarım",path:"/tartışmalar"}])
-    const {userdata:{Username},logged}=useContext(createusercontext);
+    
+    useEffect(() => {
 
+        console.log(userdata.UserId)
+
+    }, [userdata])
     return (
         <div>
             {
@@ -84,14 +89,14 @@ const Lefttoolbar=({makeactive,myactive})=>{
                 <Icon activefunc={()=>{makeactive(!myactive)}} className="fas fa-angle-double-right" Iconconfig={{width:"35px",height:"35px",lineheight:"35px",color:"black",rotate:myactive ? true : undefined}}></Icon>
                     <div style={{paddingBottom:"15px"}}>
                     <Porfileimage profile={"/car.jpg"}  width={myactive ? "80px" : "50px"} height={myactive ? "80px" : "50px"}/>
-                    <div style={{marginTop:"10px",color:"#293241",textAlign:"center"}}><span>{myactive ? Username : "..."}</span></div>
+                    <div style={{marginTop:"10px",color:"#293241",textAlign:"center"}}><span>{myactive ? userdata.Username : "..."}</span></div>
                     </div>     
                 </ImageDiv>
                 <NavigationDiv>
                     <hr></hr>
                         <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
                             {firstlist.current.map((item)=>(
-                                <Link href={`${item.path}`} >
+                                <Link href={`/[userıd]/${item.path}`} as={`/${userdata.UserId}/${item.path}`}>
                                     <Li>
                                         <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#ff0a54",color:"white"}}></Icon>   
                                         <span style={{display:myactive ? "block" : "none",fontSize:"15px",marginLeft:"10px"}}>{item.desc}</span> 

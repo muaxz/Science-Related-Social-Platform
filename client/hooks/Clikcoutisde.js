@@ -23,7 +23,11 @@ export default function useClickoutside(){
 
     },)
 
-    return {visible,setvisible,ref}
+    return {
+      visible,
+      setvisible,
+      ref
+    }
 }
 
 

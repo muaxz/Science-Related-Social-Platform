@@ -7,7 +7,7 @@ import {Black} from "../../components/styledcomponents/button"
 import {useRouter} from "next/router"
 
 const Bigdiv=styled.div`
-padding-top:50px;
+padding-top:80px;
 `
 
 export default function Mainlayout({children}) {

@@ -1,7 +1,8 @@
 import axios from 'axios';
-import React,{useRef,useState,useEffect} from 'react'
+import React,{useRef,useState,useEffect,useContext} from 'react'
 import styled from "styled-components";
 import {producereq} from "../../Api/Api";
+import {createusercontext} from "../../context/Usercontext"
 import {Button,Global} from "../../components/styledcomponents/button";
 import Window from "../../components/UI/window";
 
@@ -25,7 +26,6 @@ padding:8px;
 padding-left:40px;
 outline:none;
 border:none;
-
 `
 
 
@@ -82,24 +82,35 @@ color:black;
 
 export default function MyEditor () {
     const editorRef = useRef()
+    const {userdata} = useContext(createusercontext);
     const [ editorLoaded, setEditorLoaded ] = useState( false )
     const { CKE, ClassicEditor } = editorRef.current || {}
-    const[errormsg,seterror]=useState(false);
-    const[windowactive,setwindowactive]=useState(false);
-    const[question,setquestion]=useState({
+    const[errormsg,seterror] = useState(false);
+    const[windowactive,setwindowactive] = useState(false);
+    const[question,setquestion] = useState({
       title:false,
       subtitle:false,
     });
-    const[file,setfile]=useState();
-    const[filename,setfilename]=useState("");
-    const[uploaded,setuploaded]=useState(false);
-    const [contentpart,setcontentpart]=useState({
+    const[file,setfile] = useState();
+    const[filename,setfilename] = useState("");
+    const[uploaded,setuploaded] = useState(false);
+    const [contentpart,setcontentpart] = useState({
       content:"",
       title:"",
       subtitle:"",
       catagories:"",
+      UserId:"",
     });
- 
+    
+
+    useEffect(()=>{
+
+        const mutated={...contentpart};
+        mutated["UserId"]=userdata.UserId;
+        setcontentpart(mutated);
+
+    },[userdata])
+
     useEffect(()=>{
         const {CKEditor}=require( '@ckeditor/ckeditor5-react' )
         editorRef.current = {

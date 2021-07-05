@@ -11,9 +11,7 @@ const User=require("./models/Usermodel");
 const Contentrouter=require("./routes/Contentrouter");
 const Commentrouter=require("./routes/Commentrouter");
 const Upload=require("./routes/upload");
-
-
-
+const UserUser=require("./models/UserUser");
 const socketio = require("socket.io");
 const server=require("http").createServer(app);
 const io=socketio(server);

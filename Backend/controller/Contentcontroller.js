@@ -8,9 +8,9 @@ const Seq=require("sequelize");
 
 exports.produce=async (req,res,next)=>{
  
-  const {contentdata:{title,content,subtitle,catagories}}=req.body;
+  const {contentdata:{title,content,subtitle,catagories,UserId}}=req.body;
 
-  console.log(content);
+  console.log("USERIDDD  "+UserId);
 
   try {  
 
@@ -19,12 +19,13 @@ exports.produce=async (req,res,next)=>{
         subtitle:subtitle,
         content:content,
         catagories:catagories,
-        UserforuserId:1,
-        UserforcontentId:1,
+        UserforuserId:UserId,
+        UserforcontentId:UserId,
     })
       return res.json({state:"success"});
   }catch(err){
       next();
+      console.log(err)
       return;
   }
 }
@@ -137,7 +138,7 @@ exports.createrelation=async (req,res,next)=>{
 exports.getusercontent=async(req,res,next)=>{
 
   const {catagory,id,order}=req.params;
-  
+  console.log("CATOGERYYYY"+order)
   var latestparams="";
   var newnum=parseInt(order);
 
@@ -167,7 +168,7 @@ exports.getusercontent=async(req,res,next)=>{
       }
     })
    
-    res.json({data:includeuser})
+    return res.json({data:includeuser})
 
   } catch (error){
     console.log(error);
@@ -215,3 +216,4 @@ exports.getcontent=async (req,res,next)=>{
     return;
   }
 }
+

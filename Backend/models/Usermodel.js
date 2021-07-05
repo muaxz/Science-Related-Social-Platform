@@ -4,9 +4,10 @@ const Comment=require("./Commentmodel");
 
 const User =sequlize.define("User",{
     id:{
-        type: Sequlize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
+        type: Sequlize.UUID,
+        primaryKey:true,
+        allownull:false,
+        unique:true,
     },
     firstname:{
         type:Sequlize.STRING,
@@ -55,5 +56,6 @@ const User =sequlize.define("User",{
 
 Comment.belongsTo(User);
 User.hasMany(Comment);
-
+User.belongsToMany(User,{as:"Follower",through:"UserUser",foreignKey:"FollowerId"})
+User.belongsToMany(User,{as:"Followed",through:"UserUser",foreignKey:"FollowedId"})
 module.exports=User;

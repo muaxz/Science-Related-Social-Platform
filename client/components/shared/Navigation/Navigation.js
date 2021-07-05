@@ -6,7 +6,7 @@ import useClickoutside from '../../../hooks/Clikcoutisde';
 import {createusercontext} from "../../../context/Usercontext";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
-import { AccountCircle, Person } from '@material-ui/icons';
+import { AccountCircle, Home} from '@material-ui/icons';
 
 
 
@@ -186,11 +186,14 @@ export default function Navigation(){
         <Navbarext >
             <InnerNavbar>
                 <InputHolder flex={"block"}>
-                  <div style={{display:"flex",alignItems:"center"}}>
-                    <Porfileimage profile="https://evrimagaci.org/public/images/logo/v3.svg?v=1" width="40px" height="40px">
-                    </Porfileimage>
-                    <div style={{marginLeft:"10px"}}><span>Evrim Ağacı</span></div>
-                  </div>
+                <Link href="/">
+                    <div style={{display:"flex",alignItems:"center",cursor:"pointer"}}>
+                        <Porfileimage profile="https://evrimagaci.org/public/images/logo/v3.svg?v=1" width="40px" height="40px">
+                        </Porfileimage>
+                        <div style={{marginLeft:"10px"}}><span>Evrim Ağacı</span></div>
+                        <div style={{marginLeft:"10px",display:"flex",alignItems:"center"}}><Home style={{fontSize:"30px",color:"#c81d25"}}></Home></div>
+                    </div>
+                </Link>
                 </InputHolder>
                 <InputHolder  flex2={"none"} flex={false}>
                     <Input placeholder="Ara"></Input>

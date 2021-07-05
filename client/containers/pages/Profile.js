@@ -1,9 +1,11 @@
 import React,{useEffect,useState,useContext} from 'react'
 import styled from "styled-components";
+import {createusercontext} from "../../context/Usercontext"
 import {Porfileimage} from "../../components/styledcomponents/button"
-import {Homereq} from "../../Api/Api"
+import {Createuserrelation} from "../../Api/Api"
 import Contentcard from "../../components/shared/Contentcard";
 import {Button} from "@material-ui/core"
+import Link from "next/link";
 
 const Exteriordiv=styled.div`
 max-width:1400px;
@@ -70,17 +72,17 @@ position:absolute;
 bottom:10px;
 right:10px;
 `
+var counter=0;
 
-export default function Profile(){
-
-    const[contentdata,setcontentdata]=useState([]);
+export default function Profile({Mydata}){
+    
+    const {userdata} = useContext(createusercontext);
+    const[contentdata,setcontentdata]=useState(Mydata.personal);
     const[order,setorder]=useState(10);
-    const[errormsg,seterror]=useState(false);
-    const[activelike,setactivelike]=useState()
-    const[list,setlist]=useState([]);
-    const [stoprequesting,setstopreq]=useState(false);
-    const [spinner,setspinner]=useState(false);
-    const [options,setoptions]=useState({
+    const[profiledata,setprofiledata]=useState({})
+    const[stoprequesting,setstopreq]=useState(false);
+    const[spinner,setspinner]=useState(false);
+    const[options,setoptions]=useState({
         Post:{
             name:"Gönderiler",
             bottom:false,
@@ -94,19 +96,29 @@ export default function Profile(){
             bottom:false,
         } 
     })
-
+    console.log(counter++);
     useEffect(()=>{
 
-        Homereq({
-            currentdata:contentdata,
-            setcontentdata:setcontentdata,
-            order:10,
-            setspinner:setspinner,
-            seterrmsg:seterror,
-            setstopreq:setstopreq,
-        })
+        
 
     },[])
+
+    console.log(profiledata)
+
+    const Followingrequest=()=>{
+
+        
+        if(userdata.UserId){
+
+            Createuserrelation({
+                UserId:userdata.UserId,
+                FollowedId:Mydata.id,
+            })
+
+        }
+        
+           
+    }
 
     const Handleoptions=(optiontype)=>{
 
@@ -126,7 +138,7 @@ export default function Profile(){
                 <Imagesection>
                     <BackgroundImage/> 
                     <ButtonHolder>
-                       <Button variant="contained" color="secondary">Takip Et</Button>
+                       <Button onClick={Followingrequest} variant="contained" color="secondary">Takip Et</Button>
                     </ButtonHolder>
                 </Imagesection>
                 <Contentpart>
@@ -158,13 +170,18 @@ export default function Profile(){
                             <Optionbar>
                             {
                                Object.keys(options).map((item)=>(
+                                   <Link href={{
+                                       pathname:`/profile/${Mydata.id}`,
+                                       query:{name:`${item}`}
+                                   }}                                  
+                                   >
                                       <Options applyborder={options[item].bottom} onClick={()=>Handleoptions(item)}>{options[item].name}</Options>
+                                   </Link>
                                ))
                             }
                             </Optionbar>
                            <div style={{paddingRight:"10px",paddingLeft:"10px",maxWidth:"700px",margin:"auto"}}>
                             {
-                                contentdata.length > 0 ?
                                 contentdata.map((item,index)=>(
                                     <Contentcard 
                                     postId={item.id}
@@ -179,13 +196,16 @@ export default function Profile(){
                                     title={item.title}
                                     titleimage={"/yaprak.jpg"}
                                     username={"Duhan"}
+                                    like={[]}//bu bir obje array
+                                    retweet={[]}
+                                    comment={[]}
+                                    readlater={[]}
                                     usersurname={"Öztürk"}//bir obje props
                                     subtitle={item.subtitle}
                                     date={item.createdAt}
                                     />
-                                ))
-                                : null
-                                }
+                                ))        
+                            }
                            </div>
                      </Contentsection>
                 </Contentpart>
