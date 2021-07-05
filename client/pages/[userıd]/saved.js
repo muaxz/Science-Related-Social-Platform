@@ -27,17 +27,28 @@ export async function getServerSideProps({query}){
 
         const {data} =await axios.get(`http://localhost:3001/content/usercontent/Readlater/${query.userıd}/10`)
 
+        if(data && data.error){
+
+            return {
+                redirect:{
+                    destination:"/500"
+                }
+            };
+      
+        }
 
         return { 
             props:{content:data.data}
         }
 
     } catch (error){
-
-       return {
-           props:{}
-       }
-
+         
+        return {
+            redirect:{
+                destination:"/500"
+            }
+        };
+    
     }
 }
 
