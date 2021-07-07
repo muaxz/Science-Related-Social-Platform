@@ -190,8 +190,8 @@ export default function Navigation(){
                     <div style={{display:"flex",alignItems:"center",cursor:"pointer"}}>
                         <Porfileimage profile="https://evrimagaci.org/public/images/logo/v3.svg?v=1" width="40px" height="40px">
                         </Porfileimage>
-                        <div style={{marginLeft:"10px"}}><span>Evrim Ağacı</span></div>
-                        <div style={{marginLeft:"10px",display:"flex",alignItems:"center"}}><Home style={{fontSize:"30px",color:"#c81d25"}}></Home></div>
+                        <div style={{marginLeft:"10px",paddingRight:"10px",borderRight:"1px solid black"}}><span>Evrim Ağacı</span></div>
+                        <div style={{marginLeft:"10px",display:"flex",alignItems:"center"}}><Home style={{fontSize:"30px",color:"#c9184a"}}></Home></div>
                     </div>
                 </Link>
                 </InputHolder>

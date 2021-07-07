@@ -193,7 +193,7 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
         setelements(currentelements);
        
     }
-    console.log(username);
+
 
     return (
        <Outsidediv iscomment={iscomment}>

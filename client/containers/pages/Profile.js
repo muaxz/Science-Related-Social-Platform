@@ -6,6 +6,8 @@ import {Createuserrelation} from "../../Api/Api"
 import Contentcard from "../../components/shared/Contentcard";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
+import { Notifications, NotificationsActive } from '@material-ui/icons';
+import router from 'next/router';
 
 const Exteriordiv=styled.div`
 max-width:1400px;
@@ -68,20 +70,26 @@ border-bottom:${({applyborder})=>applyborder ? "2px solid #d62828" : "2px solid 
 `
 
 const ButtonHolder=styled.div`
+display:flex;
+align-items:center;
 position:absolute;
 bottom:10px;
 right:10px;
 `
-var counter=0;
 
-export default function Profile({Mydata}){
+var Controller=true;
+var number=0;
+export default function Profile({Mydata,query}){
     
-    const {userdata} = useContext(createusercontext);
-    const[contentdata,setcontentdata]=useState(Mydata.personal);
+    const{userdata}=useContext(createusercontext);
+    const[contentdata,setcontentdata]=useState([...Mydata.personal]);
     const[order,setorder]=useState(10);
-    const[profiledata,setprofiledata]=useState({})
+    const[profiledata,setprofiledata]=useState({...Mydata})
     const[stoprequesting,setstopreq]=useState(false);
     const[spinner,setspinner]=useState(false);
+    const[trial,setrial]=useState(false);
+    const[beingfollowed,setbeingfollowed]=useState(false);
+    const[notificationactive,setnotificationactive]=useState(false);
     const[options,setoptions]=useState({
         Post:{
             name:"Gönderiler",
@@ -96,16 +104,47 @@ export default function Profile({Mydata}){
             bottom:false,
         } 
     })
-    console.log(counter++);
+
+
+    console.log(number++);
+    useEffect(()=>{
+        
+        if(userdata.UserId == profiledata.id){
+             
+
+            setrial(true);
+
+
+        }
+        else{
+
+            if(userdata.UserId){
+
+                Mydata.Followed.forEach(item=>{
+        
+                    if(item.id == userdata.UserId){
+            
+                        setbeingfollowed(true)
+                        //zaten buraya girememiş ise default değer false
+                    }
+                
+                });
+            }
+
+        }
+    
+    },[userdata])
+
     useEffect(()=>{
 
-        
+      setprofiledata({...Mydata})
+      setcontentdata([...Mydata.personal])
 
-    },[])
+    },[query])
 
     console.log(profiledata)
 
-    const Followingrequest=()=>{
+    const Followingrequest=(checkfollowed)=>{
 
         
         if(userdata.UserId){
@@ -138,17 +177,28 @@ export default function Profile({Mydata}){
                 <Imagesection>
                     <BackgroundImage/> 
                     <ButtonHolder>
-                       <Button onClick={Followingrequest} variant="contained" color="secondary">Takip Et</Button>
+                        {
+                            beingfollowed && 
+
+                            notificationactive ? 
+                            
+                            (<NotificationsActive style={{color:"white",marginRight:"10px",cursor:"pointer"}} onClick={()=>setnotificationactive(false)}></NotificationsActive>)
+
+                            :
+
+                            (<Notifications style={{color:"white",marginRight:"10px",cursor:"pointer"}} onClick={()=>setnotificationactive(true)}></Notifications>)
+                        }
+                       <Button onClick={()=>Followingrequest(beingfollowed)} style={{color:"white",textTransform:"none"}} variant="contained" color="secondary">{beingfollowed ? "Takipten Çık" : "Takip Et"}</Button>
                     </ButtonHolder>
                 </Imagesection>
                 <Contentpart>
                      <Usersection>
                          <Porfileimage style={{position:"absolute",top:"-150px",left:"140px",border:"2px solid white"}} width="120px" height="120px" profile="/led.jpg"></Porfileimage>
-                         <h4>Emre Özer</h4>
+                         <h4>{profiledata.firstname + " " + profiledata.lastname}</h4>
                          <span style={{color:"#8B8B8B"}}>UI designer</span>
                          <div style={{display:"flex",marginTop:"10px",marginBottom:"40px",justifyContent:"space-around"}}>
                             <div>
-                                <p>246</p>
+                                <p>{trial ? "heyyo" : "null"}</p>
                                 <p>Takipçi</p>
                             </div>
                             <div>

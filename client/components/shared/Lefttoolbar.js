@@ -88,8 +88,18 @@ const Lefttoolbar=({makeactive,myactive})=>{
                 <ImageDiv>
                 <Icon activefunc={()=>{makeactive(!myactive)}} className="fas fa-angle-double-right" Iconconfig={{width:"35px",height:"35px",lineheight:"35px",color:"black",rotate:myactive ? true : undefined}}></Icon>
                     <div style={{paddingBottom:"15px"}}>
-                    <Porfileimage profile={"/car.jpg"}  width={myactive ? "80px" : "50px"} height={myactive ? "80px" : "50px"}/>
-                    <div style={{marginTop:"10px",color:"#293241",textAlign:"center"}}><span>{myactive ? userdata.Username : "..."}</span></div>
+                    <Link href={userdata.UserId && {
+                          pathname:`/profile/${userdata.UserId}`,
+                          query:{name:"Post"}
+                        }}>
+                       <Porfileimage profile={"/car.jpg"}  width={myactive ? "80px" : "50px"} height={myactive ? "80px" : "50px"}/>
+                    </Link>
+                    <Link href={userdata.UserId && {
+                          pathname:`/profile/${userdata.UserId}`,
+                          query:{name:"Post"}
+                        }}>
+                       <div style={{marginTop:"10px",color:"#293241",textAlign:"center"}}><span>{myactive ? userdata.Username : "..."}</span></div>
+                    </Link>
                     </div>     
                 </ImageDiv>
                 <NavigationDiv>

@@ -87,8 +87,8 @@ export default function Usercontent({params,mydata}){
     return(
 
         <Exteriordiv>
-        <div style={{display:"flex",alignItems:"center",paddingBottom:"10px"}}>
-           <h4 style={{paddingRight:"5px"}}>{params == "Like" ? "Beğenilen Gönderiler" : "Kaydedilen Gönderiler"} </h4>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center"}}>
+           <h3 style={{paddingRight:"5px"}}>{params == "Like" ? "Beğenilen Gönderiler" : "Kaydedilen Gönderiler"} </h3>
            {
                  params == "Readlater" ?
 
@@ -101,7 +101,6 @@ export default function Usercontent({params,mydata}){
                {`(${data.length})`}
            </span>
         </div>
-        <hr></hr>
         <Innerdiv>
             {
                 data.length ?

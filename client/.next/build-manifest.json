@@ -19,11 +19,6 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/index.js"
     ],
-    "/[userıd]/liked": [
-      "static/chunks/main.js",
-      "static/chunks/webpack.js",
-      "static/chunks/pages/[userıd]/liked.js"
-    ],
     "/[userıd]/saved": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",

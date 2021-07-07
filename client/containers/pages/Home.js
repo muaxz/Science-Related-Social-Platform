@@ -33,12 +33,12 @@ const ContentDiv=styled.div`
 `
 
 
-export default function Home(){
+export default function Home({mydata}){
    
     const {bottom}=useScroll();
     const {userdata} = useContext(createusercontext)
-    const[contentdata,setcontentdata]=useState([]);
-    const[order,setorder]=useState(10);
+    const[contentdata,setcontentdata]=useState([...mydata]);
+    const[order,setorder]=useState(0);
     const[errormsg,seterror]=useState(false);
     const[activelike,setactivelike]=useState()
     const[list,setlist]=useState([]);
@@ -47,7 +47,7 @@ export default function Home(){
   
     useEffect(()=>{
 
-        if(!stoprequesting){
+        if(!stoprequesting && bottom){
             
             setspinner(true);
             Homereq({
@@ -62,11 +62,13 @@ export default function Home(){
         }
 
     },[order])
-    console.log(contentdata)
+    
+
+
     useEffect(()=>{
         
         if(bottom)
-        setorder(prev=>prev+10);
+        setorder(mydata.length+10);
 
     },[bottom])
 

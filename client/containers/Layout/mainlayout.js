@@ -19,7 +19,7 @@ export default function Mainlayout({children}) {
         setactive(false);  
     }, [userouter.query])
 
-    console.log(userouter.query)
+    
     return (
         <Bigdiv>
             <Black onClick={()=>setactive(false)} aktif={active}></Black>
