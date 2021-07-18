@@ -14,6 +14,15 @@ const UserUser=sequlize.define("UserUser",{
     FollowedId:{
         type:Sequlize.UUID,
     },
+    Active:{
+        type:Sequlize.STRING,
+        get:function(){
+            return JSON.parse(this.getDataValue("Active"))
+        } ,
+        set:function(value){
+            return this.setDataValue("Active",JSON.stringify(value));
+        },
+    }
     
 },{freezeTableName:true})
 

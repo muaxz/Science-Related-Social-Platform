@@ -180,7 +180,7 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
          
             currentelements[elementtype].ismarked=true;
             currentelements[elementtype].number= currentelements[elementtype].number+1;
-            createrelationforsmh(postId,elementtype,"Create");
+            createrelationforsmh(postId,elementtype,"Create",userid);
            
         }
         else{

@@ -37,8 +37,8 @@ export default function Showfollower({list,setlist}) {
                         {list.map(item=>(
                             <Usercard 
                             optionforbutton={true}
-                            firstname={item.firstname}
-                            imageurl={item.surname}
+                            firstname={item.name}
+                            imageurl={item.lastname}
                             ></Usercard>
                         ))}
                     </Innerwindow>

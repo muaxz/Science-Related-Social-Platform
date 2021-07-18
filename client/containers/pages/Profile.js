@@ -66,7 +66,7 @@ padding:20px;
 const Options=styled.div`
 cursor:pointer;
 transition:all 0.1s;
-border-bottom:${({applyborder})=>applyborder ? "2px solid #d62828" : "2px solid transparent"};
+color:${({applyborder})=>applyborder ? "#d62828" : "black"};
 `
 
 const ButtonHolder=styled.div`
@@ -87,7 +87,7 @@ export default function Profile({Mydata,query}){
     const[profiledata,setprofiledata]=useState({...Mydata})
     const[stoprequesting,setstopreq]=useState(false);
     const[spinner,setspinner]=useState(false);
-    const[trial,setrial]=useState(false);
+    const[checkuserid,setcheckuserid]=useState(false);
     const[beingfollowed,setbeingfollowed]=useState(false);
     const[notificationactive,setnotificationactive]=useState(false);
     const[options,setoptions]=useState({
@@ -107,18 +107,25 @@ export default function Profile({Mydata,query}){
 
 
     console.log(number++);
+    
     useEffect(()=>{
         
         if(userdata.UserId == profiledata.id){
              
 
-            setrial(true);
+            setcheckuserid(true);
+            //burada takip et butonu ve bildirim butonu kalkıcak yerine belki ayarlar.
 
 
         }
         else{
 
             if(userdata.UserId){
+                
+                /*Mydata.Followed.find(element => {
+                    return element.id == userdata.UserId
+                })
+                */
 
                 Mydata.Followed.forEach(item=>{
         
@@ -144,14 +151,16 @@ export default function Profile({Mydata,query}){
 
     console.log(profiledata)
 
-    const Followingrequest=(checkfollowed)=>{
+    const Followingrequest=()=>{
 
-        
+        setbeingfollowed(!beingfollowed);
+
         if(userdata.UserId){
 
             Createuserrelation({
                 UserId:userdata.UserId,
                 FollowedId:Mydata.id,
+                checkiffollow:beingfollowed,
             })
 
         }
@@ -188,17 +197,17 @@ export default function Profile({Mydata,query}){
 
                             (<Notifications style={{color:"white",marginRight:"10px",cursor:"pointer"}} onClick={()=>setnotificationactive(true)}></Notifications>)
                         }
-                       <Button onClick={()=>Followingrequest(beingfollowed)} style={{color:"white",textTransform:"none"}} variant="contained" color="secondary">{beingfollowed ? "Takipten Çık" : "Takip Et"}</Button>
+                       <Button onClick={()=>Followingrequest(beingfollowed)} style={{color:"white",backgroundColor:"#0ead69",textTransform:"none"}} variant="contained">{beingfollowed ? "Takipten Çık" : "Takip Et"}</Button>
                     </ButtonHolder>
                 </Imagesection>
                 <Contentpart>
                      <Usersection>
-                         <Porfileimage style={{position:"absolute",top:"-150px",left:"140px",border:"2px solid white"}} width="120px" height="120px" profile="/led.jpg"></Porfileimage>
+                         <Porfileimage style={{position:"absolute",top:"-150px",left:"140px",border:"4px solid white"}} width="120px" height="120px" profile="/led.jpg"></Porfileimage>
                          <h4>{profiledata.firstname + " " + profiledata.lastname}</h4>
                          <span style={{color:"#8B8B8B"}}>UI designer</span>
                          <div style={{display:"flex",marginTop:"10px",marginBottom:"40px",justifyContent:"space-around"}}>
                             <div>
-                                <p>{trial ? "heyyo" : "null"}</p>
+                                <p>{beingfollowed ? "heyyo" : "null"}</p>
                                 <p>Takipçi</p>
                             </div>
                             <div>

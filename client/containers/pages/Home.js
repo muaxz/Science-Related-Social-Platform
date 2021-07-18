@@ -1,7 +1,7 @@
 import React, {useEffect,useState,useContext} from 'react'
 import Contentcard from "../../components/shared/Contentcard";
 import styled from "styled-components";
-import {Homereq,Createrelationreq} from "../../Api/Api";
+import {Homereq,Createrelationreq,Notificationreq} from "../../Api/Api";
 import {createusercontext} from "../../context/Usercontext";
 import io from "socket.io-client";
 import {FormControl,InputLabel,Select,MenuItem,Button} from "@material-ui/core"
@@ -33,6 +33,8 @@ const ContentDiv=styled.div`
 `
 
 
+const socket=io("http://localhost:3001");
+
 export default function Home({mydata}){
    
     const {bottom}=useScroll();
@@ -44,8 +46,17 @@ export default function Home({mydata}){
     const[list,setlist]=useState([]);
     const [stoprequesting,setstopreq]=useState(false);
     const [spinner,setspinner]=useState(false);
+
   
+
+    
     useEffect(()=>{
+
+
+        
+        if(userdata.UserId);
+        Notificationreq(userdata.UserId)
+
 
         if(!stoprequesting && bottom){
             
@@ -63,7 +74,9 @@ export default function Home({mydata}){
 
     },[order])
     
-
+    const sendiorequest=()=>{
+        socket.emit("message","");
+    }
 
     useEffect(()=>{
         
@@ -72,7 +85,7 @@ export default function Home({mydata}){
 
     },[bottom])
 
-    const createrelation=(postId,attribute,typeofrelation)=>{
+    const createrelation=(postId,attribute,typeofrelation,userid)=>{
         
         console.log(attribute,postId)
 
@@ -80,7 +93,8 @@ export default function Home({mydata}){
             UserId:userdata.UserId,
             PostId:postId,
             attribute:attribute,
-            relationtype:typeofrelation
+            relationtype:typeofrelation,
+            UserIdofcontent:userid,
         })
     }
    
@@ -89,6 +103,7 @@ export default function Home({mydata}){
     return (
         <div> 
             <div style={{paddingLeft:"115px"}}>
+                <button onClick={sendiorequest}>İO REQUEST</button>
                 <div style={{textAlign:"center",display:"flex",justifyContent:"center"}}>
                     {
                         spinner ? <Spinner></Spinner> : null

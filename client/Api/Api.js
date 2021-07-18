@@ -156,7 +156,7 @@ export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setconten
 }
 
 
-export const Createrelationreq=async({UserId,PostId,attribute,seterrmsg,setwindow,relationtype})=>{
+export const Createrelationreq=async({UserId,PostId,attribute,seterrmsg,setwindow,relationtype,UserIdofcontent})=>{
 
   try {
 
@@ -164,7 +164,8 @@ export const Createrelationreq=async({UserId,PostId,attribute,seterrmsg,setwindo
       UserId:UserId,
       PostId:PostId,
       attribute:attribute,
-      relationtype:relationtype
+      relationtype:relationtype,
+      UserIdofcontent:UserIdofcontent,
     })
 
     if(Errorhandler({data,seterrmsg,setwindow}))
@@ -237,21 +238,21 @@ export const Commentreq=async({contentId,setactiveproduce,setcomment,seterrmsg,s
 }
 
 export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwindow,setlogged})=>{
-
+ 
   try {
 
-    const {data}=await axios.get(`user/getuserdata`,{
+    const {data}=await axios.get(`/user/getuserdata`,{
       headers:{
         "authorization":`Bearer ${Token}`,
       }
     });
-
+  
     if(Errorhandler({data,seterrmsg,setwindow,setcontextdata,setlogged,setspinner})){ 
-   
+
       const mydata={ 
         UserId:data.userdata.id,
         Username:data.userdata.firstname,
-        Usersurname:data.userdata.usersurname,
+        Usersurname:data.userdata.lastname,
         Userrole:data.userdata.role,
         Userimage:data.userdata.imageurl,
      }
@@ -286,7 +287,7 @@ export const Getusercontent=async({UserId,params,setdata,setwindow,seterrmsg,ord
        
        const Current=[...currentdata];
        const Mydata=[...data.data];
-      //push metodu bir diziyi bir dizinin içine pushluyor fakat concat elemanları
+      //push metodu bir diziyi bi  r dizinin içine pushluyor fakat concat elemanları
        setdata(Mydata);
        
     }    
@@ -359,19 +360,37 @@ export const Getuserprofile=async({UserId,setuserdata})=>{
   
 }
 
-export const Createuserrelation=async({UserId,FollowedId})=>{
+export const Createuserrelation=async({UserId,FollowedId,checkiffollow})=>{
 
   try {
 
     const{data}=await axios.post(`user/createuserrelation`,{
       FollowerId:UserId,
       FollowedId:FollowedId,
+      checkiffollow:checkiffollow,
     })
 
     if(Errorhandler({data,seterrmsg,setwindow}))
     return;
     else
     return;
+
+  } catch (error) {
+       console.log("relation error")
+       //seterrmsg(true);
+  }
+
+}
+
+export const Notificationreq=async(UserId)=>{
+
+  try {
+
+    const{data}=await axios.get(`notification/getrows/${UserId}`);
+    
+    console.log(data.mydata);
+
+  
 
   } catch (error) {
        console.log("relation error")

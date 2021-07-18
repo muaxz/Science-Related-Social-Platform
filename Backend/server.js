@@ -12,16 +12,22 @@ const Contentrouter=require("./routes/Contentrouter");
 const Commentrouter=require("./routes/Commentrouter");
 const Upload=require("./routes/upload");
 const UserUser=require("./models/UserUser");
-const socketio = require("socket.io");
-const server=require("http").createServer(app);
-const io=socketio(server);
+const Myserver=require("http").createServer(app);
+const io=require("socket.io")(Myserver,{cors:{origin:"*"}})
 const Userrouter=require("./routes/userrouter");
+const Notifyrouter=require("./routes/Notificationroute");
 
-io.on("connection",socket=>{
-    console.log("connection...");
-    socket.emit
+io.on("connection",(socket)=>{
+
+    console.log("connection on socket io...");
+
+    socket.on("Createrelation",async (data)=>{
+        
+        socket.emit("trial","SEND TO U");
+    })
 })
 
+app.set("socketio",io)
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(cors());
@@ -34,7 +40,8 @@ app.use(Loginrouter);
 app.use("/content",Contentrouter);
 app.use("/upload",Upload);
 app.use("/user",Userrouter);
-app.use("/comment",Commentrouter)
+app.use("/comment",Commentrouter);
+app.use("/notification",Notifyrouter);
 
 
 //default error handler
@@ -43,7 +50,7 @@ app.use((error,req,res,next)=>{
     return res.status(500).json({error:"Somethingwentwrong!"})
 })
 
-app.listen("3001",()=>{console.log("server started")})
+Myserver.listen("3001",()=>{console.log("server started")})
 
 
 

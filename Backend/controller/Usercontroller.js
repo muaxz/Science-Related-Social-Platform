@@ -8,17 +8,15 @@ const UserUsermodel=require("../models/UserUser");
 exports.getuserdata=async(req,res,next)=>{
     
     const currentuserid=req.userdata;
-
+   
     try {
 
        const Myuserdata=await Usermodel.findOne({
            where:{id:currentuserid.UserId}
        })
 
-       console.log("mydataaaaaa"+Myuserdata);
-
        if(Myuserdata){
-
+        console.log("heyyyyoooooooooooooo")
          return res.json({success:"success",userdata:Myuserdata});
 
        } 
@@ -70,6 +68,8 @@ exports.getuserprofile = async (req,res,next)=>{
 
 }
 
+
+//takip edenin mainuser oldugu edilenin
 exports.getuserprofilecontent = async(req,res,next)=>{
 
   const {UserId}=req.params;
@@ -108,6 +108,7 @@ exports.getusercount = async (req,res,next)=>{
         UserforuserId:UserId,
       }
     })
+   
 
     const Followedcount = await UserUsermodel.count({
        where:{
@@ -135,16 +136,26 @@ exports.getusercount = async (req,res,next)=>{
 
 exports.createuserrelation=async (req,res,next)=>{
   
-  const {FollowerId,FollowedId} =req.body;
-
+  const {FollowerId,FollowedId,checkiffollow} =req.body;
+  //follower ıd is our current active user
   try {
-
-     await UserUsermodel.create({
-       FollowerId:FollowerId,
-       FollowedId:FollowedId,
-       Follower:FollowerId,
-       Followed:FollowedId,
-     })
+     if(checkiffollow){
+      await UserUsermodel.destroy({
+        where:{FollowerId:FollowerId,FollowedId:FollowedId}
+      })
+     }
+     else{
+      await UserUsermodel.create({
+        FollowerId:FollowerId,
+        FollowedId:FollowedId,
+        Follower:FollowerId,
+        Followed:FollowedId,
+        Active:{
+          Post:false,
+          Debate:false,
+        }
+      })
+     }
 
      res.json({data:"success"})
 

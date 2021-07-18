@@ -6,7 +6,7 @@ const Content=require("./Contentmodel");
 
 
 const Notification=sequlize.define("Notification",{
-    
+
     id:{
         type:Sequlize.INTEGER,
         allownull:false,
@@ -18,7 +18,13 @@ const Notification=sequlize.define("Notification",{
       values:["Like","Followcontent","FollowComment","Replytocontent"]
     },
     TakerId:{
-        type:Sequlize.INTEGER,
+        type:Sequlize.TEXT,
+        get:function(){ 
+            return  this.getDataValue("TakerId").split(",");
+        },
+        set:function(value){
+            return this.setDataValue("TakerId",value.join());
+        }
     }
 })
 

@@ -14,12 +14,15 @@ exports.login=async (req,res,next)=>{
       const mydata={
          UserId:user.id,
          Username:user.firstname,
-         Usersurname:user.surname,
+         Usersurname:user.lastname,
          Userrole:user.role,
          Userimage:user.imageurl,
       }
+
+      console.log("heyyyyyooooooo buradaaaaaa");
       
       if(user){
+         
          
           await bcrypt.compare(password,user.password,(err,result)=>{
             console.log(result);
@@ -54,7 +57,7 @@ exports.login=async (req,res,next)=>{
 
 //---------------------------------------------------------------------------------
 
-exports.register=async (req,res)=>{
+exports.register=async (req,res,next)=>{
 
   const  {name,surname,email,password}=req.body.userdata;
    console.log(email);
@@ -92,6 +95,7 @@ exports.register=async (req,res)=>{
   catch(err){
       
      next();
+     console.log(err);
      return;
   }
 

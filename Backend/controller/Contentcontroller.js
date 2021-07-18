@@ -3,6 +3,7 @@ const User=require("../models/Usermodel");
 const Usercontent=require("../models/UserContent");
 const Comment=require("../models/Commentmodel");
 const Seq=require("sequelize");
+const Notification=require("../models/Notificationmodel");
 
 
 
@@ -98,8 +99,9 @@ exports.gethome=async(req,res,next)=>{
 exports.createrelation=async (req,res,next)=>{
 
   try {
-
-    const {UserId,PostId,attribute,relationtype}=req.body; 
+    
+    const io =req.app.get("socketio");
+    const {UserId,PostId,attribute,relationtype,UserIdofcontent}=req.body; 
    
    
     if(relationtype == "Destroy"){
@@ -113,6 +115,8 @@ exports.createrelation=async (req,res,next)=>{
         Useruserid:UserId,
       }
       })
+     
+    
       
     }
     else{
@@ -125,7 +129,19 @@ exports.createrelation=async (req,res,next)=>{
         Useruserid:UserId,
       })
 
+      await Notification.create({
+         attribute:"Like",
+         TakerId:[`${UserIdofcontent}`],
+         ContentId:PostId,
+         UserId:UserId,
+      })
+
+      io.emit("Notify","Notife edildi")
+      
+
     } 
+
+
 
     res.json({state:"success"})
 
@@ -172,6 +188,7 @@ exports.getusercontent=async(req,res,next)=>{
 
   } catch (error){
     console.log(error);
+    next();
     return;
   }
 }
@@ -180,7 +197,6 @@ exports.getusercontent=async(req,res,next)=>{
 exports.getcontent=async (req,res,next)=>{
 
   const {id}=req.params;
- 
 
   try {
     //TODO including comments and users (with nested include)
