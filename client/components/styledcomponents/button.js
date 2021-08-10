@@ -25,10 +25,7 @@ export const Global=createGlobalStyle`
  }
 
  body {
-    
-    background-color:#F0F0F0;
-    height:100%;
-   
+  height:100%;
  }
 `
 
@@ -37,6 +34,7 @@ width:${width};
 height:${height};
 background-color:white;
 border-radius:50%;
+cursor:pointer;
 background-image:url(${profile});
 background-size: cover;
 background-repeat: no-repeat;

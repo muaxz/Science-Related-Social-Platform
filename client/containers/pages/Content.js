@@ -85,7 +85,9 @@ export default function Content({id}){
             seterrmsg:seterrmsg,
         });      
 
-    },[])
+    },[id])
+
+  
    
     useEffect(()=>{
 
@@ -98,7 +100,7 @@ export default function Content({id}){
             seterrmsg:seterrmsg,
         })
 
-    },[numberofcomment])
+    },[numberofcomment,id])
     
     const Produce=(message)=>{
 
@@ -106,6 +108,7 @@ export default function Content({id}){
             ContentId:id,
             UserId:userdata.UserId,
             Message:message,
+            TakerId:content.personal.id,
             setnumbercom:setnumbercom,
             seterrmsg:seterrmsg,
         })

@@ -21,9 +21,9 @@ position:relative;
 margin:auto;
 margin-bottom:30px;
 width:100%;
-background-color:${({iscomment})=>!iscomment ? "white": "white"};
+background-color:${({iscomment})=>!iscomment ? "#faf9f9": "#faf9f9"};
 border-radius:7px;
-box-shadow: 0 3px 3px rgba(0,0,0,0.2);
+box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 `
 const Imagediv=styled.div`
 padding-right:5px;
@@ -206,7 +206,8 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
                
             !iscomment ?  
                 
-            <div style={{backgroundColor:"red"}} ref={ref}>         
+            <div style={{backgroundColor:"red"}} ref={ref}>   
+      
                 <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
                 {
                     visible ?

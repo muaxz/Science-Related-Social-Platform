@@ -2,6 +2,7 @@ const Usercontent = require("../models/UserContent");
 const Usermodel=require("../models/Usermodel");
 const Contentmodel=require("../models/Contentmodel");
 const UserUsermodel=require("../models/UserUser");
+const Notificationmodel=require("../models/Notificationmodel");
 
 
 
@@ -137,14 +138,18 @@ exports.getusercount = async (req,res,next)=>{
 exports.createuserrelation=async (req,res,next)=>{
   
   const {FollowerId,FollowedId,checkiffollow} =req.body;
+  const io = req.app.get("socketio");
   //follower ıd is our current active user
   try {
      if(checkiffollow){
+
       await UserUsermodel.destroy({
         where:{FollowerId:FollowerId,FollowedId:FollowedId}
       })
+
      }
      else{
+
       await UserUsermodel.create({
         FollowerId:FollowerId,
         FollowedId:FollowedId,
@@ -155,6 +160,16 @@ exports.createuserrelation=async (req,res,next)=>{
           Debate:false,
         }
       })
+
+      await Notificationmodel.create({
+        attribute:"Follow",
+        TakerId:[`${FollowedId}`],
+        UserId:FollowerId,
+      })
+
+      io.emit("Notification","notify");
+      //burada tekrar tetikliyoruz
+
      }
 
      res.json({data:"success"})

@@ -1,15 +1,16 @@
 const Content=require("../models/Contentmodel");
 const Comment=require("../models/Commentmodel");
 const User = require("../models/Usermodel");
+const Notificationmodel=require("../models/Notificationmodel");
 
 
 
 exports.produce=async (req,res,next)=>{
- 
-        const {contentdata:{Message,ContentId,UserId}}=req.body;
-
+        //content-userId gerekli
+        const {contentdata:{Message,ContentId,UserId,TakerId}}=req.body;
+        const io = req.app.get("socketio");
       
-        console.log("messssssage"+Message);
+        console.log("messser.jssssage"+Message);
       
         try {  
       
@@ -18,6 +19,18 @@ exports.produce=async (req,res,next)=>{
              ContentId:ContentId,
              UserId:UserId
           })
+          
+          
+         await Notificationmodel.create({
+            attribute:"Comment",
+            TakerId:[`${TakerId}`],
+            ContentId:ContentId,
+            UserId:UserId,
+         })
+         //istek yapılıp eklendikten sonra trigger
+
+         io.emit("Notification","notify");
+      
 
         }catch(err){
 

@@ -1,11 +1,13 @@
-import React, { useState,useContext} from 'react'
+import React, { useState,useContext, useEffect , useRef} from 'react'
 import styled,{keyframes} from "styled-components";
 import {Porfileimage} from "../../styledcomponents/button";
 import Navtools from "./Navigationtools";
-import useClickoutside from '../../../hooks/Clikcoutisde';
+import useClickoutsie from '../../../hooks/Clikcoutisde';
+import useScroll from "../../../hooks/Scroll"
 import {createusercontext} from "../../../context/Usercontext";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
+import {UpdateNotificationcount} from "../../../Api/Api"
 import { AccountCircle, Home} from '@material-ui/icons';
 
 
@@ -60,7 +62,7 @@ const Iconholder=styled.div`
 position:relative;
 margin-right:10px;
 cursor:pointer;
-background-color:${({clicked})=>clicked ? "#00b4d8" : ""};
+background-color:${({clicked})=>clicked ? "" : ""};
 padding:2px;
 border-radius:50%;
 transition:0.3s;
@@ -102,6 +104,8 @@ transform:translate(50%,-50%);
 const Optionwindow=styled.div`
 position:absolute;
 top:60px;
+height:${({fornotify})=>fornotify ? "400px" : ""};
+overflow-y:scroll;
 padding:8px;
 right:0px;
 width:350px;
@@ -115,30 +119,46 @@ const Inneroption=styled.div`
 `
 
 
-export default function Navigation(){
+export default function Navigation({Data,Count,Reloadfunc,Update}){
  
 
-    const {logged,spinner}=useContext(createusercontext);
-    const {ref,visible,setvisible} = useClickoutside();
-    const [toolnumber,settoolnumber]=useState(0);
-    const [Iconumber,setıconnumber]=useState(0);
-    const [Iconobject,setIconobject]=useState({
+    const {logged,spinner,userdata} = useContext(createusercontext);
+    const {ref,visible,setvisible} = useClickoutsie();
+    const  Myref = useRef();
+    const [ordernumber,setordernumber]=useState(10);
+    const [Iconumber,setıconnumber] = useState(0);
+    const [Iconobject,setIconobject] = useState({
         1:{
           className:"fas fa-plus",
           onoff:false,
-          lineheight:'36px'
+          lineheight:'36px',
+          short:"plus"
+          
         },
         2:{
           className:"fas fa-bell",
           onoff:false,
-          lineheight:'36px'
+          lineheight:'33px',
+          short:"bell",
+          Oncerequested:false,
         },
         3:{
           className:"fas fa-sort-down",
           onoff:false,
-          lineheight:'30px'
-        }
+          lineheight:'30px',
+          short:"down"
+
+        },
     })
+    
+
+    const ScrolltoBottom=()=>{
+
+        if(Myref.current.scrollTop + Myref.current.offsetHeight >= Myref.current.scrollHeight){
+            Reloadfunc(ordernumber+Data.length);
+        }
+
+    }
 
     const Iconselect=(iconnumber)=>{
       
@@ -169,31 +189,40 @@ export default function Navigation(){
         
     }
 
-    if(!visible){
+  
+    
+    //ToDo rewrite this code
+  
 
-        const myobject={...Iconobject};
-        Object.keys(myobject).forEach(key =>{ 
-            myobject[key].onoff=false;
-        });
+    const Iconclick=(item,shortname)=>{
 
-        setIconobject(myobject);
-        setvisible(true); 
-        setıconnumber(0);
-
+        var Iconobj = {...Iconobject};
+        
+        Update();
+        if(shortname == "bell" &&  Iconobject["2"].Oncerequested == false){
+            Reloadfunc(ordernumber+Data.length);
+            console.log(Data.length);
+            const Iconobj = {...Iconobject};
+            Iconobj[2].Oncerequested = true;
+            setIconobject(Iconobj);
+            //burada sadece 1 kez istek yapılıcak
+        }
+    
+        Iconselect(item);
     }
 
     return (
-        <Navbarext >
+        <Navbarext>
             <InnerNavbar>
                 <InputHolder flex={"block"}>
-                <Link href="/">
-                    <div style={{display:"flex",alignItems:"center",cursor:"pointer"}}>
-                        <Porfileimage profile="https://evrimagaci.org/public/images/logo/v3.svg?v=1" width="40px" height="40px">
-                        </Porfileimage>
-                        <div style={{marginLeft:"10px",paddingRight:"10px",borderRight:"1px solid black"}}><span>Evrim Ağacı</span></div>
-                        <div style={{marginLeft:"10px",display:"flex",alignItems:"center"}}><Home style={{fontSize:"30px",color:"#c9184a"}}></Home></div>
-                    </div>
-                </Link>
+                    <Link href="/">
+                        <div style={{display:"flex",alignItems:"center",cursor:"pointer"}}>
+                            <Porfileimage profile="https://evrimagaci.org/public/images/logo/v3.svg?v=1" width="40px" height="40px">
+                            </Porfileimage>
+                            <div style={{marginLeft:"10px",paddingRight:"10px",borderRight:"1px solid black"}}><span>Evrim Ağacı</span></div>
+                            <div style={{marginLeft:"10px",display:"flex",alignItems:"center"}}><Home style={{fontSize:"30px",color:"#c9184a"}}></Home></div>
+                        </div>
+                    </Link>
                 </InputHolder>
                 <InputHolder  flex2={"none"} flex={false}>
                     <Input placeholder="Ara"></Input>
@@ -218,28 +247,35 @@ export default function Navigation(){
 
                    :
 
-                        <InputHolder  flex2={"flex"} ref={ref} flex={"flex"}>
+                    <InputHolder  flex2={"flex"} ref={ref} flex={"flex"}>
                         {
                             Object.keys(Iconobject).map((item)=>{
                                 return (
-                                    <Iconholder clicked={Iconobject[item].onoff} onClick={()=>Iconselect(item)}>
+                                    <Iconholder clicked={Iconobject[item].onoff} onClick={()=>Iconclick(item,Iconobject[item].short)}>
                                         <span style={{display:"block",backgroundColor:"#F0F0F0",borderRadius:"50%",width:"35px",height:"35px",textAlign:"center",lineHeight:Iconobject[item].lineheight}}>
-                                            <i className={Iconobject[item].className}></i>
+                                            <i className={Iconobject[item].className} style={{color:Count > 0 && Iconobject[item].short == "bell" ? "#d90429" : ""}}></i>
                                             {
-                                                /*<span style={{position:"absolute",width:"20px",display:"block",height:"20px",textAlign:"center",lineHeight:"20px",backgroundColor:"red",color:"white",borderRadius:"50%"}}>3</span> : "" */
+                                                Iconobject[item].short == "bell" && Count > 0 ?
+                                                (<span style={{position:"absolute",fontSize:"12px",top:"-5px",right:"-5px",width:"20px",display:"block",height:"20px",textAlign:"center",lineHeight:"20px",backgroundColor:"#d90429",color:"white",borderRadius:"50%"}}>{Count}</span>) : null
                                             }
                                         </span>
                                     </Iconholder>
                                 )
                             })
+                            
                         }
+
+                         <Link href="/profile/[username]" as={`/profile/${userdata.UserId}`}> 
+                           <Porfileimage width="35px" height="35px" profile="/car.jpg"/>
+                         </Link>
+                         
                         {
                         
                             Iconumber !== 0 && visible == true ?
-                            <Optionwindow>
-                                    <Inneroption>
-                                    <Navtools optnumber={Iconumber}></Navtools>
-                                    </Inneroption>
+                            <Optionwindow onScroll={ScrolltoBottom} ref={Myref} fornotify={Iconobject["2"].onoff}>
+                                <Inneroption>
+                                    <Navtools Navdata={Data} optnumber={Iconumber}></Navtools>
+                                </Inneroption>
                             </Optionwindow> : null
                         }  
                         

@@ -51,6 +51,11 @@ exports.gethome=async(req,res,next)=>{
           model:User,
           as:"Like",
           attributes:["id","firstname","lastname","imageurl","Role"],
+          include:{
+            model:User,
+            as:"Followed",
+            attributes:["id"]
+          },
           through:{
             where:{attribute:"Like"},
             attributes:["attribute"]
@@ -69,6 +74,11 @@ exports.gethome=async(req,res,next)=>{
           model:User,
           as:"Retweet",
           attributes:["id","firstname","lastname","imageurl","Role"],
+          include:{
+            model:User,
+            as:"Followed",
+            attributes:["id"]
+          },
           through:{
             where:{attribute:"Reshow"},
             attributes:["attribute"]
@@ -94,13 +104,14 @@ exports.gethome=async(req,res,next)=>{
     next();
     return;
   }
+
 }
 
 exports.createrelation=async (req,res,next)=>{
 
   try {
     
-    const io =req.app.get("socketio");
+    const io = req.app.get("socketio");
     const {UserId,PostId,attribute,relationtype,UserIdofcontent}=req.body; 
    
    
@@ -128,16 +139,21 @@ exports.createrelation=async (req,res,next)=>{
         Contentuserid:PostId,
         Useruserid:UserId,
       })
-
-      await Notification.create({
-         attribute:"Like",
-         TakerId:[`${UserIdofcontent}`],
-         ContentId:PostId,
-         UserId:UserId,
-      })
-
-      io.emit("Notify","Notife edildi")
       
+      //burada sadece like ve retweet için bildirim ayarlayabiliri
+      //ToDo change enum values in not.. model
+      if(attribute == "Like" || attribute == "reshow")
+      {
+        await Notification.create({
+            attribute:attribute,
+            TakerId:[`${UserIdofcontent}`],
+            ContentId:PostId,
+            UserId:UserId,
+        })
+
+        io.emit("Notification","notify");
+        
+      }
 
     } 
 

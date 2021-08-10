@@ -77,8 +77,7 @@ bottom:10px;
 right:10px;
 `
 
-var Controller=true;
-var number=0;
+
 export default function Profile({Mydata,query}){
     
     const{userdata}=useContext(createusercontext);
@@ -106,7 +105,7 @@ export default function Profile({Mydata,query}){
     })
 
 
-    console.log(number++);
+
     
     useEffect(()=>{
         
@@ -149,7 +148,7 @@ export default function Profile({Mydata,query}){
 
     },[query])
 
-    console.log(profiledata)
+    
 
     const Followingrequest=()=>{
 
@@ -185,20 +184,24 @@ export default function Profile({Mydata,query}){
             <Innerdiv>
                 <Imagesection>
                     <BackgroundImage/> 
-                    <ButtonHolder>
-                        {
-                            beingfollowed && 
+                    {
+                            !checkuserid && userdata.UserId &&
 
-                            notificationactive ? 
-                            
-                            (<NotificationsActive style={{color:"white",marginRight:"10px",cursor:"pointer"}} onClick={()=>setnotificationactive(false)}></NotificationsActive>)
+                            (<ButtonHolder>
+                                {
+                                    beingfollowed && 
 
-                            :
+                                    notificationactive ? 
+                                    
+                                    (<NotificationsActive style={{color:"white",marginRight:"10px",cursor:"pointer"}} onClick={()=>setnotificationactive(false)}></NotificationsActive>)
 
-                            (<Notifications style={{color:"white",marginRight:"10px",cursor:"pointer"}} onClick={()=>setnotificationactive(true)}></Notifications>)
-                        }
-                       <Button onClick={()=>Followingrequest(beingfollowed)} style={{color:"white",backgroundColor:"#0ead69",textTransform:"none"}} variant="contained">{beingfollowed ? "Takipten Çık" : "Takip Et"}</Button>
-                    </ButtonHolder>
+                                    :
+
+                                    (<Notifications style={{color:"white",marginRight:"10px",cursor:"pointer"}} onClick={()=>setnotificationactive(true)}></Notifications>)
+                                }
+                            <Button onClick={()=>Followingrequest(beingfollowed)} style={{color:"white",backgroundColor:"#0ead69",textTransform:"none"}} variant="contained">{beingfollowed ? "Takipten Çık" : "Takip Et"}</Button>
+                        </ButtonHolder>)
+                    }     
                 </Imagesection>
                 <Contentpart>
                      <Usersection>

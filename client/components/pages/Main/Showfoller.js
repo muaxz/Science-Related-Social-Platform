@@ -2,6 +2,7 @@ import React from 'react'
 import {Black} from "../../styledcomponents/button";
 import styled from "styled-components";
 import Usercard from "../../shared/Usercard";
+import {Createuserrelation} from "../../../Api/Api"
 
 const Rtlikewindow=styled.div`
 position:absolute;
@@ -24,21 +25,33 @@ overflow:auto;
 `
 
 export default function Showfollower({list,setlist}) {
+    
+    const Followingrelation = (checkfollow,UserId,followedid) =>{
+
+        Createuserrelation({
+            UserId:UserId,
+            FollowedId:followedid,
+            checkiffollow:checkfollow
+        })
+
+    }
+
     return (
         <div>
                 <Black onClick={setlist} aktif={true}></Black>
                 <Rtlikewindow>
                     <div style={{height:"40px",width:"95%",margin:"auto",display:"flex",alignItems:"center",justifyContent:"flex-end"}}>
-                      
                         <i onClick={setlist}  style={{color:"white",cursor:"pointer"}} className="fas fa-times-circle fa-lg"></i>
-                       
                     </div>
                     <Innerwindow>
                         {list.map(item=>(
                             <Usercard 
                             optionforbutton={true}
-                            firstname={item.name}
-                            imageurl={item.lastname}
+                            firstname={item.firstname}
+                            surname={item.lastname}
+                            userid={item.id}
+                            followerlist={item.Followed}
+                            Relationfunc={Followingrelation}
                             ></Usercard>
                         ))}
                     </Innerwindow>

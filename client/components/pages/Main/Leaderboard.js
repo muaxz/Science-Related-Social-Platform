@@ -121,7 +121,7 @@ export default function Leaderboard({list}){
                    <Slider  {...settings}>
                        {
                             [{name:"Uzay neden gizemli? İnsanlar bu konuda ne yapmalı?",image:"/yaprak.jpg"},{name:"Resim ve Düşüncenin insanın fizyolohisine etkisi.",image:"/led.jpg"},{name:"İçimizdeki Sönmeyen Ateşi bulabilir miyiz?",image:"/yaprak.jpg"},{name:"Son Krallık",image:"/car.jpg"},{name:"Sadık",image:"/car.jpg"},{name:"Sadık",image:"/car.jpg"}].map((item,index)=>(
-                               <Contentdiv image={item.image}>
+                               <Contentdiv key={index} image={item.image}>
                                    <p style={{color:"white"}}>{item.name}</p>
                                </Contentdiv>
                             ))

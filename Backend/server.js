@@ -17,14 +17,8 @@ const io=require("socket.io")(Myserver,{cors:{origin:"*"}})
 const Userrouter=require("./routes/userrouter");
 const Notifyrouter=require("./routes/Notificationroute");
 
-io.on("connection",(socket)=>{
-
+io.on("connection",(socket)=>{ 
     console.log("connection on socket io...");
-
-    socket.on("Createrelation",async (data)=>{
-        
-        socket.emit("trial","SEND TO U");
-    })
 })
 
 app.set("socketio",io)

@@ -19,8 +19,6 @@ export default function Liked({content}) {
     )
 }
 
-
-
 export async function getServerSideProps({query}){
 
     try {

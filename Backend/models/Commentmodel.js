@@ -6,6 +6,7 @@ const Comment=sequlize.define("Comment",{
         type: Sequlize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
+        allownull:false,
     },
     Message:{
         type:Sequlize.STRING,

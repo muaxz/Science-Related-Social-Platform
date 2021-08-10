@@ -3,7 +3,6 @@ import Contentcard from "../../components/shared/Contentcard";
 import styled from "styled-components";
 import {Homereq,Createrelationreq,Notificationreq} from "../../Api/Api";
 import {createusercontext} from "../../context/Usercontext";
-import io from "socket.io-client";
 import {FormControl,InputLabel,Select,MenuItem,Button} from "@material-ui/core"
 import {makeStyles} from "@material-ui/core/styles"
 import Showfollower from "../../components/pages/Main/Showfoller";
@@ -33,7 +32,6 @@ const ContentDiv=styled.div`
 `
 
 
-const socket=io("http://localhost:3001");
 
 export default function Home({mydata}){
    
@@ -53,9 +51,8 @@ export default function Home({mydata}){
     useEffect(()=>{
 
 
-        
-        if(userdata.UserId);
-        Notificationreq(userdata.UserId)
+        //TODO MOVE THİS TO LAYOUT FİLE
+       
 
 
         if(!stoprequesting && bottom){
@@ -73,10 +70,9 @@ export default function Home({mydata}){
         }
 
     },[order])
+
+  
     
-    const sendiorequest=()=>{
-        socket.emit("message","");
-    }
 
     useEffect(()=>{
         
@@ -103,7 +99,7 @@ export default function Home({mydata}){
     return (
         <div> 
             <div style={{paddingLeft:"115px"}}>
-                <button onClick={sendiorequest}>İO REQUEST</button>
+                
                 <div style={{textAlign:"center",display:"flex",justifyContent:"center"}}>
                     {
                         spinner ? <Spinner></Spinner> : null
@@ -145,7 +141,6 @@ export default function Home({mydata}){
                         ))
                         }
                     </ContentDiv>
-                    <Leaderboard></Leaderboard>
                 </Flexdiv>
            </div>
         </div>

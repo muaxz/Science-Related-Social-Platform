@@ -15,7 +15,7 @@ const Notification=sequlize.define("Notification",{
     },
     attribute:{
       type:Sequlize.ENUM,
-      values:["Like","Followcontent","FollowComment","Replytocontent"]
+      values:["Like","Reshow","Follow","Comment","Post","Debate"]
     },
     TakerId:{
         type:Sequlize.TEXT,
@@ -25,7 +25,13 @@ const Notification=sequlize.define("Notification",{
         set:function(value){
             return this.setDataValue("TakerId",value.join());
         }
+    },
+    //migrationda ekledigini burada eklemek zorundasın
+    Facecheck:{
+        type:Sequlize.BOOLEAN,
+        defaultValue:false,
     }
+   
 })
 
 Notification.belongsTo(Content)

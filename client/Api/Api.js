@@ -102,7 +102,7 @@ export const producereq=async({contentdata,seterrmsg,setwindow,router})=>{
 
 }
 
-export const Producecommentreq=async ({Message,setnumbercom,setwindow,UserId,ContentId,seterrmsg})=>{
+export const Producecommentreq=async ({Message,TakerId,setnumbercom,setwindow,UserId,ContentId,seterrmsg})=>{
 
   try{
     
@@ -110,6 +110,7 @@ export const Producecommentreq=async ({Message,setnumbercom,setwindow,UserId,Con
       Message:Message,
       UserId:UserId,
       ContentId:ContentId,
+      TakerId:TakerId,
     }})
     
     if(Errorhandler({data,seterrmsg})){    
@@ -268,7 +269,7 @@ export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwi
  
 
   } catch (err) {
-      console.log("errorburadaduruyor");
+    console.log("errorburadaduruyor");
   }
 }
 
@@ -288,7 +289,7 @@ export const Getusercontent=async({UserId,params,setdata,setwindow,seterrmsg,ord
        const Current=[...currentdata];
        const Mydata=[...data.data];
       //push metodu bir diziyi bi  r dizinin içine pushluyor fakat concat elemanları
-       setdata(Mydata);
+       setdata(Current.concat(Mydata));
        
     }    
     else if(data == "Unauthroized"){
@@ -303,6 +304,17 @@ export const Getusercontent=async({UserId,params,setdata,setwindow,seterrmsg,ord
        console.log(error);
        
   }
+
+}
+
+export const UpdateNotificationcount=async()=>{
+
+   try {
+      await axios.get("/notification/update");
+
+   } catch (error) {
+      //
+   }
 
 }
 
@@ -382,15 +394,38 @@ export const Createuserrelation=async({UserId,FollowedId,checkiffollow})=>{
 
 }
 
-export const Notificationreq=async(UserId)=>{
+export const Notificationreq=async({UserId,setnavdata,order,navdata})=>{
 
   try {
+    console.log(UserId);
 
-    const{data}=await axios.get(`notification/getrows/${UserId}`);
-    
+    const{data}=await axios.get(`notification/getrows/${UserId}/${order}`);
     console.log(data.mydata);
+    const Mycurrentdata=[...navdata];
+    const Newdata=data.mydata;
+    setnavdata(Mycurrentdata.concat(Newdata));
+    
+    
 
   
+
+  } catch (error) {
+       console.log("relation error")
+       //seterrmsg(true);
+  }
+
+}
+
+export const NotificationCountreq=async({UserId,setcountdata})=>{
+
+  try {
+    console.log(UserId);
+
+    const{data}=await axios.get(`notification/getcount/${UserId}`);
+
+    setcountdata(data.data);
+ 
+    console.log(data.mydata);
 
   } catch (error) {
        console.log("relation error")
