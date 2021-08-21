@@ -3,6 +3,7 @@ const User=require("../models/Usermodel");
 const Usercontent=require("../models/UserContent");
 const Comment=require("../models/Commentmodel");
 const Seq=require("sequelize");
+const UserUser = require("../models/UserUser");
 const Notification=require("../models/Notificationmodel");
 
 
@@ -15,7 +16,7 @@ exports.produce=async (req,res,next)=>{
 
   try {  
 
-    await Content.create({
+    const Obj = await Content.create({
         title:title,
         subtitle:subtitle,
         content:content,
@@ -23,7 +24,35 @@ exports.produce=async (req,res,next)=>{
         UserforuserId:UserId,
         UserforcontentId:UserId,
     })
-      return res.json({state:"success"});
+
+    
+     
+    //....................
+    //produce için değil editör postu public yaptıgında gelen bildirim bu olucak
+    
+    const Followerofcontentuser = await UserUser.findAll({
+      where:{
+      FollowedId:UserId,
+    }})
+    
+    const Editdarray = [];
+
+    for (let i = 0; i < Followerofcontentuser.length; i++){
+
+        Editdarray[i] = Followerofcontentuser[i].FollowerId; //burada gelen her bir objenin followed ıd sini yeni bir arraya koyuyoruz
+
+    }
+     //taker ıd burada "current" kişiyi takip edenlerin bildirimi "post notification" açık olan kişiler.
+     await Notification.create({
+            attribute:"Post",
+            TakerId:Editdarray,
+            ContentId:Obj.dataValues.id,
+            UserId:UserId,
+         })
+
+    
+    return res.json({state:"success"});
+
   }catch(err){
       next();
       console.log(err)
@@ -46,6 +75,7 @@ exports.gethome=async(req,res,next)=>{
       attributes:["id","titleimage","title","subtitle","content","createdAt","updatedAt"],
       limit:newnum,
       offset:newnum-10,
+      order:Seq.literal("rand()"),
       include:[
         {
           model:User,
@@ -142,22 +172,28 @@ exports.createrelation=async (req,res,next)=>{
       
       //burada sadece like ve retweet için bildirim ayarlayabiliri
       //ToDo change enum values in not.. model
-      if(attribute == "Like" || attribute == "reshow")
-      {
-        await Notification.create({
-            attribute:attribute,
-            TakerId:[`${UserIdofcontent}`],
-            ContentId:PostId,
-            UserId:UserId,
-        })
+      //burada userıd ve yapılan contentin ıd si eşitse notification üretme diyoruz
+      if(UserId !== UserIdofcontent){
 
-        io.emit("Notification","notify");
-        
+          if(attribute == "Like" || attribute == "reshow")
+          {
+            await Notification.create({
+                attribute:attribute,
+                TakerId:[`${UserIdofcontent}`],
+                ContentId:PostId,
+                UserId:UserId,
+            })
+    
+            
+            //ToDo changable
+            io.emit("Notification","");
+            
+          }
+
       }
+      
 
     } 
-
-
 
     res.json({state:"success"})
 
@@ -170,7 +206,6 @@ exports.createrelation=async (req,res,next)=>{
 exports.getusercontent=async(req,res,next)=>{
 
   const {catagory,id,order}=req.params;
-  console.log("CATOGERYYYY"+order)
   var latestparams="";
   var newnum=parseInt(order);
 

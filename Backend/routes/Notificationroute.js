@@ -3,9 +3,9 @@ const router=express.Router();
 const controller=require("../controller/notification");
 
 
-router.get("/getrows/:UserId/:Order",controller.getrows);
+router.get("/getrows/:UserId/:Order/:last",controller.getrows);
 router.get("/getcount/:UserId",controller.getcount);
-router.get("/update",controller.Updatecount);
+router.get("/update/:UserId",controller.Updatecount);
 
 
 

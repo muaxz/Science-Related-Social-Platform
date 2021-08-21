@@ -53,7 +53,7 @@ export default function Navigationtools({optnumber,optname,Navdata}){
             {name:"Reshow",idname:"ContentId",desc:"Senin Gönderini İşaretledi.",Icon:"fas fa-thumbtack",color:"#adb5bd",lh:"35px",href:"/content"},
             {name:"Follow",idname:"UserId",desc:"Seni Takip Etti",Icon:"fas fa-user-plus fa-sm",color:"#ee6055",lh:"30px",href:"/profile"},
             {name:"Comment",idname:"ContentId",desc:"Gönderine Yorum Yaptı.",Icon:"fas fa-comment-dots",color:"#adb5bd",lh:"30px",href:"/content"},
-            {name:"Post",desc:"Yeni Bir Gönderi Paylaştı",Icon:""},
+            {name:"Post",desc:"Yeni Bir Gönderi Paylaştı",Icon:"fas fa-edit",color:"#fca311",lh:"30px"},
             {name:"Debate",desc:"Yeni Bir grup Oluşturdu.",Icon:""}];
 
         if(Navdata.length == 0)

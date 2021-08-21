@@ -42,6 +42,7 @@ exports.getuserprofile = async (req,res,next)=>{
   console.log("getuserpfoile İÇİNDEE" + UserId)
   try {
      //kullanıcı bilgileri
+     //first 10 request
      const Myuserdata=await Usermodel.findOne({
          where:{id:UserId},
          include:[{
@@ -54,6 +55,11 @@ exports.getuserprofile = async (req,res,next)=>{
          {
            model:Usermodel,
            as:"Followed",
+           attributes:["id"]
+         },
+         {
+           model:Usermodel,
+           as:"Follower",
            attributes:["id"]
          }
         ]
@@ -160,7 +166,8 @@ exports.createuserrelation=async (req,res,next)=>{
           Debate:false,
         }
       })
-
+      
+      //burada zaten aynı kişiye takip atamaz
       await Notificationmodel.create({
         attribute:"Follow",
         TakerId:[`${FollowedId}`],

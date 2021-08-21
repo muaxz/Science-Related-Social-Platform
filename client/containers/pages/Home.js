@@ -26,6 +26,15 @@ justify-content:space-between;
 max-width:1250px;
 width:100%;
 `
+const TitleDiv=styled.div`
+width:90%;
+height:300px;
+background-color:red;
+background-image:url(/led.jpg);
+background-size: cover;
+background-repeat: no-repeat;
+background-position: center; 
+`
 
 const ContentDiv=styled.div`
 
@@ -83,8 +92,6 @@ export default function Home({mydata}){
 
     const createrelation=(postId,attribute,typeofrelation,userid)=>{
         
-        console.log(attribute,postId)
-
         Createrelationreq({
             UserId:userdata.UserId,
             PostId:postId,
@@ -97,9 +104,11 @@ export default function Home({mydata}){
    
 
     return (
-        <div> 
+        <div style={{height:`${list.length > 0 ? "100vh" : "100%"}`,overflow:"hidden"}}> 
             <div style={{paddingLeft:"115px"}}>
-                
+                <TitleDiv>
+                     
+                </TitleDiv>
                 <div style={{textAlign:"center",display:"flex",justifyContent:"center"}}>
                     {
                         spinner ? <Spinner></Spinner> : null
@@ -113,7 +122,7 @@ export default function Home({mydata}){
                 
                 }
                 <Flexdiv>
-                    <ContentDiv style={{padding:"10px",maxWidth:"650px",height:`${list.length > 0 ? "100vh" : "100%"}`,overflow:"hidden"}}>
+                    <ContentDiv style={{padding:"10px",maxWidth:"650px"}}>
                         {
                     
                         contentdata.length &&

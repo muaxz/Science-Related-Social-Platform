@@ -7,7 +7,8 @@ import Contentcard from "../../components/shared/Contentcard";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
 import { Notifications, NotificationsActive } from '@material-ui/icons';
-import router from 'next/router';
+import router, { useRouter } from 'next/router';
+import axious from "axios"
 
 const Exteriordiv=styled.div`
 max-width:1400px;
@@ -66,6 +67,7 @@ padding:20px;
 const Options=styled.div`
 cursor:pointer;
 transition:all 0.1s;
+font-weight:600;
 color:${({applyborder})=>applyborder ? "#d62828" : "black"};
 `
 
@@ -77,10 +79,15 @@ bottom:10px;
 right:10px;
 `
 
+const P = styled.p`
+font-weight:600;
+`
 
-export default function Profile({Mydata,query}){
+
+export default function Profile({Mydata,Counts,query}){
     
     const{userdata}=useContext(createusercontext);
+    const route = useRouter();
     const[contentdata,setcontentdata]=useState([...Mydata.personal]);
     const[order,setorder]=useState(10);
     const[profiledata,setprofiledata]=useState({...Mydata})
@@ -92,7 +99,7 @@ export default function Profile({Mydata,query}){
     const[options,setoptions]=useState({
         Post:{
             name:"Gönderiler",
-            bottom:false,
+            bottom:true,
         },
         Like:{
             name:"Beğeniler",
@@ -106,10 +113,10 @@ export default function Profile({Mydata,query}){
 
 
 
-    
+
     useEffect(()=>{
-        
-        if(userdata.UserId == profiledata.id){
+         
+        if(userdata.UserId == query.username){
              
 
             setcheckuserid(true);
@@ -139,7 +146,7 @@ export default function Profile({Mydata,query}){
 
         }
     
-    },[userdata])
+    },[userdata,query])
 
     useEffect(()=>{
 
@@ -184,7 +191,8 @@ export default function Profile({Mydata,query}){
             <Innerdiv>
                 <Imagesection>
                     <BackgroundImage/> 
-                    {
+                    {       //burada context userId yok ise buna izin vermiyorum ancak setstate oldugunda gösterim var
+                            //TODO this should be fixed during navigaiton
                             !checkuserid && userdata.UserId &&
 
                             (<ButtonHolder>
@@ -207,19 +215,19 @@ export default function Profile({Mydata,query}){
                      <Usersection>
                          <Porfileimage style={{position:"absolute",top:"-150px",left:"140px",border:"4px solid white"}} width="120px" height="120px" profile="/led.jpg"></Porfileimage>
                          <h4>{profiledata.firstname + " " + profiledata.lastname}</h4>
-                         <span style={{color:"#8B8B8B"}}>UI designer</span>
+                         <span style={{color:"#6c757d"}}>UI designer</span>
                          <div style={{display:"flex",marginTop:"10px",marginBottom:"40px",justifyContent:"space-around"}}>
                             <div>
-                                <p>{beingfollowed ? "heyyo" : "null"}</p>
-                                <p>Takipçi</p>
+                                <P>{Counts.Contentcount}</P>
+                                <P>Takipçi</P>
                             </div>
                             <div>
-                                <p>12</p>
-                                <p>Takip Edilen</p>
+                                <P>{Counts.Followercount}</P>
+                                <P>Takip Edilen</P>
                             </div>
                             <div>
-                                <p>2</p>
-                                <p>Gönderi</p>
+                                <P>{Counts.Followedcount}</P>
+                                <P>Gönderi</P>
                             </div>
                          </div>
                          <div style={{width:"80%",margin:"auto"}}>

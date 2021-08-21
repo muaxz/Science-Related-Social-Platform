@@ -8,7 +8,7 @@ import {createusercontext} from "../../context/Usercontext";
 import {useRouter} from "next/router"
 import io from "socket.io-client";
 import {NotificationCountreq,Notificationreq,UpdateNotificationcount} from "../../Api/Api"
-import { Update } from '@material-ui/icons';
+
 
 const Bigdiv=styled.div`
 padding-top:80px;
@@ -22,39 +22,71 @@ export default function Mainlayout({children}) {
     const {userdata} = useContext(createusercontext)
     const [navdata,setnavdata]=useState([]);
     const [countofdata,setcountdata]=useState(0);
+    const [lastrecord,setlastrecord]=useState(0);
+    const [lastrecordactive,setlastrecordactive]=useState(false);
     const userouter=useRouter();
-
+    
+ 
     useEffect(() => {
         setactive(false);  
     }, [userouter.query])
     
    
     useEffect(()=>{
-
+      
        if(userdata.UserId){
+
             NotificationCountreq({
                 setcountdata:setcountdata,
                 UserId:userdata.UserId
             })
+
+            Notificationreq({
+                setnavdata:setnavdata,
+                UserId:userdata.UserId,
+                order:10,
+                navdata:navdata,
+                lastrow:false,
+            })
+
        }   
 
     },[userdata])
     
     useEffect(()=>{
-      
-        socket.on("Notification",(data)=>{
-             
-             if(userdata.UserId){
 
+        const listener=()=>{
+            setlastrecordactive(true);
+            setlastrecord(prev=>prev+1);
+            if(userdata.UserId){
+                
                 NotificationCountreq({
                     setcountdata:setcountdata,
                     UserId:userdata.UserId
                 })
 
              }
-        })
+        }
+    
+        socket.on("Notification",listener) 
+
+       
 
     },[userdata])
+
+    useEffect(()=>{
+    
+      if(userdata.UserId && lastrecordactive){
+            Notificationreq({
+                setnavdata:setnavdata,
+                UserId:userdata.UserId,
+                order:countofdata,
+                navdata:navdata,
+                lastrow:true,
+            })
+      }
+
+    },[lastrecord])
 
     const Reloadnav=(order)=>{
 
@@ -63,15 +95,15 @@ export default function Mainlayout({children}) {
             UserId:userdata.UserId,
             order:order,
             navdata:navdata,
+            lastrow:false,
         })
 
     }
 
     const Updatecount=()=>{
-
-        UpdateNotificationcount();
+        console.log(lastrecordactive)
         setcountdata(0);
-        
+        UpdateNotificationcount({UserId:userdata.UserId});
     }
     //
     return (

@@ -3,12 +3,11 @@ import styled,{keyframes} from "styled-components";
 import {Porfileimage} from "../../styledcomponents/button";
 import Navtools from "./Navigationtools";
 import useClickoutsie from '../../../hooks/Clikcoutisde';
-import useScroll from "../../../hooks/Scroll"
 import {createusercontext} from "../../../context/Usercontext";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
 import {UpdateNotificationcount} from "../../../Api/Api"
-import { AccountCircle, Home} from '@material-ui/icons';
+import { AccountCircle, Home,Assignment} from '@material-ui/icons';
 
 
 
@@ -118,7 +117,7 @@ const Inneroption=styled.div`
 
 `
 
-
+//ToDo 
 export default function Navigation({Data,Count,Reloadfunc,Update}){
  
 
@@ -196,17 +195,9 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
 
     const Iconclick=(item,shortname)=>{
 
-        var Iconobj = {...Iconobject};
-        
+        if(shortname == "bell")
         Update();
-        if(shortname == "bell" &&  Iconobject["2"].Oncerequested == false){
-            Reloadfunc(ordernumber+Data.length);
-            console.log(Data.length);
-            const Iconobj = {...Iconobject};
-            Iconobj[2].Oncerequested = true;
-            setIconobject(Iconobj);
-            //burada sadece 1 kez istek yapılıcak
-        }
+        
     
         Iconselect(item);
     }
@@ -238,11 +229,11 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
 
                    <InputHolder>
                         <Link  href="/login">
-                         <Button variant="contained" style={{marginRight:"10px"}} endIcon={<AccountCircle style={{fontSize:"25px"}}></AccountCircle>}>
+                         <Button variant="contained" style={{marginRight:"10px",textTransform:"capitalize"}} endIcon={<AccountCircle style={{fontSize:"25px"}}></AccountCircle>}>
                            Giriş Yap
                          </Button>
                        </Link>
-                       <Button variant="contained" color="secondary">Kayıt Ol</Button>
+                       <Button variant="contained"  style={{textTransform:"capitalize"}} endIcon={<Assignment style={{color:"white",borderRadius:"50%",fontSize:"25px"}}></Assignment>} color="secondary">Kayıt Ol</Button>
                    </InputHolder>
 
                    :

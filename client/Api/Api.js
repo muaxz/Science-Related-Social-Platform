@@ -307,10 +307,11 @@ export const Getusercontent=async({UserId,params,setdata,setwindow,seterrmsg,ord
 
 }
 
-export const UpdateNotificationcount=async()=>{
+export const UpdateNotificationcount=async({UserId})=>{
 
    try {
-      await axios.get("/notification/update");
+    
+      await axios.get(`/notification/update/${UserId}`);
 
    } catch (error) {
       //
@@ -394,21 +395,28 @@ export const Createuserrelation=async({UserId,FollowedId,checkiffollow})=>{
 
 }
 
-export const Notificationreq=async({UserId,setnavdata,order,navdata})=>{
+export const Notificationreq=async({UserId,setnavdata,order,navdata,lastrow})=>{
 
   try {
     console.log(UserId);
-
-    const{data}=await axios.get(`notification/getrows/${UserId}/${order}`);
-    console.log(data.mydata);
+    
+    const{data}=await axios.get(`notification/getrows/${UserId}/${order}/${lastrow}`);
     const Mycurrentdata=[...navdata];
     const Newdata=data.mydata;
-    setnavdata(Mycurrentdata.concat(Newdata));
-    
-    
+    console.log(Newdata);
 
+    if(lastrow){
+      console.log("looo2")
+      setnavdata(Newdata.concat(Mycurrentdata));
+
+    }
+    else{
+      console.log("looo")
+      setnavdata(Mycurrentdata.concat(Newdata));
+    }
+    
+    
   
-
   } catch (error) {
        console.log("relation error")
        //seterrmsg(true);
@@ -423,9 +431,10 @@ export const NotificationCountreq=async({UserId,setcountdata})=>{
 
     const{data}=await axios.get(`notification/getcount/${UserId}`);
 
+
     setcountdata(data.data);
  
-    console.log(data.mydata);
+    
 
   } catch (error) {
        console.log("relation error")

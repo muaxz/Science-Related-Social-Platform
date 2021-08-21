@@ -57,10 +57,21 @@ height:150px;
 object-fit:cover;
 `
 
+const Spanfor = styled.span`
+margin-left:5px;
+&:hover {
+    text-decoration-line:underline;
+    cursor:pointer;
+}
+`
+
 const İconholder=styled.div`
 margin-right:10px;
 display:flex;
 align-items:center;
+&: hover ${Spanfor}{
+    color:${({howercolor})=>howercolor};
+}
 `
 
 const Profilediv=styled.div`
@@ -73,11 +84,22 @@ transition:all 0.3s;
 
 
 const Icons=styled.i`
+display:flex;
+justify-content:center;
+align-items:center;
 font-size:16px;
+transition-duration:0.5s;
+width:30px;
+height:30px;
+padding:5px;
+border-radius:50%;
 cursor:pointer;
+animation-duration:0.08s;
+&:hover {
+    background:rgba(${({howercolor})=>howercolor});
+};
 color:${({ismarked,color})=>ismarked ? color : "grey" };
 animation-name:${({ismarked})=>ismarked ? Likeanimaton : ""};
-animation-duration:0.08s;
 `
 const Optionwindow=styled.div`
 display:${({active})=>active ? "block" : "none"};
@@ -85,7 +107,7 @@ width:350px;
 padding:5px;
 position:absolute;
 top:35px;
-right:25px; 
+right:10px; 
 border-radius:7px;
 box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
 background-color:white;
@@ -101,6 +123,10 @@ border-radius:6px;
     background-color:#EBEBEB;
     cursor:pointer;
 }
+`
+
+const Span = styled.span`
+
 `
 
 const Profileimageholder=styled.div`
@@ -199,7 +225,7 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
        <Outsidediv iscomment={iscomment}>
            {
               //left arrow
-              iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-6px",top:"8px",color:"white"}}></Icon> : null
+              iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-6px",top:"8px",color:"#faf9f9"}}></Icon> : null
            }
 
            {
@@ -302,11 +328,13 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
                     }
                       
                     <Toolbar foruser={foruser}>
-                        <İconholder style={{flex:1}}>
-                            <Icons  ismarked={elements.reshow.ismarked} color={"green"}  onClick={()=>Countplus("reshow")}  className="fas fa-retweet fa-sm"></Icons><span   onClick={()=>showwindow(retweet)} style={{marginLeft:"5px"}}>{elements.reshow.number}</span>
+                        <İconholder howercolor="green" style={{flex:1}}>
+                            <Icons  howercolor="0, 255, 0, 0.2" ismarked={elements.reshow.ismarked} color={"green"}  onClick={()=>Countplus("reshow")}  className="fas fa-retweet fa-sm"></Icons>
+                            <Spanfor onClick={()=>showwindow(retweet,"Reshow")}>{elements.reshow.number}</Spanfor>
                         </İconholder>
-                        <İconholder style={{flex:1}}>
-                            <Icons  ismarked={elements.Like.ismarked} color={"#C72121"}  onClick={()=>Countplus("Like")} className="fas fa-heart fa-sm"></Icons><span  onClick={()=>showwindow(like)} style={{marginLeft:"5px"}}>{elements.Like.number}</span>
+                        <İconholder howercolor="red" style={{flex:1}}>
+                            <Icons  howercolor="255, 0, 0,0.2" ismarked={elements.Like.ismarked} color={"#C72121"}  onClick={()=>Countplus("Like")} className="fas fa-heart fa-sm"></Icons>
+                            <Spanfor  onClick={()=>showwindow(like,"Like")} >{elements.Like.number}</Spanfor>
                         </İconholder>
                         <İconholder style={{flex:1}}>
                             <Icons className="fas fa-comment-alt fa-sm"></Icons><span style={{marginLeft:"5px",color:""}}>{comment.length}</span>
