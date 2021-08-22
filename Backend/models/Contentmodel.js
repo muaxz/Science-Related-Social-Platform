@@ -32,7 +32,7 @@ const Content=sequlize.define("Content",{
     catagories:{
         type:Sequlize.ENUM,
         values:["Felsefe","Uzay","Metafizik","Biyoloji"],
-        allowNull:false,
+        allowNull:true,
     },
     allowPublish:{
         type:Sequlize.BOOLEAN,

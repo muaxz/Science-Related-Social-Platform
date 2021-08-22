@@ -68,7 +68,7 @@ export default function Navigationtools({optnumber,optname,Navdata}){
 
             (<React.Fragment>
 
-                {Navdata.map((item)=>{
+                {Navdata.length > 0 && Navdata.map((item)=>{
                     //TODO icon detector
                     var myitemobj={};
             

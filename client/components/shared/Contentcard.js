@@ -23,7 +23,7 @@ margin-bottom:30px;
 width:100%;
 background-color:${({iscomment})=>!iscomment ? "#faf9f9": "#faf9f9"};
 border-radius:7px;
-box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 `
 const Imagediv=styled.div`
 padding-right:5px;

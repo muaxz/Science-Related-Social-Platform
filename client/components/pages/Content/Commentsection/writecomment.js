@@ -78,7 +78,10 @@ export default function Commentsection({Producecomment,spinner}){
                 </Options>  
             </Innerdiv>
             {
-              spinner ? <Spinner></Spinner> : null
+              spinner ? 
+                <div style={{display:"flex",justifyContent:"center"}}>
+                  <Spinner></Spinner> 
+                </div> : null
             }
         </Writecomment>
     )

@@ -15,7 +15,8 @@ const Notification=sequlize.define("Notification",{
     },
     attribute:{
       type:Sequlize.ENUM,
-      values:["Like","Reshow","Follow","Comment","Post","Debate"]
+      values:["Like","Reshow","Follow","Comment","Post","Debate"],
+      allownull:true,
     },
     TakerId:{
         type:Sequlize.TEXT,

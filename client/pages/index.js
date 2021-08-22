@@ -25,7 +25,7 @@ export async function getServerSideProps({}){
 
     try {
 
-        const {data} =await axios.get(`http://localhost:3001/content/gethome/10`)
+        const {data} =await axios.get(`http://localhost:3001/content/gethome/10/Felsefe`)
 
         if(data && data.error){
 

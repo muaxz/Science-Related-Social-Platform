@@ -130,10 +130,10 @@ export const Producecommentreq=async ({Message,TakerId,setnumbercom,setwindow,Us
 
 }
 
-export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setcontentdata,order,setstopreq})=>{
+export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setcontentdata,order,setstopreq,category,paignation})=>{
   try {
 
-    const{data}=await axios.get(`content/gethome/${order}`)
+    const{data}=await axios.get(`content/gethome/${order}/${category}`)
   
     if(Errorhandler({data,seterrmsg,setwindow})){
 
@@ -141,11 +141,24 @@ export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setconten
         setstopreq(false)
       }
 
-      const Current=[...currentdata];
-      const Mydata=[...data.data];
-      //push metodu bir diziyi bir dizinin içine pushluyor fakat concat elemanları
-      setcontentdata(Current.concat(Mydata));
+      var Current=[...currentdata];
+      var Mydata=[...data.data];
+
+      if(paignation){
+
+        setcontentdata(Current.concat(Mydata));
+        
+        //push metodu bir diziyi bir dizinin içine pushluyor fakat concat elemanları
+
+      }
+      else{
+
+        setcontentdata(Mydata)
+        
+      }
+
       setspinner(false);
+     
     }    
     else{
       return;
@@ -216,7 +229,7 @@ export const Commentreq=async({contentId,setactiveproduce,setcomment,seterrmsg,s
   try {
 
     const{data}=await axios.get(`comment/${contentId}`);
-    
+    //burada tekrardan bütün yorumlar çekiliyor eklenen en son yorum çekilmeli
     if(Errorhandler({data,seterrmsg,setwindow})){ 
        console.log(data.data)
        setcomment(data.data);

@@ -70,7 +70,7 @@ export const Spinner = styled.div`
   border-top: 2px solid lightgrey;
   border-right: 2px solid lightgrey;
   border-bottom: 2px solid lightgrey;
-  border-left: 2px solid black;
+  border-left: 2px solid #6c757d;
   background: transparent;
   width: 24px;
   height: 24px;

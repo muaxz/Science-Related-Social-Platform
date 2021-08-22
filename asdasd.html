@@ -8,18 +8,21 @@
     <style>
         .mydiv{
             height:30px;
+            padding: 10px;
+            display: flex;
             background-color: red;
             padding-bottom: 10px;
 
         }
        .boxa{
-           width:50px;
+           width:500px;
            height:100%;
+           flex-shrink: 0;
            background-color: tan;
                 
        }
        .boxb{
-          width: 50px;
+          width:50%;
           height: 40px;
           background-color: turquoise;
        }
@@ -28,7 +31,12 @@
 </head>
 <body>
    <div class="mydiv">
-    sa
+      <div class="boxa">
+
+      </div>
+      <div class="boxb">
+
+      </div>
    </div>
 </body>
 </html>

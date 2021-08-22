@@ -11,7 +11,7 @@ import {NotificationCountreq,Notificationreq,UpdateNotificationcount} from "../.
 
 
 const Bigdiv=styled.div`
-padding-top:80px;
+padding-top:65px;
 `
 
 const socket=io("http://localhost:3001");

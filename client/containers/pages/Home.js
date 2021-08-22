@@ -9,6 +9,7 @@ import Showfollower from "../../components/pages/Main/Showfoller";
 import Leaderboard from '../../components/pages/Main/Leaderboard';
 import useScroll from "../../hooks/Scroll";
 import {Spinner} from "../../components/styledcomponents/button"
+import { ArrowBackIos, ArrowForwardIos, FormatQuote } from '@material-ui/icons';
 
 
 
@@ -28,9 +29,10 @@ width:100%;
 `
 const TitleDiv=styled.div`
 width:90%;
+padding:10px;
 height:300px;
 background-color:red;
-background-image:url(/led.jpg);
+background-image:url(/black.jpg);
 background-size: cover;
 background-repeat: no-repeat;
 background-position: center; 
@@ -40,30 +42,86 @@ const ContentDiv=styled.div`
 
 `
 
+const ShortDiv=styled.div`
+height:50px;
+max-width:500px;
+margin:auto;
+margin-bottom:10px;
+overflow-x:hidden;
+`
+
+const InnershortDiv=styled.div`
+height:100%;
+width:100%;
+display:flex;
+align-items:center;
+transition-duration:0.5s;
+position:relative;
+right:${({slidevalue})=>slidevalue};
+`
+
+const Selectionboxes=styled.div`
+width:100px;
+font-weight:600;
+padding:5px;
+text-align:center;
+margin-left:15px;
+font-size:14px;
+border-radius:50px;
+cursor:pointer;
+background-color:${({selected})=>selected ? "#ef233c" :"#ced4da"};
+color:${({selected})=>selected ? "white" :"black"};
+flex-shrink:0;
+`
+
+const Iconholder=styled.div`
+display:flex;
+justify-content:center;
+align-items:center;
+border-radius:50%;
+position:absolute;
+cursor:pointer;
+left:${({leftvalue})=>leftvalue};
+top:50%;
+font-size:20px;
+transform:translateY(-50%);
+right:${({rightvalue})=>rightvalue}
+`
+//flex-shrink kutuların belirlenen boyuttan aşagı inmemesini saglıyor
+
 
 
 export default function Home({mydata}){
    
     const {bottom}=useScroll();
+    const [slidevalue,setslidevalue]=useState(0);
     const {userdata} = useContext(createusercontext)
-    const[contentdata,setcontentdata]=useState([...mydata]);
-    const[order,setorder]=useState(0);
-    const[errormsg,seterror]=useState(false);
-    const[activelike,setactivelike]=useState()
-    const[list,setlist]=useState([]);
+    const [contentdata,setcontentdata]=useState([...mydata]);
+    const [order,setorder]=useState(0);
+    const [errormsg,seterror]=useState(false);
+    const [selectionlist,setselectionlist] = useState({
+        Felsefe:{
+            selected:false
+        },
+        Metafizik:{
+            selected:false
+        },
+        Uzay:{
+            selected:false
+        },
+        Biyoloji:{
+            selected:false
+        },    
+    })
+    const [selectedkey,setselectedkey]=useState("");
+    //followerlist
+    const [list,setlist]=useState([]);
     const [stoprequesting,setstopreq]=useState(false);
     const [spinner,setspinner]=useState(false);
 
-  
-
-    
+   
     useEffect(()=>{
-
-
-        //TODO MOVE THİS TO LAYOUT FİLE
-       
-
-
+    
         if(!stoprequesting && bottom){
             
             setspinner(true);
@@ -72,6 +130,8 @@ export default function Home({mydata}){
                 setcontentdata:setcontentdata,
                 order:order,
                 setspinner:setspinner,
+                paignation:true,
+                category:selectedkey,
                 seterrmsg:seterror,
                 setstopreq:setstopreq,
             })
@@ -80,8 +140,34 @@ export default function Home({mydata}){
 
     },[order])
 
+    const Requestagain=(keyname)=>{
+        
+        setspinner(true);
+        setorder(10);
+        Homereq({
+            currentdata:contentdata,
+            setcontentdata:setcontentdata,
+            order:10,
+            setspinner:setspinner,
+            category:keyname,
+            paignation:false,
+            seterrmsg:seterror,
+            setstopreq:setstopreq,
+        })
+        
+    }
+
   
-    
+    const Setslidevalue=(value)=>{
+
+       if(value == "Back" && slidevalue !== 0){
+         setslidevalue(slidevalue-220)
+       } 
+       else if(value == "forward" && slidevalue < 600){
+        setslidevalue(slidevalue+220)
+       }
+    }
+
 
     useEffect(()=>{
         
@@ -100,20 +186,27 @@ export default function Home({mydata}){
             UserIdofcontent:userid,
         })
     }
-   
+    
+    const Selectionhander = (keyname) =>{
+
+       const Mutated = {...selectionlist};
+
+       for (const key in Mutated) {
+           Mutated[key].selected=false;
+       }
+       Mutated[keyname].selected = true;
+       Requestagain(keyname);
+       setselectionlist(Mutated);
+       setselectedkey(keyname)
+    }
    
 
     return (
         <div style={{height:`${list.length > 0 ? "100vh" : "100%"}`,overflow:"hidden"}}> 
-            <div style={{paddingLeft:"115px"}}>
+            <div style={{paddingLeft:"100px"}}>
                 <TitleDiv>
-                     
+                    <h3 style={{color:"white"}}><FormatQuote style={{transform:"rotateY(180deg)"}}></FormatQuote> Bil ki nezaket başkasını rahatsız etmemek değil, asıl başkası için rahatsızlık duymaktır.<FormatQuote></FormatQuote></h3>
                 </TitleDiv>
-                <div style={{textAlign:"center",display:"flex",justifyContent:"center"}}>
-                    {
-                        spinner ? <Spinner></Spinner> : null
-                    }
-                </div>
                 { list.length > 0 ?
 
                   <Showfollower setlist={()=>setlist([])} list={list}></Showfollower>
@@ -122,9 +215,40 @@ export default function Home({mydata}){
                 
                 }
                 <Flexdiv>
-                    <ContentDiv style={{padding:"10px",maxWidth:"650px"}}>
+                    <ContentDiv style={{maxWidth:"650px",paddingTop:"10px"}}>
+                       <div style={{position:"relative"}}>
+                               <Iconholder onClick={()=>Setslidevalue("Back")} leftvalue="20px" rightvalue={""}>
+                                        <ArrowBackIos style={{color:"black",fontSize:"20px"}}></ArrowBackIos>
+                                </Iconholder>
+                                <Iconholder onClick={()=>Setslidevalue("forward")} leftvalue={""} rightvalue="15px">
+                                        <ArrowForwardIos  style={{color:"black",fontSize:"20px"}}></ArrowForwardIos>
+                                </Iconholder>
+                              <ShortDiv>
+                                  
+                                <InnershortDiv slidevalue={slidevalue+"px"}>
+                                    {
+                                        Object.keys(selectionlist).map((item)=>{
+
+                                            return (
+                                                <Selectionboxes selected={selectionlist[item].selected} onClick={()=>Selectionhander(item)}>
+                                                    <span>{item}</span>                           
+                                                </Selectionboxes>
+                                            )
+
+                                        })
+                                    }
+                                </InnershortDiv>
+                            </ShortDiv>
+                            
+                       </div>
+                       <div style={{textAlign:"center",display:"flex",justifyContent:"center",marginBottom:"20px"}}>
+                                {
+                                    spinner ? <Spinner></Spinner> : null
+                                }
+                        </div>
+
                         {
-                    
+
                         contentdata.length &&
 
                         contentdata.map((item,index)=>(

@@ -20,17 +20,17 @@ exports.produce=async (req,res,next)=>{
              UserId:UserId
           })
           
-          
-         await Notificationmodel.create({
-            attribute:"Comment",
-            TakerId:[`${TakerId}`],
-            ContentId:ContentId,
-            UserId:UserId,
-         })
-         //istek yapılıp eklendikten sonra trigger
+         if(UserId !== TakerId){
+              await Notificationmodel.create({
+                attribute:"Comment",
+                TakerId:[`${TakerId}`],
+                ContentId:ContentId,
+                UserId:UserId,
+            })
 
-         io.emit("Notification","notify");
-      
+            io.emit("Notification","notify");
+         }
+         //istek yapılıp eklendikten sonra trigger
 
         }catch(err){
 
