@@ -15,6 +15,7 @@ padding:10px;
 margin:auto;
 `
 
+
 const InputHolder=styled.div`
 position:relative;
 width:80%;
@@ -164,7 +165,7 @@ export default function MyEditor () {
     //alt başlık daha uzun tutlabilir.
     return (
       <div style={{display:"flex",maxWidth:"1000px",width:"100%",margin:"auto"}}>
-         <Window active={windowactive} type="confirm">İçeriğiniz Editöre Gönderildi.</Window>
+        <Window closefunction={()=>setwindowactive(false)} active={windowactive} type="confirm">İçeriğiniz Editöre Gönderildi.</Window>
         <div style={{flex:1,backgroundColor:"#8a8888",height:"400px",position:"sticky",top:"65px"}}> 
             <InputHolder>
                 <p style={{marginBottom:"10px",color:"white"}}>Yazı Türü</p>

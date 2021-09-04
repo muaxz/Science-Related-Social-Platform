@@ -4,6 +4,6 @@ const controller=require("../controller/commentcontroller");
 
 
 router.post("/produce",controller.produce);
-router.get("/:id",controller.getcomments);
+router.get("/:id/:Last/:order",controller.getcomments);
 
 module.exports=router;

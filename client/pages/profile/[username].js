@@ -22,6 +22,7 @@ export default function Stuff({mydata,counts,getquery}){
 }
 
 export async function getServerSideProps({query}){ 
+    
     try {
 
         
@@ -39,6 +40,16 @@ export async function getServerSideProps({query}){
             };
       
         }
+        //404
+        if(recieve[0].data.userdata == null){
+            
+            return {
+                redirect:{
+                    destination:"/404.js"
+                }
+            };
+    
+        };
          
         return {
             props :{mydata:recieve[0].data.userdata,counts:recieve[1].data.data,getquery:query}

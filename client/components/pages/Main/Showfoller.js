@@ -24,10 +24,11 @@ height:100%;
 overflow:auto;
 `
 
-export default function Showfollower({list,setlist}) {
+export default function Showfollower({list,setlist,attribute}) {
 
     var Title = "";
-
+    var Icon  = "";
+    console.log(list)
     const Followingrelation = (checkfollow,UserId,followedid) =>{
 
         Createuserrelation({
@@ -35,12 +36,12 @@ export default function Showfollower({list,setlist}) {
             FollowedId:followedid,
             checkiffollow:checkfollow
         })
-
     }
     
-    switch (list[0].UserContent.attribute) {
+    switch (attribute) {
         case "Like":
             Title="Beğeniler"
+            Icon=<ThumbUp style={{color:"#C72121"}}></ThumbUp>
             break;
         case "Reshow":
             Title="İşaretler"
@@ -49,6 +50,7 @@ export default function Showfollower({list,setlist}) {
             Title="Empty for now"
             break;
     }
+    
     return (
         <div>
                 <Black onClick={setlist} aktif={true}></Black>

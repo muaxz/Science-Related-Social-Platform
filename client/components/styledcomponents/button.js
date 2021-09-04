@@ -27,6 +27,10 @@ export const Global=createGlobalStyle`
  body {
   height:100%;
  }
+
+ html{
+   scroll-behavior:smooth;
+ }
 `
 
 export const Porfileimage=styled.div(({width,height,profile})=>`

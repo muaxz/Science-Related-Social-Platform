@@ -65,20 +65,20 @@ exports.gethome=async(req,res,next)=>{
 
 
   const {number,category}=req.params;
-  console.log("categoryyyyyyyyyyyyyyyyy"+typeof(category))
   var newnum=parseInt(number);//paramstand string olarak alıyoruz
 
   try {
     //beğenenler,yorumlar
+    console.log(newnum);
     const Contents=await Content.findAll({
       //dizi[1].preferences[0].usercontent.attribute
       where:{
         catagories:category,
       },
       attributes:["id","titleimage","title","subtitle","content","createdAt","updatedAt"],
-      limit:newnum,
+      limit:10,
       offset:newnum-10,
-      order:Seq.literal("rand()"),
+     
       include:[
         {
           model:User,

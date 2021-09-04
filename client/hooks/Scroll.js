@@ -11,9 +11,11 @@ export default function useScroll(){
            
             if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {  
                 setbottom(true);
+                console.log("bottom")
             }
             else{
                 setbottom(false);
+                console.log("bottomout")
             }
         })
     

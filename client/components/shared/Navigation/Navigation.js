@@ -6,7 +6,7 @@ import useClickoutsie from '../../../hooks/Clikcoutisde';
 import {createusercontext} from "../../../context/Usercontext";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
-import {UpdateNotificationcount} from "../../../Api/Api"
+import {Getusersforsearchbar} from "../../../Api/Api"
 import { AccountCircle, Home,Assignment} from '@material-ui/icons';
 
 
@@ -43,7 +43,7 @@ height:60px;
 padding:5px;
 background-color:white;
 box-shadow: 0 3px 3px rgba(0,0,0,0.2);
-z-index:100;
+z-index:200;
 `
 const InnerNavbar=styled.div`
 position:relative;
@@ -65,9 +65,13 @@ background-color:${({clicked})=>clicked ? "" : ""};
 padding:2px;
 border-radius:50%;
 transition:0.3s;
+&:active {
+    background-color:#bbdefb;
+}
 `
 
 const InputHolder=styled.div`
+position:relative;
 display:${({flex})=>flex};
 position:relative;
 @media (max-width:850px){
@@ -89,12 +93,6 @@ color:black;
 }
 `
 const Iconsecure=styled.i`
-position:absolute;
-padding:6px;
-right:15px;
-border-top-right-radius:4px;
-border-bottom-right-radius:4px;
-border-left:1px solid white;
 color:white;
 top:50%;
 height:100%;
@@ -117,12 +115,64 @@ const Inneroption=styled.div`
 
 `
 
+const Searchdiv=styled.div`
+padding:10px;
+position:absolute;
+top:60px;
+left:-55px;
+width:300px;
+height:300px;
+background-color:white;
+overflow:auto;
+border-radius:10px;
+box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+&:before {
+    position:absolute;
+    left:50px;
+    top:0;
+}
+&::-webkit-scrollbar {
+    width:30px;
+}
+&::-webkit-scrollbar:vertical {
+    width: 5px;
+    }
+    
+&::-webkit-scrollbar:horizontal {
+    height: 12px;
+}
+
+&::-webkit-scrollbar-thumb {
+    fontsize:10px;
+    background-color: rgba(0, 0, 0, .5);
+    border-radius:10px;
+}
+`
+
+const Searchelements=styled.div`
+display:flex;
+border-radius:5px;
+padding:10px;
+align-items:center;
+margin-bottom:15px;
+&:hover {
+cursor:pointer;
+background-color:#e63946;
+color:white;
+}
+`
+
 //ToDo 
 export default function Navigation({Data,Count,Reloadfunc,Update}){
  
 
     const {logged,spinner,userdata} = useContext(createusercontext);
     const {ref,visible,setvisible} = useClickoutsie();
+    const {ref:ref2,visible:visible2,setvisible:setvisible2} = useClickoutsie();
+    //burada değişken isimi değiştirerek kullanabilrsin
+    const [inputvalue,setinputvalue] = useState("");
+    const [usersforsearch,setusersforsearch]=useState([]);
+    const [searchactive,setsearchactive]=useState(true);
     const  Myref = useRef();
     const [ordernumber,setordernumber]=useState(10);
     const [Iconumber,setıconnumber] = useState(0);
@@ -150,6 +200,23 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
         },
     })
     
+    useEffect(()=>{
+
+        setsearchactive(true);
+        Getusersforsearchbar({
+           inputvalue:inputvalue,
+           setusers:setusersforsearch,
+           setactive:setsearchactive,
+        })
+
+    },[inputvalue])
+
+    useEffect(()=>{
+
+      if(!visible2)
+      setinputvalue("");
+
+    },[visible2])
 
     const ScrolltoBottom=()=>{
 
@@ -157,6 +224,11 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
             Reloadfunc(ordernumber+Data.length);
         }
 
+    }
+    
+    const Changehandler=(e)=>{
+         setvisible2(true);
+         setinputvalue(e.target.value)
     }
 
     const Iconselect=(iconnumber)=>{
@@ -188,15 +260,12 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
         
     }
 
-  
-    
-    //ToDo rewrite this code
-  
-
     const Iconclick=(item,shortname)=>{
-
-        if(shortname == "bell")
-        Update();
+        //burada sadece bilidirim kutusu kapalıyken istek atıyoruz 2 kez degil
+        if(shortname == "bell" && Iconobject[item].onoff == false)
+        {
+            Update();
+        }
         
     
         Iconselect(item);
@@ -204,20 +273,50 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
 
     return (
         <Navbarext>
-            <InnerNavbar>
-                <InputHolder flex={"block"}>
+            <InnerNavbar>   
+               <InputHolder flex={"block"}>
                     <Link href="/">
                         <div style={{display:"flex",alignItems:"center",cursor:"pointer"}}>
-                            <Porfileimage profile="https://evrimagaci.org/public/images/logo/v3.svg?v=1" width="40px" height="40px">
-                            </Porfileimage>
+                            <Porfileimage profile="https://evrimagaci.org/public/images/logo/v3.svg?v=1" width="40px" height="40px"/>
                             <div style={{marginLeft:"10px",paddingRight:"10px",borderRight:"1px solid black"}}><span>Evrim Ağacı</span></div>
                             <div style={{marginLeft:"10px",display:"flex",alignItems:"center"}}><Home style={{fontSize:"30px",color:"#c9184a"}}></Home></div>
                         </div>
                     </Link>
                 </InputHolder>
-                <InputHolder  flex2={"none"} flex={false}>
-                    <Input placeholder="Ara"></Input>
-                    <Iconsecure className="fas fa-search"></Iconsecure>
+               <InputHolder  ref={ref2} flex2={"none"} flex={false}>
+                    <Input value={inputvalue} onChange={Changehandler} placeholder="Ara"></Input>
+                    {
+                        inputvalue.length <= 0 ?
+                        <div style={{position:"absolute",right:"15px",top:"10px",width:"20px"}}>
+                           <Iconsecure className="fas fa-search"></Iconsecure>
+                        </div>
+                        :
+                        <div onClick={()=>setvisible2(false)} style={{position:"absolute",right:"12px",top:"10px",width:"20px",cursor:"pointer"}}>
+                           <Iconsecure className="fas fa-times"></Iconsecure>
+                        </div>
+                    } 
+                    
+                    {
+                        inputvalue.length > 0 && visible2 == true &&
+                        <Searchdiv >
+                            
+                            {
+                                searchactive ? <div style={{display:"flex",justifyContent:"center",alignItems:"center",height:"100%"}}><Spinner></Spinner></div> :
+                                usersforsearch.map((item)=>{
+        
+                                    return(<Searchelements>
+                                            <div>
+                                                <Porfileimage profile="/black.jpg" width="45px" height="45px"/>
+                                            </div>
+                                            <div style={{paddingLeft:"10px"}}>
+                                                <p style={{fontWeight:"600"}}>{item.firstname+" "+item.lastname}</p>
+                                                <p style={{color:"lightgray",fontSize:"15px"}}>İnşaat Mühendisi</p>
+                                            </div>
+                                        </Searchelements>)
+                                })
+                            }
+                        </Searchdiv>
+                    }
                 </InputHolder>
                 {  !spinner ? 
                    

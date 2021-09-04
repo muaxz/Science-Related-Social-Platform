@@ -7,11 +7,18 @@ import {Black} from "../../components/styledcomponents/button"
 import {createusercontext} from "../../context/Usercontext";
 import {useRouter} from "next/router"
 import io from "socket.io-client";
+import Icon from "../../components/UI/Icon";
 import {NotificationCountreq,Notificationreq,UpdateNotificationcount} from "../../Api/Api"
 
 
 const Bigdiv=styled.div`
-padding-top:65px;
+padding-top:60px;
+`
+
+const Goupicon=styled.div`
+transition:all 0.5s;
+z-index:400;
+opacity:${({up})=>up ? "1" : "0"};
 `
 
 const socket=io("http://localhost:3001");
@@ -19,6 +26,7 @@ const socket=io("http://localhost:3001");
 export default function Mainlayout({children}) {
 
     const [active,setactive]=useState(false);
+    const [goup,setgoup]=useState(false);
     const {userdata} = useContext(createusercontext)
     const [navdata,setnavdata]=useState([]);
     const [countofdata,setcountdata]=useState(0);
@@ -28,12 +36,24 @@ export default function Mainlayout({children}) {
     
  
     useEffect(() => {
+    
         setactive(false);  
     }, [userouter.query])
     
    
     useEffect(()=>{
-      
+
+       document.addEventListener("scroll",()=>{
+
+          if(window.scrollY > 500){
+              setgoup(true)
+          }
+          else{
+              setgoup(false)
+          }
+
+       })
+
        if(userdata.UserId){
 
             NotificationCountreq({
@@ -101,10 +121,11 @@ export default function Mainlayout({children}) {
     }
 
     const Updatecount=()=>{
-        console.log(lastrecordactive)
+        console.log("updatinnggg");
         setcountdata(0);
         UpdateNotificationcount({UserId:userdata.UserId});
     }
+
     //
     return (
         <Bigdiv>
@@ -113,6 +134,9 @@ export default function Mainlayout({children}) {
             <Lefttoolbar myactive={active} makeactive={setactive}></Lefttoolbar>
             {/*this part will be changed*/}
             <Global></Global>
+            <Goupicon onClick={()=>{window.scrollTo({top:0})}} up={goup}>
+                <Icon className="fas fa-chevron-up fa-lg" Iconconfig={{position:"fixed",bottom:"40px",right:"40px",backcolor:"#ef233c",color:"white",width:"40px",height:"40px",lineheight:"40px"}}></Icon>
+            </Goupicon>
             {children}
         </Bigdiv>
     )

@@ -7,36 +7,33 @@
     <title>Document</title>
     <style>
         .mydiv{
-            height:30px;
+            max-width: 800px;
+            height:400px;
             padding: 10px;
             display: flex;
             background-color: red;
             padding-bottom: 10px;
 
         }
-       .boxa{
-           width:500px;
-           height:100%;
-           flex-shrink: 0;
-           background-color: tan;
-                
-       }
-       .boxb{
-          width:50%;
-          height: 40px;
-          background-color: turquoise;
-       }
+        .images{
+           width:100%;
+           object-fit: contain;
+        }
     </style>
     
 </head>
 <body>
    <div class="mydiv">
-      <div class="boxa">
-
-      </div>
-      <div class="boxb">
-
-      </div>
+      <img class="images" src="yaprak copy.jpg" alt="">
    </div>
+   <script>
+           var obj={
+                name:"ahmet",
+                surname:"özer"
+           }
+           const {name:sa} = obj
+
+           console.log(sa);
+   </script>
 </body>
 </html>

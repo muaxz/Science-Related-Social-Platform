@@ -17,7 +17,10 @@ z-index:150;
 background-color:#e9ecef;
 box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
 transition:all 0.2s;
-width:${({active})=>active ? "200px" : "60px"}
+width:${({active})=>active ? "200px" : "60px"};
+@media (max-width:940px){
+    display:none;
+}
 `
 const InnerDiv=styled.div`
 display:flex;

@@ -10,11 +10,12 @@ import useClickoutside from "../../hooks/Clikcoutisde";
 
 
 const Likeanimaton=keyframes`
-0% {font-size:18px}
-30% {font-size:19px}
+0% {font-size:16px}
+25% {font-size:18px}
 50% {font-size:21px}
-70% {font-size:22px}
-100% {font-size:18px}
+65% {font-size:17}
+70% {font-size:10px}
+100% {font-size:16px}
 `
 const Outsidediv=styled.div`
 position:relative;
@@ -45,6 +46,14 @@ padding-left:15px;
 padding-right:15px;
 flex:1;
 `
+
+const SecondPart = styled.div`
+display:${({foruser})=>foruser ? "block":"flex"};
+@media (max-width:540px){
+    display:block;
+}
+`
+
 const Toolbar=styled.div`
 display:${({foruser})=>foruser ? "none" : "flex"};
 padding-left:15px;
@@ -55,6 +64,9 @@ const Img=styled.img`
 width:100%;
 height:150px;
 object-fit:cover;
+@media (max-width:540px){
+    height:200px;
+}
 `
 
 const Spanfor = styled.span`
@@ -94,7 +106,8 @@ height:30px;
 padding:5px;
 border-radius:50%;
 cursor:pointer;
-animation-duration:0.08s;
+animation-duration:0.3s;
+animation-timing-function:ease-in-out;
 &:hover {
     background:rgba(${({howercolor})=>howercolor});
 };
@@ -111,7 +124,7 @@ right:10px;
 border-radius:7px;
 box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
 background-color:white;
-z-index:1000;
+z-index:180;
 `
 const Optionholder=styled.div`
 display:flex;
@@ -136,15 +149,17 @@ left:${({iscomment})=>iscomment ? "-60px" : "0px"};;
 `
 
 //içerik sayısı,takipçi sayısı,
-export default function Contentcard({readlater,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid}){
+export default function Contentcard({Selectedkey,readlater,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid}){
     
     const[elements,setelements]=useState({
         Like:{
             number:like.length,
+            array:like,
             ismarked:false,
         },
         reshow:{
             number:retweet.length,
+            array:retweet,
             ismarked:false
         },
         Readlater:{
@@ -154,6 +169,7 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
     });
     const {ref,visible,setvisible} = useClickoutside();
     const {userdata} = useContext(createusercontext);
+    const [checkfollow,setcheckfollow] = useState(false);
 
     var textforopiton="";
     switch (foruseroption) {
@@ -164,7 +180,8 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
             textforopiton="Beğenilen Gönderilerden kaldır"
             break;        
     }
-
+    
+  
     useEffect(() =>{
 
 
@@ -174,13 +191,23 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
 
             like.forEach((user)=>{
                 if(userdata.UserId == user.id){//eğer burada herhangi bir eşitlik bulunursa kullanıcı postu beğendi demek
-                currentelements["Like"].ismarked=true;
+                 
+                 currentelements["Like"].ismarked=true;
+                 const Indexofcurrentuser = currentelements["Like"].array.findIndex((item)=>item.id == userdata.UserId);
+                 currentelements["Like"].array.splice(Indexofcurrentuser,1);
+                 currentelements["Like"].array.unshift(user);
+
                 }
             })
     
             retweet.forEach((user)=>{
                 if(userdata.UserId == user.id){//eğer burada herhangi bir eşitlik bulunursa kullanıcı postu beğendi demek
+
                     currentelements["reshow"].ismarked=true;
+                    const Indexofcurrentuser = currentelements["reshow"].array.findIndex((item)=>item.id == userdata.UserId);
+                    currentelements["reshow"].array.splice(Indexofcurrentuser,1);
+                    currentelements["reshow"].array.unshift(user);
+
                 }
             })
     
@@ -206,14 +233,24 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
          
             currentelements[elementtype].ismarked=true;
             currentelements[elementtype].number= currentelements[elementtype].number+1;
+            if(elementtype == "reshow" || elementtype == "Like"){
+                currentelements[elementtype].array.unshift({
+                    firstname:userdata.Username,
+                    lastname:userdata.Usersurname,
+                    id:userdata.UserId
+                })
+            }
             createrelationforsmh(postId,elementtype,"Create",userid);
-           
         }
         else{
 
             currentelements[elementtype].ismarked = false;
             currentelements[elementtype].number = currentelements[elementtype].number-1;
+            if(elementtype == "reshow" || elementtype == "Like"){
+               currentelements[elementtype].array.splice(0,1);
+            }
             createrelationforsmh(postId,elementtype,"Destroy");
+
         }
 
         setelements(currentelements);
@@ -299,7 +336,7 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
                   </div>           
                </div>
            </Profilediv>
-           <div style={{display:foruser ? "block" : "flex"}}>
+           <SecondPart foruser={foruser}>
                {
                    iscomment ? null : 
 
@@ -330,11 +367,11 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
                     <Toolbar foruser={foruser}>
                         <İconholder howercolor="green" style={{flex:1}}>
                             <Icons  howercolor="0, 255, 0, 0.2" ismarked={elements.reshow.ismarked} color={"green"}  onClick={()=>Countplus("reshow")}  className="fas fa-retweet fa-sm"></Icons>
-                            <Spanfor onClick={()=>showwindow(retweet,"Reshow")}>{elements.reshow.number}</Spanfor>
+                            <Spanfor onClick={()=>showwindow(elements["reshow"].array,"Reshow")}>{elements.reshow.number}</Spanfor>
                         </İconholder>
                         <İconholder howercolor="red" style={{flex:1}}>
                             <Icons  howercolor="255, 0, 0,0.2" ismarked={elements.Like.ismarked} color={"#C72121"}  onClick={()=>Countplus("Like")} className="fas fa-heart fa-sm"></Icons>
-                            <Spanfor  onClick={()=>showwindow(like,"Like")} >{elements.Like.number}</Spanfor>
+                            <Spanfor  onClick={()=>showwindow(elements["Like"].array,"Like")} >{elements.Like.number}</Spanfor>
                         </İconholder>
                         <İconholder style={{flex:1}}>
                             <Icons className="fas fa-comment-alt fa-sm"></Icons><span style={{marginLeft:"5px",color:""}}>{comment.length}</span>
@@ -344,7 +381,7 @@ export default function Contentcard({readlater,profileimage,content,titleimage,t
                         </İconholder>  
                     </Toolbar>
                 </Contentholder>
-           </div>
+           </SecondPart>
        </Outsidediv>
     )
 }

@@ -134,11 +134,12 @@ export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setconten
   try {
 
     const{data}=await axios.get(`content/gethome/${order}/${category}`)
-  
+    console.log(data);
     if(Errorhandler({data,seterrmsg,setwindow})){
 
       if(data.data.length == 0){
-        setstopreq(false)
+        setstopreq(true)
+        console.log("stopped request")
       }
 
       var Current=[...currentdata];
@@ -224,15 +225,29 @@ export const Contentreq=async({contentId,setcontent,seterrmsg,setwindow})=>{
 
 }
 
-export const Commentreq=async({contentId,setactiveproduce,setcomment,seterrmsg,setwindow})=>{
+export const Commentreq=async({contentId,setactiveproduce,setcomment,seterrmsg,setwindow,last,order,commentlist})=>{
 
   try {
 
-    const{data}=await axios.get(`comment/${contentId}`);
+    const{data}=await axios.get(`comment/${contentId}/${last}/${order}`);
     //burada tekrardan bütün yorumlar çekiliyor eklenen en son yorum çekilmeli
-    if(Errorhandler({data,seterrmsg,setwindow})){ 
-       console.log(data.data)
-       setcomment(data.data);
+    if(Errorhandler({data,seterrmsg,setwindow})){
+      
+      var Current=[...commentlist];
+      var Mydata=[...data.data];
+
+      if(last){
+
+        setcomment(Mydata.concat(Current));
+        
+        //push metodu bir diziyi bir dizinin içine pushluyor fakat concat elemanları
+
+      }
+      else{
+
+        setcomment(Current.concat(Mydata))
+        
+      }
        setactiveproduce(false);
     }   
 
@@ -449,6 +464,30 @@ export const NotificationCountreq=async({UserId,setcountdata})=>{
  
     
 
+  } catch (error) {
+       console.log("relation error")
+       //seterrmsg(true);
+  }
+
+}
+
+export const Getusersforsearchbar=async({inputvalue,setusers,setactive,nothingfound})=>{
+
+  try {
+
+    const{data}=await axios.get(`user/getusername/${inputvalue}`);
+
+    console.log(data.data)
+    /*
+    if(data.data == null){
+       nothingfound(true)
+    }
+    */
+     
+    setactive(false);
+    setusers(data.data);
+ 
+  
   } catch (error) {
        console.log("relation error")
        //seterrmsg(true);

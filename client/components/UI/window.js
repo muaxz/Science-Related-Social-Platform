@@ -11,9 +11,9 @@ transform:translate(-50%,-50%);
 width:300px;
 height:200px;
 text-align:center;
-transition:top 0.4s;
+transition:${({aktif})=>aktif ? "top 0.4s" : "top 0.4s, z-index 0.6s"};
 top:${({aktif})=>aktif ? "50%" : "200px"};
-z-index:${({aktif})=>aktif ? "50" : "-200"};
+z-index:${({aktif})=>aktif ? "180" : "-200"};
 background-color:white;
 border-radius:10px;
 `
@@ -26,6 +26,7 @@ text-align:center;
 `
 
 const Window=({children,active,type,closefunction})=>{
+   
     var icon= null;
     if(type == "error"){
        icon=<i className="fas fa-exclamation-circle fa-2x" style={{color:"red",marginBottom:"10px"}}></i>
@@ -38,7 +39,7 @@ const Window=({children,active,type,closefunction})=>{
          <Black onClick={closefunction} aktif={active}/>
          <External aktif={active}>
             <Textbox>
-                  <Error style={{fontSize:"40px"}} color="error"></Error>
+                  {icon}
                   <p style={{textAlign:'center',wordWrap:'break-word',lineHeight:"25px"}}>
                      {children}
                   </p>

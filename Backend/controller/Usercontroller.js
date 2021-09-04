@@ -1,9 +1,37 @@
 const Usercontent = require("../models/UserContent");
 const Usermodel=require("../models/Usermodel");
+const {Op} = require("sequelize")
 const Contentmodel=require("../models/Contentmodel");
 const UserUsermodel=require("../models/UserUser");
 const Notificationmodel=require("../models/Notificationmodel");
 
+
+exports.getusername = async(req,res,next)=>{
+   
+  const {input} = req.params;
+
+
+  try {
+
+   const Users = await Usermodel.findAll({
+        where:{
+          firstname:{[Op.startsWith]:`${input}`}
+        },
+        limit:10,
+        offset:0,
+    })
+  
+
+    res.json({data:Users})
+
+  }catch(error){
+
+     next();
+     return;
+
+  }
+
+} 
 
 
 exports.getuserdata=async(req,res,next)=>{
@@ -51,6 +79,11 @@ exports.getuserprofile = async (req,res,next)=>{
            separate:true,
            limit:10,
            offset:0,
+           include:{
+            model:Usermodel,
+            as:"personal",
+            attributes:["id","firstname","imageurl","lastname","Role"]
+           }
          },
          {
            model:Usermodel,
@@ -141,7 +174,7 @@ exports.getusercount = async (req,res,next)=>{
   }
 }
 
-exports.createuserrelation=async (req,res,next)=>{
+exports.createuserrelation = async (req,res,next)=>{
   
   const {FollowerId,FollowedId,checkiffollow} =req.body;
   const io = req.app.get("socketio");
@@ -186,6 +219,30 @@ exports.createuserrelation=async (req,res,next)=>{
     next();
     console.log(error)
     return;
+
+  }
+
+}
+
+exports.getusercontents = async (req,res,next)=>{
+ 
+  const {UserId} = req.params;
+
+  try {
+
+    const includeuser=await Usercontent.findAll({
+      where:{
+        UserId:UserId,
+        attribute:[`${latestparams}`],
+      },
+      limit:newnum,
+      offset:newnum-10,
+      include:{
+        model:Content,
+      }
+    })
+
+  } catch (error) {
 
   }
 

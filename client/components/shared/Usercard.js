@@ -30,23 +30,24 @@ export default function Usercard({firstname,surname,imageurl,optionforbutton,chi
     const [checkfollow,setcheckfollow] = useState(false);
     const {userdata} = useContext(createusercontext);
 
-    var Option=null;
-
-
     useEffect(()=>{
        
      
         if(userdata.UserId){
 
-            followerlist.forEach(element => {
+            if(userdata.UserId !== userid){
+
+                followerlist.forEach(element => {
             
-                if(userdata.UserId == element.id){
-    
-                    setcheckfollow(true);
-    
-                }
-    
-            });
+                    if(userdata.UserId == element.id){
+        
+                        setcheckfollow(true);
+        
+                    }
+        
+                });
+
+            }
 
         }
 
@@ -70,7 +71,10 @@ export default function Usercard({firstname,surname,imageurl,optionforbutton,chi
                </Link>
                <Name><span style={{color:"black"}}>{firstname+" "+surname}</span></Name>
                <Following>{children}</Following>
-               <Button  startIcon={<PersonAdd></PersonAdd>} style={{width:"170px",textTransform:"capitalize",fontWeight:"600"}} color="secondary" variant="outlined" onClick={Followingreq}>{checkfollow ? "Takipten Çık" : "Takip Et"}</Button>
+               {
+                   userdata.UserId !== userid &&
+                   <Button  startIcon={<PersonAdd></PersonAdd>} style={{width:"170px",textTransform:"capitalize",fontWeight:"600"}} color="secondary" variant="outlined" onClick={Followingreq}>{checkfollow ? "Takipten Çık" : "Takip Et"}</Button>
+               }
             </Inner>
         </Exterior>
     )

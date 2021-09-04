@@ -68,7 +68,7 @@ export default function Navigationtools({optnumber,optname,Navdata}){
 
             (<React.Fragment>
 
-                {Navdata.length > 0 && Navdata.map((item)=>{
+                {Navdata.map((item,index)=>{
                     //TODO icon detector
                     var myitemobj={};
             
@@ -87,7 +87,7 @@ export default function Navigationtools({optnumber,optname,Navdata}){
                            
                     }
      
-                    return (<Option1div check={item.Facecheck}>
+                    return (<Option1div key={index} check={item.Facecheck}>
                               <Link href={`${myitemobj.href}/${item[myitemobj.idname]}`}>
                                 <div style={{display:"flex"}}>
                                      <div>

@@ -1,13 +1,13 @@
 import React, { useEffect,useState,useRef, useContext} from 'react'
-import styled,{keyframes} from "styled-components";
-import {useRouter} from "next/router"
 import Icon from "../../components/UI/Icon";
+import styled from "styled-components";
 import {Porfileimage} from "../../components/styledcomponents/button";
-import {Producecommentreq,Contentreq,Commentreq} from "../../Api/Api";
-import Parser from "react-html-parser";
+import {Producecommentreq,Commentreq} from "../../Api/Api";
 import {createusercontext} from "../../context/Usercontext";
 import Commentpart from '../../components/pages/Content/Commentsection/Commentpart';
-import {Global} from "../../components/styledcomponents/button";
+import useScroll from "../../hooks/Scroll"
+
+
 
 
 const Exteriorcontent=styled.div`
@@ -65,42 +65,63 @@ padding:5px;
 `
 //todo map array to create attribute list
 
-export default function Content({id}){
+export default function Content({Contentdata,comments,id}){
 
     const {current}=useRef([{icon:"fas fa-bookmark",desc:"Gönderiyi Kaydet"},{icon:"fas fa-thumbs-up",desc:"Gönderiyi Beğen"},{icon:"fas fa-retweet",desc:"Gönderiyi Profil Sayfamda Göster"}])
-    const [content,setcontent]=useState({});
-    const [commentlist,setcommentlist]=useState([]);
+    const {bottom} = useScroll();
+    const [content,setcontent]=useState(Contentdata);
+    const [commentlist,setcommentlist]=useState(comments);
     const [numberofcomment,setnumbercom]=useState(0);
     const [active,setactive]=useState(false);
     const [actives,seterrmsg]=useState(false);
     const [activeproduce,setactiveproduce]=useState(false);
     const {userdata}=useContext(createusercontext);
     //const {id}=router.query;
-    
-    useEffect(()=>{
-
-        Contentreq({
-            contentId:id, 
-            setcontent:setcontent,
-            seterrmsg:seterrmsg,
-        });      
-
-    },[id])
-
   
    
     useEffect(()=>{
 
-        setactiveproduce(true);
+       
 
-        Commentreq({
-            contentId:id,
-            setcomment:setcommentlist,
-            setactiveproduce:setactiveproduce,
-            seterrmsg:seterrmsg,
-        })
+        if(numberofcomment > 0){
+            //ilk sayfa geldiginde isteği önlemk için
+            setactiveproduce(true);
+            Commentreq({
+                contentId:id,
+                setcomment:setcommentlist,
+                commentlist:commentlist,
+                last:true,
+                order:commentlist.length+10,
+                setactiveproduce:setactiveproduce,
+                seterrmsg:seterrmsg,
+            })
+        }
 
-    },[numberofcomment,id])
+    },[numberofcomment])
+
+    useEffect(()=>{
+
+       if(bottom){
+
+            Commentreq({
+                contentId:id,
+                setcomment:setcommentlist,
+                commentlist:commentlist,
+                last:false,
+                order:commentlist.length+10,
+                setactiveproduce:setactiveproduce,
+                seterrmsg:seterrmsg,
+            })
+
+       }
+
+    },[bottom])
+
+    useEffect(()=>{
+       //changeable
+       setcontent(Contentdata);
+       setcommentlist(comments);
+    },[id])
     
     const Produce=(message)=>{
 

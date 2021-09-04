@@ -3,10 +3,8 @@ import Contentcard from "../../components/shared/Contentcard";
 import styled from "styled-components";
 import {Homereq,Createrelationreq,Notificationreq} from "../../Api/Api";
 import {createusercontext} from "../../context/Usercontext";
-import {FormControl,InputLabel,Select,MenuItem,Button} from "@material-ui/core"
 import {makeStyles} from "@material-ui/core/styles"
 import Showfollower from "../../components/pages/Main/Showfoller";
-import Leaderboard from '../../components/pages/Main/Leaderboard';
 import useScroll from "../../hooks/Scroll";
 import {Spinner} from "../../components/styledcomponents/button"
 import { ArrowBackIos, ArrowForwardIos, FormatQuote } from '@material-ui/icons';
@@ -28,26 +26,29 @@ max-width:1250px;
 width:100%;
 `
 const TitleDiv=styled.div`
-width:90%;
+width:100%;
 padding:10px;
 height:300px;
-background-color:red;
-background-image:url(/black.jpg);
+background-image:url(/way.jpg);
 background-size: cover;
 background-repeat: no-repeat;
 background-position: center; 
 `
 
 const ContentDiv=styled.div`
-
 `
 
 const ShortDiv=styled.div`
+position:sticky;
+top:60px;
 height:50px;
-max-width:500px;
+max-width:650px;
+width:100%;
 margin:auto;
 margin-bottom:10px;
 overflow-x:hidden;
+background-color:white;
+z-index:120;
 `
 
 const InnershortDiv=styled.div`
@@ -55,6 +56,7 @@ height:100%;
 width:100%;
 display:flex;
 align-items:center;
+justify-content:space-around;
 transition-duration:0.5s;
 position:relative;
 right:${({slidevalue})=>slidevalue};
@@ -64,8 +66,8 @@ const Selectionboxes=styled.div`
 width:100px;
 font-weight:600;
 padding:5px;
+margin-left:5px;
 text-align:center;
-margin-left:15px;
 font-size:14px;
 border-radius:50px;
 cursor:pointer;
@@ -73,19 +75,26 @@ background-color:${({selected})=>selected ? "#ef233c" :"#ced4da"};
 color:${({selected})=>selected ? "white" :"black"};
 flex-shrink:0;
 `
-
 const Iconholder=styled.div`
 display:flex;
 justify-content:center;
+color:red;
 align-items:center;
-border-radius:50%;
 position:absolute;
+padding:6px;
+height:100%;
+background-color:rgb(46,196,182,1);
 cursor:pointer;
+z-index:150;
 left:${({leftvalue})=>leftvalue};
 top:50%;
 font-size:20px;
+transition-duration:0.1s;
 transform:translateY(-50%);
-right:${({rightvalue})=>rightvalue}
+right:${({rightvalue})=>rightvalue};
+&:hover {
+ background-color:#d90429;
+}
 `
 //flex-shrink kutuların belirlenen boyuttan aşagı inmemesini saglıyor
 
@@ -94,9 +103,9 @@ right:${({rightvalue})=>rightvalue}
 export default function Home({mydata}){
    
     const {bottom}=useScroll();
-    const [slidevalue,setslidevalue]=useState(0);
+    const [slidevalue,setslidevalue]=useState(-30);
     const {userdata} = useContext(createusercontext)
-    const [contentdata,setcontentdata]=useState([...mydata]);
+    const [contentdata,setcontentdata]=useState(mydata);
     const [order,setorder]=useState(0);
     const [errormsg,seterror]=useState(false);
     const [selectionlist,setselectionlist] = useState({
@@ -111,24 +120,32 @@ export default function Home({mydata}){
         },
         Biyoloji:{
             selected:false
+        },   
+        Biyolos:{
+            selected:false
+        },   
+        Biyolojs:{
+            selected:false
         },    
     })
-    const [selectedkey,setselectedkey]=useState("");
-    //followerlist
-    const [list,setlist]=useState([]);
+    const [selectedkey,setselectedkey]=useState("Uzay");
+    const [windowlist,setwindowlist]=useState({
+        list:[],
+        attribute:"",
+    });
     const [stoprequesting,setstopreq]=useState(false);
     const [spinner,setspinner]=useState(false);
 
    
     useEffect(()=>{
-    
+        console.log("buradaaa");
         if(!stoprequesting && bottom){
-            
+           
             setspinner(true);
             Homereq({
                 currentdata:contentdata,
                 setcontentdata:setcontentdata,
-                order:order,
+                order:order, 
                 setspinner:setspinner,
                 paignation:true,
                 category:selectedkey,
@@ -160,7 +177,7 @@ export default function Home({mydata}){
   
     const Setslidevalue=(value)=>{
 
-       if(value == "Back" && slidevalue !== 0){
+       if(value == "Back" && slidevalue >= 20){
          setslidevalue(slidevalue-220)
        } 
        else if(value == "forward" && slidevalue < 600){
@@ -171,8 +188,10 @@ export default function Home({mydata}){
 
     useEffect(()=>{
         
-        if(bottom)
-        setorder(mydata.length+10);
+        if(bottom){
+            setorder(contentdata.length+10);
+        }
+       
 
     },[bottom])
 
@@ -189,6 +208,7 @@ export default function Home({mydata}){
     
     const Selectionhander = (keyname) =>{
 
+       setcontentdata([]);
        const Mutated = {...selectionlist};
 
        for (const key in Mutated) {
@@ -199,32 +219,39 @@ export default function Home({mydata}){
        setselectionlist(Mutated);
        setselectedkey(keyname)
     }
+
+    const Showfollowers=(statelist,type)=>{
+        
+        const Mutatedwindow={...windowlist};
+        Mutatedwindow.list = statelist;
+        Mutatedwindow.attribute = type;
+        setwindowlist(Mutatedwindow);
+
+    }
    
 
     return (
-        <div style={{height:`${list.length > 0 ? "100vh" : "100%"}`,overflow:"hidden"}}> 
+        <div style={{height:`${windowlist.list.length > 0 ? "100vh" : "100%"}`,overflow:windowlist.list.length > 0 ? "hidden": "visible"}}> 
             <div style={{paddingLeft:"100px"}}>
                 <TitleDiv>
                     <h3 style={{color:"white"}}><FormatQuote style={{transform:"rotateY(180deg)"}}></FormatQuote> Bil ki nezaket başkasını rahatsız etmemek değil, asıl başkası için rahatsızlık duymaktır.<FormatQuote></FormatQuote></h3>
                 </TitleDiv>
-                { list.length > 0 ?
+                {windowlist.list.length > 0 ?
 
-                  <Showfollower setlist={()=>setlist([])} list={list}></Showfollower>
+                  <Showfollower setlist={()=>setwindowlist(prev=>{return {...prev,list:[]}})} attribute={windowlist.attribute} list={windowlist.list}></Showfollower>
 
                 : null
                 
                 }
                 <Flexdiv>
-                    <ContentDiv style={{maxWidth:"650px",paddingTop:"10px"}}>
-                       <div style={{position:"relative"}}>
-                               <Iconholder onClick={()=>Setslidevalue("Back")} leftvalue="20px" rightvalue={""}>
-                                        <ArrowBackIos style={{color:"black",fontSize:"20px"}}></ArrowBackIos>
+                    <ContentDiv style={{maxWidth:"650px",paddingTop:"20px",width:"100%",paddingRight:"30px"}}>
+                            {/*<ShortDiv>
+                                <Iconholder onClick={()=>Setslidevalue("Back")} leftvalue="0" rightvalue={""}>
+                                   <i style={{color:"white"}} class="fas fa-chevron-left"></i>
                                 </Iconholder>
-                                <Iconholder onClick={()=>Setslidevalue("forward")} leftvalue={""} rightvalue="15px">
-                                        <ArrowForwardIos  style={{color:"black",fontSize:"20px"}}></ArrowForwardIos>
-                                </Iconholder>
-                              <ShortDiv>
-                                  
+                                <Iconholder onClick={()=>Setslidevalue("forward")} leftvalue={""} rightvalue="0">
+                                   <i style={{color:"white"}} class="fas fa-chevron-right"></i>
+                                </Iconholder>   
                                 <InnershortDiv slidevalue={slidevalue+"px"}>
                                     {
                                         Object.keys(selectionlist).map((item)=>{
@@ -238,9 +265,7 @@ export default function Home({mydata}){
                                         })
                                     }
                                 </InnershortDiv>
-                            </ShortDiv>
-                            
-                       </div>
+                                </ShortDiv>*/} 
                        <div style={{textAlign:"center",display:"flex",justifyContent:"center",marginBottom:"20px"}}>
                                 {
                                     spinner ? <Spinner></Spinner> : null
@@ -249,14 +274,12 @@ export default function Home({mydata}){
 
                         {
 
-                        contentdata.length &&
-
                         contentdata.map((item,index)=>(
                             <Contentcard 
                             postId={item.id}
                             content={item.content}
                             createrelationforsmh={createrelation}
-                            showwindow={(stateoflist)=>setlist(stateoflist)}
+                            showwindow={(stateoflist,type)=>Showfollowers(stateoflist,type)}
                             like={item.Like}//bu bir obje array
                             retweet={item.Retweet}
                             comment={item.allcomments}

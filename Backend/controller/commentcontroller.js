@@ -44,14 +44,17 @@ exports.produce=async (req,res,next)=>{
 
 exports.getcomments=async (req,res,next)=>{
 
-  const {id} = req.params;
-
+  const {id,Last,order} = req.params;
+  var ordernumb=parseInt(order);
   const comments = await Comment.findAll({
     where:{ContentId:id},
+    limit:Last == "true" ? 1 : ordernumb,
+    offset:Last == "true" ? 0 : ordernumb-10,
     include:{
       model:User,
       attributes:["id","firstname","imageurl","lastname","Role"]
-    }
+    },
+    order:[["createdAt","DESC"]],
   })
 
   res.json({data:comments})

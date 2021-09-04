@@ -15,6 +15,9 @@ max-width:1400px;
 width:100%;
 padding-bottom:20px;
 padding-left:60px;
+@media (max-width:940px){
+    padding-left:0;
+}
 `
 
 const Innerdiv=styled.div`
@@ -25,6 +28,22 @@ const Imagesection=styled.div`
 position:relative;
 height:250px;
 position:relative;
+`
+
+const ProfileImageholder=styled.div`
+position:absolute;
+width:120px;
+height:120px;
+top:-120px;
+left:140px;
+@media (max-width:940px){
+    position:absolute;
+    width:90px;
+    height:90px;
+    top:-100px;
+    left:160px;
+    color:White;
+}
 `
 
 const BackgroundImage=styled.div`
@@ -49,6 +68,13 @@ align-self:flex-start;
 max-width:400px;
 text-align:center;
 width:100%;
+@media (max-width:940px){
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    top:100px;
+    color:White;
+}
 `
 
 const Contentsection=styled.div`
@@ -83,16 +109,21 @@ const P = styled.p`
 font-weight:600;
 `
 
+const Description=styled.div`
+width:80%;
+margin:auto;
+@media (max-width:940px){
+  display:none;
+}
+`
+
 
 export default function Profile({Mydata,Counts,query}){
     
     const{userdata}=useContext(createusercontext);
-    const route = useRouter();
     const[contentdata,setcontentdata]=useState([...Mydata.personal]);
     const[order,setorder]=useState(10);
     const[profiledata,setprofiledata]=useState({...Mydata})
-    const[stoprequesting,setstopreq]=useState(false);
-    const[spinner,setspinner]=useState(false);
     const[checkuserid,setcheckuserid]=useState(false);
     const[beingfollowed,setbeingfollowed]=useState(false);
     const[notificationactive,setnotificationactive]=useState(false);
@@ -110,9 +141,11 @@ export default function Profile({Mydata,Counts,query}){
             bottom:false,
         } 
     })
+   console.log(Counts);
 
-
-
+   useEffect(()=>{
+        
+   },[options])
 
     useEffect(()=>{
          
@@ -213,12 +246,14 @@ export default function Profile({Mydata,Counts,query}){
                 </Imagesection>
                 <Contentpart>
                      <Usersection>
-                         <Porfileimage style={{position:"absolute",top:"-150px",left:"140px",border:"4px solid white"}} width="120px" height="120px" profile="/led.jpg"></Porfileimage>
+                         <ProfileImageholder>
+                             <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile="/led.jpg"></Porfileimage>
+                         </ProfileImageholder>
                          <h4>{profiledata.firstname + " " + profiledata.lastname}</h4>
                          <span style={{color:"#6c757d"}}>UI designer</span>
                          <div style={{display:"flex",marginTop:"10px",marginBottom:"40px",justifyContent:"space-around"}}>
                             <div>
-                                <P>{Counts.Contentcount}</P>
+                                <P>{Counts.Followedcount}</P>
                                 <P>Takipçi</P>
                             </div>
                             <div>
@@ -226,21 +261,21 @@ export default function Profile({Mydata,Counts,query}){
                                 <P>Takip Edilen</P>
                             </div>
                             <div>
-                                <P>{Counts.Followedcount}</P>
+                                <P>{Counts.Contentcount}</P>
                                 <P>Gönderi</P>
                             </div>
                          </div>
-                         <div style={{width:"80%",margin:"auto"}}>
+                         <Description style={{width:"80%",margin:"auto"}}>
                              <hr></hr>
                              <p style={{padding:"15px"}}>You're not having that problem here. There is no negative space. Therefore, I don't believe flex-shrink.</p>
                              <hr></hr>
-                         </div>
+                         </Description>
                      </Usersection>
                      <Contentsection>
                             <Optionbar>
                             {
                                Object.keys(options).map((item)=>(
-                                   <Link href={{
+                                   <Link  href={{
                                        pathname:`/profile/${Mydata.id}`,
                                        query:{name:`${item}`}
                                    }}                                  
@@ -256,21 +291,17 @@ export default function Profile({Mydata,Counts,query}){
                                     <Contentcard 
                                     postId={item.id}
                                     content={item.content}
-                                    showwindow={(stateoflist)=>setlist(stateoflist)}
-                                    like={item.Like}//bu bir obje array
-                                    retweet={item.Retweet}
-                                    comment={item.allcomments}
-                                    readlater={item.Readlater}
-                                    key={index}//key numarası
-                                    profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
-                                    title={item.title}
-                                    titleimage={"/yaprak.jpg"}
-                                    username={"Duhan"}
                                     like={[]}//bu bir obje array
                                     retweet={[]}
                                     comment={[]}
                                     readlater={[]}
-                                    usersurname={"Öztürk"}//bir obje props
+                                    key={index}//key numarası
+                                    profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
+                                    title={item.title}
+                                    titleimage={"/yaprak.jpg"}
+                                    username={item.personal !== null ? item.personal.firstname : "notyet"}
+                                    usersurname={item.personal !== null ? item.personal.lastname : "notyet"}//bir obje props
+                                    userid={item.personal !== null ? item.personal.id: "notyet"}
                                     subtitle={item.subtitle}
                                     date={item.createdAt}
                                     />
