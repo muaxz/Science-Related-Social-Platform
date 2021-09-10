@@ -231,10 +231,58 @@ exports.getusercontent=async(req,res,next)=>{
         UserId:id,
         attribute:[`${latestparams}`],
       },
-      limit:newnum,
-      offset:newnum-10,
+      limit:10,
+      offset:0,
       include:{
         model:Content,
+        include:[{
+          model:User,
+          as:"personal",
+          attributes:["id","firstname","imageurl","lastname","Role"]
+        },
+        {
+          model:User,
+          as:"Like",
+          attributes:["id","firstname","lastname","imageurl","Role"],
+          include:{
+            model:User,
+            as:"Followed",
+            attributes:["id"]
+          },
+          through:{
+            where:{attribute:"Like"},
+            attributes:["attribute"]
+          }
+        },
+        {
+          model:User,
+          as:"Readlater",
+          attributes:["id"],
+          through:{
+            where:{attribute:"Readlater"},
+            attributes:["attribute"]
+          }
+        },
+        {
+          model:User,
+          as:"Retweet",
+          attributes:["id","firstname","lastname","imageurl","Role"],
+          include:{
+            model:User,
+            as:"Followed",
+            attributes:["id"]
+          },
+          through:{
+            where:{attribute:"Reshow"},
+            attributes:["attribute"]
+          }
+        },
+        {
+          model:Comment,
+          as:"allcomments",  
+        }
+        
+       ]
       }
     })
    

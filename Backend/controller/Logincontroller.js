@@ -11,20 +11,20 @@ exports.login=async (req,res,next)=>{
      
       const user=await User.findOne({where:{email:email}});
          
-      const mydata={
-         UserId:user.id,
-         Username:user.firstname,
-         Usersurname:user.lastname,
-         Userrole:user.role,
-         Userimage:user.imageurl,
-      }
 
       console.log("heyyyyyooooooo buradaaaaaa");
       
       if(user){
+
+         const mydata={
+            UserId:user.id,
+            Username:user.firstname,
+            Usersurname:user.lastname,
+            Userrole:user.role,
+            Userimage:user.imageurl,
+         }
          
-         
-          await bcrypt.compare(password,user.password,(err,result)=>{
+         await bcrypt.compare(password,user.password,(err,result)=>{
             console.log(result);
             if(result == true){
                
@@ -50,6 +50,7 @@ exports.login=async (req,res,next)=>{
    }
    catch(err){
         //server error
+        console.log(err);
         next();
         return;
    }

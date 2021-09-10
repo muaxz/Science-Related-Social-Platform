@@ -2,13 +2,14 @@ import React,{useEffect,useState,useContext} from 'react'
 import styled from "styled-components";
 import {createusercontext} from "../../context/Usercontext"
 import {Porfileimage} from "../../components/styledcomponents/button"
-import {Createuserrelation} from "../../Api/Api"
+import {Createuserrelation,Getuserprofilecontent} from "../../Api/Api"
 import Contentcard from "../../components/shared/Contentcard";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
+import useScroll from "../../hooks/Scroll";
 import { Notifications, NotificationsActive } from '@material-ui/icons';
 import router, { useRouter } from 'next/router';
-import axious from "axios"
+
 
 const Exteriordiv=styled.div`
 max-width:1400px;
@@ -118,14 +119,17 @@ margin:auto;
 `
 
 
-export default function Profile({Mydata,Counts,query}){
+export default function Profile({Mydata,Counts,Contentdata,query}){
+
     
     const{userdata}=useContext(createusercontext);
-    const[contentdata,setcontentdata]=useState([...Mydata.personal]);
+    const {bottom} = useScroll();
+    const[contentdata,setcontentdata]=useState(Contentdata);
     const[order,setorder]=useState(10);
-    const[profiledata,setprofiledata]=useState({...Mydata})
+    const[profiledata,setprofiledata]=useState(Mydata)
     const[checkuserid,setcheckuserid]=useState(false);
     const[beingfollowed,setbeingfollowed]=useState(false);
+    const[Timetorender,settimetorender]=useState(false);
     const[notificationactive,setnotificationactive]=useState(false);
     const[options,setoptions]=useState({
         Post:{
@@ -136,45 +140,64 @@ export default function Profile({Mydata,Counts,query}){
             name:"Beğeniler",
             bottom:false,
         },
-        Retweet:{
+        Reshow:{
             name:"İşaretler",
             bottom:false,
         } 
     })
-   console.log(Counts);
+   
 
    useEffect(()=>{
+
+      var Leakcontrolloer = true;
         
-   },[options])
+        console.log(query.name)
+        Getuserprofilecontent({
+            UserId:query.username,
+            category:query.name,
+            setdata:setcontentdata,
+            paignation:false,
+            ownerpost:query.name == "Post" ? "true" : "fasle",
+            Leakcontrolloer:Leakcontrolloer,
+            order:10,
+            currentdata:contentdata,
+        })
+
+      return ()=>{
+         Leakcontrolloer=false;
+      }
+
+   },[query])
+
+   useEffect(()=>{
+
+   },[])
 
     useEffect(()=>{
          
-        if(userdata.UserId == query.username){
+        if(userdata.UserId){
+              
+            settimetorender(true);
+
+            if(userdata.UserId == query.username){
              
 
-            setcheckuserid(true);
-            //burada takip et butonu ve bildirim butonu kalkıcak yerine belki ayarlar.
-
-
-        }
-        else{
-
-            if(userdata.UserId){
-                
-                /*Mydata.Followed.find(element => {
-                    return element.id == userdata.UserId
-                })
-                */
-
-                Mydata.Followed.forEach(item=>{
-        
-                    if(item.id == userdata.UserId){
+                setcheckuserid(true);
+                //burada takip et butonu ve bildirim butonu kalkıcak yerine belki ayarlar.
+    
+    
+            }
+            else{
+    
+                   Mydata.Followed.forEach(item=>{
             
-                        setbeingfollowed(true)
-                        //zaten buraya girememiş ise default değer false
-                    }
-                
-                });
+                        if(item.id == userdata.UserId){
+                            
+                            setbeingfollowed(true)
+                            //zaten buraya girememiş ise default değer false
+                        }
+                    
+                    });
             }
 
         }
@@ -182,9 +205,9 @@ export default function Profile({Mydata,Counts,query}){
     },[userdata,query])
 
     useEffect(()=>{
-
+      
       setprofiledata({...Mydata})
-      setcontentdata([...Mydata.personal])
+      setcontentdata([...Contentdata])
 
     },[query])
 
@@ -208,13 +231,13 @@ export default function Profile({Mydata,Counts,query}){
     }
 
     const Handleoptions=(optiontype)=>{
-
+        setcontentdata([]);
         const optionobj={...options};
 
         for (const key in optionobj) {
             optionobj[key].bottom=false;
         }
-
+      
         optionobj[optiontype].bottom=true;
         setoptions(optionobj);
     }
@@ -226,7 +249,8 @@ export default function Profile({Mydata,Counts,query}){
                     <BackgroundImage/> 
                     {       //burada context userId yok ise buna izin vermiyorum ancak setstate oldugunda gösterim var
                             //TODO this should be fixed during navigaiton
-                            !checkuserid && userdata.UserId &&
+                            //userdata.userıd yoksa kullanıcı giriş yapmamıştır
+                            !checkuserid && Timetorender &&
 
                             (<ButtonHolder>
                                 {
@@ -287,25 +311,23 @@ export default function Profile({Mydata,Counts,query}){
                             </Optionbar>
                            <div style={{paddingRight:"10px",paddingLeft:"10px",maxWidth:"700px",margin:"auto"}}>
                             {
-                                contentdata.map((item,index)=>(
-                                    <Contentcard 
-                                    postId={item.id}
-                                    content={item.content}
-                                    like={[]}//bu bir obje array
-                                    retweet={[]}
-                                    comment={[]}
-                                    readlater={[]}
-                                    key={index}//key numarası
-                                    profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
-                                    title={item.title}
-                                    titleimage={"/yaprak.jpg"}
-                                    username={item.personal !== null ? item.personal.firstname : "notyet"}
-                                    usersurname={item.personal !== null ? item.personal.lastname : "notyet"}//bir obje props
-                                    userid={item.personal !== null ? item.personal.id: "notyet"}
-                                    subtitle={item.subtitle}
-                                    date={item.createdAt}
-                                    />
-                                ))        
+                                contentdata.map((item,index)=>{
+                                 
+                                    return ( <Contentcard 
+                                        key={index}
+                                        like={item.personal ? item.Like : item.Content.Like}//bu bir obje array
+                                        retweet={item.personal ? item.Retweet : item.Content.Retweet}
+                                        readlater={item.personal ? item.Readlater : item.Content.Readlater}
+                                        comment={item.personal ? item.allcomments : item.Content.allcomments}
+                                        profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
+                                        title={item.personal ? item.title : item.Content.title}
+                                        titleimage={"/yaprak.jpg"}
+                                        username={item.personal ? item.personal.firstname : item.Content.personal.firstname}
+                                        usersurname={item.personal ? item.personal.lastname : item.Content.personal.lastname}//bir obje props
+                                       
+                                        date={item.personal ? item.createdAt : item.Content.createdAt}
+                                        />)
+                                })     
                             }
                            </div>
                      </Contentsection>

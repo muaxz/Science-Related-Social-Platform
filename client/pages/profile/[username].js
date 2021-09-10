@@ -6,7 +6,7 @@ import {Global} from "../../components/styledcomponents/button"
 import axious from "axios";
 
 
-export default function Stuff({mydata,counts,getquery}){
+export default function Stuff({profile,counts,contents,getquery}){
 
     
     return (
@@ -16,7 +16,7 @@ export default function Stuff({mydata,counts,getquery}){
             <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Slabo+27px&display=swap&family=Domine&display=swap&family=Rajdhani:wght@500&display=swap&family=Tinos:ital@1&display=swap&family=Libre+Baskerville&display=swap&family=Shippori+Mincho:wght@600&display=swap&family=Amiri&display=swap&family=Poppins:ital,wght@1,300&display=swap" rel="stylesheet"></link>
            </Head>
            <Global></Global>
-           <Profile Counts={counts} Mydata={mydata} query={getquery}></Profile>
+           <Profile Counts={counts} Mydata={profile} query={getquery} Contentdata={contents}></Profile>
         </React.Fragment>
     )
 }
@@ -24,15 +24,16 @@ export default function Stuff({mydata,counts,getquery}){
 export async function getServerSideProps({query}){ 
     
     try {
-
+        
         
         const recieve=await axious.all([
             axious.get(`user/getuserprofile/${query.username}`),
-            axious.get(`user/getusercount/${query.username}`)
+            axious.get(`user/getusercount/${query.username}`),
+            axious.get(`user/getuserprofilecontent/${query.username}/${query.name == "Post" ? "true" : "false"}/${query.name}/10`)
         ])
           
         if(recieve[0].data && recieve[0].data.error || recieve[1].data && recieve[1].data.error){
-
+s
             return {
                 redirect:{
                     destination:"/500"
@@ -52,7 +53,7 @@ export async function getServerSideProps({query}){
         };
          
         return {
-            props :{mydata:recieve[0].data.userdata,counts:recieve[1].data.data,getquery:query}
+            props :{profile:recieve[0].data.userdata,counts:recieve[1].data.data,contents:recieve[2].data.data,getquery:query}
         }
 
     } catch (error) {

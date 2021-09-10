@@ -82,6 +82,7 @@ position:relative;
 const Input=styled.input`
 padding:6px;
 padding-left:10px;
+padding-right:40px;
 border:none;
 width:100%;
 outline:none;
@@ -172,7 +173,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
     //burada değişken isimi değiştirerek kullanabilrsin
     const [inputvalue,setinputvalue] = useState("");
     const [usersforsearch,setusersforsearch]=useState([]);
-    const [searchactive,setsearchactive]=useState(true);
+    const [searchactive,setsearchactive]=useState("");
     const  Myref = useRef();
     const [ordernumber,setordernumber]=useState(10);
     const [Iconumber,setıconnumber] = useState(0);
@@ -200,23 +201,28 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
         },
     })
     
-    useEffect(()=>{
-
-        setsearchactive(true);
-        Getusersforsearchbar({
-           inputvalue:inputvalue,
-           setusers:setusersforsearch,
-           setactive:setsearchactive,
-        })
-
-    },[inputvalue])
 
     useEffect(()=>{
-
+      //Todo only input lenth
       if(!visible2)
       setinputvalue("");
+      setsearchactive("");
 
     },[visible2])
+
+    const Keyupfunction=()=>{
+
+       console.log(inputvalue)
+       if(inputvalue !== ""){
+            setsearchactive("Loading");
+            Getusersforsearchbar({
+                inputvalue:inputvalue,
+                setusers:setusersforsearch,
+                setactive:setsearchactive,
+            })
+       }
+
+    }
 
     const ScrolltoBottom=()=>{
 
@@ -225,10 +231,10 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
         }
 
     }
-    
+
     const Changehandler=(e)=>{
          setvisible2(true);
-         setinputvalue(e.target.value)
+         setinputvalue(e.target.value);
     }
 
     const Iconselect=(iconnumber)=>{
@@ -270,6 +276,15 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
     
         Iconselect(item);
     }
+    
+    var searchtype="";
+    
+    if(searchactive == "Loading"){
+        searchtype=<div style={{display:"flex",justifyContent:"center",alignItems:"center",height:"100%"}}><Spinner></Spinner></div> 
+    }
+    else if(searchactive == "Nothing"){
+        searchtype=<div style={{display:"flex",justifyContent:"center",alignItems:"center",height:"100%"}}>Sonuç Bulunamadı.</div> 
+    }
 
     return (
         <Navbarext>
@@ -284,7 +299,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                     </Link>
                 </InputHolder>
                <InputHolder  ref={ref2} flex2={"none"} flex={false}>
-                    <Input value={inputvalue} onChange={Changehandler} placeholder="Ara"></Input>
+                    <Input onKeyUp={Keyupfunction} value={inputvalue} onChange={Changehandler} placeholder="Ara"></Input>
                     {
                         inputvalue.length <= 0 ?
                         <div style={{position:"absolute",right:"15px",top:"10px",width:"20px"}}>
@@ -298,10 +313,14 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                     
                     {
                         inputvalue.length > 0 && visible2 == true &&
-                        <Searchdiv >
+
+                        <Searchdiv>
                             
                             {
-                                searchactive ? <div style={{display:"flex",justifyContent:"center",alignItems:"center",height:"100%"}}><Spinner></Spinner></div> :
+                                searchactive.length > 0 ? <React.Fragment>{searchtype}</React.Fragment>
+
+                                :
+            
                                 usersforsearch.map((item)=>{
         
                                     return(<Searchelements>
@@ -355,7 +374,10 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                             
                         }
 
-                         <Link href="/profile/[username]" as={`/profile/${userdata.UserId}`}> 
+                         <Link href={{
+                            pathname:`/profile/${userdata.UserId}`,
+                            query:{name:"Post"}
+                            }}> 
                            <Porfileimage width="35px" height="35px" profile="/car.jpg"/>
                          </Link>
                          

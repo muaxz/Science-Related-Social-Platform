@@ -4,6 +4,8 @@ const {Op} = require("sequelize")
 const Contentmodel=require("../models/Contentmodel");
 const UserUsermodel=require("../models/UserUser");
 const Notificationmodel=require("../models/Notificationmodel");
+const Comment = require("../models/Commentmodel");
+
 
 
 exports.getusername = async(req,res,next)=>{
@@ -69,33 +71,10 @@ exports.getuserprofile = async (req,res,next)=>{
   const {UserId}=req.params;
   console.log("getuserpfoile İÇİNDEE" + UserId)
   try {
-     //kullanıcı bilgileri
-     //first 10 request
+     
      const Myuserdata=await Usermodel.findOne({
-         where:{id:UserId},
-         include:[{
-           model:Contentmodel,
-           as:"personal",
-           separate:true,
-           limit:10,
-           offset:0,
-           include:{
-            model:Usermodel,
-            as:"personal",
-            attributes:["id","firstname","imageurl","lastname","Role"]
-           }
-         },
-         {
-           model:Usermodel,
-           as:"Followed",
-           attributes:["id"]
-         },
-         {
-           model:Usermodel,
-           as:"Follower",
-           attributes:["id"]
-         }
-        ]
+         where:{id:UserId}, 
+         attributes:["id","firstname","lastname","imageurl","Role"],
      })
 
       return res.json({success:"success",userdata:Myuserdata});
@@ -112,32 +91,146 @@ exports.getuserprofile = async (req,res,next)=>{
 //takip edenin mainuser oldugu edilenin
 exports.getuserprofilecontent = async(req,res,next)=>{
 
-  const {UserId}=req.params;
-  console.log("getuserpfoile İÇİNDEE" + UserId)
-  try {
+  const {UserId,ownerpost,category,order}=req.params;
+  console.log(ownerpost)
 
-     const Myuserdata=await Usercontent.findAll({
-         where:{UserId:UserId},
-         include:{
-           model:Contentmodel,
-           include:{
-             model:Usermodel,
-             as:"personal"
-           }
-         } 
-     })
+  if(ownerpost == "true"){
 
-      return res.json({success:"success",userdata:Myuserdata});
+    const Contentdata=await Contentmodel.findAll({
+      where:{
+        Userforcontentid:UserId,
+      },
+      limit:10,
+      offset:0,
+      include:[{
+        model:Usermodel,
+        as:"Like",
+        attributes:["id","firstname","lastname","imageurl","Role"],
+        include:{
+          model:Usermodel,
+          as:"Followed",
+          attributes:["id"]
+        },
+        through:{
+          where:{attribute:"Like"},
+          attributes:["attribute"]
+        }
+      },
+      {
+        model:Usermodel,
+        as:"Readlater",
+        attributes:["id"],
+        through:{
+          where:{attribute:"Readlater"},
+          attributes:["attribute"]
+        }
+      },
+      {
+        model:Usermodel,
+        as:"Retweet",
+        attributes:["id","firstname","lastname","imageurl","Role"],
+        include:{
+          model:Usermodel,
+          as:"Followed",
+          attributes:["id"]
+        },
+        through:{
+          where:{attribute:"Reshow"},
+          attributes:["attribute"]
+        }
+      },
+      {
+        model:Usermodel,
+        as:"personal",
+        attributes:["id","firstname","imageurl","lastname","Role"]
+        //burada user -> user many-to-many girilebilir takipçiler için
+      },
+      {
+        model:Comment,
+        as:"allcomments",  
+      }]
+    })
 
-  } catch (error){
-     next();
-     console.log(error)
-     return;
+    return res.json({success:"success",data:Contentdata});
+
+  }   
+  else{
+
+      try {
+        //buradan default 10 tane gelicek
+        const Contentdata=await Usercontent.findAll({
+            where:{
+              UserId:UserId,
+              attribute:category
+            },
+            limit:10,
+            offset:0,
+            include:{
+              model:Contentmodel,
+              include:[{
+                model:Usermodel,
+                as:"Like",
+                attributes:["id","firstname","lastname","imageurl","Role"],
+                include:{
+                  model:Usermodel,
+                  as:"Followed",
+                  attributes:["id"]
+                },
+                through:{
+                  where:{attribute:"Like"},
+                  attributes:["attribute"]
+                }
+              },
+              {
+                model:Usermodel,
+                as:"Readlater",
+                attributes:["id"],
+                through:{
+                  where:{attribute:"Readlater"},
+                  attributes:["attribute"]
+                }
+              },
+              {
+                model:Usermodel,
+                as:"Retweet",
+                attributes:["id","firstname","lastname","imageurl","Role"],
+                include:{
+                  model:Usermodel,
+                  as:"Followed",
+                  attributes:["id"]
+                },
+                through:{
+                  where:{attribute:"Reshow"},
+                  attributes:["attribute"]
+                }
+              },
+              {
+                model:Usermodel,
+                as:"personal",
+                attributes:["id","firstname","imageurl","lastname","Role"]
+                //burada user -> user many-to-many girilebilir takipçiler için
+              },
+              {
+                model:Comment,
+                as:"allcomments",  
+              }]
+            } 
+        })
+  
+        return res.json({success:"success",data:Contentdata});
+  
+    } catch (error){
+        next();
+        console.log(error)
+        return;
+    }
+
   }
+
 
 }
 
-exports.getusercount = async (req,res,next)=>{
+exports.getuserprofilecount = async (req,res,next)=>{
 
   const {UserId}=req.params;
 
@@ -247,3 +340,4 @@ exports.getusercontents = async (req,res,next)=>{
   }
 
 }
+

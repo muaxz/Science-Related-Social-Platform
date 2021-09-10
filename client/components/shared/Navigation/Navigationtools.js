@@ -22,9 +22,12 @@ background-color:${({check})=> check == false ? "#EBEBEB" : ""};
 `
 
 export default function Navigationtools({optnumber,optname,Navdata}){
+
     const [toggle,settogle]=useState(false);
+
     let Myoption = null;
-    let title = null;
+    let title = "";
+
     if(optnumber == 1){
       title = "Oluştur"
       Myoption = <React.Fragment>

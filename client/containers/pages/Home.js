@@ -24,6 +24,9 @@ display:flex;
 justify-content:space-between;
 max-width:1250px;
 width:100%;
+@media (max-width:940px){
+    justify-content:center;
+}
 `
 const TitleDiv=styled.div`
 width:100%;
@@ -36,6 +39,14 @@ background-position: center;
 `
 
 const ContentDiv=styled.div`
+max-width:650px;
+padding-top:20px;
+width:100%;
+padding-right:25px;
+@media (max-width:940px){
+    justify-content:center;
+    padding-left:25px;
+}
 `
 
 const ShortDiv=styled.div`
@@ -83,8 +94,9 @@ align-items:center;
 position:absolute;
 padding:6px;
 height:100%;
-background-color:rgb(46,196,182,1);
 cursor:pointer;
+background-color:white;
+opacity:1;
 z-index:150;
 left:${({leftvalue})=>leftvalue};
 top:50%;
@@ -92,8 +104,12 @@ font-size:20px;
 transition-duration:0.1s;
 transform:translateY(-50%);
 right:${({rightvalue})=>rightvalue};
-&:hover {
- background-color:#d90429;
+box-shadow:10px 10px 60px 30px white;
+`
+const Container=styled.div`
+padding-left:100px;
+@media (max-width:940px){
+ padding-left:0;
 }
 `
 //flex-shrink kutuların belirlenen boyuttan aşagı inmemesini saglıyor
@@ -110,22 +126,28 @@ export default function Home({mydata}){
     const [errormsg,seterror]=useState(false);
     const [selectionlist,setselectionlist] = useState({
         Felsefe:{
-            selected:false
+            selected:false,
+            stoprequesting:false,
         },
         Metafizik:{
-            selected:false
+            selected:false,
+            stoprequesting:false,
         },
         Uzay:{
-            selected:false
+            selected:false,
+            stoprequesting:false,
         },
         Biyoloji:{
-            selected:false
+            selected:false,
+            stoprequesting:false,
         },   
         Biyolos:{
-            selected:false
+            selected:false,
+            stoprequesting:false,
         },   
         Biyolojs:{
-            selected:false
+            selected:false,
+            stoprequesting:false,
         },    
     })
     const [selectedkey,setselectedkey]=useState("Uzay");
@@ -139,7 +161,8 @@ export default function Home({mydata}){
    
     useEffect(()=>{
         console.log("buradaaa");
-        if(!stoprequesting && bottom){
+
+        if(!selectionlist[selectedkey].stoprequesting && bottom){
            
             setspinner(true);
             Homereq({
@@ -148,9 +171,10 @@ export default function Home({mydata}){
                 order:order, 
                 setspinner:setspinner,
                 paignation:true,
+                selectionlist:selectionlist,
+                setselection:setselectionlist,
                 category:selectedkey,
                 seterrmsg:seterror,
-                setstopreq:setstopreq,
             })
 
         }
@@ -158,7 +182,11 @@ export default function Home({mydata}){
     },[order])
 
     const Requestagain=(keyname)=>{
-        
+
+        const selections = {...selectionlist};
+        selections[keyname].stoprequesting = false;
+        setselectionlist(selectionlist);
+
         setspinner(true);
         setorder(10);
         Homereq({
@@ -169,7 +197,6 @@ export default function Home({mydata}){
             category:keyname,
             paignation:false,
             seterrmsg:seterror,
-            setstopreq:setstopreq,
         })
         
     }
@@ -187,11 +214,10 @@ export default function Home({mydata}){
 
 
     useEffect(()=>{
-        
+        console.log(bottom);
         if(bottom){
-            setorder(contentdata.length+10);
+            setorder(contentdata.length+10); 
         }
-       
 
     },[bottom])
 
@@ -207,17 +233,27 @@ export default function Home({mydata}){
     }
     
     const Selectionhander = (keyname) =>{
-
-       setcontentdata([]);
-       const Mutated = {...selectionlist};
-
-       for (const key in Mutated) {
-           Mutated[key].selected=false;
+        
+       window.scrollTo({top:350,behavior:"auto"})
+       
+       if(keyname == selectedkey){
+         return;
        }
-       Mutated[keyname].selected = true;
-       Requestagain(keyname);
-       setselectionlist(Mutated);
-       setselectedkey(keyname)
+       else{
+           
+            const Mutated = {...selectionlist};
+
+            for (const key in Mutated) {
+                Mutated[key].selected=false;
+            }
+            Mutated[keyname].selected = true;
+    
+            Requestagain(keyname);
+            setselectionlist(Mutated);
+            setselectedkey(keyname)
+       }
+      
+      
     }
 
     const Showfollowers=(statelist,type)=>{
@@ -232,7 +268,7 @@ export default function Home({mydata}){
 
     return (
         <div style={{height:`${windowlist.list.length > 0 ? "100vh" : "100%"}`,overflow:windowlist.list.length > 0 ? "hidden": "visible"}}> 
-            <div style={{paddingLeft:"100px"}}>
+            <Container>
                 <TitleDiv>
                     <h3 style={{color:"white"}}><FormatQuote style={{transform:"rotateY(180deg)"}}></FormatQuote> Bil ki nezaket başkasını rahatsız etmemek değil, asıl başkası için rahatsızlık duymaktır.<FormatQuote></FormatQuote></h3>
                 </TitleDiv>
@@ -244,13 +280,13 @@ export default function Home({mydata}){
                 
                 }
                 <Flexdiv>
-                    <ContentDiv style={{maxWidth:"650px",paddingTop:"20px",width:"100%",paddingRight:"30px"}}>
-                            {/*<ShortDiv>
+                    <ContentDiv style={{maxWidth:"650px",minHeight:"600px",paddingTop:"30px",width:"100%",paddingRight:"30px"}}>
+                            <ShortDiv>
                                 <Iconholder onClick={()=>Setslidevalue("Back")} leftvalue="0" rightvalue={""}>
-                                   <i style={{color:"white"}} class="fas fa-chevron-left"></i>
+                                   <i style={{color:"black"}} class="fas fa-chevron-left"></i>
                                 </Iconholder>
                                 <Iconholder onClick={()=>Setslidevalue("forward")} leftvalue={""} rightvalue="0">
-                                   <i style={{color:"white"}} class="fas fa-chevron-right"></i>
+                                   <i style={{color:"black"}} class="fas fa-chevron-right"></i>
                                 </Iconholder>   
                                 <InnershortDiv slidevalue={slidevalue+"px"}>
                                     {
@@ -265,8 +301,9 @@ export default function Home({mydata}){
                                         })
                                     }
                                 </InnershortDiv>
-                                </ShortDiv>*/} 
-                       <div style={{textAlign:"center",display:"flex",justifyContent:"center",marginBottom:"20px"}}>
+                                </ShortDiv> 
+
+                       <div style={{textAlign:"center",display:"flex",justifyContent:"center",marginBottom:"10px",marginTop:"20px"}}>
                                 {
                                     spinner ? <Spinner></Spinner> : null
                                 }
@@ -274,31 +311,31 @@ export default function Home({mydata}){
 
                         {
 
-                        contentdata.map((item,index)=>(
-                            <Contentcard 
-                            postId={item.id}
-                            content={item.content}
-                            createrelationforsmh={createrelation}
-                            showwindow={(stateoflist,type)=>Showfollowers(stateoflist,type)}
-                            like={item.Like}//bu bir obje array
-                            retweet={item.Retweet}
-                            comment={item.allcomments}
-                            readlater={item.Readlater}
-                            key={index}//key numarası
-                            profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
-                            title={item.title}
-                            titleimage={"yaprak.jpg"}
-                            username={item.personal !== null ? item.personal.firstname : "notyet"}
-                            usersurname={item.personal !== null ? item.personal.lastname : "notyet"}//bir obje props
-                            userid={item.personal !== null ? item.personal.id: "notyet"}
-                            subtitle={item.subtitle}
-                            date={item.createdAt}
-                            />
-                        ))
+                            contentdata.map((item,index)=>(
+                                <Contentcard 
+                                postId={item.id}
+                                content={item.content}
+                                createrelationforsmh={createrelation}
+                                showwindow={(stateoflist,type)=>Showfollowers(stateoflist,type)}
+                                like={item.Like}//bu bir obje array
+                                retweet={item.Retweet}
+                                comment={item.allcomments}
+                                readlater={item.Readlater}
+                                key={index}//key numarası
+                                profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
+                                title={item.title}
+                                titleimage={"yaprak.jpg"}
+                                username={item.personal !== null ? item.personal.firstname : "notyet"}
+                                usersurname={item.personal !== null ? item.personal.lastname : "notyet"}//bir obje props
+                                userid={item.personal !== null ? item.personal.id: "notyet"}
+                                subtitle={item.subtitle}
+                                date={item.createdAt}
+                                />
+                            ))
                         }
                     </ContentDiv>
                 </Flexdiv>
-           </div>
+           </Container>
         </div>
        
     )

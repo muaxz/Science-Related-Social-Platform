@@ -130,7 +130,7 @@ export const Producecommentreq=async ({Message,TakerId,setnumbercom,setwindow,Us
 
 }
 
-export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setcontentdata,order,setstopreq,category,paignation})=>{
+export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setcontentdata,order,setstopreq,category,paignation,selectionlist,setselection})=>{
   try {
 
     const{data}=await axios.get(`content/gethome/${order}/${category}`)
@@ -138,8 +138,12 @@ export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setconten
     if(Errorhandler({data,seterrmsg,setwindow})){
 
       if(data.data.length == 0){
-        setstopreq(true)
+
+        const selections = {...selectionlist};
+        selections[category].stoprequesting = true;
+        setselection(selectionlist);
         console.log("stopped request")
+
       }
 
       var Current=[...currentdata];
@@ -154,11 +158,15 @@ export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setconten
       }
       else{
 
-        setcontentdata(Mydata)
-        
+        setTimeout(() => {
+          setcontentdata(Mydata)
+        }, 1000);
+       
       }
 
-      setspinner(false);
+      setTimeout(() => {
+        setspinner(false);
+      }, 1000);
      
     }    
     else{
@@ -309,7 +317,7 @@ export const Getusercontent=async({UserId,params,setdata,setwindow,seterrmsg,ord
      console.log(data.data)
     if(Errorhandler({data})){ 
        
-       if(data.data.length == 0){
+       if(!data.data.length){
           setstopscrolling(true);
        } 
         
@@ -347,14 +355,15 @@ export const UpdateNotificationcount=async({UserId})=>{
 
 }
 
-export const Getuserprofilecontent=async({setdata,catogery,UserId})=>{
+export const Getuserprofilecontent=async({setdata,category,UserId,ownerpost,order})=>{
 
   try {
-    const{data}=await axios.get(`content/profilecontent/${catogery}/${UserId}`);
+    const{data}=await axios.get(`user/getuserprofilecontent/${UserId}/${ownerpost}/${category}/${order}`);
 
     if(Errorhandler({data})){ 
 
        setdata(data.data)
+       
 
     }    
     else if(data == "Unauthroized"){
@@ -471,21 +480,22 @@ export const NotificationCountreq=async({UserId,setcountdata})=>{
 
 }
 
-export const Getusersforsearchbar=async({inputvalue,setusers,setactive,nothingfound})=>{
+export const Getusersforsearchbar=async({inputvalue,setusers,setactive,setnothingfound})=>{
 
   try {
 
     const{data}=await axios.get(`user/getusername/${inputvalue}`);
 
     console.log(data.data)
-    /*
-    if(data.data == null){
-       nothingfound(true)
+    
+    if(data.data.length == 0){
+       setactive("Nothing")
     }
-    */
-     
-    setactive(false);
-    setusers(data.data);
+    else{
+      setactive("");
+      setusers(data.data);
+    }  
+
  
   
   } catch (error) {
