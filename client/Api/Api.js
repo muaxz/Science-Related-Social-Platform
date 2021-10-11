@@ -241,7 +241,7 @@ export const Commentreq=async({contentId,setactiveproduce,setcomment,seterrmsg,s
       
       var Current=[...commentlist];
       var Mydata=[...data.data];
-
+      console.log(Mydata)
       if(last){
 
         setcomment(Mydata.concat(Current));
@@ -512,6 +512,31 @@ export const DeletePost = async({PostId,seterrmsg,setwindow})=>{
 
     const{data}=await axios.post("user/deletepost",{
       PostId:PostId
+    });
+    
+    if(Errorhandler({data,seterrmsg,setwindow})){ 
+       console.log(data.success);   
+    }    
+    else{
+      return;
+    }
+  
+  } catch (error){
+     
+    console.log("error")
+       
+  }
+
+}
+
+export const Commentanswerreq = async({UppercommentId,Answer,UserId,seterrmsg,setwindow})=>{
+
+  try {
+
+    const{data}=await axios.post("comment/produceanswer",{
+      CommentId:UppercommentId,
+      Message:Answer,
+      UserId:UserId,
     });
     
     if(Errorhandler({data,seterrmsg,setwindow})){ 

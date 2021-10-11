@@ -50,14 +50,42 @@ exports.getcomments=async (req,res,next)=>{
     where:{ContentId:id},
     limit:Last == "true" ? 1 : ordernumb,
     offset:Last == "true" ? 0 : ordernumb-10,
-    include:{
+    include:[{
       model:User,
       attributes:["id","firstname","imageurl","lastname","Role"]
-    },
+    },{
+        model:Comment,
+        as:"subcomments",
+        include:{
+          model:Comment,
+          as:"subcomments",
+        }
+    }],
     order:[["createdAt","DESC"]],
   })
 
   res.json({data:comments})
+
+}
+
+exports.porduceanswer = async(req,res,next)=>{
+  
+  const {Message,CommentId,UserId} = req.body;
+
+  try {
+
+      await Comment.create({
+        Message:Message,
+        CommentId:CommentId,//burası bir üstündeki commentin id si
+        UserId:UserId
+    })
+
+    return res.json({state:"success"})
+
+  } catch (error){
+     next();
+     return;
+  } 
 
 }
 

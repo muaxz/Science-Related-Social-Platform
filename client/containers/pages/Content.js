@@ -2,7 +2,7 @@ import React, { useEffect,useState,useRef, useContext} from 'react'
 import Icon from "../../components/UI/Icon";
 import styled from "styled-components";
 import {Porfileimage} from "../../components/styledcomponents/button";
-import {Producecommentreq,Commentreq} from "../../Api/Api";
+import {Producecommentreq,Commentreq,Commentanswerreq} from "../../Api/Api";
 import {createusercontext} from "../../context/Usercontext";
 import Commentpart from '../../components/pages/Content/Commentsection/Commentpart';
 import useScroll from "../../hooks/Scroll"
@@ -134,6 +134,16 @@ export default function Content({Contentdata,comments,id}){
 
     }
 
+    const Answerhandler=(Answer,UpperId)=>{
+          console.log("BURADAAA")
+          Commentanswerreq({
+              UppercommentId:UpperId,
+              UserId:userdata.UserId,
+              Answer:Answer
+          })
+
+    }
+
     return (
         <div style={{maxWidth:"950px",margin:"auto"}}>
             <Exteriorcontent>
@@ -182,7 +192,7 @@ export default function Content({Contentdata,comments,id}){
             <hr></hr>
             <p>{commentlist.length+ " Yorum"}</p>
             <Commentdiv>
-                <Commentpart spinner={activeproduce} list={commentlist} Producecomment={Produce}></Commentpart>
+                <Commentpart handleanswer={Answerhandler} spinner={activeproduce} list={commentlist} Producecomment={Produce}></Commentpart>
             </Commentdiv>
         </div>
         

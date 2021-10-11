@@ -4,9 +4,10 @@ import {createusercontext} from "../../context/Usercontext";
 import {Porfileimage} from "../styledcomponents/button";
 import Link from "next/link";
 import Icon from "../UI/Icon"
-import {feed, Feedback} from "@material-ui/icons"
+import {AddComment, feed, Feedback,Send} from "@material-ui/icons"
 import {calculatedate} from "../../utilsfunc"
 import useClickoutside from "../../hooks/Clikcoutisde";
+import { TextField , Button,InputAdornment} from '@material-ui/core';
 
 
 const Likeanimaton=keyframes`
@@ -162,6 +163,14 @@ transform:translate(-50%,-50%);
 z-index:300;
 `
 
+//comment-answer section
+const Inputholder = styled.div`
+display:flex;
+align-items:center;
+padding-left:15px;
+padding-bottom:15px;
+padding-top:15px;
+`
 const Profileimageholder=styled.div`
 cursor:pointer; 
 position:${({iscomment})=>iscomment ? "absolute" : "relative"};
@@ -181,7 +190,7 @@ left:${({iscomment})=>iscomment ? "-60px" : "0px"};
 `
 
 //içerik sayısı,takipçi sayısı,
-function Contentcard({readlater,draft,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid}){
+function Contentcard({Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid}){
     
     const[elements,setelements]=useState({
         Like:{
@@ -203,6 +212,8 @@ function Contentcard({readlater,draft,profileimage,content,titleimage,title,isco
         }
     });
     const {ref,visible,setvisible} = useClickoutside();
+    const [commentanswer,setcommentanswer]=useState(false);
+    const [answervalue,setanswervalue]=useState("");
     const {userdata} = useContext(createusercontext);
 
 
@@ -261,6 +272,7 @@ function Contentcard({readlater,draft,profileimage,content,titleimage,title,isco
 
     },[userdata])
     
+    //like , sign and save operations
     const Countplus=(elementtype)=>{
 
         const currentelements={...elements};
@@ -438,21 +450,47 @@ function Contentcard({readlater,draft,profileimage,content,titleimage,title,isco
                     }
                       
                     <Toolbar foruser={foruser}>
-                        <İconholder howercolor="green" style={{flex:1}}>
-                            <Icons  howercolor="0, 255, 0, 0.2" ismarked={elements.reshow.ismarked} animation={elements.reshow.animation} color={"green"}  onClick={()=>Countplus("reshow")}  className="fas fa-retweet fa-sm"></Icons>
-                            <Spanfor onClick={()=>showwindow(elements["reshow"].array,"Reshow")}>{elements.reshow.number}</Spanfor>
-                        </İconholder>
+                        {
+                            !iscomment && 
+                            (<İconholder howercolor="green" style={{flex:1}}>
+                                <Icons  howercolor="0, 255, 0, 0.2" ismarked={elements.reshow.ismarked} animation={elements.reshow.animation} color={"green"}  onClick={()=>Countplus("reshow")}  className="fas fa-retweet fa-sm"></Icons>
+                                <Spanfor onClick={()=>showwindow(elements["reshow"].array,"Reshow")}>{elements.reshow.number}</Spanfor>
+                           </İconholder>)
+                        }
                         <İconholder howercolor="red" style={{flex:1}}>
                             <Icons  howercolor="255, 0, 0,0.2" ismarked={elements.Like.ismarked} animation={elements.Like.animation} color={"#C72121"}  onClick={()=>Countplus("Like")} className="fas fa-heart fa-sm"></Icons>
                             <Spanfor  onClick={()=>showwindow(elements["Like"].array,"Like")} >{elements.Like.number}</Spanfor>
                         </İconholder>
                         <İconholder style={{flex:1}}>
-                            <Icons className="fas fa-comment-alt fa-sm"></Icons><span style={{marginLeft:"5px",color:""}}>{comment.length}</span>
+                            {
+                                iscomment ? 
+                                
+                                <AddComment onClick={()=>setcommentanswer(!commentanswer)}  style={{color:"grey",cursor:"pointer"}}/>
+
+                                :
+
+                                <Icons className="fas fa-comment-alt fa-sm"></Icons>
+                            }
+                            <span style={{marginLeft:"5px",color:""}}>{comment.length}</span>
                         </İconholder>
                         <İconholder style={{flex:4,display:"flex",justifyContent:"flex-end",color:"grey"}}>
                             <Icons  ismarked={elements.Readlater.ismarked} animation={elements.Readlater.animation} color={"black"} onClick={()=>Countplus("Readlater")}  className="fas fa-bookmark"></Icons>
                         </İconholder>  
                     </Toolbar>
+                    {
+                        commentanswer &&
+                        (<Inputholder>
+                            <TextField 
+                                value={answervalue}
+                                onChange={(e)=>setanswervalue(e.target.value)}
+                                InputProps={{
+                                    style:{cursor:"pointer"},
+                                    endAdornment: <InputAdornment onClick={()=>Answerhandler(answervalue,postId)} style={{color:answervalue.length > 0 ?  "#e63946": "grey"}} position="end"><Send></Send></InputAdornment>,
+                                }}
+                                label="Yoruma Cevap Ver..." size="small" variant="outlined">
+                            </TextField>
+                        </Inputholder>)
+                    }
                 </Contentholder>
            </SecondPart>
        </Outsidediv>
