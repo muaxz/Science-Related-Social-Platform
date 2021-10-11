@@ -6,7 +6,7 @@ width:${width};
 padding:10px;
 outline:none;
 border:none;
-border-radius:8px;
+border-radius:5px;
 color:${color};
 background-color:${backcolor};
 transition:0.3s;

@@ -7,6 +7,7 @@ import {makeStyles} from "@material-ui/core/styles"
 import Showfollower from "../../components/pages/Main/Showfoller";
 import useScroll from "../../hooks/Scroll";
 import {Spinner} from "../../components/styledcomponents/button"
+import uniqid from "uniqid";
 import { ArrowBackIos, ArrowForwardIos, FormatQuote } from '@material-ui/icons';
 
 
@@ -158,10 +159,10 @@ export default function Home({mydata}){
     const [stoprequesting,setstopreq]=useState(false);
     const [spinner,setspinner]=useState(false);
 
-   
+   console.log(userdata)
     useEffect(()=>{
         console.log("buradaaa");
-
+        
         if(!selectionlist[selectedkey].stoprequesting && bottom){
            
             setspinner(true);
@@ -321,7 +322,7 @@ export default function Home({mydata}){
                                 retweet={item.Retweet}
                                 comment={item.allcomments}
                                 readlater={item.Readlater}
-                                key={index}//key numarası
+                                key={uniqid()}//key numarası
                                 profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
                                 title={item.title}
                                 titleimage={"yaprak.jpg"}

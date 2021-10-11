@@ -14,6 +14,7 @@ const Content=sequlize.define("Content",{
          type:Sequlize.TEXT,
     },
     title:{
+      
         type:Sequlize.STRING,
         allowNull:false,      
     },
@@ -24,10 +25,10 @@ const Content=sequlize.define("Content",{
          type:Sequlize.TEXT,
          allowNull:false,
     },
-    Process:{
+    phase:{
         type:Sequlize.ENUM,
-        values:["Checked","Waiting","Published","NotAllowed"],
-        defaultValue:"Waiting",
+        values:["Waiting","Published","NotAllowed","Draft"],
+        allowNull:true,
     },
     catagories:{
         type:Sequlize.ENUM,
@@ -38,6 +39,10 @@ const Content=sequlize.define("Content",{
         type:Sequlize.BOOLEAN,
         defaultValue:false,
         allownull:false,
+    },
+    Draftalias:{
+        type:Sequlize.STRING,
+        allowNull:true,
     },
     Message:{
         type:Sequlize.STRING,

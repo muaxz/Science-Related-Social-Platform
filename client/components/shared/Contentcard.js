@@ -20,16 +20,29 @@ const Likeanimaton=keyframes`
 const Outsidediv=styled.div`
 position:relative;
 margin:auto;
+height:${({draft})=> draft ? "300px" : ""};
 margin-bottom:30px;
 width:100%;
 background-color:${({iscomment})=>!iscomment ? "#faf9f9": "#faf9f9"};
 border-radius:7px;
 box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+
 `
+
+//This is for draft page
+const Softcover = styled.div`
+position:absolute;
+width:100%;
+height:100%;
+z-index:300;
+background-color:black;
+border-radius:7px;
+opacity:0.6;
+`
+
 const Imagediv=styled.div`
 padding-right:5px;
 padding-left:5px;
-
 `
 const Imageholder=styled.div`
 flex:1;
@@ -112,10 +125,10 @@ animation-timing-function:ease-in-out;
     background:rgba(${({howercolor})=>howercolor});
 };
 color:${({ismarked,color})=>ismarked ? color : "grey" };
-animation-name:${({ismarked})=>ismarked ? Likeanimaton : ""};
+animation-name:${({animation})=>animation ? Likeanimaton : ""};
 `
 const Optionwindow=styled.div`
-display:${({active})=>active ? "block" : "none"};
+display:block;
 width:350px;
 padding:5px;
 position:absolute;
@@ -124,7 +137,7 @@ right:10px;
 border-radius:7px;
 box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
 background-color:white;
-z-index:180;
+z-index:480;
 `
 const Optionholder=styled.div`
 display:flex;
@@ -138,38 +151,60 @@ border-radius:6px;
 }
 `
 
-const Span = styled.span`
-
+const Draftholder = styled.span`
+display:flex;
+flex-direction:column;
+align-items:center;
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+z-index:300;
 `
 
 const Profileimageholder=styled.div`
 cursor:pointer; 
 position:${({iscomment})=>iscomment ? "absolute" : "relative"};
-left:${({iscomment})=>iscomment ? "-60px" : "0px"};;
+left:${({iscomment})=>iscomment ? "-60px" : "0px"};
+&:before{
+    position:absolute;
+    top:50px;
+    left:20px;
+    border-radius:10px;
+    width:100px;
+    height:150px;
+    border-left:2px solid lightgrey;
+    border-bottom:2px solid lightgrey;
+    content:"";
+
+}
 `
 
 //içerik sayısı,takipçi sayısı,
-export default function Contentcard({Selectedkey,readlater,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid}){
+function Contentcard({readlater,draft,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid}){
     
     const[elements,setelements]=useState({
         Like:{
             number:like.length,
             array:like,
+            animation:false,
             ismarked:false,
         },
         reshow:{
             number:retweet.length,
             array:retweet,
+            animation:false,
             ismarked:false
         },
         Readlater:{
             ismarked:false,
+            animation:false,
             number:0,
         }
     });
     const {ref,visible,setvisible} = useClickoutside();
     const {userdata} = useContext(createusercontext);
-    const [checkfollow,setcheckfollow] = useState(false);
+
 
     var textforopiton="";
     switch (foruseroption) {
@@ -178,7 +213,9 @@ export default function Contentcard({Selectedkey,readlater,profileimage,content,
             break;
         case "Like":
             textforopiton="Beğenilen Gönderilerden kaldır"
-            break;        
+            break;
+        case "Draft":
+            textforopiton="Taslaklardan kaldır"            
     }
     
   
@@ -232,6 +269,7 @@ export default function Contentcard({Selectedkey,readlater,profileimage,content,
         if(currentelements[elementtype].ismarked==false){
          
             currentelements[elementtype].ismarked=true;
+            currentelements[elementtype].animation=true;
             currentelements[elementtype].number= currentelements[elementtype].number+1;
             if(elementtype == "reshow" || elementtype == "Like"){
                 currentelements[elementtype].array.unshift({
@@ -240,15 +278,18 @@ export default function Contentcard({Selectedkey,readlater,profileimage,content,
                     id:userdata.UserId
                 })
             }
+
             createrelationforsmh(postId,elementtype,"Create",userid);
         }
         else{
 
             currentelements[elementtype].ismarked = false;
+            currentelements[elementtype].animation=false;
             currentelements[elementtype].number = currentelements[elementtype].number-1;
             if(elementtype == "reshow" || elementtype == "Like"){
                currentelements[elementtype].array.splice(0,1);
             }
+
             createrelationforsmh(postId,elementtype,"Destroy");
 
         }
@@ -259,52 +300,74 @@ export default function Contentcard({Selectedkey,readlater,profileimage,content,
 
 
     return (
-       <Outsidediv iscomment={iscomment}>
+       <Outsidediv  draft={draft} iscomment={iscomment}>
+
+           {
+               //draft cover
+               draft ?
+
+               <div>
+                    <Softcover/>
+                    <Draftholder>
+                        <Icon className="far fa-edit fa-lg" Iconconfig={{zindex:"400",hoverback:"white",hovercolor:"#d90429",backcolor:"#d90429",color:"white",width:"60px",height:"60px",lineheight:"60px"}}/>
+                        <p style={{paddingTop:"10px",color:"white",textAlign:"center"}}>Culture of the Ottoman Empire</p>
+                    </Draftholder>
+               </div> 
+               : null
+           }
+            
            {
               //left arrow
               iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-6px",top:"8px",color:"#faf9f9"}}></Icon> : null
            }
 
            {
-               
+            //option section
             !iscomment ?  
                 
-            <div style={{backgroundColor:"red"}} ref={ref}>   
+               <div ref={ref}>   
       
-                <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
-                {
-                    visible ?
-                    <Optionwindow active={true}>
-                        <Optionholder>
-                        <Icon className="fas fa-user-minus" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
-                        <div style={{marginLeft:"8px",color:"#757575"}}>
-                            <p style={{color:"black"}}>Duhan Öztürk'ü takipten çık</p>
-                            <p style={{fontSize:"13px"}}>Bu kullanıcıdan gelen bildirimleri görme</p>
-                        </div>
-                        </Optionholder>
-                        <Optionholder>
-                        <Icon className="fas fa-link" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
-                        <div style={{marginLeft:"8px",color:"#757575"}}>
-                            <p style={{color:"black"}}>Paylaş</p>
-                            <p style={{fontSize:"13px"}}>Bağlantı adresini kopyala</p>
-                        </div>
-                        </Optionholder>  
-                        {
-                            foruser ?
-                            <Optionholder onClick={()=>createrelationforsmh(postId,foruseroption,"Destroy",indexnum)}>
-                                <Icon className="fas fa-trash-alt fa-sm" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
-                                <div style={{marginLeft:"8px",color:"#757575"}}>
-                                    <p style={{color:"black"}}>Kaldır</p>
-                                    <p style={{fontSize:"13px"}}>{textforopiton}</p>
-                                </div>
-                            </Optionholder>  
-                            : null
-                        }   
-                    </Optionwindow> 
-                    : null
-                }
-                </div>
+                    <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:draft ? "white" : "#2A2A2A",zindex:"500"}}></Icon>
+                    {
+                        visible ?
+                        <Optionwindow active={true}>
+                            {
+                                !draft ?
+                                  <React.Fragment>
+                                        <Optionholder>
+                                            <Icon className="fas fa-user-minus" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                            <div style={{marginLeft:"8px",color:"#757575"}}>
+                                                <p style={{color:"black"}}>Duhan Öztürk'ü takipten çık</p>
+                                                <p style={{fontSize:"13px"}}>Bu kullanıcıdan gelen bildirimleri görme</p>
+                                            </div>
+                                        </Optionholder>
+                                        <Optionholder>
+                                            <Icon className="fas fa-link" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                            <div style={{marginLeft:"8px",color:"#757575"}}>
+                                                <p style={{color:"black"}}>Paylaş</p>
+                                                <p style={{fontSize:"13px"}}>Bağlantı adresini kopyala</p>
+                                            </div>
+                                        </Optionholder> 
+                                  </React.Fragment> : null
+                            }
+                            {
+                                foruser ?
+                                <Optionholder onClick={()=>createrelationforsmh(postId,foruseroption,"Destroy",indexnum,foruseroption)}>
+                                    <Icon className="fas fa-trash-alt fa-sm" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                    <div style={{marginLeft:"8px",color:"#757575"}}>
+                                        <p style={{color:"black"}}>Kaldır</p>
+                                        <p style={{fontSize:"13px"}}>{textforopiton}</p>
+                                    </div>
+                                </Optionholder>  
+                                : null
+                            }   
+                        </Optionwindow> 
+                        : null
+                    }
+              </div>
+
               : 
+              //comment report
               <div ref={ref}>
                 <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-v" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
                 {
@@ -320,25 +383,30 @@ export default function Contentcard({Selectedkey,readlater,profileimage,content,
                 }
               </div>
            }
-           <Profilediv>
-               <div style={{display:'flex',alignItems:"center",height:"100%",marginLeft:"5px"}}>
-                  <Profileimageholder iscomment={iscomment}>
-                      <Link href={{
-                          pathname:`/profile/${userid}`,
-                          query:{name:"Post"}
+
+           {
+                !draft &&
+                <Profilediv>
+                <div style={{display:'flex',alignItems:"center",height:"100%",marginLeft:"5px"}}>
+                    <Profileimageholder iscomment={iscomment}>
+                        <Link href={{
+                            pathname:`/profile/${userid}`,
+                            query:{name:"Post"}
                         }}>
                         <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={profileimage}></Porfileimage>
-                      </Link>
-                  </Profileimageholder>
-                  <div style={{marginLeft:"10px",fontSize:"15px"}}><p style={{color:"black"}}>
-                      <strong>{username+" "+usersurname}</strong></p>
-                      <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{calculatedate(date).time + " " + calculatedate(date).express + " Önce"}</span></div>
-                  </div>           
-               </div>
-           </Profilediv>
+                        </Link>
+                    </Profileimageholder>
+                    <div style={{marginLeft:"10px",fontSize:"15px"}}><p style={{color:"black"}}>
+                        <strong>{username+" "+usersurname}</strong></p>
+                        <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{calculatedate(date).time + " " + calculatedate(date).express + " Önce"}</span></div>
+                    </div>           
+                </div>
+                </Profilediv>
+           }
+
            <SecondPart foruser={foruser}>
                {
-                   iscomment ? null : 
+                   iscomment || draft ? null : 
 
                     <Imageholder>
                         <Imagediv>
@@ -354,6 +422,9 @@ export default function Contentcard({Selectedkey,readlater,profileimage,content,
                                 <p style={{textAlign:"left",wordBreak:"bre"}}>{content}</p> 
                             </Contentdiv>   
                             : 
+
+                            !draft ?
+
                             <Contentdiv iscomment={iscomment}>
                             
                                 <h3 style={{marginBottom:"10px",color:"#A70909"}}>{title}</h3>
@@ -361,23 +432,25 @@ export default function Contentcard({Selectedkey,readlater,profileimage,content,
                                 <Link href="/content/[id]" as={`/content/${postId}`}>
                                     <p style={{textAlign:"left",wordBreak:"bre",cursor:"pointer"}}>While the Crypto Professors may set specific requirements for some....</p> 
                                 </Link>
-                            </Contentdiv> 
+                            </Contentdiv>
+
+                            : null 
                     }
                       
                     <Toolbar foruser={foruser}>
                         <İconholder howercolor="green" style={{flex:1}}>
-                            <Icons  howercolor="0, 255, 0, 0.2" ismarked={elements.reshow.ismarked} color={"green"}  onClick={()=>Countplus("reshow")}  className="fas fa-retweet fa-sm"></Icons>
+                            <Icons  howercolor="0, 255, 0, 0.2" ismarked={elements.reshow.ismarked} animation={elements.reshow.animation} color={"green"}  onClick={()=>Countplus("reshow")}  className="fas fa-retweet fa-sm"></Icons>
                             <Spanfor onClick={()=>showwindow(elements["reshow"].array,"Reshow")}>{elements.reshow.number}</Spanfor>
                         </İconholder>
                         <İconholder howercolor="red" style={{flex:1}}>
-                            <Icons  howercolor="255, 0, 0,0.2" ismarked={elements.Like.ismarked} color={"#C72121"}  onClick={()=>Countplus("Like")} className="fas fa-heart fa-sm"></Icons>
+                            <Icons  howercolor="255, 0, 0,0.2" ismarked={elements.Like.ismarked} animation={elements.Like.animation} color={"#C72121"}  onClick={()=>Countplus("Like")} className="fas fa-heart fa-sm"></Icons>
                             <Spanfor  onClick={()=>showwindow(elements["Like"].array,"Like")} >{elements.Like.number}</Spanfor>
                         </İconholder>
                         <İconholder style={{flex:1}}>
                             <Icons className="fas fa-comment-alt fa-sm"></Icons><span style={{marginLeft:"5px",color:""}}>{comment.length}</span>
                         </İconholder>
                         <İconholder style={{flex:4,display:"flex",justifyContent:"flex-end",color:"grey"}}>
-                            <Icons  ismarked={elements.Readlater.ismarked} color={"black"} onClick={()=>Countplus("Readlater")}  className="fas fa-bookmark"></Icons>
+                            <Icons  ismarked={elements.Readlater.ismarked} animation={elements.Readlater.animation} color={"black"} onClick={()=>Countplus("Readlater")}  className="fas fa-bookmark"></Icons>
                         </İconholder>  
                     </Toolbar>
                 </Contentholder>
@@ -385,3 +458,6 @@ export default function Contentcard({Selectedkey,readlater,profileimage,content,
        </Outsidediv>
     )
 }
+
+
+export default React.memo(Contentcard);

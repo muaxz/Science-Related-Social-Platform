@@ -19,7 +19,13 @@ export default function Content({mydata,comments,getquery}) {
     )
 }
 
-Content.layout=Mainlayout;
+Content.layout=(children)=>{
+    return (
+        <Mainlayout>
+            {children}
+        </Mainlayout>
+    )
+  }
 
 export async function getServerSideProps({query}){
     

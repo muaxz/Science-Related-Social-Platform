@@ -16,8 +16,12 @@ padding-top:60px;
 `
 
 const Goupicon=styled.div`
-transition:all 0.5s;
-z-index:400;
+position:fixed;
+bottom:40px;
+right:40px;
+transition-property:opacity;
+transition-duration:0.5s;
+z-index:100;
 opacity:${({up})=>up ? "1" : "0"};
 `
 
@@ -34,7 +38,7 @@ export default function Mainlayout({children}) {
     const [lastrecordactive,setlastrecordactive]=useState(false);
     const userouter=useRouter();
     
- 
+    console.log(userouter.pathname);
     useEffect(() => {
     
         setactive(false);  
@@ -135,7 +139,7 @@ export default function Mainlayout({children}) {
             {/*this part will be changed*/}
             <Global></Global>
             <Goupicon onClick={()=>{window.scrollTo({top:0})}} up={goup}>
-                <Icon className="fas fa-chevron-up fa-lg" Iconconfig={{position:"fixed",bottom:"40px",right:"40px",backcolor:"#ef233c",color:"white",width:"40px",height:"40px",lineheight:"40px"}}></Icon>
+                <Icon className="fas fa-chevron-up fa-lg" Iconconfig={{backcolor:"#ef233c",color:"white",width:"40px",height:"40px",lineheight:"40px"}}></Icon>
             </Goupicon>
             {children}
         </Bigdiv>

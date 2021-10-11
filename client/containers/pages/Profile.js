@@ -1,14 +1,14 @@
-import React,{useEffect,useState,useContext} from 'react'
+import React,{useEffect,useState,useContext,useCallback} from 'react'
 import styled from "styled-components";
 import {createusercontext} from "../../context/Usercontext"
 import {Porfileimage} from "../../components/styledcomponents/button"
-import {Createuserrelation,Getuserprofilecontent} from "../../Api/Api"
+import {Createuserrelation,Getuserprofilecontent,Createrelationreq} from "../../Api/Api"
 import Contentcard from "../../components/shared/Contentcard";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
 import useScroll from "../../hooks/Scroll";
 import { Notifications, NotificationsActive } from '@material-ui/icons';
-import router, { useRouter } from 'next/router';
+import Contentmap from "../../components/pages/Profile/contentmap";
 
 
 const Exteriordiv=styled.div`
@@ -37,7 +37,7 @@ width:120px;
 height:120px;
 top:-120px;
 left:140px;
-@media (max-width:940px){
+@media (max-width:1050px){
     position:absolute;
     width:90px;
     height:90px;
@@ -69,7 +69,7 @@ align-self:flex-start;
 max-width:400px;
 text-align:center;
 width:100%;
-@media (max-width:940px){
+@media (max-width:1050px){
     position:absolute;
     left:50%;
     transform:translateX(-50%);
@@ -113,7 +113,7 @@ font-weight:600;
 const Description=styled.div`
 width:80%;
 margin:auto;
-@media (max-width:940px){
+@media (max-width:1050px){
   display:none;
 }
 `
@@ -121,7 +121,7 @@ margin:auto;
 
 export default function Profile({Mydata,Counts,Contentdata,query}){
 
-    
+    //use reducer try on it
     const{userdata}=useContext(createusercontext);
     const {bottom} = useScroll();
     const[contentdata,setcontentdata]=useState(Contentdata);
@@ -131,10 +131,11 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
     const[beingfollowed,setbeingfollowed]=useState(false);
     const[Timetorender,settimetorender]=useState(false);
     const[notificationactive,setnotificationactive]=useState(false);
+    const[spinner,setspinner]=useState(false);
     const[options,setoptions]=useState({
         Post:{
             name:"Gönderiler",
-            bottom:true,
+            bottom:false,
         },
         Like:{
             name:"Beğeniler",
@@ -146,30 +147,40 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
         } 
     })
    
+console.log(Mydata);
 
    useEffect(()=>{
-
+      //sadece paignation zaten query değişince ilk 10 value serverside tarafından çekiliyor
       var Leakcontrolloer = true;
-        
-        console.log(query.name)
-        Getuserprofilecontent({
-            UserId:query.username,
-            category:query.name,
-            setdata:setcontentdata,
-            paignation:false,
-            ownerpost:query.name == "Post" ? "true" : "fasle",
-            Leakcontrolloer:Leakcontrolloer,
-            order:10,
-            currentdata:contentdata,
-        })
+      var Requestpermission = false;
+
+      if(Requestpermission){
+            setspinner(true);
+            Getuserprofilecontent({
+                UserId:query.username,
+                category:query.name,
+                setdata:setcontentdata,
+                setspinner:setspinner,
+                paignation:false,
+                ownerpost:query.name == "Post" ? "true" : "fasle",
+                Leakcontrolloer:Leakcontrolloer,
+                order:10,
+                currentdata:contentdata,
+            })
+      }
 
       return ()=>{
          Leakcontrolloer=false;
+         Requestpermission=true;
       }
 
    },[query])
 
    useEffect(()=>{
+
+        const optionobj={...options};
+        optionobj[query.name].bottom=true;
+        setoptions(optionobj);
 
    },[])
 
@@ -205,12 +216,23 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
     },[userdata,query])
 
     useEffect(()=>{
-      
+
       setprofiledata({...Mydata})
       setcontentdata([...Contentdata])
 
     },[query])
 
+    const Relationrequest=useCallback((postId,attribute,typeofrelation,userid)=>{
+        
+        Createrelationreq({
+            UserId:userdata.UserId,
+            PostId:postId,
+            attribute:attribute,
+            relationtype:typeofrelation,
+            UserIdofcontent:userid,
+        })
+
+    },[])
     
 
     const Followingrequest=()=>{
@@ -231,7 +253,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
     }
 
     const Handleoptions=(optiontype)=>{
-        setcontentdata([]);
+        
         const optionobj={...options};
 
         for (const key in optionobj) {
@@ -300,35 +322,21 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                             {
                                Object.keys(options).map((item)=>(
                                    <Link  href={{
-                                       pathname:`/profile/${Mydata.id}`,
+                                       pathname:`/profile/${query.username}`,
                                        query:{name:`${item}`}
-                                   }}                                  
+                                   }}     
+                                   scroll={false}                             
                                    >
                                       <Options applyborder={options[item].bottom} onClick={()=>Handleoptions(item)}>{options[item].name}</Options>
                                    </Link>
                                ))
                             }
                             </Optionbar>
+                            {/*TODO separate this map function*/}
                            <div style={{paddingRight:"10px",paddingLeft:"10px",maxWidth:"700px",margin:"auto"}}>
-                            {
-                                contentdata.map((item,index)=>{
-                                 
-                                    return ( <Contentcard 
-                                        key={index}
-                                        like={item.personal ? item.Like : item.Content.Like}//bu bir obje array
-                                        retweet={item.personal ? item.Retweet : item.Content.Retweet}
-                                        readlater={item.personal ? item.Readlater : item.Content.Readlater}
-                                        comment={item.personal ? item.allcomments : item.Content.allcomments}
-                                        profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
-                                        title={item.personal ? item.title : item.Content.title}
-                                        titleimage={"/yaprak.jpg"}
-                                        username={item.personal ? item.personal.firstname : item.Content.personal.firstname}
-                                        usersurname={item.personal ? item.personal.lastname : item.Content.personal.lastname}//bir obje props
-                                       
-                                        date={item.personal ? item.createdAt : item.Content.createdAt}
-                                        />)
-                                })     
-                            }
+
+                              <Contentmap  norecord={query.name} relationfunc={Relationrequest} contentlist={Contentdata}/> 
+
                            </div>
                      </Contentsection>
                 </Contentpart>

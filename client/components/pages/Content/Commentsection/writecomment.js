@@ -12,6 +12,9 @@ const Innerdiv=styled.div`
 display:flex;
 align-items:center;
 justify-content:center;
+&:after{
+  content:sasasasdasdas
+}
 `
 const Options=styled.div`
 width:${({flex})=>flex};
@@ -52,7 +55,13 @@ export default function Commentsection({Producecomment,spinner}){
     }
 
     const Submitcomment=()=>{
-      Producecomment(commentvalue);
+
+      if(commentvalue.length > 0){
+
+        Producecomment(commentvalue);
+
+      }
+
       setcommentvalue("");
     }
 

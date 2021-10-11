@@ -15,7 +15,14 @@ export default function MyEditor(){
     )
 }
 
-MyEditor.layout=Mainlayout;
+MyEditor.layout=(children)=>{
+  return (
+      <Mainlayout>
+          {children}
+      </Mainlayout>
+  )
+}
+
 
 
 

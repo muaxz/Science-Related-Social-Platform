@@ -71,6 +71,7 @@ const Lefttoolbar=({makeactive,myactive})=>{
     const {userdata,logged}=useContext(createusercontext);
     const firstlist=useRef([{icon:"fas fa-bookmark",desc:"Kaydedilenler",path:`saved`},{icon:"fas fa-thumbs-up",desc:"Beğenilenler",path:`liked`}])
     const secondlist=useRef([{icon:"fas fa-edit",desc:"Gönderilerim",path:"/gönderiler"},{icon:"fas fa-users",desc:"Tartışmalarım",path:"/tartışmalar"}])
+    const thirdlist=useRef([{icon:"fas fa-pencil-ruler",desc:"Taslaklar",path:`Drafts`}])
     
     useEffect(() => {
 
@@ -135,12 +136,13 @@ const Lefttoolbar=({makeactive,myactive})=>{
                 <NavigationDiv>     
                     <hr></hr>
                         <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
-                            {secondlist.current.map((item)=>(
-                                <Li>
-                                    <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F0F0F0",color:"black"}}></Icon>   
-                                    <span style={{display:myactive ? "block" : "none",fontSize:"15px",marginLeft:"10px"}}>{item.desc}</span> 
-                                </Li>
-                                
+                            {thirdlist.current.map((item)=>(
+                                <Link href="/Drafts/[userid]" as={`/Drafts/${userdata.UserId}`}> 
+                                    <Li>
+                                        <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"black",color:"white"}}></Icon>   
+                                        <span style={{display:myactive ? "block" : "none",fontSize:"15px",marginLeft:"10px"}}>{item.desc}</span> 
+                                    </Li>
+                                </Link>
                             ))}        
                         </ul>
                 </NavigationDiv>
@@ -148,6 +150,7 @@ const Lefttoolbar=({makeactive,myactive})=>{
             </ExteriorDiv>
 
             : null
+            
             }
         </div>
     )

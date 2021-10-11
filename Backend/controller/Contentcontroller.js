@@ -10,17 +10,18 @@ const Notification=require("../models/Notificationmodel");
 
 exports.produce=async (req,res,next)=>{
  
-  const {contentdata:{title,content,subtitle,catagories,UserId}}=req.body;
+  const {title,content,subtitle,catagories,UserId,processtype}=req.body;
 
-  console.log("USERIDDD  "+UserId);
+  console.log("USERIDDD  "+processtype);
 
   try {  
-
+ 
     const Obj = await Content.create({
         title:title,
         subtitle:subtitle,
         content:content,
-        catagories:catagories,
+        phase:processtype,
+        catagories:catagories == "" ? null : catagories,
         UserforuserId:UserId,
         UserforcontentId:UserId,
     })
@@ -210,6 +211,7 @@ exports.getusercontent=async(req,res,next)=>{
 
   const {catagory,id,order}=req.params;
   var latestparams="";
+  console.log("Categorrryyyyyy "+catagory);
   var newnum=parseInt(order);
 
   switch (catagory) {
@@ -221,72 +223,52 @@ exports.getusercontent=async(req,res,next)=>{
         break;
     case "Reshow":
         latestparams="Retweet"
+        break;    
+    case "Draft":
+        latestparams="Draft"
         break;       
   }
 
-  try {
- 
-    const includeuser=await Usercontent.findAll({
-      where:{
-        UserId:id,
-        attribute:[`${latestparams}`],
-      },
-      limit:10,
-      offset:0,
-      include:{
-        model:Content,
-        include:[{
-          model:User,
-          as:"personal",
-          attributes:["id","firstname","imageurl","lastname","Role"]
-        },
-        {
-          model:User,
-          as:"Like",
-          attributes:["id","firstname","lastname","imageurl","Role"],
-          include:{
-            model:User,
-            as:"Followed",
-            attributes:["id"]
-          },
-          through:{
-            where:{attribute:"Like"},
-            attributes:["attribute"]
-          }
-        },
-        {
-          model:User,
-          as:"Readlater",
-          attributes:["id"],
-          through:{
-            where:{attribute:"Readlater"},
-            attributes:["attribute"]
-          }
-        },
-        {
-          model:User,
-          as:"Retweet",
-          attributes:["id","firstname","lastname","imageurl","Role"],
-          include:{
-            model:User,
-            as:"Followed",
-            attributes:["id"]
-          },
-          through:{
-            where:{attribute:"Reshow"},
-            attributes:["attribute"]
-          }
-        },
-        {
-          model:Comment,
-          as:"allcomments",  
-        }
-        
-       ]
-      }
-    })
+  var Datawillsend = null;
    
-    return res.json({data:includeuser})
+  try {
+    
+    if(latestparams == "Draft"){
+         //todo alias for draft posts
+         Datawillsend = await Content.findAll({
+            where:{
+              phase:"Draft",
+              Userforuserid:id,
+            }
+         })  
+
+         console.log(Datawillsend)
+
+    }
+    else{
+
+          Datawillsend = await Usercontent.findAll({
+          where:{
+            UserId:id,
+            attribute:[`${latestparams}`],
+          },
+          limit:10,
+          offset:newnum-10,
+          include:{
+            model:Content,
+            include:[{
+              model:User,
+              as:"personal",
+              attributes:["id","firstname","imageurl","lastname","Role"]
+            }    
+          ]
+          }
+        })
+
+    }
+
+   
+    return res.json({data:Datawillsend})
 
   } catch (error){
     console.log(error);
@@ -295,7 +277,8 @@ exports.getusercontent=async(req,res,next)=>{
   }
 }
 
-
+//Content sayfası
+//namechange
 exports.getcontent=async (req,res,next)=>{
 
   const {id}=req.params;

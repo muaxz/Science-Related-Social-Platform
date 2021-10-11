@@ -75,6 +75,15 @@ exports.getuserprofile = async (req,res,next)=>{
      const Myuserdata=await Usermodel.findOne({
          where:{id:UserId}, 
          attributes:["id","firstname","lastname","imageurl","Role"],
+         include:[{
+           model:Usermodel,
+           as:"Followed",
+           attributes:["id"]
+         },{
+           model:Usermodel,
+           as:"Follower",
+           attributes:["id"]
+         }]
      })
 
       return res.json({success:"success",userdata:Myuserdata});
@@ -87,7 +96,29 @@ exports.getuserprofile = async (req,res,next)=>{
 
 }
 
+exports.getuserdrafts=async(req,res,next)=>{
+   
+  const {UserId} = req.params;
 
+  try {
+     
+    const Drafts = await Contentmodel.findAll({
+      where:{
+        Userforcontentid:UserId,
+        phase:"Draft"
+      },
+      limit:10,
+      offet:0,
+    })
+
+    res.json({success:"success",data:Drafts});
+
+  } catch (error){
+    next();
+    return;
+  }
+
+}
 //takip edenin mainuser oldugu edilenin
 exports.getuserprofilecontent = async(req,res,next)=>{
 
@@ -341,3 +372,22 @@ exports.getusercontents = async (req,res,next)=>{
 
 }
 
+exports.deletepost = async (req,res,next)=>{
+
+  const {PostId} = req.body;
+
+  try {
+    await Contentmodel.destroy({
+       where:{
+         id:PostId
+       }
+    })
+
+    return res.json({state:"success"})
+
+  } catch (error){
+    next();
+    return;
+  }
+
+}

@@ -8,6 +8,7 @@ import Window from "../components/UI/window";
 import {TextField,Button,InputAdornment} from '@material-ui/core';
 import {withStyles,makeStyles} from '@material-ui/core/styles';
 import {Global} from "../components/styledcomponents/button"
+import Routerguard from '../containers/Layout/routerguard';
 import {AccountCircle,EmailOutlined,Lock,ArrowRight, ArrowLeft,SupervisorAccount,SupervisedUserCircleSharp, SupervisorAccountRounded, SupervisorAccountSharp, AccountCircleSharp, AccountCircleRounded, Person, Home, ArrowRightAltRounded, ChevronRight, Assignment} from "@material-ui/icons"
 
 
@@ -383,6 +384,14 @@ const Login=()=>{
                         
            </WindowDiv>
        </ImageDiv>
+    )
+}
+
+Login.layout=(children)=>{
+    return (
+          <Routerguard>
+               {children}
+          </Routerguard>
     )
 }
 

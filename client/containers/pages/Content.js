@@ -81,8 +81,6 @@ export default function Content({Contentdata,comments,id}){
    
     useEffect(()=>{
 
-       
-
         if(numberofcomment > 0){
             //ilk sayfa geldiginde isteği önlemk için
             setactiveproduce(true);

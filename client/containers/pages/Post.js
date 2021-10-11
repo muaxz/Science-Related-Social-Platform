@@ -2,6 +2,7 @@ import axios from 'axios';
 import React,{useRef,useState,useEffect,useContext} from 'react'
 import styled from "styled-components";
 import {producereq} from "../../Api/Api";
+import {Button as Corebutton} from "@material-ui/core";
 import {createusercontext} from "../../context/Usercontext"
 import {Button,Global} from "../../components/styledcomponents/button";
 import Window from "../../components/UI/window";
@@ -18,7 +19,7 @@ margin:auto;
 
 const InputHolder=styled.div`
 position:relative;
-width:80%;
+width:90%;
 margin:20px auto;
 `
 const Input=styled.input`
@@ -81,7 +82,30 @@ cursor:pointer;
 color:black;
 `
 
-export default function MyEditor () {
+const Exterior=styled.div`
+display:flex;
+max-width:1000px;
+width:100%;
+margin:50px auto;
+@media (max-width:900px){
+display:block;
+width:80%;
+}
+`
+const Leftside=styled.div`
+flex:1;
+background-color:#8a8888;
+position:sticky;
+padding:10px;
+top:65px;
+@media (max-width:900px){
+  position:relative;
+  top:0;
+  }
+`
+
+export default function MyEditor (){
+
     const editorRef = useRef()
     const {userdata} = useContext(createusercontext);
     const [ editorLoaded, setEditorLoaded ] = useState( false )
@@ -95,6 +119,7 @@ export default function MyEditor () {
     const[file,setfile] = useState();
     const[filename,setfilename] = useState("");
     const[uploaded,setuploaded] = useState(false);
+    const textref=useRef("");
     const [contentpart,setcontentpart] = useState({
       content:"",
       title:"",
@@ -107,7 +132,7 @@ export default function MyEditor () {
     useEffect(()=>{
 
         const mutated={...contentpart};
-        mutated["UserId"]=userdata.UserId;
+        mutated["UserId"] = userdata.UserId;
         setcontentpart(mutated);
 
     },[userdata])
@@ -151,38 +176,50 @@ export default function MyEditor () {
       }
       return setuploaded(true);
     }
+    
+    const Submitpost=(typeofsubmit)=>{
 
-    const Submitpost=()=>{
-      
-       producereq({
-         contentdata:contentpart,
-         seterrmsg:seterror, 
-         setwindow:setwindowactive, 
-       })
+        producereq({
+          contentdata:contentpart,
+          seterrmsg:seterror, 
+          typeofsubmit:typeofsubmit,
+          setwindow:setwindowactive, 
+        })
 
+        if(typeofsubmit == "Waiting"){
+           textref.current="Postun Editöre Gönderildi"
+        }
+        else{
+           textref.current="Taslak Olarak kaydedildi"
+        }
+    
     }
+    
+    
     //ana başlık kısa tutulacak.
     //alt başlık daha uzun tutlabilir.
+    
     return (
-      <div style={{display:"flex",maxWidth:"1000px",width:"100%",margin:"auto"}}>
-        <Window closefunction={()=>setwindowactive(false)} active={windowactive} type="confirm">İçeriğiniz Editöre Gönderildi.</Window>
-        <div style={{flex:1,backgroundColor:"#8a8888",height:"400px",position:"sticky",top:"65px"}}> 
-            <InputHolder>
-                <p style={{marginBottom:"10px",color:"white"}}>Yazı Türü</p>
-                <select value={contentpart.catagories} onChange={(event)=>changehandler(event,"","catagories")} style={{width:"100%",padding:"8px",border:"none",outline:"none"}} id="cars">
-                        <option hidden value="Yazı Türü">Yazı Türü...</option>
-                        <option value="Felsefe">Felsefe</option>
-                        <option value="Uzay">Uzay</option>
-                        <option value="Metafizik">Metafizik</option>
-                        <option value="Biyoloji">Biyoloji</option>
-                </select>
-            </InputHolder>
-            <InputHolder>
-                <p style={{marginBottom:"10px",color:"white"}}>Tahmini Yayınlanma Süresi</p>
-                <Input style={{padding:"6px"}}  value="2013-01-08" type="date"  onChange={(event)=>changehandler(event,"","title")} placeholder="Başlık..."></Input>
-            </InputHolder>
-          <InputHolder><Button onClick={Submitpost} width="100px" backcolor="#DE3131" color="white">Gönder</Button></InputHolder>
-        </div>
+      <Exterior>
+        <Window closefunction={()=>setwindowactive(false)} active={windowactive} type="confirm"> {textref.current} </Window>
+        <Leftside> 
+              <InputHolder>
+                  <p style={{marginBottom:"10px",color:"white"}}>Yazı Türü</p>
+                  <select value={contentpart.catagories} onChange={(event)=>changehandler(event,"","catagories")} style={{width:"100%",padding:"8px",border:"none",outline:"none"}} id="cars">
+                          <option hidden value="Yazı Türü">Yazı Türü...</option>
+                          <option value="Felsefe">Felsefe</option>
+                          <option value="Uzay">Uzay</option>
+                          <option value="Metafizik">Metafizik</option>
+                          <option value="Biyoloji">Biyoloji</option>
+                  </select>
+              </InputHolder>
+              <InputHolder>
+                  <p style={{marginBottom:"10px",color:"white"}}>Tahmini Yayınlanma Süresi</p>
+                  <Input style={{padding:"6px"}}  value="2013-01-08" type="date"  onChange={(event)=>changehandler(event,"","title")} placeholder="Başlık..."></Input>
+              </InputHolder>
+            <InputHolder><Corebutton onClick={()=>Submitpost("Waiting")}  style={{width:"100%",backgroundColor:"#ef233c",textTransform:"capitalize"}} color="secondary" variant="contained">Gönder</Corebutton></InputHolder>
+            <InputHolder><Corebutton onClick={()=>Submitpost("Draft")}   style={{width:"100%",backgroundColor:"#2ec4b6",textTransform:"capitalize"}} color="secondary" variant="contained">Taslak Olarak Sakla</Corebutton></InputHolder>
+        </Leftside>
         <Postdiv>
             <Global></Global>
             <div>
@@ -243,7 +280,7 @@ export default function MyEditor () {
               
           </Ckeholder>
         </Postdiv>
-      </div>
+      </Exterior>
 
     )
 }

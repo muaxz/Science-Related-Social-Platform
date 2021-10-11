@@ -110,7 +110,16 @@ width:350px;
 background-color:white;
 border-radius:6px;
 box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+&:before{
+    position:absolute;
+    top:50px;
+    left:0;
+    width:100px;
+    border:2px solid black;
+    content:"";
+    background-color:red;
 
+}
 `
 const Inneroption=styled.div`
 
@@ -201,7 +210,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
         },
     })
     
-
+    console.log(usersforsearch)
     useEffect(()=>{
       //Todo only input lenth
       if(!visible2)
@@ -306,7 +315,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                            <Iconsecure className="fas fa-search"></Iconsecure>
                         </div>
                         :
-                        <div onClick={()=>setvisible2(false)} style={{position:"absolute",right:"12px",top:"10px",width:"20px",cursor:"pointer"}}>
+                        <div onClick={()=>setvisible2(false)} style={{position:"absolute",right:"11px",top:"12px",width:"20px",cursor:"pointer"}}>
                            <Iconsecure className="fas fa-times"></Iconsecure>
                         </div>
                     } 
@@ -317,33 +326,50 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                         <Searchdiv>
                             
                             {
-                                searchactive.length > 0 ? <React.Fragment>{searchtype}</React.Fragment>
+                                searchactive.length > 0 
+                                
+                                ? 
+                                
+                                <React.Fragment>{searchtype}</React.Fragment>
 
                                 :
             
                                 usersforsearch.map((item)=>{
-        
-                                    return(<Searchelements>
-                                            <div>
-                                                <Porfileimage profile="/black.jpg" width="45px" height="45px"/>
-                                            </div>
-                                            <div style={{paddingLeft:"10px"}}>
-                                                <p style={{fontWeight:"600"}}>{item.firstname+" "+item.lastname}</p>
-                                                <p style={{color:"lightgray",fontSize:"15px"}}>İnşaat Mühendisi</p>
-                                            </div>
+                                   
+                                    return(<Searchelements onClick={()=>setinputvalue("")}>
+                                            <Link href={{
+                                                pathname:`/profile/${item.id}`,
+                                                query:{name:"Post"}
+                                                }}>
+
+                                                <div style={{display:"flex"}}>
+                                                    <div>
+                                                        <Porfileimage profile="/black.jpg" width="45px" height="45px"/>
+                                                    </div>
+                                                    <div style={{paddingLeft:"10px"}}>
+                                                        <p style={{fontWeight:"600"}}>{item.firstname+" "+item.lastname}</p>
+                                                        <p style={{color:"lightgray",fontSize:"15px"}}>İnşaat Mühendisi</p>
+                                                    </div>
+                                                </div>
+                                            </Link>
                                         </Searchelements>)
                                 })
                             }
                         </Searchdiv>
                     }
                 </InputHolder>
-                {  !spinner ? 
+                {  
+                   !spinner 
+
+                   ? 
                    
                     <Spinner></Spinner>
                    
                    :
 
-                   !logged ? 
+                   !logged 
+                   
+                   ? 
 
                    <InputHolder>
                         <Link  href="/login">

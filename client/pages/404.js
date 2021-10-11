@@ -16,5 +16,11 @@ export default function Error404() {
     )
 }
 
-Error404.layout=Mainlayout;
+Error404.layout=(children)=>{
+   return (
+       <Mainlayout>
+           {children}
+       </Mainlayout>
+   )
+};
 

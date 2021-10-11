@@ -22,10 +22,8 @@ const Errorhandler=({data,seterrmsg,setwindow,setcontextdata,setlogged,setspinne
       return false;  
       
    }
-   else{
-      return true;
-   }
-   
+  
+   return true;
 }
 
 export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,seterrmsg,setbackenderror,setactive})=>{
@@ -80,11 +78,11 @@ export const resigterreq=async({setbackenderror,userdata,setactive,seterrmsg})=>
   }
 }
 
-export const producereq=async({contentdata,seterrmsg,setwindow,router})=>{
+export const producereq=async({contentdata,seterrmsg,setwindow,router,typeofsubmit})=>{
 
   try{
     
-    const{data}=await axios.post("/content/produce",{contentdata:contentdata})
+    const{data}=await axios.post("/content/produce",{...contentdata,processtype:typeofsubmit})
     
     if(Errorhandler({data,setwindow,seterrmsg})){
         setwindow(true);
@@ -274,7 +272,7 @@ export const Commentreq=async({contentId,setactiveproduce,setcomment,seterrmsg,s
 
 }
 
-export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwindow,setlogged})=>{
+export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwindow,setlogged,setallowaction})=>{
  
   try {
 
@@ -283,6 +281,7 @@ export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwi
         "authorization":`Bearer ${Token}`,
       }
     });
+    console.log(data);
   
     if(Errorhandler({data,seterrmsg,setwindow,setcontextdata,setlogged,setspinner})){ 
 
@@ -290,14 +289,14 @@ export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwi
         UserId:data.userdata.id,
         Username:data.userdata.firstname,
         Usersurname:data.userdata.lastname,
-        Userrole:data.userdata.role,
+        Userrole:data.userdata.Role,
         Userimage:data.userdata.imageurl,
      }
-  
+      
       setcontextdata(mydata);
       setspinner(true);
-      setlogged(true);
-      
+      setlogged(true);  
+      setallowaction(true);    
     }   
     else{
         return;
@@ -305,7 +304,7 @@ export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwi
  
 
   } catch (err) {
-    console.log("errorburadaduruyor");
+    console.log(err);
   }
 }
 
@@ -355,14 +354,16 @@ export const UpdateNotificationcount=async({UserId})=>{
 
 }
 
-export const Getuserprofilecontent=async({setdata,category,UserId,ownerpost,order})=>{
+export const Getuserprofilecontent=async({setspinner,setdata,category,UserId,ownerpost,order})=>{
 
   try {
-    const{data}=await axios.get(`user/getuserprofilecontent/${UserId}/${ownerpost}/${category}/${order}`);
 
+    const{data}= await axios.get(`user/getuserprofilecontent/${UserId}/${ownerpost}/${category}/${order}`);
+    console.log(data.data);
     if(Errorhandler({data})){ 
 
-       setdata(data.data)
+       setdata([...data.data])
+       setspinner(false)
        
 
     }    
@@ -501,6 +502,29 @@ export const Getusersforsearchbar=async({inputvalue,setusers,setactive,setnothin
   } catch (error) {
        console.log("relation error")
        //seterrmsg(true);
+  }
+
+}
+
+export const DeletePost = async({PostId,seterrmsg,setwindow})=>{
+
+  try {
+
+    const{data}=await axios.post("user/deletepost",{
+      PostId:PostId
+    });
+    
+    if(Errorhandler({data,seterrmsg,setwindow})){ 
+       console.log(data.success);   
+    }    
+    else{
+      return;
+    }
+  
+  } catch (error){
+     
+    console.log("error")
+       
   }
 
 }

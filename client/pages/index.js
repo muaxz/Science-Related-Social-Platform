@@ -19,7 +19,13 @@ const Home=({content})=>{
     )
 }
 
-Home.layout=Mainlayout;
+Home.layout=(children)=>{
+    return (
+        <Mainlayout>
+            {children}
+        </Mainlayout>
+    )
+};
 
 export async function getServerSideProps({}){
 

@@ -22,9 +22,6 @@ top:80px;
 width:300px;
 height:600px;
 border-radius:7px;
-@media (max-width:940px){
-    display:none;
-}
 `
 
 const Innerdiv=styled.div`

@@ -7,36 +7,51 @@
     <title>Document</title>
     <style>
         .mydiv{
-            max-width: 800px;
-            height:400px;
-            padding: 10px;
-            display: flex;
-            background-color: red;
-            padding-bottom: 10px;
+            display:flex;
+            max-width:900px;
+            margin:20px auto;
+            margin-right: 20px;
+            margin-left: 20px;
+            background-color: burlywood;
 
         }
-        .images{
-           width:100%;
-           object-fit: contain;
+        .subdivA{
+           height:100px;
+           word-break: break-all;
+           flex: 1;
+           flex-shrink: 0;
+           background-color: blue;
         }
+         .subdivB{
+            width:400px;
+            background-color: yellow;
+        }
+        .subdivC{
+            width:300px;
+            background-color: aquamarine;
+        }
+        
     </style>
     
 </head>
 <body>
-   <div class="mydiv">
-      <img class="images" src="yaprak copy.jpg" alt="">
-   </div>
+    <div class="mydiv">
+        <div class="subdivA">
+              asdasdasdasd
+        </div>
+        <div class="subdivB">
+            
+        </div>
+        <div class="subdivC">
+            
+        </div>
+    </div>
+  
+        sa
+    </div>
+   
    <script>
-           
-    var bool1=true;
-    
-    setTimeout(() => {
-        console.log(bool1);
-    }, 2000);
-
-    bool1=false;
-
-    
+       
    </script>
 </body>
 </html>

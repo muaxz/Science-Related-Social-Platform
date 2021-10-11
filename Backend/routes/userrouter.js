@@ -5,11 +5,13 @@ const Usercontroller=require("../controller/Usercontroller");
 
 
 
-router.get("/getuserdata",Verifytoken,Usercontroller.getuserdata);
-router.get("/getuserprofile/:UserId",Usercontroller.getuserprofile);
-router.get("/getusercount/:UserId",Usercontroller.getuserprofilecount);
+router.get("/getuserdata",Verifytoken,Usercontroller.getuserdata);//For context
+router.get("/getuserprofile/:UserId",Usercontroller.getuserprofile);//Profile page
+router.get("/getusercount/:UserId",Usercontroller.getuserprofilecount);//Profile page
 router.post("/createuserrelation",Usercontroller.createuserrelation);
-router.get("/getuserprofilecontent/:UserId/:ownerpost/:category/:order",Usercontroller.getuserprofilecontent);
-router.get("/getusername/:input",Usercontroller.getusername)
+router.get("/getuserprofilecontent/:UserId/:ownerpost/:category/:order",Usercontroller.getuserprofilecontent);//profile page
+router.get("/getusername/:input",Usercontroller.getusername)//Search Bar
+router.get("/getuserdrafts/:UserId/:Order",Usercontroller.getuserdrafts);
+router.post("/deletepost",Usercontroller.deletepost)// draft page
 
 module.exports=router;

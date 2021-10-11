@@ -2,8 +2,10 @@ import React from 'react'
 import Head from "next/head";
 import Mainlayout from "../../containers/Layout/mainlayout";
 import Usercontent from "../../containers/pages/Usercontent";
+import Guardlayout from "../../containers/Layout/routerguard";
 import {Global} from "../../components/styledcomponents/button"
 import axios from 'axios';
+import ContextProvider from "../../context/Usercontext";
 
 export default function Saved({content}) {
     return (
@@ -52,4 +54,15 @@ export async function getServerSideProps({query}){
     }
 }
 
-Saved.layout=Mainlayout;
+Saved.layout=(children)=>{
+    return (
+        <Mainlayout>
+           <Guardlayout>
+               <React.Fragment>
+                  {children}
+               </React.Fragment>
+           </Guardlayout>
+        </Mainlayout>
+       
+    )
+}

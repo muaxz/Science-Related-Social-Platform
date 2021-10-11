@@ -4,10 +4,9 @@ export default function useClickoutside(){
     
     const ref=useRef();
     const [visible,setvisible]=useState(false);
-
+    
     const handleclick=(event)=>{  
 
-      
 
         if(ref.current && !ref.current.contains(event.target)){
             setvisible(false);
