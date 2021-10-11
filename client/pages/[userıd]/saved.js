@@ -16,7 +16,6 @@ export default function Saved({content}) {
            </Head>
            <Global></Global>
            <Usercontent mydata={content} params={"Readlater"}></Usercontent>
-           
         </React.Fragment>
     )
 }
