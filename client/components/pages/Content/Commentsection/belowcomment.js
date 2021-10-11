@@ -1,6 +1,6 @@
 import React from 'react'
 import Contentcard from "../../../shared/Contentcard";
-
+//deneme
 export default function Belowcomment({mylist,iscomment,postId,content,showwindow,like,retweet,comment,readlater,profileimage,title,titleimage,username,usersurname,subtitle,date}){
 
     const Contentdiv =
