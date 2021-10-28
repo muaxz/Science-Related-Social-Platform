@@ -103,23 +103,13 @@ const Optionwindow=styled.div`
 position:absolute;
 top:60px;
 height:${({fornotify})=>fornotify ? "400px" : ""};
-overflow-y:scroll;
+overflow:auto;
 padding:8px;
 right:0px;
 width:350px;
 background-color:white;
 border-radius:6px;
 box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
-&:before{
-    position:absolute;
-    top:50px;
-    left:0;
-    width:100px;
-    border:2px solid black;
-    content:"";
-    background-color:red;
-
-}
 `
 const Inneroption=styled.div`
 

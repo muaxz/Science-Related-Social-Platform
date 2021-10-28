@@ -1,11 +1,10 @@
-'use strict';
-
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-     return queryInterface.renameColumn("contents","process","phase")
-  },
-
-  down: async (queryInterface, Sequelize) => {
-     return queryInterface.renameColumn("contents","process","process")
-  }
-};
+   up: function(queryInterface, Sequelize) {
+     return Promise.resolve()
+   },
+ 
+   down: function(queryInterface) {
+     return Promise.resolve()
+   }
+ };
+ 

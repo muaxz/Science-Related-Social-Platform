@@ -35,23 +35,17 @@
     
 </head>
 <body>
-    <div class="mydiv">
-        <div class="subdivA">
-              asdasdasdasd
-        </div>
-        <div class="subdivB">
-            
-        </div>
-        <div class="subdivC">
-            
-        </div>
-    </div>
-  
-        sa
-    </div>
-   
    <script>
-       
+          var p3 = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve("foo");
+            }, 5000);
+            
+            });
+
+            Promise.all([1,2,p3]).then((values)=>{
+                console.log(values)
+            })  
    </script>
 </body>
 </html>

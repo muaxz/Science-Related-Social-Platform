@@ -136,7 +136,7 @@ export default function MyEditor (){
         setcontentpart(mutated);
 
     },[userdata])
-
+    
     useEffect(()=>{
         const {CKEditor}=require( '@ckeditor/ckeditor5-react' )
         editorRef.current = {
@@ -148,7 +148,7 @@ export default function MyEditor (){
   
     const changehandler=(event,editör,value)=>{
        const muteted={...contentpart};
-       muteted[value]=value == "content" ? editör.getData() : event.target.value;
+       muteted[value]= value == "content" ? editör.getData() : event.target.value;
        setcontentpart(muteted);
        console.log(muteted);
     }
@@ -179,19 +179,19 @@ export default function MyEditor (){
     
     const Submitpost=(typeofsubmit)=>{
 
+        if(typeofsubmit == "Waiting"){
+          textref.current="Postun Editöre Gönderildi"
+        }
+        else{
+          textref.current="Taslak Olarak kaydedildi"
+        }
+        
         producereq({
           contentdata:contentpart,
           seterrmsg:seterror, 
           typeofsubmit:typeofsubmit,
           setwindow:setwindowactive, 
         })
-
-        if(typeofsubmit == "Waiting"){
-           textref.current="Postun Editöre Gönderildi"
-        }
-        else{
-           textref.current="Taslak Olarak kaydedildi"
-        }
     
     }
     

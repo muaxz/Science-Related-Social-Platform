@@ -1,14 +1,9 @@
-'use strict';
-
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-     queryInterface.addColumn("contents","Draftalias",{
-          type:Sequelize.STRING,
-          allowNull:true,
-     })
+  up: function(queryInterface, Sequelize) {
+    return Promise.resolve()
   },
 
-  down: async (queryInterface, Sequelize) => {
-      queryInterface.removeColumn("contents","Draftalias")
+  down: function(queryInterface) {
+    return Promise.resolve()
   }
 };

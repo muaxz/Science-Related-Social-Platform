@@ -4,7 +4,7 @@ const Comment=require("./Commentmodel");
 
 const User =sequlize.define("User",{
     id:{
-        type: Sequlize.UUID,
+        type:Sequlize.UUID,
         primaryKey:true,
         allownull:false,
         unique:true,

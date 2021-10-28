@@ -1,8 +1,8 @@
-import React,{useEffect,useState,useContext,useCallback} from 'react'
+import React,{useEffect,useState,useContext,useCallback, useRef} from 'react'
 import styled from "styled-components";
 import {createusercontext} from "../../context/Usercontext"
 import {Porfileimage} from "../../components/styledcomponents/button"
-import {Createuserrelation,Getuserprofilecontent,Createrelationreq} from "../../Api/Api"
+import {Createuserrelation,Getuserprofilecontent,Createrelationreq,UpdateNotificationactive} from "../../Api/Api"
 import Contentcard from "../../components/shared/Contentcard";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
@@ -123,6 +123,8 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
 
     //use reducer try on it
     const{userdata}=useContext(createusercontext);
+    const Preventspam = useRef(true)
+    const Preventspam2 = useRef(true)
     const {bottom} = useScroll();
     const[contentdata,setcontentdata]=useState(Contentdata);
     const[order,setorder]=useState(10);
@@ -204,6 +206,11 @@ console.log(Mydata);
             
                         if(item.id == userdata.UserId){
                             
+                            if(item.UserUser.Active == true){
+
+                                setnotificationactive(true)
+
+                            }
                             setbeingfollowed(true)
                             //zaten buraya girememiş ise default değer false
                         }
@@ -232,24 +239,46 @@ console.log(Mydata);
             UserIdofcontent:userid,
         })
 
-    },[])
+    },[userdata.UserId])
     
-
+    console.log(beingfollowed)
     const Followingrequest=()=>{
 
-        setbeingfollowed(!beingfollowed);
+        //todo response gelene kadar bekle hamleye izin verme
+       if(Preventspam2.current){
+            Preventspam2.current = false
+            setbeingfollowed(!beingfollowed);
 
-        if(userdata.UserId){
+            if(userdata.UserId){
 
-            Createuserrelation({
-                UserId:userdata.UserId,
-                FollowedId:Mydata.id,
-                checkiffollow:beingfollowed,
-            })
+                Createuserrelation({
+                    UserId:userdata.UserId,
+                    FollowedId:Mydata.id,
+                    checkiffollow:beingfollowed,
+                    Prevent:Preventspam2
+                })
 
-        }
+            }
+       }
         
            
+    }
+
+    const NotificationActivate = ()=>{
+
+        if(Preventspam.current){
+
+            Preventspam.current = false
+            setnotificationactive(!notificationactive)
+
+            UpdateNotificationactive({
+                FollowerId:userdata.UserId,
+                FollowedId:Mydata.id,
+                currentactive:notificationactive,
+                Prevent:Preventspam
+            })
+        }
+       
     }
 
     const Handleoptions=(optiontype)=>{
@@ -276,15 +305,21 @@ console.log(Mydata);
 
                             (<ButtonHolder>
                                 {
-                                    beingfollowed && 
+                                    beingfollowed && (
 
-                                    notificationactive ? 
-                                    
-                                    (<NotificationsActive style={{color:"white",marginRight:"10px",cursor:"pointer"}} onClick={()=>setnotificationactive(false)}></NotificationsActive>)
+                                    <React.Fragment>
+                                        
+                                        {
+                                            notificationactive ? 
+                                                                                    
+                                            (<NotificationsActive style={{color:"white",marginRight:"10px",cursor:"pointer"}} onClick={NotificationActivate}></NotificationsActive>)
 
-                                    :
+                                            :
 
-                                    (<Notifications style={{color:"white",marginRight:"10px",cursor:"pointer"}} onClick={()=>setnotificationactive(true)}></Notifications>)
+                                            (<Notifications style={{color:"white",marginRight:"10px",cursor:"pointer"}} onClick={NotificationActivate}></Notifications>)
+                                        }
+
+                                    </React.Fragment>)
                                 }
                             <Button onClick={()=>Followingrequest(beingfollowed)} style={{color:"white",backgroundColor:"#0ead69",textTransform:"none"}} variant="contained">{beingfollowed ? "Takipten Çık" : "Takip Et"}</Button>
                         </ButtonHolder>)

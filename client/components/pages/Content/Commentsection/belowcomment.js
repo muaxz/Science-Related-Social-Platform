@@ -1,9 +1,12 @@
-import React from 'react'
+import React,{useRef} from 'react'
 import Contentcard from "../../../shared/Contentcard";
 import uniqid from "uniqid"
 //deneme
-export default function Belowcomment({Answerhandler,mylist,postId,content,showwindow,like,retweet,comment,readlater,profileimage,title,titleimage,username,usersurname,subtitle,date}){
 
+
+var lengthcounter = 0
+function Belowcomment({parentId,Answerhandler,mylist,postId,content,showwindow,like,retweet,comment,readlater,profileimage,title,titleimage,username,usersurname,subtitle,date}){
+    
     const Contentdiv =
     (<Contentcard 
     iscomment={true}
@@ -22,10 +25,12 @@ export default function Belowcomment({Answerhandler,mylist,postId,content,showwi
     subtitle={subtitle}//no need
     date={date}
     Answerhandler={Answerhandler}
+    Childlength={mylist.length}
     >
     </Contentcard>)
     
-    console.log(mylist)
+   
+    
     return (
         <React.Fragment>
         { 
@@ -33,7 +38,8 @@ export default function Belowcomment({Answerhandler,mylist,postId,content,showwi
         }
         <div style={{marginTop:"20px",marginLeft:"60px"}}>
             {
-            mylist ?
+            mylist.length > 0 ?
+
             mylist.map((item,index)=>{
                 return (<Belowcomment
                     key={uniqid()}
@@ -53,8 +59,9 @@ export default function Belowcomment({Answerhandler,mylist,postId,content,showwi
                     usersurname={"Öztürk"}
                     subtitle={item.subtitle}//no need
                     date={item.createdAt}
-                    mylist={item.subcomments}
+                    mylist={item.takeit}
                     Answerhandler={Answerhandler}
+                    parentId={item.parentId}
                 ></Belowcomment>)
             })
             :null
@@ -64,6 +71,8 @@ export default function Belowcomment({Answerhandler,mylist,postId,content,showwi
     )
 
 }
+
+export default React.memo(Belowcomment)
 
 
 /*

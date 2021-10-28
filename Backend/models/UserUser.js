@@ -15,13 +15,7 @@ const UserUser=sequlize.define("UserUser",{
         type:Sequlize.UUID,
     },
     Active:{
-        type:Sequlize.STRING,
-        get:function(){
-            return JSON.parse(this.getDataValue("Active"))
-        } ,
-        set:function(value){
-            return this.setDataValue("Active",JSON.stringify(value));
-        },
+        type:Sequlize.BOOLEAN,
     }
     
 },{freezeTableName:true})

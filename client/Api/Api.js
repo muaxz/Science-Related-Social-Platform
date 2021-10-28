@@ -411,7 +411,7 @@ export const Getuserprofile=async({UserId,setuserdata})=>{
   
 }
 
-export const Createuserrelation=async({UserId,FollowedId,checkiffollow})=>{
+export const Createuserrelation=async({UserId,Prevent,FollowedId,checkiffollow})=>{
 
   try {
 
@@ -420,11 +420,15 @@ export const Createuserrelation=async({UserId,FollowedId,checkiffollow})=>{
       FollowedId:FollowedId,
       checkiffollow:checkiffollow,
     })
-
-    if(Errorhandler({data,seterrmsg,setwindow}))
-    return;
-    else
-    return;
+    setTimeout(() => {
+      Prevent.current = true
+    }, 2000);
+    
+    if(Errorhandler({data,seterrmsg,setwindow})){
+      
+      return;
+    }
+    else return;
 
   } catch (error) {
        console.log("relation error")
@@ -529,18 +533,42 @@ export const DeletePost = async({PostId,seterrmsg,setwindow})=>{
 
 }
 
-export const Commentanswerreq = async({UppercommentId,Answer,UserId,seterrmsg,setwindow})=>{
+export const Commentanswerreq = async({UppercommentId,Answer,UserId,seterrmsg,setwindow,ContentId})=>{
 
   try {
 
     const{data}=await axios.post("comment/produceanswer",{
       CommentId:UppercommentId,
+      ContentId:ContentId,
       Message:Answer,
       UserId:UserId,
     });
     
     if(Errorhandler({data,seterrmsg,setwindow})){ 
        console.log(data.success);   
+    }    
+    else{
+      return;
+    }
+  
+  } catch (error){
+     
+    console.log("error")
+       
+  }
+
+}
+
+export const UpdateNotificationactive = async ({FollowedId,Prevent,FollowerId,currentactive,seterrmsg,setwindow})=>{
+
+  try {
+
+    const{data}=await axios.get(`user/updateusernot/${FollowerId}/${FollowedId}/${currentactive}`);
+    
+    if(Errorhandler({data,seterrmsg,setwindow})){ 
+
+       Prevent.current = true
+       console.log(data.state);   
     }    
     else{
       return;

@@ -9,15 +9,15 @@ export default function Routerguard({children}){
     const [controller,setcontroller]=useState(false);
     const {userdata,logged} = useContext(createusercontext);
 
-    console.log(myrouter.query)
-    console.log(controller);
+    
+    console.log(logged);
 
     useEffect(()=>{
-
+     
         const Token = localStorage.getItem("TOKEN");
         
-        if(userdata.UserId && Token){
-            
+        if(userdata.UserId ){
+            console.log("girdiiiiiii")
             if(myrouter.pathname == "/[userıd]/liked" || myrouter.pathname == "/[userıd]/saved"){
                 
                 if(myrouter.query.userıd == userdata.UserId){
@@ -32,7 +32,7 @@ export default function Routerguard({children}){
               
             }
             if(myrouter.pathname == "/login"){
-
+                console.log(logged)
                 if(logged){
                     
                     myrouter.push("/");

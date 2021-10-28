@@ -180,17 +180,27 @@ left:${({iscomment})=>iscomment ? "-60px" : "0px"};
     top:50px;
     left:20px;
     border-radius:10px;
-    width:100px;
-    height:150px;
+    width:${({length})=>length};
+    height:${({length})=>length*150}px;
     border-left:2px solid lightgrey;
     border-bottom:2px solid lightgrey;
     content:"";
-
+};
+&:after{
+    position:absolute;
+    top:20px;
+    left:-40px;
+    border-radius:10px;
+    width:${({length})=>length*50}px;
+    z-index:-5;
+    border-left:2px solid lightgrey;
+    border-top:2px solid lightgrey;
+    content:"";
 }
 `
 
 //içerik sayısı,takipçi sayısı,
-function Contentcard({Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid}){
+function Contentcard({Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid}){
     
     const[elements,setelements]=useState({
         Like:{
@@ -310,6 +320,12 @@ function Contentcard({Answerhandler,readlater,draft,profileimage,content,titleim
        
     }
 
+    const Makeacomment=()=>{
+        Answerhandler(answervalue,postId)
+        setanswervalue("")
+        setcommentanswer(false)
+    }
+
 
     return (
        <Outsidediv  draft={draft} iscomment={iscomment}>
@@ -400,7 +416,7 @@ function Contentcard({Answerhandler,readlater,draft,profileimage,content,titleim
                 !draft &&
                 <Profilediv>
                 <div style={{display:'flex',alignItems:"center",height:"100%",marginLeft:"5px"}}>
-                    <Profileimageholder iscomment={iscomment}>
+                    <Profileimageholder length={Childlength} iscomment={iscomment}>
                         <Link href={{
                             pathname:`/profile/${userid}`,
                             query:{name:"Post"}
@@ -431,7 +447,7 @@ function Contentcard({Answerhandler,readlater,draft,profileimage,content,titleim
                         iscomment ? 
                         
                             <Contentdiv iscomment={iscomment}>     
-                                <p style={{textAlign:"left",wordBreak:"bre"}}>{content}</p> 
+                                <p style={{textAlign:"left",wordBreak:"break-word"}}>{content}</p> 
                             </Contentdiv>   
                             : 
 
@@ -485,7 +501,7 @@ function Contentcard({Answerhandler,readlater,draft,profileimage,content,titleim
                                 onChange={(e)=>setanswervalue(e.target.value)}
                                 InputProps={{
                                     style:{cursor:"pointer"},
-                                    endAdornment: <InputAdornment onClick={()=>Answerhandler(answervalue,postId)} style={{color:answervalue.length > 0 ?  "#e63946": "grey"}} position="end"><Send></Send></InputAdornment>,
+                                    endAdornment: <InputAdornment onClick={Makeacomment} style={{color:answervalue.length > 0 ?  "#e63946": "grey"}} position="end"><Send></Send></InputAdornment>,
                                 }}
                                 label="Yoruma Cevap Ver..." size="small" variant="outlined">
                             </TextField>

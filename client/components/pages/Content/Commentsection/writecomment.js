@@ -12,9 +12,7 @@ const Innerdiv=styled.div`
 display:flex;
 align-items:center;
 justify-content:center;
-&:after{
-  content:sasasasdasdas
-}
+
 `
 const Options=styled.div`
 width:${({flex})=>flex};

@@ -1,19 +1,10 @@
-'use strict';
-
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    return queryInterface.changeColumn("contents","catagories",{
-      type:Sequelize.ENUM,
-      values:["Felsefe","Uzay","Metafizik","Biyoloji"],
-      allowNull:true,
-     })
+  up: function(queryInterface, Sequelize) {
+    return Promise.resolve()
   },
 
-  down: async (queryInterface, Sequelize) => {
-    return queryInterface.changeColumn("contents","catagories",{
-      type:Sequelize.ENUM,
-      values:["Felsefe","Uzay","Metafizik","Biyoloji"],
-      allowNull:true,
-     })
+  down: function(queryInterface) {
+    return Promise.resolve()
   }
 };
+

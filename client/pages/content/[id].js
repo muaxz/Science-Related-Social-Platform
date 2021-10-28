@@ -6,7 +6,8 @@ import {Global} from "../../components/styledcomponents/button"
 import axious from "axios";
 
 
-export default function Content({mydata,comments,getquery}) {
+export default function Content({mydata,comments,getquery,comments2}) {
+
     return (
        <> 
            <Head>
@@ -60,7 +61,7 @@ export async function getServerSideProps({query}){
         };
  
         return {
-            props :{mydata:recieve[0].data.data,comments:recieve[1].data.data,getquery:query.id}
+            props :{mydata:recieve[0].data.data,comments:recieve[1].data.data,getquery:query.id,comments2:recieve[1].data.trial}
         }
 
     } catch (error) {

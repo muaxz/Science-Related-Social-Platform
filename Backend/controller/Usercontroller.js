@@ -78,11 +78,17 @@ exports.getuserprofile = async (req,res,next)=>{
          include:[{
            model:Usermodel,
            as:"Followed",
-           attributes:["id"]
+           attributes:["id"],
+           through:{
+            attributes:["FollowedId","Active","FollowerId","createdAt","updatedAt"]
+          }
          },{
            model:Usermodel,
            as:"Follower",
-           attributes:["id"]
+           attributes:["id"],
+           through:{
+            attributes:["FollowedId","Active","FollowerId","createdAt","updatedAt"]
+          }
          }]
      })
 
@@ -300,7 +306,7 @@ exports.getuserprofilecount = async (req,res,next)=>{
 
 exports.createuserrelation = async (req,res,next)=>{
   
-  const {FollowerId,FollowedId,checkiffollow} =req.body;
+  const {FollowerId,FollowedId,checkiffollow} = req.body;
   const io = req.app.get("socketio");
   //follower ıd is our current active user
   try {
@@ -318,10 +324,7 @@ exports.createuserrelation = async (req,res,next)=>{
         FollowedId:FollowedId,
         Follower:FollowerId,
         Followed:FollowedId,
-        Active:{
-          Post:false,
-          Debate:false,
-        }
+        Active:false
       })
       
       //burada zaten aynı kişiye takip atamaz
@@ -390,4 +393,22 @@ exports.deletepost = async (req,res,next)=>{
     return;
   }
 
+}
+
+exports.updatenotification = async (req,res,next)=>{
+
+  try {
+
+    const {FollowerId,FollowedId,currentactive} = req.params;
+
+    await UserUsermodel.update({Active:currentactive == "true" ? false : true},{where:{FollowerId:FollowerId,FollowedId:FollowedId}})
+
+    return res.json({state:"success"})
+
+  } catch (error){
+
+    next()
+    return;
+
+  }
 }

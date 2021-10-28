@@ -16,6 +16,7 @@ const Myserver=require("http").createServer(app);
 const io=require("socket.io")(Myserver,{cors:{origin:"*"}})
 const Userrouter=require("./routes/userrouter");
 const Notifyrouter=require("./routes/Notificationroute");
+const Hr = require("sequelize-hierarchy")
 
 io.on("connection",(socket)=>{ 
     console.log("connection on socket io...");
@@ -25,6 +26,7 @@ app.set("socketio",io)
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(cors());
+
 DB.sync()
 .then(()=>{
     console.log("deleted");

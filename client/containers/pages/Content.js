@@ -1,4 +1,4 @@
-import React, { useEffect,useState,useRef, useContext} from 'react'
+import React, { useEffect,useState,useRef, useContext,useCallback} from 'react'
 import Icon from "../../components/UI/Icon";
 import styled from "styled-components";
 import {Porfileimage} from "../../components/styledcomponents/button";
@@ -100,7 +100,7 @@ export default function Content({Contentdata,comments,id}){
     useEffect(()=>{
 
        if(bottom){
-
+            
             Commentreq({
                 contentId:id,
                 setcomment:setcommentlist,
@@ -121,8 +121,8 @@ export default function Content({Contentdata,comments,id}){
        setcommentlist(comments);
     },[id])
     
-    const Produce=(message)=>{
-
+    const Produce=useCallback((message)=>{
+        console.log(content.personal.id)
         Producecommentreq({
             ContentId:id,
             UserId:userdata.UserId,
@@ -132,18 +132,19 @@ export default function Content({Contentdata,comments,id}){
             seterrmsg:seterrmsg,
         })
 
-    }
+    },[userdata.UserId])
 
     const Answerhandler=(Answer,UpperId)=>{
           console.log("BURADAAA")
           Commentanswerreq({
               UppercommentId:UpperId,
               UserId:userdata.UserId,
-              Answer:Answer
+              Answer:Answer,
+              ContentId:id
           })
 
     }
-
+   
     return (
         <div style={{maxWidth:"950px",margin:"auto"}}>
             <Exteriorcontent>

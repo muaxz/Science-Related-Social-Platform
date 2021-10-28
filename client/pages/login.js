@@ -387,12 +387,6 @@ const Login=()=>{
     )
 }
 
-Login.layout=(children)=>{
-    return (
-          <Routerguard>
-               {children}
-          </Routerguard>
-    )
-}
+
 
 export default Login;
