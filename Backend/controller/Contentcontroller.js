@@ -30,27 +30,33 @@ exports.produce=async (req,res,next)=>{
      
     //....................
     //produce için değil editör postu public yaptıgında gelen bildirim bu olucak
-    
+   
     const Followerofcontentuser = await UserUser.findAll({
       where:{
       FollowedId:UserId,
+      Active:true
     }})
     
-    const Editdarray = [];
+    if(Followerofcontentuser.length > 0){
 
-    for (let i = 0; i < Followerofcontentuser.length; i++){
+        const Editdarray = [];
 
-        Editdarray[i] = Followerofcontentuser[i].FollowerId; //burada gelen her bir objenin followed ıd sini yeni bir arraya koyuyoruz
-
+        for (let i = 0; i < Followerofcontentuser.length; i++){
+    
+            Editdarray[i] = Followerofcontentuser[i].FollowerId; //burada gelen her bir objenin followed ıd sini yeni bir arraya koyuyoruz
+    
+        }
+        //taker ıd burada "current" kişiyi takip edenlerin bildirimi "post notification" açık olan kişiler.
+        await Notification.create({
+                attribute:"Post",
+                TakerId:Editdarray,
+                ContentId:Obj.dataValues.id,
+                UserId:UserId,
+            })
+            
+  
     }
-     //taker ıd burada "current" kişiyi takip edenlerin bildirimi "post notification" açık olan kişiler.
-     await Notification.create({
-            attribute:"Post",
-            TakerId:Editdarray,
-            ContentId:Obj.dataValues.id,
-            UserId:UserId,
-         })
-
+  
     
     return res.json({state:"success"});
 

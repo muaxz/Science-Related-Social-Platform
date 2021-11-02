@@ -3,6 +3,7 @@ import styled,{keyframes} from "styled-components";
 import {createusercontext} from "../../context/Usercontext";
 import {Porfileimage} from "../styledcomponents/button";
 import Link from "next/link";
+import {useRouter} from "next/router"
 import Icon from "../UI/Icon"
 import {AddComment, feed, Feedback,Send} from "@material-ui/icons"
 import {calculatedate} from "../../utilsfunc"
@@ -225,6 +226,7 @@ function Contentcard({Childlength,Answerhandler,readlater,draft,profileimage,con
     const [commentanswer,setcommentanswer]=useState(false);
     const [answervalue,setanswervalue]=useState("");
     const {userdata} = useContext(createusercontext);
+    const router = useRouter()
 
 
     var textforopiton="";
@@ -245,7 +247,7 @@ function Contentcard({Childlength,Answerhandler,readlater,draft,profileimage,con
 
        const currentelements={...elements};
 
-        if(!foruser){
+        if(!foruser && userdata.UserId){
 
             like.forEach((user)=>{
                 if(userdata.UserId == user.id){//eğer burada herhangi bir eşitlik bulunursa kullanıcı postu beğendi demek
@@ -288,7 +290,7 @@ function Contentcard({Childlength,Answerhandler,readlater,draft,profileimage,con
         const currentelements={...elements};
   
        
-        if(currentelements[elementtype].ismarked==false){
+        if(currentelements[elementtype].ismarked==false && userdata.UserId){
          
             currentelements[elementtype].ismarked=true;
             currentelements[elementtype].animation=true;
@@ -300,10 +302,11 @@ function Contentcard({Childlength,Answerhandler,readlater,draft,profileimage,con
                     id:userdata.UserId
                 })
             }
-
+            
             createrelationforsmh(postId,elementtype,"Create",userid);
+               
         }
-        else{
+        else if(currentelements[elementtype].ismarked==true && userdata.UserId){
 
             currentelements[elementtype].ismarked = false;
             currentelements[elementtype].animation=false;
@@ -314,6 +317,9 @@ function Contentcard({Childlength,Answerhandler,readlater,draft,profileimage,con
 
             createrelationforsmh(postId,elementtype,"Destroy");
 
+        }
+        else{
+            router.push("/login")
         }
 
         setelements(currentelements);
@@ -362,7 +368,7 @@ function Contentcard({Childlength,Answerhandler,readlater,draft,profileimage,con
                             {
                                 !draft ?
                                   <React.Fragment>
-                                        <Optionholder>
+                                        <Optionholder style={{display:userdata.UserId ? "flex" : "none"}}>
                                             <Icon className="fas fa-user-minus" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
                                             <div style={{marginLeft:"8px",color:"#757575"}}>
                                                 <p style={{color:"black"}}>Duhan Öztürk'ü takipten çık</p>

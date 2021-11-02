@@ -7,8 +7,9 @@ import Contentcard from "../../components/shared/Contentcard";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
 import useScroll from "../../hooks/Scroll";
-import { Notifications, NotificationsActive } from '@material-ui/icons';
+import { EditRounded, Notifications, NotificationsActive } from '@material-ui/icons';
 import Contentmap from "../../components/pages/Profile/contentmap";
+import Editwindow from "../../components/pages/Profile/Editwindow"
 
 
 const Exteriordiv=styled.div`
@@ -134,6 +135,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
     const[Timetorender,settimetorender]=useState(false);
     const[notificationactive,setnotificationactive]=useState(false);
     const[spinner,setspinner]=useState(false);
+    const[activeedit,setactiveedit]=useState(false);
     const[options,setoptions]=useState({
         Post:{
             name:"Gönderiler",
@@ -191,7 +193,8 @@ console.log(Mydata);
         if(userdata.UserId){
               
             settimetorender(true);
-
+            setcheckuserid(false);
+            console.log(query.username)
             if(userdata.UserId == query.username){
              
 
@@ -295,13 +298,14 @@ console.log(Mydata);
 
     return (
         <Exteriordiv>
+            <Editwindow active={activeedit} />
             <Innerdiv>
                 <Imagesection>
                     <BackgroundImage/> 
                     {       //burada context userId yok ise buna izin vermiyorum ancak setstate oldugunda gösterim var
                             //TODO this should be fixed during navigaiton
                             //userdata.userıd yoksa kullanıcı giriş yapmamıştır
-                            !checkuserid && Timetorender &&
+                            !checkuserid && Timetorender ?
 
                             (<ButtonHolder>
                                 {
@@ -322,6 +326,12 @@ console.log(Mydata);
                                     </React.Fragment>)
                                 }
                             <Button onClick={()=>Followingrequest(beingfollowed)} style={{color:"white",backgroundColor:"#0ead69",textTransform:"none"}} variant="contained">{beingfollowed ? "Takipten Çık" : "Takip Et"}</Button>
+                        </ButtonHolder>)
+
+                        : 
+
+                        (<ButtonHolder>
+                            <Button onClick={()=>setactiveedit(!activeedit)} endIcon={<EditRounded></EditRounded>} variant="contained" style={{color:"white",backgroundColor:"#e63946",textTransform:"none"}}>Profili Duzenle</Button>
                         </ButtonHolder>)
                     }     
                 </Imagesection>

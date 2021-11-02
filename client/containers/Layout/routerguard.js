@@ -16,8 +16,9 @@ export default function Routerguard({children}){
      
         const Token = localStorage.getItem("TOKEN");
         
-        if(userdata.UserId ){
-            console.log("girdiiiiiii")
+        if(userdata.UserId){
+
+
             if(myrouter.pathname == "/[userıd]/liked" || myrouter.pathname == "/[userıd]/saved"){
                 
                 if(myrouter.query.userıd == userdata.UserId){
@@ -33,7 +34,7 @@ export default function Routerguard({children}){
             }
             if(myrouter.pathname == "/login"){
                 console.log(logged)
-                if(logged){
+                if(userdata.UserId){
                     
                     myrouter.push("/");
 

@@ -26,6 +26,9 @@ const Usercontext=({children})=>{
             })
 
         }
+        else{
+            setspinner(true)
+        }
 
     },[]);
 
