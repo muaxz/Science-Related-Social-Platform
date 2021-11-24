@@ -1,19 +1,16 @@
 const jwt=require("jsonwebtoken");
 
 
+
 module.exports=(req,res,next)=>{
 
-    const bearerHeader=req.headers["authorization"];
-  
-    if(typeof bearerHeader !== "undefined"){
-     
-     const bearer=bearerHeader.split(" ");
-
-     const beareToken=bearer[1];
+    const token =req.cookies["myauth"];
+   
+    if(token){
 
      //burada request objesine yeni bir eleman tanımlayailiyoruz
 
-     jwt.verify(beareToken,"secretkey",(err,authdata)=>{
+     jwt.verify(token,"secretkey",(err,authdata)=>{
          
         if(err){
 
@@ -31,7 +28,7 @@ module.exports=(req,res,next)=>{
 
     }
     else{
-       return res.json("warning")
+        return res.json("Unauthorized");
        //burada kullanıcı outlogin ediliyor
     }
 }

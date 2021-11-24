@@ -5,6 +5,7 @@ const Contentmodel=require("../models/Contentmodel");
 const UserUsermodel=require("../models/UserUser");
 const Notificationmodel=require("../models/Notificationmodel");
 const Comment = require("../models/Commentmodel");
+const User = require("../models/Usermodel");
 
 
 
@@ -47,7 +48,7 @@ exports.getuserdata=async(req,res,next)=>{
        })
 
        if(Myuserdata){
-        console.log("heyyyyoooooooooooooo")
+
          return res.json({success:"success",userdata:Myuserdata});
 
        } 
@@ -74,7 +75,7 @@ exports.getuserprofile = async (req,res,next)=>{
      
      const Myuserdata=await Usermodel.findOne({
          where:{id:UserId}, 
-         attributes:["id","firstname","lastname","imageurl","Role"],
+         attributes:["id","firstname","lastname","imageurl","Role","Personaltext","username","backgroundurl"],
          include:[{
            model:Usermodel,
            as:"Followed",
@@ -411,4 +412,32 @@ exports.updatenotification = async (req,res,next)=>{
     return;
 
   }
+}
+
+exports.updateprofile = async (req,res,next)=>{
+
+  const {username,firstname,lastname,personaltext,UserId,imageurl,backgroundurl} = req.body
+
+  try {
+
+       //const UN = User.findOne({where:{username:username}})
+
+       if(UN == null){
+          await User.update({
+            firstname:firstname,
+            lastname:lastname,
+            personaltext:personaltext,
+            backgroundurl:"",
+            imageurl:"",},
+            {where:{id:UserId}})
+       }
+       else{
+          //res.json({state:"baska bisey dene"})
+       }
+      
+
+  } catch (error) {
+    
+  }
+
 }

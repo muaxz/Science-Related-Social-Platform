@@ -22,11 +22,11 @@ export default function Saved({content}) {
 
 
 
-export async function getServerSideProps({query}){
+export async function getServerSideProps({query,req}){
 
     try {
 
-        const {data} =await axios.get(`http://localhost:3001/content/usercontent/Readlater/${query.userıd}/10`)
+        const {data} = await axios.get(`http://localhost:3001/content/usercontent/Readlater/${query.userıd}/10`,{headers:{Cookie:req.headers.cookie}})
 
         if(data && data.error){
 

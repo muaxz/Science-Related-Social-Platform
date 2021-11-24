@@ -7,14 +7,17 @@ import Contentcard from "../../components/shared/Contentcard";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
 import useScroll from "../../hooks/Scroll";
-import { EditRounded, Notifications, NotificationsActive } from '@material-ui/icons';
+import { EditRounded, Notifications, NotificationsActive,Person} from '@material-ui/icons';
 import Contentmap from "../../components/pages/Profile/contentmap";
 import Editwindow from "../../components/pages/Profile/Editwindow"
 
 
 const Exteriordiv=styled.div`
 max-width:1400px;
+padding-top:60px;
 width:100%;
+height:100vh;
+overflow:${({editactive})=>editactive ? "hidden" : "visible"};
 padding-bottom:20px;
 padding-left:60px;
 @media (max-width:940px){
@@ -51,7 +54,7 @@ left:140px;
 const BackgroundImage=styled.div`
 width:100%;
 height:100%;
-background-image:url(/black.jpg);
+background-image:url(https://cdn.evrimagaci.org/TLXVkrIihHZ_W4_DBiPznd74psg=/160x160/filters:format(webp)/evrimagaci.org%2Fpublic%2Fprofile_images%2F4e239b51c0dd9ec00dcc4cbc06bf6f26.jpg);
 background-size: cover;
 background-repeat: no-repeat;
 background-position: center; 
@@ -297,8 +300,8 @@ console.log(Mydata);
     }
 
     return (
-        <Exteriordiv>
-            <Editwindow active={activeedit} />
+        <Exteriordiv editactive={activeedit}>
+            <Editwindow closefunc={()=>setactiveedit(false)} editdata={profiledata} active={activeedit} />
             <Innerdiv>
                 <Imagesection>
                     <BackgroundImage/> 
@@ -329,10 +332,10 @@ console.log(Mydata);
                         </ButtonHolder>)
 
                         : 
-
-                        (<ButtonHolder>
-                            <Button onClick={()=>setactiveedit(!activeedit)} endIcon={<EditRounded></EditRounded>} variant="contained" style={{color:"white",backgroundColor:"#e63946",textTransform:"none"}}>Profili Duzenle</Button>
-                        </ButtonHolder>)
+                          Timetorender &&
+                            (<ButtonHolder>
+                                <Button onClick={()=>setactiveedit(!activeedit)} endIcon={<Person></Person>} variant="contained" style={{color:"white",backgroundColor:"#e63946",textTransform:"none",borderRadius:"25px"}}>Profili Duzenle</Button>
+                            </ButtonHolder>)
                     }     
                 </Imagesection>
                 <Contentpart>

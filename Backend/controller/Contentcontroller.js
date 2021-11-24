@@ -67,16 +67,15 @@ exports.produce=async (req,res,next)=>{
   }
 }
 
-
 exports.gethome=async(req,res,next)=>{
 
-
+  
   const {number,category}=req.params;
   var newnum=parseInt(number);//paramstand string olarak alıyoruz
 
   try {
     //beğenenler,yorumlar
-    console.log(newnum);
+
     const Contents=await Content.findAll({
       //dizi[1].preferences[0].usercontent.attribute
       where:{
@@ -216,71 +215,77 @@ exports.createrelation=async (req,res,next)=>{
 exports.getusercontent=async(req,res,next)=>{
 
   const {catagory,id,order}=req.params;
-  var latestparams="";
-  console.log("Categorrryyyyyy "+catagory);
-  var newnum=parseInt(order);
+  const {UserId} = req.userdata
+  //burada serverda tutaln user geliyor
+  //burada ekstra bir kontrol gerekli
+  console.log(UserId)
+  console.log(id)
+  if(UserId == id){//UserId is current, id is coming from outside
 
-  switch (catagory) {
-    case "Readlater":
-        latestparams="Readlater"
-        break;
-    case "Like":
-        latestparams="Like"
-        break;
-    case "Reshow":
-        latestparams="Retweet"
-        break;    
-    case "Draft":
-        latestparams="Draft"
-        break;       
-  }
+        var latestparams="";
+        var newnum=parseInt(order);
 
-  var Datawillsend = null;
-   
-  try {
-    
-    if(latestparams == "Draft"){
-         //todo alias for draft posts
-         Datawillsend = await Content.findAll({
-            where:{
-              phase:"Draft",
-              Userforuserid:id,
-            }
-         })  
+        switch (catagory) {
+          case "Readlater":
+              latestparams="Readlater"
+              break;
+          case "Like":
+              latestparams="Like"
+              break;
+          case "Reshow":
+              latestparams="Retweet"
+              break;    
+          case "Draft":
+              latestparams="Draft"
+              break;       
+        }
 
-         console.log(Datawillsend)
+        var Datawillsend = null;
+        
+        try {
+          
+          if(latestparams == "Draft"){
+              //todo alias for draft posts
+              Datawillsend = await Content.findAll({
+                  where:{
+                    phase:"Draft",
+                    Userforuserid:id,
+                  }
+              })  
 
-    }
-    else{
-
-          Datawillsend = await Usercontent.findAll({
-          where:{
-            UserId:id,
-            attribute:[`${latestparams}`],
-          },
-          limit:10,
-          offset:newnum-10,
-          include:{
-            model:Content,
-            include:[{
-              model:User,
-              as:"personal",
-              attributes:["id","firstname","imageurl","lastname","Role"]
-            }    
-          ]
           }
-        })
+          else{
 
-    }
+                Datawillsend = await Usercontent.findAll({
+                where:{
+                  UserId:id,
+                  attribute:[`${latestparams}`],
+                },
+                limit:10,
+                offset:newnum-10,
+                include:{
+                  model:Content,
+                  include:[{
+                    model:User,
+                    as:"personal",
+                    attributes:["id","firstname","imageurl","lastname","Role"]
+                  }    
+                ]
+                }
+              })
 
-   
-    return res.json({data:Datawillsend})
+          }
 
-  } catch (error){
-    console.log(error);
-    next();
-    return;
+        
+          return res.json({data:Datawillsend})
+
+        } catch (error){
+          console.log(error);
+          next();
+          return;
+        }
   }
+  
 }
 
 //Content sayfası

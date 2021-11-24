@@ -118,7 +118,7 @@ padding-left:100px;
 
 
 export default function Home({mydata}){
-   
+    
     const {bottom}=useScroll();
     const [slidevalue,setslidevalue]=useState(-30);
     const {userdata} = useContext(createusercontext)
@@ -159,9 +159,9 @@ export default function Home({mydata}){
     const [stoprequesting,setstopreq]=useState(false);
     const [spinner,setspinner]=useState(false);
 
-   console.log(userdata)
+  
     useEffect(()=>{
-        console.log("buradaaa");
+        console.log(document.cookie);
         
         if(!selectionlist[selectedkey].stoprequesting && bottom){
            
@@ -284,7 +284,7 @@ export default function Home({mydata}){
                     <ContentDiv style={{maxWidth:"650px",minHeight:"600px",paddingTop:"30px",width:"100%",paddingRight:"30px"}}>
                             <ShortDiv>
                                 <Iconholder onClick={()=>Setslidevalue("Back")} leftvalue="0" rightvalue={""}>
-                                   <i style={{color:"black"}} class="fas fa-chevron-left"></i>
+                                   <i style={{color:"red"}} class="fas fa-chevron-left"></i>
                                 </Iconholder>
                                 <Iconholder onClick={()=>Setslidevalue("forward")} leftvalue={""} rightvalue="0">
                                    <i style={{color:"black"}} class="fas fa-chevron-right"></i>

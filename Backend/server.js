@@ -13,25 +13,30 @@ const Commentrouter=require("./routes/Commentrouter");
 const Upload=require("./routes/upload");
 const UserUser=require("./models/UserUser");
 const Myserver=require("http").createServer(app);
-const io=require("socket.io")(Myserver,{cors:{origin:"*"}})
+const io=require("socket.io")(Myserver,{cors:{origin:"http://localhost:3000"}})
 const Userrouter=require("./routes/userrouter");
 const Notifyrouter=require("./routes/Notificationroute");
 const Hr = require("sequelize-hierarchy")
+const cookieparser = require("cookie-parser")
+const fileupload = require("express-fileupload")
+
 
 io.on("connection",(socket)=>{ 
     console.log("connection on socket io...");
 })
 
+app.use(fileupload())
 app.set("socketio",io)
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({extended:false}));
 app.use(express.json());
-app.use(cors());
+app.use(cors({origin:"http://localhost:3000",credentials:true}));
 
 DB.sync()
 .then(()=>{
     console.log("deleted");
 })
 
+app.use(cookieparser())
 app.use(Loginrouter);
 app.use("/content",Contentrouter);
 app.use("/upload",Upload);

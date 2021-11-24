@@ -387,7 +387,7 @@ const Login=()=>{
     )
 }
 
-
+/*
 Login.layout=(children)=>{
     return (
            <Guardlayout>
@@ -397,6 +397,7 @@ Login.layout=(children)=>{
            </Guardlayout>
     )
 }
+*/
 
 
 

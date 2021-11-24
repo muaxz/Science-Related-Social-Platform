@@ -3,7 +3,7 @@ const User=require("../models/Usermodel");
 const bcrypt=require("bcrypt");
 const {v4}=require("uuid");
 
-exports.login=async (req,res,next)=>{
+exports.login = async (req,res,next)=>{
 
    try{
 
@@ -32,6 +32,7 @@ exports.login=async (req,res,next)=>{
                 //ToDorefresh token
                jwt.sign({UserId:user.id},"secretkey",(err,token)=>{
                   //public key or private key
+                   res.cookie("myauth",token,{httpOnly:true,path:"/"})
                    return res.json({Userdata:mydata,token:token,auth:true});
                })
                
@@ -56,9 +57,8 @@ exports.login=async (req,res,next)=>{
    }
 }
 
-//---------------------------------------------------------------------------------
 
-exports.register=async (req,res,next)=>{
+exports.register = async (req,res,next)=>{
 
   const  {name,surname,email,password}=req.body.userdata;
    console.log(email);
@@ -99,5 +99,12 @@ exports.register=async (req,res,next)=>{
      console.log(err);
      return;
   }
+
+}
+
+exports.logout = async(req,res,next)=>{
+    console.log("Logout aloooooooooooooo")
+    res.clearCookie("myauth",{path:"/"})
+    res.json({state:"success"})
 
 }

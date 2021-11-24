@@ -6,7 +6,7 @@ import useClickoutsie from '../../../hooks/Clikcoutisde';
 import {createusercontext} from "../../../context/Usercontext";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
-import {Getusersforsearchbar} from "../../../Api/Api"
+import {Getusersforsearchbar,logout} from "../../../Api/Api"
 import { AccountCircle, Home,Assignment} from '@material-ui/icons';
 
 
@@ -166,7 +166,7 @@ color:white;
 export default function Navigation({Data,Count,Reloadfunc,Update}){
  
 
-    const {logged,spinner,userdata} = useContext(createusercontext);
+    const {logged,spinner,userdata,setspinner,setuserdata,setlogged} = useContext(createusercontext);
     const {ref,visible,setvisible} = useClickoutsie();
     const {ref:ref2,visible:visible2,setvisible:setvisible2} = useClickoutsie();
     //burada değişken isimi değiştirerek kullanabilrsin
@@ -208,6 +208,14 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
       setsearchactive("");
 
     },[visible2])
+
+    const Logout =()=>{
+        logout({
+            setlogged:setlogged,
+            setuserdata:setuserdata,
+            setspinner:setspinner
+        })
+    }
 
     const Keyupfunction=()=>{
 
@@ -402,7 +410,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                             Iconumber !== 0 && visible == true ?
                             <Optionwindow onScroll={ScrolltoBottom} ref={Myref} fornotify={Iconobject["2"].onoff}>
                                 <Inneroption>
-                                    <Navtools Navdata={Data} optnumber={Iconumber}></Navtools>
+                                    <Navtools Logout={Logout} Navdata={Data} optnumber={Iconumber}></Navtools>
                                 </Inneroption>
                             </Optionwindow> : null
                         }  

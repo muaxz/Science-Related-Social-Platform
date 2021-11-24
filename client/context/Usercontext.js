@@ -15,7 +15,7 @@ const Usercontext=({children})=>{
         
         const token=localStorage.getItem("TOKEN");   
         
-        if(token){
+        //if(token){
 
             Contextdata({
                 Token:token,
@@ -25,10 +25,10 @@ const Usercontext=({children})=>{
                 setallowaction:setallowaction,
             })
 
-        }
-        else{
-            setspinner(true)
-        }
+        //}
+        //else{
+            
+        //}
 
     },[]);
 

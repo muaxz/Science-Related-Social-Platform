@@ -9,7 +9,6 @@ import Window from "../../components/UI/window";
 
 
 
-
 const Ckeholder=styled.div`
 width:82%;
 padding:10px;
@@ -156,7 +155,7 @@ export default function MyEditor (){
     const filechange=(event)=>{
        setfile(event.target.files[0])
        setfilename(event.target.files[0].name);
-       console.log(event.target.files[0].name);
+       console.log(event.target.files[0]);
     }
     
     const submitfile=async ()=>{
@@ -239,7 +238,7 @@ export default function MyEditor (){
               </InputHolder>
               <InputHolder>
                   <Labelimage  htmlFor="file">Başlık Fotoğrafı Seç</Labelimage>
-                  <Input onChange={filechange} style={{display:"none"}} id="file" type="file" name="upload"></Input>
+                  <Input accept="image/png, image/gif, image/jpeg"  onChange={filechange} formEncType={"multipart/form-data"} style={{display:"none"}} id="file" type="file" name="upload"></Input>
                   <Iconsecure style={{top:"50%",left:"-18px",height:"100%",lineHeight:"20px"}} className="fas fa-images"></Iconsecure>  
               </InputHolder>
               <InputHolder>

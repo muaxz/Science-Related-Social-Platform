@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "universal-cookie"
 
 axios.defaults.baseURL="http://localhost:3001";
 
@@ -27,10 +28,11 @@ const Errorhandler=({data,seterrmsg,setwindow,setcontextdata,setlogged,setspinne
 }
 
 export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,seterrmsg,setbackenderror,setactive})=>{
+    
 
     try{
 
-      const{data}=await axios.post("/login",{userdata:userdata})
+      const{data}=await axios.post("/login",{userdata:userdata},{withCredentials:true})
       console.log(data);
       
       if(data.wrong == "WP"){
@@ -57,6 +59,20 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
         seterrmsg(true)
     }
     
+}
+
+export const logout = async({setspinner,setuserdata,setlogged})=>{
+
+  try {
+
+      await axios.get("/logout",{withCredentials:true})
+      setlogged(false)
+      setuserdata({})
+      setspinner(true)
+      console.log(logged)
+  } catch (error) {
+    ///
+  }
 }
 
 
@@ -131,7 +147,7 @@ export const Producecommentreq=async ({Message,TakerId,setnumbercom,setwindow,Us
 export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setcontentdata,order,setstopreq,category,paignation,selectionlist,setselection})=>{
   try {
 
-    const{data}=await axios.get(`content/gethome/${order}/${category}`)
+    const{data}=await axios.get(`content/gethome/${order}/${category}`,{withCredentials:true})
     console.log(data);
     if(Errorhandler({data,seterrmsg,setwindow})){
 
@@ -276,11 +292,8 @@ export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwi
  
   try {
 
-    const {data}=await axios.get(`/user/getuserdata`,{
-      headers:{
-        "authorization":`Bearer ${Token}`,
-      }
-    });
+    const {data}=await axios.get(`/user/getuserdata`,{withCredentials:true});
+
     console.log(data);
   
     if(Errorhandler({data,seterrmsg,setwindow,setcontextdata,setlogged,setspinner})){ 
@@ -440,13 +453,12 @@ export const Createuserrelation=async({UserId,Prevent,FollowedId,checkiffollow})
 export const Notificationreq=async({UserId,setnavdata,order,navdata,lastrow})=>{
 
   try {
-    console.log(UserId);
+   
     
     const{data}=await axios.get(`notification/getrows/${UserId}/${order}/${lastrow}`);
     const Mycurrentdata=[...navdata];
     const Newdata=data.mydata;
-    console.log(Newdata);
-
+    
     if(lastrow){
       console.log("looo2")
       setnavdata(Newdata.concat(Mycurrentdata));

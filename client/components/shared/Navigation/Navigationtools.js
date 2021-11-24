@@ -1,10 +1,12 @@
-import React,{useState}from 'react'
+import React,{useState,useContext}from 'react'
 import styled from "styled-components";
 import Icon from "../../UI/Icon";
 import {Porfileimage} from "../../styledcomponents/button";
 import Switch from "react-switch";
 import Link from "next/link";
 import {calculatedate} from "../../../utilsfunc"
+import {logout} from "../../../Api/Api"
+import {createusercontext} from "../../../context/Usercontext"
 
 const Option1div=styled.div`
 width:100%;
@@ -21,8 +23,9 @@ background-color:${({check})=> check == false ? "#EBEBEB" : ""};
 }
 `
 
-export default function Navigationtools({optnumber,optname,Navdata}){
-
+export default function Navigationtools({optnumber,optname,Navdata,Logout}){
+    const {setlogged,setuserdata,setspinner,logged} = useContext(createusercontext)
+    console.log(setlogged)
     const [toggle,settogle]=useState(false);
 
     let Myoption = null;
@@ -91,7 +94,7 @@ export default function Navigationtools({optnumber,optname,Navdata}){
                     }
      
                     return (<Option1div key={index} check={item.Facecheck}>
-                              <Link href={`${myitemobj.href}/${item[myitemobj.idname]}`}>
+                              <Link href={{pathname:`${myitemobj.href}/${item[myitemobj.idname]}`,query:{name:"Post"}}}>
                                 <div style={{display:"flex"}}>
                                      <div>
                                       <Porfileimage profile="/black.jpg" width="50px" height="50px"/>
@@ -138,7 +141,7 @@ export default function Navigationtools({optnumber,optname,Navdata}){
                           <Switch  checkedIcon={false} uncheckedIcon={false} onChange={()=>settogle(!toggle)} checked={toggle}></Switch>
                         </div>
                     </Option1div>
-                    <Option1div>
+                    <Option1div onClick={()=>Logout()}>
                         <Icon className="fas fa-sign-out-alt " Iconconfig={{width:"32px",backcolor:"#DEDEDE",height:"32px",lineheight:"32px"}}></Icon>
                         <div style={{marginLeft:"8px"}}>
                             <p style={{fontSize:"15px"}}>Çıkış Yap</p>
