@@ -163,7 +163,7 @@ export default function MyEditor (){
       const formData=new FormData();
 
       formData.append("upload",file);
-
+      console.log(formData)
       try{
 
          await axios.post("/upload",formData);

@@ -54,7 +54,7 @@ left:140px;
 const BackgroundImage=styled.div`
 width:100%;
 height:100%;
-background-image:url(https://cdn.evrimagaci.org/TLXVkrIihHZ_W4_DBiPznd74psg=/160x160/filters:format(webp)/evrimagaci.org%2Fpublic%2Fprofile_images%2F4e239b51c0dd9ec00dcc4cbc06bf6f26.jpg);
+background-image:url(https://pbs.twimg.com/profile_images/1463942370723090439/KmNZ38l1_200x200.jpg);
 background-size: cover;
 background-repeat: no-repeat;
 background-position: center; 

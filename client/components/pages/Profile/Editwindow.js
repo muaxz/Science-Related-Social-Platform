@@ -1,22 +1,25 @@
 import { CameraAlt } from '@material-ui/icons'
-import React, { useState } from 'react'
+import React, { useState,useEffect} from 'react'
 import styled from "styled-components"
 import {Black,Porfileimage} from "../../styledcomponents/button"
-import {TextField} from "@material-ui/core"
+import {TextField,Button} from "@material-ui/core"
+import Cropper from  "react-image-crop"
+import axios from 'axios'
+import "react-image-crop/dist/ReactCrop.css"
 
 const Exterior = styled.div`
 display:${({active})=>active ? "block" : "none"};
 position:absolute;
 transform:translateX(-50%);
 left:50%;
-top:70px;
+top:${({getcropper})=>getcropper ? "150px" : "70px"};;
 max-width:600px;
 width:90%;
-height:580px;
+height:${({getcropper})=>getcropper ? "350px" : "580px"};
 background-color:white;
 border-radius:10px;
 z-index:1000;
-overflow:auto;
+overflow:${({getcropper})=>getcropper ? "visible" : "auto"};;
 `
 const Inner = styled.div`
 position:relative;
@@ -77,10 +80,17 @@ opacity:0;
 `
 
 export default function Editwindow({active,editdata,closefunc}){
-    console.log(editdata)
+
+
+    const [file,setfile] = useState(null)
+    const [crop,setcrop] = useState({aspect:16/16})
+    const [src,setsrc] = useState(null)
+    const [image,setimage] = useState(null)
+    const [iscropperactive,setcropperactive] = useState(false)
+    const [filename,setfilename] = useState(null)
     const [userinfo,setuserinfo] = useState({
         username:{
-            value:"Muaxz232",
+            value:editdata.username,
             label:"Kullanici Adi",
             warning:false,
             multiline:false
@@ -104,9 +114,38 @@ export default function Editwindow({active,editdata,closefunc}){
             multiline:true
         },
     })
+    
+    useEffect(()=>{
+        setcropperactive(false)
+    },[active])
+    useEffect(()=>{
+        console.log(image)
+    },[image])
 
-    const Submitupdated = ()=>{
+    useEffect(()=>{
+        const trial = document.querySelector("#trial")
+        trial.addEventListener("load",()=>{
+            console.log(trial.width)
+        })
+    },[src])
 
+    const Upload = async ()=>{
+        const formData=new FormData();
+
+        formData.append("upload",file);
+
+        try{
+            console.log(crop.width)
+            console.log(crop.height)
+            await axios.post(`/upload/${crop.width}/${crop.height}/${crop.x}/${crop.y}`,formData);
+   
+         }catch(err){
+   
+            return console.log(err);
+            
+         }
+
+        
     }
 
     const Inputhandler = (key,event)=>{
@@ -116,41 +155,75 @@ export default function Editwindow({active,editdata,closefunc}){
         setuserinfo(mutated)
     }
 
+    const Updatefile = (event)=>{
+        setcropperactive(true)
+        
+        setsrc(URL.createObjectURL(event.target.files[0]))
+        console.log(URL.createObjectURL(event.target.files[0]))
+        setfile(event.target.files[0])
+        setfilename(event.target.files[0].name);
+      
+    }
+
+    const updatecrop = (newcrop)=>{
+        console.log(newcrop)
+        setcrop(newcrop)
+    }
+
     return (
         <div>
             <Black onClick={closefunc} aktif={active}/>
-            <Exterior active={active}>
+            <img style={{visibility:"hidden",position:"absolute"}} id="trial" src={src}></img>
+            <Exterior getcropper={iscropperactive} active={active}>
                 <Inner>
-                    <Background>
-                        <Labelimage htmlFor="file"></Labelimage>
-                        <CameraAlt style={{color:"white"}}></CameraAlt>
-                        <input accept="image/png, image/gif, image/jpeg" id="file" type="file" style={{display:"none"}}></input>
-                    </Background>
-                    <ProfileImageholder>
-                        <Porfileimage style={{display:"flex",justifyContent:"center",alignItems:"center"}} width="80px" height="80px" profile={"/car.jpg"}>
-                            <Labelimage htmlFor="file2"></Labelimage>
-                            <CameraAlt style={{color:"white"}}></CameraAlt>
-                            <input accept="image/png, image/gif, image/jpeg" id="file2" type="file" style={{display:"none"}}></input>
-                        </Porfileimage>
-                    </ProfileImageholder>
-                    <Information>
-                        {
-                            Object.keys(userinfo).map((item,index)=>{
+                    {
+                        iscropperactive 
+                        
+                        ? 
+                            <div style={{textAlign:"center"}}>
+                                <Cropper onImageLoaded={setimage} imageStyle={{height:"300px",width:"200px",objectFit:"contain"}}  src={src} crop={crop} onChange={(newcrop)=>updatecrop(newcrop)}/> 
+                                <div style={{textAlign:"center"}}>
+                                 <Button onClick={()=>Upload()} variant="contained" >Upload the file to server</Button>
+                                </div>
+                            </div>
+                        
+                        :
 
-                                return (<Inputholder>
-                                            <TextField
-                                            multiline={userinfo[item].multiline}
-                                            rows={4}
-                                            onChange={(e)=>Inputhandler(item,e)}
-                                            style={{width:"100%"}}
-                                            label={userinfo[item].label}
-                                            variant="outlined"
-                                            value={userinfo[item].value}
-                                            ></TextField>
-                                       </Inputholder>)
-                            })
-                        }
-                    </Information>
+                             (<> 
+                                <Background>
+                                    <Labelimage  htmlFor="file"></Labelimage>
+                                    <CameraAlt style={{color:"white"}}></CameraAlt>
+                                    <input onChange={(e)=>Updatefile(e)} name="upload" accept="image/png, image/gif, image/jpeg" id="file" type="file" style={{display:"none"}}></input>
+                                </Background>
+                                <ProfileImageholder>
+                                    <Porfileimage style={{display:"flex",justifyContent:"center",alignItems:"center"}} width="80px" height="80px" profile={"/car.jpg"}>
+                                        <Labelimage htmlFor="file2"></Labelimage>
+                                        <CameraAlt style={{color:"white"}}></CameraAlt>
+                                        <input accept="image/png, image/gif, image/jpeg" id="file2" type="file" style={{display:"none"}}></input>
+                                    </Porfileimage>
+                                </ProfileImageholder>
+                                <Information>
+                                    {
+                                        Object.keys(userinfo).map((item,index)=>{
+
+                                            return (<Inputholder>
+                                                        <TextField
+                                                        multiline={userinfo[item].multiline}
+                                                        rows={4}
+                                                        onChange={(e)=>Inputhandler(item,e)}
+                                                        style={{width:"100%"}}
+                                                        label={userinfo[item].label}
+                                                        variant="outlined"
+                                                        value={userinfo[item].value}
+                                                        ></TextField>
+                                                </Inputholder>)
+                                        })
+                                    }
+                                </Information>
+                        </>)
+                    }
+                       
+        
                 </Inner>
             </Exterior>
         </div>
