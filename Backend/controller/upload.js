@@ -16,33 +16,53 @@ const getupload=multer({
 }).single("upload");
 
 exports.upload=(req,res,next)=>{
-            
-            const {width,height,x,y} = req.params
+                console.log(req.body)
+                console.log(req.files)
+                /*
+                const {width,height,x,y} = req.params
+                // uploadB , uploadP 
+                        var counter = 0 ;
+                        var fileURL = {}
+                        req.files.upload.forEach(fileobj => {
 
-            sharp(req.files.upload.data).resize(200,300).extract({
-                width:parseInt(width),height:parseInt(height),left:parseInt(x),top:parseInt(y)
-            }).toFormat("jpeg").toBuffer({resolveWithObject:true}).then(({data,info})=>{
-            
-                console.log(info)
-                const blob = firebase.bucket.file(req.files.upload.name)
-           
-                const blobwriter = blob.createWriteStream({
-                    metadata:{
-                        contentType:"image/"+info.format
-                    }
-                })
-     
-                 blobwriter.on("error",(err)=>{
-                     console.log(err)
-                 })
-                 blobwriter.on("finish",()=>{
-                     console.log("file uploaded")
-                 })
-                 blobwriter.end(data)
-     
-                res.json({state:"success"}) 
+                                
+                                sharp(fileobj.data).resize({height:300,width:400}).extract({
+                                    width:parseInt(width),height:parseInt(height),left:parseInt(x),top:parseInt(y)
+                                }).toFormat("png").toBuffer({resolveWithObject:true}).then(({data,info})=>{
+                            
+                                console.log(info)
+                                const blob = firebase.bucket.file(fileobj.name)
+                                
+                                const blobwriter = blob.createWriteStream({
+                                    metadata:{
+                                        contentType:"image/"+info.format
+                                    }
+                                })
+                
+                                blobwriter.on("error",(err)=>{
+                                    console.log(err)
+                                })
+                
+                                blobwriter.on("finish",(data)=>{
+
+                                    counter++
+
+                                    
+                                    blob.getSignedUrl({action:"read",expires:"03-09-2391"}).then((geturl)=>{
+                                        fileURL[count] = geturl[0]
+                                        if(counter == 1){
+                                            req.fileurls = fileURL
+                                        }
+                                    })
+                                    
+                                    
+                                })
+                
+                                blobwriter.end(data)
+                    
+                                        
+                            }).catch((err)=>console.log(err)) 
                         
-            }).catch((err)=>console.log(err)) 
-
-            
+                        });
+                        */
 }

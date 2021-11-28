@@ -36,10 +36,10 @@ border-top-left-radius:10px;
 border-top-right-radius:10px;
 height:200px;
 opacity:0.8;
-background-image:url(/led.jpg);
-background-size: cover;
+background-image:url(${({ImageforBack})=>ImageforBack});
+background-size:cover;
 background-repeat: no-repeat;
-background-position: center; 
+background-position:center; 
 transition:0.4s;
 &:hover{
     opacity:1;
@@ -79,15 +79,41 @@ color:black;
 opacity:0;
 `
 
-export default function Editwindow({active,editdata,closefunc}){
+export default function Editwindow({updatefunc,active,editdata,closefunc}){
 
 
-    const [file,setfile] = useState(null)
-    const [crop,setcrop] = useState({aspect:16/16})
-    const [src,setsrc] = useState(null)
+    const [file,setfile] = useState({
+        Backimage:"",
+        Profileimage:""
+    })
+    const [crop,setcrop] = useState({aspect:16/16,height:200,width:100,x:50,y:50})
+    const [src,setsrc] = useState({
+        Backimage:"",
+        Profileimage:""
+    })
+    const [imagetype,setimagetype] = useState("")
     const [image,setimage] = useState(null)
+    const [result,setresult] = useState({
+        Backimage:{
+            src:"",
+            cropvalues:{
+                width:"",
+                height:"",
+                x:"",
+                y:""
+            }
+        },
+        Profileimage:{
+            src:"",
+            cropvalues:{
+                width:"",
+                height:"",
+                x:"",
+                y:""
+            }
+        }
+    })
     const [iscropperactive,setcropperactive] = useState(false)
-    const [filename,setfilename] = useState(null)
     const [userinfo,setuserinfo] = useState({
         username:{
             value:editdata.username,
@@ -118,33 +144,36 @@ export default function Editwindow({active,editdata,closefunc}){
     useEffect(()=>{
         setcropperactive(false)
     },[active])
-    useEffect(()=>{
-        console.log(image)
-    },[image])
 
-    useEffect(()=>{
-        const trial = document.querySelector("#trial")
-        trial.addEventListener("load",()=>{
-            console.log(trial.width)
+    
+    const ToCanvas = async ()=>{
+        
+        const canvas = document.createElement("canvas");
+        const scaleX = image.naturalWidth / image.width;
+        const scaleY = image.naturalHeight / image.height;
+        canvas.width = Math.ceil(crop.width);
+        canvas.height = Math.ceil(crop.height);
+        const ctx = canvas.getContext("2d");
+    
+        ctx.drawImage(
+        image,
+        crop.x * scaleX,
+        crop.y * scaleY,
+        crop.width * scaleX,
+        crop.height * scaleY,
+        0,
+        0,
+        crop.width,
+        crop.height
+        );
+        
+        const base64Image = canvas.toDataURL("imge/png")
+
+        setresult((prev)=>{
+            return {...prev,[imagetype]:{src:base64Image,cropvalues:{x:crop.x,y:crop.y,width:crop.width,height:crop.height}}}
         })
-    },[src])
 
-    const Upload = async ()=>{
-        const formData=new FormData();
-
-        formData.append("upload",file);
-
-        try{
-            console.log(crop.width)
-            console.log(crop.height)
-            await axios.post(`/upload/${crop.width}/${crop.height}/${crop.x}/${crop.y}`,formData);
-   
-         }catch(err){
-   
-            return console.log(err);
-            
-         }
-
+        setcropperactive(false)
         
     }
 
@@ -155,19 +184,92 @@ export default function Editwindow({active,editdata,closefunc}){
         setuserinfo(mutated)
     }
 
-    const Updatefile = (event)=>{
-        setcropperactive(true)
+    const Updatefile = (event,type)=>{
+
+        if(type == "Backimage"){
+            setcrop({
+                aspect:16/9,
+                height:200,
+                width:600,
+                unit:"px",
+                x:0,
+                y:50
+            })
+        }
+        else{
+            setcrop({
+                aspect:16/16,
+                height:200,
+                width:200,
+                unit:"px",
+                x:50,
+                y:50
+            })
+        }
         
-        setsrc(URL.createObjectURL(event.target.files[0]))
-        console.log(URL.createObjectURL(event.target.files[0]))
-        setfile(event.target.files[0])
-        setfilename(event.target.files[0].name);
-      
+        setimagetype(type)
+        setcropperactive(true)
+        setsrc((prev)=>{
+            return {...prev,[type]:URL.createObjectURL(event.target.files[0])}
+        })
+        setfile((prev)=>{
+            return {...prev,[type]:event.target.files[0]}
+        })
     }
 
     const updatecrop = (newcrop)=>{
-        console.log(newcrop)
-        setcrop(newcrop)
+        //buraya bak
+        if(crop.aspect > 1){
+            setcrop((res)=>{
+                return {...res,y:newcrop.y}
+            })
+        }
+        else{
+            setcrop((res)=>{
+                return {...res,y:newcrop.y,x:newcrop.x}
+            })
+        }
+
+        //value of cropper width height x and y
+    }
+
+    const Sendupdates = async ()=>{
+
+        const values = {}
+        for (const key in userinfo){
+            values[key] = userinfo[key].value
+        }
+
+        values.backcrop = result.Backimage.cropvalues
+        values.profile  = result.Profileimage.cropvalues
+
+        const formData=new FormData();
+
+        if(file.Backimage !== "" && file.Profileimage !== ""){
+
+            formData.append("upload",file.Backimage);
+            formData.append("upload",file.Profileimage)
+            
+        }
+        else{
+            
+            formData.append("upload",file[imagetype])
+        }
+
+        formData.append("Profilevalues",JSON.stringify(values))
+        
+     
+
+        try{
+
+            await axios.post(`/upload/x/x/x/x`,formData);
+   
+         }catch(err){
+   
+            return console.log("UPLOAD ERRORRRRRRR");
+            
+         }
+
     }
 
     return (
@@ -181,25 +283,28 @@ export default function Editwindow({active,editdata,closefunc}){
                         
                         ? 
                             <div style={{textAlign:"center"}}>
-                                <Cropper onImageLoaded={setimage} imageStyle={{height:"300px",width:"200px",objectFit:"contain"}}  src={src} crop={crop} onChange={(newcrop)=>updatecrop(newcrop)}/> 
+                                <Cropper  style={{backgroundColor:"red",height:"350px",width:"100%"}} onImageLoaded={setimage} imageStyle={{height:"350px",width:"100%",objectFit:"cover"}}  src={src[imagetype]} crop={crop} onChange={(newcrop)=>updatecrop(newcrop)}/> 
                                 <div style={{textAlign:"center"}}>
-                                 <Button onClick={()=>Upload()} variant="contained" >Upload the file to server</Button>
+                                 <Button onClick={()=>ToCanvas()} color="secondary" variant="contained" >Upload the file to server</Button>
                                 </div>
                             </div>
                         
                         :
 
                              (<> 
-                                <Background>
+                                <Background ImageforBack={result.Backimage.src}>
+                                    <div style={{position:"absolute",top:"225px",right:"10px",zIndex:"1000"}}>
+                                        <Button style={{textTransform:"capitalize",borderRadius:"25px"}} color="secondary" variant="contained">Kaydet</Button>
+                                    </div>
                                     <Labelimage  htmlFor="file"></Labelimage>
                                     <CameraAlt style={{color:"white"}}></CameraAlt>
-                                    <input onChange={(e)=>Updatefile(e)} name="upload" accept="image/png, image/gif, image/jpeg" id="file" type="file" style={{display:"none"}}></input>
+                                    <input onChange={(e)=>Updatefile(e,"Backimage")} name="upload" accept="image/png, image/gif, image/jpeg" id="file" type="file" style={{display:"none"}}></input>
                                 </Background>
                                 <ProfileImageholder>
-                                    <Porfileimage style={{display:"flex",justifyContent:"center",alignItems:"center"}} width="80px" height="80px" profile={"/car.jpg"}>
+                                    <Porfileimage style={{display:"flex",justifyContent:"center",alignItems:"center"}} width="80px" height="80px" profile={result.Profileimage.src}>
                                         <Labelimage htmlFor="file2"></Labelimage>
                                         <CameraAlt style={{color:"white"}}></CameraAlt>
-                                        <input accept="image/png, image/gif, image/jpeg" id="file2" type="file" style={{display:"none"}}></input>
+                                        <input onChange={(e)=>Updatefile(e,"Profileimage")} accept="image/png, image/gif, image/jpeg" id="file2" type="file" style={{display:"none"}}></input>
                                     </Porfileimage>
                                 </ProfileImageholder>
                                 <Information>

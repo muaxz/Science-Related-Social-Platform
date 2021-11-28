@@ -54,7 +54,7 @@ left:140px;
 const BackgroundImage=styled.div`
 width:100%;
 height:100%;
-background-image:url(https://pbs.twimg.com/profile_images/1463942370723090439/KmNZ38l1_200x200.jpg);
+background-image:url(/yaprak.jpg);
 background-size: cover;
 background-repeat: no-repeat;
 background-position: center; 
@@ -304,7 +304,7 @@ console.log(Mydata);
             <Editwindow closefunc={()=>setactiveedit(false)} editdata={profiledata} active={activeedit} />
             <Innerdiv>
                 <Imagesection>
-                    <BackgroundImage/> 
+                    <BackgroundImage ImageforBack={"/way.jpg"} /> 
                     {       //burada context userId yok ise buna izin vermiyorum ancak setstate oldugunda gösterim var
                             //TODO this should be fixed during navigaiton
                             //userdata.userıd yoksa kullanıcı giriş yapmamıştır
@@ -341,7 +341,7 @@ console.log(Mydata);
                 <Contentpart>
                      <Usersection>
                          <ProfileImageholder>
-                             <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile="/led.jpg"></Porfileimage>
+                             <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile="https://storage.googleapis.com/mynext-a074a.appspot.com/pexels-greg-contreras-3177801.jpg"></Porfileimage>
                          </ProfileImageholder>
                          <h4>{profiledata.firstname + " " + profiledata.lastname}</h4>
                          <span style={{color:"#6c757d"}}>UI designer</span>

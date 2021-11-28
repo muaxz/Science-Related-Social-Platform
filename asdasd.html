@@ -36,16 +36,11 @@
 </head>
 <body>
    <script>
-          var p3 = new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve("foo");
-            }, 5000);
-            
-            });
+         var obj = {
+            ["name"]:"ahmet"
+         }
 
-            Promise.all([1,2,p3]).then((values)=>{
-                console.log(values)
-            })  
+         console.log(obj)
    </script>
 </body>
 </html>
