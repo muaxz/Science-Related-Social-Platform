@@ -1,6 +1,7 @@
 const multer=require("multer");
 const path=require("path");
 const firebase = require("../firebase/firebase")
+const {v4} = require("uuid")
 const sharp = require("sharp")
 
 
@@ -15,54 +16,89 @@ const getupload=multer({
     storage:storage
 }).single("upload");
 
-exports.upload=(req,res,next)=>{
-                console.log(req.body)
-                console.log(req.files)
-                /*
-                const {width,height,x,y} = req.params
+
+module.exports=(req,res,next)=>{
+
+            
+                const userprofile = JSON.parse(req.body.Profilevalues)
+                
+                var numberoffiles = 0
+                if(userprofile["backcrop"].width == "" && req.files["profile"].width == ""){
+
+                    numberoffiles = 0
+
+                }else if(userprofile["backcrop"].width == ""){
+
+                    numberoffiles = 1
+                    req.files["upload"].cordinates = userprofile.profile
+
+                }else if(userprofile["profile"].width == ""){
+
+                    numberoffiles = 1
+                    req.files["upload"].cordinates = userprofile.backcrop
+
+                }
+                else{
+
+                    numberoffiles = 2
+                    req.files["upload"].cordinates = userprofile.backcrop
+                    req.files["upload2"].cordinates = userprofile.profile
+
+                }
+              
+            
                 // uploadB , uploadP 
-                        var counter = 0 ;
-                        var fileURL = {}
-                        req.files.upload.forEach(fileobj => {
-
-                                
-                                sharp(fileobj.data).resize({height:300,width:400}).extract({
-                                    width:parseInt(width),height:parseInt(height),left:parseInt(x),top:parseInt(y)
-                                }).toFormat("png").toBuffer({resolveWithObject:true}).then(({data,info})=>{
+                       var counter = 0
+                       fileURLs = {}
+                        console.log(req.files)
+                        if(numberoffiles > 0){
                             
-                                console.log(info)
-                                const blob = firebase.bucket.file(fileobj.name)
+                                for (const key in req.files) {
+                                  
+                                    sharp(req.files[key].data).resize({height:350,width:300}).extract({
+                                        width:req.files[key].cordinates.width,height:req.files[key].cordinates.height,left:req.files[key].cordinates.x,top:req.files[key].cordinates.x
+                                    }).toFormat("png").toBuffer({resolveWithObject:true}).then(({data,info})=>{
                                 
-                                const blobwriter = blob.createWriteStream({
-                                    metadata:{
-                                        contentType:"image/"+info.format
-                                    }
-                                })
-                
-                                blobwriter.on("error",(err)=>{
-                                    console.log(err)
-                                })
-                
-                                blobwriter.on("finish",(data)=>{
-
-                                    counter++
-
-                                    
-                                    blob.getSignedUrl({action:"read",expires:"03-09-2391"}).then((geturl)=>{
-                                        fileURL[count] = geturl[0]
-                                        if(counter == 1){
-                                            req.fileurls = fileURL
+                                      
+                                    const blob = firebase.bucket.file(req.files[key].name)
+                                    const generatedToken = v4()
+                                    const blobwriter = blob.createWriteStream({
+                                        metadata:{
+                                            contentType:"image/"+info.format,
+                                            firebaseStorageDownloadTokens: generatedToken
                                         }
                                     })
-                                    
-                                    
-                                })
-                
-                                blobwriter.end(data)
                     
+                                    blobwriter.on("error",(err)=>{
+                                        console.log(err)
+                                    })
+                    
+                                    blobwriter.on("finish",(data)=>{
+
+                                        fileURLs[counter] = {
+                                            token : generatedToken,
+                                            filename : req.files[key].name
+                                        }
+
+                                      
+                                        counter++
+                                        if(counter == numberoffiles){
+                                            req.urlconfig = fileURLs
+                                            next()
+                                        }
+
                                         
-                            }).catch((err)=>console.log(err)) 
+                                    })
+                    
+                                    blobwriter.end(data)
                         
-                        });
-                        */
+                                            
+                                }).catch((err)=>console.log(err)) 
+                            }
+
+                        }
+                        
+                   
+
+                             
 }

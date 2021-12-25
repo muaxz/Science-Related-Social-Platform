@@ -144,16 +144,31 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
     useEffect(()=>{
         setcropperactive(false)
     },[active])
+    /*
+    useEffect(()=>{
 
-    
+       if(src.Backimage !== ""){
+           console.log("heyyo")
+            const backimg = document.querySelector("#Backimg")
+            backimg.addEventListener("load",()=>{
+                setimage(backimg)
+                console.log(backimg)
+            })
+       }    
+
+    },[src])
+    */
+
     const ToCanvas = async ()=>{
-        
+       
         const canvas = document.createElement("canvas");
         const scaleX = image.naturalWidth / image.width;
         const scaleY = image.naturalHeight / image.height;
-        canvas.width = Math.ceil(crop.width);
-        canvas.height = Math.ceil(crop.height);
+        canvas.width = crop.width
+        canvas.height = crop.height
         const ctx = canvas.getContext("2d");
+
+        
     
         ctx.drawImage(
         image,
@@ -190,7 +205,7 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
             setcrop({
                 aspect:16/9,
                 height:200,
-                width:600,
+                width:300,
                 unit:"px",
                 x:0,
                 y:50
@@ -215,6 +230,8 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
         setfile((prev)=>{
             return {...prev,[type]:event.target.files[0]}
         })
+
+      
     }
 
     const updatecrop = (newcrop)=>{
@@ -229,6 +246,7 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
                 return {...res,y:newcrop.y,x:newcrop.x}
             })
         }
+        console.log(crop)
 
         //value of cropper width height x and y
     }
@@ -248,7 +266,7 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
         if(file.Backimage !== "" && file.Profileimage !== ""){
 
             formData.append("upload",file.Backimage);
-            formData.append("upload",file.Profileimage)
+            formData.append("upload2",file.Profileimage)
             
         }
         else{
@@ -262,7 +280,7 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
 
         try{
 
-            await axios.post(`/upload/x/x/x/x`,formData);
+            await axios.post(`user/updateprofile`,formData);
    
          }catch(err){
    
@@ -275,7 +293,8 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
     return (
         <div>
             <Black onClick={closefunc} aktif={active}/>
-            <img style={{visibility:"hidden",position:"absolute"}} id="trial" src={src}></img>
+            <img style={{visibility:"hidden",position:"absolute"}} id="Backimg" src={src["Backimage"]}></img>
+            <img style={{visibility:"hidden",position:"absolute"}} id="Profileimg" src={src["Profileimage"]}></img>
             <Exterior getcropper={iscropperactive} active={active}>
                 <Inner>
                     {
@@ -283,7 +302,7 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
                         
                         ? 
                             <div style={{textAlign:"center"}}>
-                                <Cropper  style={{backgroundColor:"red",height:"350px",width:"100%"}} onImageLoaded={setimage} imageStyle={{height:"350px",width:"100%",objectFit:"cover"}}  src={src[imagetype]} crop={crop} onChange={(newcrop)=>updatecrop(newcrop)}/> 
+                                <Cropper  onImageLoaded={(img)=>setimage(img)} style={{backgroundColor:"red",height:"350px",width:"300px"}}  imageStyle={{height:"350px",width:"300px",objectFit:"cover"}}  src={src[imagetype]} crop={crop} onChange={(newcrop)=>updatecrop(newcrop)}/> 
                                 <div style={{textAlign:"center"}}>
                                  <Button onClick={()=>ToCanvas()} color="secondary" variant="contained" >Upload the file to server</Button>
                                 </div>
@@ -294,7 +313,7 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
                              (<> 
                                 <Background ImageforBack={result.Backimage.src}>
                                     <div style={{position:"absolute",top:"225px",right:"10px",zIndex:"1000"}}>
-                                        <Button style={{textTransform:"capitalize",borderRadius:"25px"}} color="secondary" variant="contained">Kaydet</Button>
+                                        <Button onClick={()=>Sendupdates()} style={{textTransform:"capitalize",borderRadius:"25px"}} color="secondary" variant="contained">Kaydet</Button>
                                     </div>
                                     <Labelimage  htmlFor="file"></Labelimage>
                                     <CameraAlt style={{color:"white"}}></CameraAlt>

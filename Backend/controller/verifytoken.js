@@ -4,7 +4,7 @@ const jwt=require("jsonwebtoken");
 
 module.exports=(req,res,next)=>{
 
-    const token =req.cookies["myauth"];
+    const token = req.cookies["myauth"];
    
     if(token){
 

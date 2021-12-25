@@ -8,7 +8,7 @@ const Comment = require("../models/Commentmodel");
 const User = require("../models/Usermodel");
 
 
-
+//search bar
 exports.getusername = async(req,res,next)=>{
    
   const {input} = req.params;
@@ -36,7 +36,7 @@ exports.getusername = async(req,res,next)=>{
 
 } 
 
-
+//data of current user data
 exports.getuserdata=async(req,res,next)=>{
     
     const currentuserid=req.userdata;
@@ -67,6 +67,7 @@ exports.getuserdata=async(req,res,next)=>{
     //buradan sadece userId gelicek
 }
 
+//profile pagedata
 exports.getuserprofile = async (req,res,next)=>{
 
   const {UserId}=req.params;
@@ -306,10 +307,12 @@ exports.getuserprofilecount = async (req,res,next)=>{
 }
 
 exports.createuserrelation = async (req,res,next)=>{
-  
+  //follower == current user
   const {FollowerId,FollowedId,checkiffollow} = req.body;
   const io = req.app.get("socketio");
+
   //follower ıd is our current active user
+  //tokenm validation git
   try {
      if(checkiffollow){
 
@@ -351,7 +354,7 @@ exports.createuserrelation = async (req,res,next)=>{
   }
 
 }
-
+//in a broader and detalied view of contents of current user
 exports.getusercontents = async (req,res,next)=>{
  
   const {UserId} = req.params;
@@ -371,7 +374,8 @@ exports.getusercontents = async (req,res,next)=>{
     })
 
   } catch (error) {
-
+      next()
+      return
   }
 
 }
@@ -396,6 +400,7 @@ exports.deletepost = async (req,res,next)=>{
 
 }
 
+//alert for user feedback when a post is shared
 exports.updatenotification = async (req,res,next)=>{
 
   try {
@@ -415,29 +420,72 @@ exports.updatenotification = async (req,res,next)=>{
 }
 
 exports.updateprofile = async (req,res,next)=>{
+  //bunlardan once upload middleware
 
-  const {username,firstname,lastname,personaltext,UserId,imageurl,backgroundurl} = req.body
+  console.log(JSON.parse(req.body.Profilevalues))
+  /*
+  const userprofiledata = JSON.parse(req.body.Profilevalues)
 
+  const {UserId} = req.userdata
+  
   try {
+       //kullanici adi alinmis ise yeniden degistir
 
-       //const UN = User.findOne({where:{username:username}})
+    
+       if(true){
 
-       if(UN == null){
-          await User.update({
-            firstname:firstname,
-            lastname:lastname,
-            personaltext:personaltext,
-            backgroundurl:"",
-            imageurl:"",},
-            {where:{id:UserId}})
+                var controllerforusername = true
+                
+                const Currentuser = User.findOne({
+                  where:{id:UserId},
+                  attributes:["username"]
+                })
+                
+                if(Currentuser.username !== username){
+        
+                  const UN = User.findOne({where:{username:username}})
+        
+                  if(UN){
+                    controllerforusername = false
+                  }
+                  else{
+                    controllerforusername = true
+                  }
+        
+                }
+                
+                if(controllerforusername){
+
+                    await User.update({
+                      username:username,
+                      firstname:firstname,
+                      lastname:lastname,
+                      Personaltext:personaltext,
+                      backgroundurl:"",
+                      imageurl:""},
+                      {where:{id:UserId}})
+    
+                      res.json({state:"success"})
+
+                }
+                else{
+                      res.json({state:"Uniqe username required !!"})
+                }
+               
+
        }
        else{
-          //res.json({state:"baska bisey dene"})
+
+           res.status(500)
+
        }
       
 
   } catch (error) {
-    
+     next()
+     return
   }
+  */
+  
 
 }
