@@ -2,20 +2,32 @@ const Sequlize=require("sequelize");
 const sequlize=require("../database/base");
 const Comment=require("./Commentmodel");
 
-const User =sequlize.define("User",{
+const User = sequlize.define("User",{
     id:{
         type:Sequlize.UUID,
         primaryKey:true,
         allownull:false,
         unique:true,
     },
+    username:{
+        type:Sequlize.STRING,
+        allownull:false,
+    },
     firstname:{
         type:Sequlize.STRING,
-        allownull:false, 
-        uniqe:true,    
+        allownull:false,    
     },
     imageurl:{
         type:Sequlize.STRING,
+    },
+    imagetoken:{
+        type:Sequlize.STRING
+    },
+    backgroundtoken:{//NAME OF THE BACKGROUND IMAGE FILE
+        type:Sequlize.STRING
+    },
+    backgroundurl:{
+        type:Sequlize.TEXT,
     },
     lastname:{
          type:Sequlize.STRING,

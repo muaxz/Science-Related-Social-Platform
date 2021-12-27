@@ -15,6 +15,6 @@ router.get("/getusername/:input",Usercontroller.getusername)//Search Bar
 router.get("/getuserdrafts/:UserId/:Order",Usercontroller.getuserdrafts);
 router.post("/deletepost",Usercontroller.deletepost)// draft page
 router.get("/updateusernot/:FollowerId/:FollowedId/:currentactive",Usercontroller.updatenotification)
-router.post("/updateprofile",Uploadware,Usercontroller.updateprofile)
+router.post("/updateprofile",Verifytoken,Uploadware,Usercontroller.updateprofile)
 
 module.exports=router;

@@ -115,7 +115,7 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
     })
     const [iscropperactive,setcropperactive] = useState(false)
     const [userinfo,setuserinfo] = useState({
-        username:{
+        musername:{
             value:editdata.username,
             label:"Kullanici Adi",
             warning:false,
@@ -280,7 +280,7 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
 
         try{
 
-            await axios.post(`user/updateprofile`,formData);
+            await axios.post(`user/updateprofile`,formData,{withCredentials:true});
    
          }catch(err){
    
@@ -311,7 +311,7 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
                         :
 
                              (<> 
-                                <Background ImageforBack={result.Backimage.src}>
+                                <Background ImageforBack={src.Backimage}>
                                     <div style={{position:"absolute",top:"225px",right:"10px",zIndex:"1000"}}>
                                         <Button onClick={()=>Sendupdates()} style={{textTransform:"capitalize",borderRadius:"25px"}} color="secondary" variant="contained">Kaydet</Button>
                                     </div>
@@ -320,7 +320,7 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
                                     <input onChange={(e)=>Updatefile(e,"Backimage")} name="upload" accept="image/png, image/gif, image/jpeg" id="file" type="file" style={{display:"none"}}></input>
                                 </Background>
                                 <ProfileImageholder>
-                                    <Porfileimage style={{display:"flex",justifyContent:"center",alignItems:"center"}} width="80px" height="80px" profile={result.Profileimage.src}>
+                                    <Porfileimage style={{display:"flex",justifyContent:"center",alignItems:"center"}} width="80px" height="80px" profile={src.Profileimage}>
                                         <Labelimage htmlFor="file2"></Labelimage>
                                         <CameraAlt style={{color:"white"}}></CameraAlt>
                                         <input onChange={(e)=>Updatefile(e,"Profileimage")} accept="image/png, image/gif, image/jpeg" id="file2" type="file" style={{display:"none"}}></input>

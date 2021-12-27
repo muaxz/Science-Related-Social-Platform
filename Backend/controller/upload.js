@@ -19,39 +19,40 @@ const getupload=multer({
 
 module.exports=(req,res,next)=>{
 
-            
+                
                 const userprofile = JSON.parse(req.body.Profilevalues)
                 
+                var whichfile = ""
                 var numberoffiles = 0
                 if(userprofile["backcrop"].width == "" && req.files["profile"].width == ""){
 
-                    numberoffiles = 0
+                    whichfile = ""
 
                 }else if(userprofile["backcrop"].width == ""){
-
                     numberoffiles = 1
+                    whichfile = "Profile"
                     req.files["upload"].cordinates = userprofile.profile
 
                 }else if(userprofile["profile"].width == ""){
-
                     numberoffiles = 1
+                    whichfile = "Background"
                     req.files["upload"].cordinates = userprofile.backcrop
 
                 }
                 else{
-
                     numberoffiles = 2
+                    whichfile = "Back&Profile"
                     req.files["upload"].cordinates = userprofile.backcrop
                     req.files["upload2"].cordinates = userprofile.profile
 
                 }
               
-            
+                console.log(whichfile)
                 // uploadB , uploadP 
                        var counter = 0
                        fileURLs = {}
-                        console.log(req.files)
-                        if(numberoffiles > 0){
+                       
+                        if(whichfile.length > 0){
                             
                                 for (const key in req.files) {
                                   
@@ -62,10 +63,14 @@ module.exports=(req,res,next)=>{
                                       
                                     const blob = firebase.bucket.file(req.files[key].name)
                                     const generatedToken = v4()
+                                    console.log(generatedToken)
                                     const blobwriter = blob.createWriteStream({
                                         metadata:{
                                             contentType:"image/"+info.format,
-                                            firebaseStorageDownloadTokens: generatedToken
+                                            metadata:{
+                                                firebaseStorageDownloadTokens: generatedToken //generating uniqe token
+                                            }
+                                           
                                         }
                                     })
                     
@@ -77,7 +82,8 @@ module.exports=(req,res,next)=>{
 
                                         fileURLs[counter] = {
                                             token : generatedToken,
-                                            filename : req.files[key].name
+                                            filename : req.files[key].name,
+                                            type: whichfile
                                         }
 
                                       

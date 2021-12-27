@@ -1,9 +1,15 @@
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return Promise.resolve()
+    return queryInterface.changeColumn("users","backgroundtoken",{
+       type:Sequelize.TEXT,
+      
+    })
   },
 
-  down: function(queryInterface) {
-    return Promise.resolve()
+  down: function(queryInterface,Sequelize){
+    return queryInterface.changeColumn("users","backgroundtoken",{
+      type:Sequelize.STRING,
+    
+   })
   }
 };

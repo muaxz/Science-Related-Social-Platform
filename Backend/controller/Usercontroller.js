@@ -422,8 +422,12 @@ exports.updatenotification = async (req,res,next)=>{
 exports.updateprofile = async (req,res,next)=>{
   //bunlardan once upload middleware
 
+  const Urldata = req.urlconfig
+  console.log(Urldata)
   console.log(JSON.parse(req.body.Profilevalues))
-  /*
+  
+  var controllerforusername = false
+
   const userprofiledata = JSON.parse(req.body.Profilevalues)
 
   const {UserId} = req.userdata
@@ -431,61 +435,74 @@ exports.updateprofile = async (req,res,next)=>{
   try {
        //kullanici adi alinmis ise yeniden degistir
 
-    
+      //esitleme yapildi
        if(true){
 
-                var controllerforusername = true
-                
-                const Currentuser = User.findOne({
-                  where:{id:UserId},
-                  attributes:["username"]
-                })
-                
-                if(Currentuser.username !== username){
+                const UN = await User.findOne({where:{username:userprofiledata.musername}})
         
-                  const UN = User.findOne({where:{username:username}})
-        
-                  if(UN){
-                    controllerforusername = false
-                  }
-                  else{
-                    controllerforusername = true
-                  }
-        
-                }
-                
-                if(controllerforusername){
+                if(UN){
 
-                    await User.update({
-                      username:username,
-                      firstname:firstname,
-                      lastname:lastname,
-                      Personaltext:personaltext,
-                      backgroundurl:"",
-                      imageurl:""},
-                      {where:{id:UserId}})
-    
-                      res.json({state:"success"})
+                    controllerforusername = false
 
                 }
                 else{
-                      res.json({state:"Uniqe username required !!"})
-                }
-               
 
+                    controllerforusername = true
+
+                }
+        
+                
+                if(controllerforusername){
+
+                    const myuser = await User.findByPk(UserId)
+                    console.log("update phase in")
+                    var willbeupdated = {
+                      email:"bursa@hotmail.com",
+                      firstname:userprofiledata.firstname,
+                      lastname:userprofiledata.surname,
+                      username:userprofiledata.musername,
+                      imagetoken:Urldata["1"].token,
+                      backgroundtoken:Urldata["0"].token,
+                      imageurl:Urldata["1"].filename,
+                      backgroundurl:Urldata["0"].filename,
+                      Personaltext:userprofiledata.personaltext,
+                      }
+
+                    if(Urldata["0"].type == "Profile"){
+                      delete willbeupdated.backgroundtoken
+                      delete willbeupdated.backgroundurl
+                    }else if(Urldata["0"].type == "Background"){
+                      delete willbeupdated.imagetoken
+                      delete willbeupdated.imageurl
+                    }
+
+                    console.log(willbeupdated)
+
+                    await myuser.update(willbeupdated)
+    
+                     return res.json({state:"success"})
+
+                }
+                else{
+
+                     return res.json({state:"Uniqe username required !!"})
+
+                }
+              
        }
        else{
 
-           res.status(500)
+          return res.json()
 
        }
       
 
-  } catch (error) {
+  } catch (error){
+     console.log(error)
      next()
      return
   }
-  */
+
   
 
 }
