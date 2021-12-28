@@ -76,7 +76,7 @@ exports.getuserprofile = async (req,res,next)=>{
      
      const Myuserdata=await Usermodel.findOne({
          where:{id:UserId}, 
-         attributes:["id","firstname","lastname","imageurl","Role","Personaltext","username","backgroundurl"],
+         attributes:["id","firstname","lastname","imageurl","Role","Personaltext","username","backgroundurl","email"],
          include:[{
            model:Usermodel,
            as:"Followed",

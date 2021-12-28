@@ -1,6 +1,7 @@
 import { CameraAlt } from '@material-ui/icons'
 import React, { useState,useEffect} from 'react'
 import styled from "styled-components"
+import {ArrowDropUp,Email,Lock,Notifications} from "@material-ui/icons"
 import {Black,Porfileimage} from "../../styledcomponents/button"
 import {TextField,Button} from "@material-ui/core"
 import Cropper from  "react-image-crop"
@@ -23,7 +24,22 @@ overflow:${({getcropper})=>getcropper ? "visible" : "auto"};;
 `
 const Inner = styled.div`
 position:relative;
+padding:10px;
+`
 
+const Holderforupicon = styled.div`
+position:absolute;
+transition-duration:0.5s;
+top:-45px;
+left:${({slipvalue})=>{
+    if(slipvalue == 1){
+        return "55px"
+    }else if(slipvalue == 2){
+        return "250px"
+    }else{
+        return "440px"
+    }
+}};
 `
 
 const Background = styled.div`
@@ -57,13 +73,17 @@ transition:0.4s;
 }
 `
 const Inputholder = styled.div`
+display:${({displayed})=> displayed ? "block" : "none"};
 margin-top:20px;
 `
 const Information = styled.div`
-padding-top:80px;
+position:relative;
+padding-top:${({isforedit})=>isforedit ? "10px" : "80px"};
+background-color:${({isforedit})=>isforedit ? "#e9ecef" : "white"};
 padding-left:20px;
 padding-right:20px; 
 padding-bottom:20px;
+border-radius:20px;
 `
 
 const Labelimage=styled.label`
@@ -78,10 +98,34 @@ cursor:pointer;
 color:black;
 opacity:0;
 `
+//selection bar for editing
+const Selectionbar = styled.div`
+display:flex;
+justify-content:space-around;
+height:30px;
+margin-bottom:40px;
+`
 
-export default function Editwindow({updatefunc,active,editdata,closefunc}){
+const Childsofselection = styled.div`
+background-color:${({innercolor})=>innercolor ? "#7de2d1" : "#ff0a54"};
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+width:38px;
+height:38px;
+cursor:pointer;
+transition-duration:0.18s;
+padding:5px;
+&:hover{
+    background-color:
+}
+`
 
+//email,password,notification
+export default function Editwindow({isWindowforedit,updatefunc,active,editdata,closefunc}){
 
+    console.log(editdata)
     const [file,setfile] = useState({
         Backimage:"",
         Profileimage:""
@@ -116,31 +160,69 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
     const [iscropperactive,setcropperactive] = useState(false)
     const [userinfo,setuserinfo] = useState({
         musername:{
+            activate:isWindowforedit ? false : true,
             value:editdata.username,
             label:"Kullanici Adi",
             warning:false,
-            multiline:false
+            multiline:false,
+            msg:""
         },
         firstname:{
+            activate:isWindowforedit ? false : true,
             value:editdata.firstname,
             label:"Ad",
             warning:false,
-            multiline:false
+            multiline:false,
+            msg:""
         },
         surname:{
+            activate:isWindowforedit ? false : true,
             value:editdata.lastname,
             label:"Soyad",
             warning:false,
-            multiline:false
+            multiline:false,
+            msg:""
         },
         personaltext:{
+            activate:isWindowforedit ? false : true,
             value:editdata.Personaltext,
             label:"Kisisel Bilgiler",
             warning:false,
-            multiline:true
+            multiline:true,
+            msg:""
         },
+        email:{
+            activate:isWindowforedit ? true : false,
+            value:editdata.email,
+            label:"E-Posta",
+            warning:false,
+            multiline:false,
+            msg:"E-postani degistirmek istersen, yeni girdigin adrese bir kod gonderilicek lutfen onu gir."
+        },
+      
     })
-    
+    const [selectionchilds,setselectionchilds] = useState({
+        Email:true,
+        Password:false,
+        Notification:false
+    })
+    const [selected,setselected] = useState(1)
+
+    useEffect(()=>{
+
+        const copy = {...userinfo}
+      
+        for (const key in copy){
+            copy[key].activate = isWindowforedit ? false : true
+            if(copy[key].label == "E-Posta"){
+                    copy[key].activate = isWindowforedit ? true : false
+            }
+        }
+
+        setuserinfo(copy)
+      
+    },[isWindowforedit])
+
     useEffect(()=>{
         setcropperactive(false)
     },[active])
@@ -290,6 +372,25 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
 
     }
 
+    const Selectionhandler=(keyname,index)=>{
+        const copy = {...selectionchilds}
+        for (const key in copy) {
+           copy[key] = false
+        }
+        copy[keyname] = true
+        setselected(index+1)
+        setselectionchilds(copy)
+    }
+
+    const Iconcreater =(keyname)=>{
+        if(keyname == "Email")
+        return <Email></Email>
+        if(keyname == "Password")
+        return <Lock></Lock>
+        if(keyname == "Notification")
+        return <Notifications></Notifications>
+    }
+
     return (
         <div>
             <Black onClick={closefunc} aktif={active}/>
@@ -297,6 +398,16 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
             <img style={{visibility:"hidden",position:"absolute"}} id="Profileimg" src={src["Profileimage"]}></img>
             <Exterior getcropper={iscropperactive} active={active}>
                 <Inner>
+                    {
+                        isWindowforedit &&
+                        (<Selectionbar>
+                            {
+                                Object.keys(selectionchilds).map((item,index)=>{
+                                    return (<Childsofselection innercolor={selectionchilds[item]} style={{color:selectionchilds[item] ? "white" : "white"}} onClick={()=>Selectionhandler(item,index)}>{Iconcreater(item)}</Childsofselection>)
+                                })
+                            }
+                        </Selectionbar>)
+                    }
                     {
                         iscropperactive 
                         
@@ -311,34 +422,49 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
                         :
 
                              (<> 
-                                <Background ImageforBack={src.Backimage}>
-                                    <div style={{position:"absolute",top:"225px",right:"10px",zIndex:"1000"}}>
-                                        <Button onClick={()=>Sendupdates()} style={{textTransform:"capitalize",borderRadius:"25px"}} color="secondary" variant="contained">Kaydet</Button>
-                                    </div>
-                                    <Labelimage  htmlFor="file"></Labelimage>
-                                    <CameraAlt style={{color:"white"}}></CameraAlt>
-                                    <input onChange={(e)=>Updatefile(e,"Backimage")} name="upload" accept="image/png, image/gif, image/jpeg" id="file" type="file" style={{display:"none"}}></input>
-                                </Background>
-                                <ProfileImageholder>
-                                    <Porfileimage style={{display:"flex",justifyContent:"center",alignItems:"center"}} width="80px" height="80px" profile={src.Profileimage}>
-                                        <Labelimage htmlFor="file2"></Labelimage>
-                                        <CameraAlt style={{color:"white"}}></CameraAlt>
-                                        <input onChange={(e)=>Updatefile(e,"Profileimage")} accept="image/png, image/gif, image/jpeg" id="file2" type="file" style={{display:"none"}}></input>
-                                    </Porfileimage>
-                                </ProfileImageholder>
-                                <Information>
+                                    { !isWindowforedit &&  
+
+                                        (<>
+                                            <Background ImageforBack={src.Backimage}>
+                                                <div style={{position:"absolute",top:"225px",right:"10px",zIndex:"1000"}}>
+                                                    <Button onClick={()=>Sendupdates()} style={{textTransform:"capitalize",borderRadius:"25px"}} color="secondary" variant="contained">Kaydet</Button>
+                                                </div>
+                                                <Labelimage  htmlFor="file"></Labelimage>
+                                                <CameraAlt style={{color:"white"}}></CameraAlt>
+                                                <input onChange={(e)=>Updatefile(e,"Backimage")} name="upload" accept="image/png, image/gif, image/jpeg" id="file" type="file" style={{display:"none"}}></input>
+                                            </Background>
+                                            <ProfileImageholder>
+                                                <Porfileimage style={{display:"flex",justifyContent:"center",alignItems:"center"}} width="80px" height="80px" profile={src.Profileimage}>
+                                                    <Labelimage htmlFor="file2"></Labelimage>
+                                                    <CameraAlt style={{color:"white"}}></CameraAlt>
+                                                    <input onChange={(e)=>Updatefile(e,"Profileimage")} accept="image/png, image/gif, image/jpeg" id="file2" type="file" style={{display:"none"}}></input>
+                                                </Porfileimage>
+                                            </ProfileImageholder>
+                                        </>)
+
+                                    }
+                                  
+                                <Information isforedit={isWindowforedit}>
+                                    {
+                                        isWindowforedit &&
+                                        <Holderforupicon slipvalue={selected}>
+                                           <ArrowDropUp style={{fontSize:"80px",color:"#e9ecef"}}></ArrowDropUp>
+                                        </Holderforupicon>
+                                    }
+                                   
                                     {
                                         Object.keys(userinfo).map((item,index)=>{
 
-                                            return (<Inputholder>
-                                                        <TextField
-                                                        multiline={userinfo[item].multiline}
-                                                        rows={4}
-                                                        onChange={(e)=>Inputhandler(item,e)}
-                                                        style={{width:"100%"}}
-                                                        label={userinfo[item].label}
-                                                        variant="outlined"
-                                                        value={userinfo[item].value}
+                                            return (<Inputholder displayed={userinfo[item].activate}>
+                                                        <TextField   
+                                                            multiline={userinfo[item].multiline}
+                                                            rows={4}
+                                                            onChange={(e)=>Inputhandler(item,e)}
+                                                            style={{width:"100%"}}
+                                                            label={userinfo[item].label}
+                                                            variant="outlined"
+                                                            value={userinfo[item].value}
+                                                            helperText={userinfo[item].msg}
                                                         ></TextField>
                                                 </Inputholder>)
                                         })
@@ -346,8 +472,6 @@ export default function Editwindow({updatefunc,active,editdata,closefunc}){
                                 </Information>
                         </>)
                     }
-                       
-        
                 </Inner>
             </Exterior>
         </div>

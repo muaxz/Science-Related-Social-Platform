@@ -7,7 +7,7 @@ import Contentcard from "../../components/shared/Contentcard";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
 import useScroll from "../../hooks/Scroll";
-import { EditRounded, Notifications, NotificationsActive,Person} from '@material-ui/icons';
+import { EditRounded, Notifications, NotificationsActive,Settings,Person} from '@material-ui/icons';
 import Contentmap from "../../components/pages/Profile/contentmap";
 import Editwindow from "../../components/pages/Profile/Editwindow"
 
@@ -138,7 +138,8 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
     const[Timetorender,settimetorender]=useState(false);
     const[notificationactive,setnotificationactive]=useState(false);
     const[spinner,setspinner]=useState(false);
-    const[activeedit,setactiveedit]=useState(false);
+    const[activeedit,setactiveedit] = useState(false);
+    const[editforsettings,seteditforsettings] = useState(false)
     const[options,setoptions]=useState({
         Post:{
             name:"Gönderiler",
@@ -183,13 +184,13 @@ console.log(Mydata);
 
    },[query])
 
-   useEffect(()=>{
+    useEffect(()=>{
 
         const optionobj={...options};
         optionobj[query.name].bottom=true;
         setoptions(optionobj);
 
-   },[])
+    },[])
 
     useEffect(()=>{
          
@@ -234,7 +235,7 @@ console.log(Mydata);
       setcontentdata([...Contentdata])
 
     },[query])
-
+    //
     const Relationrequest=useCallback((postId,attribute,typeofrelation,userid)=>{
         
         Createrelationreq({
@@ -247,7 +248,7 @@ console.log(Mydata);
 
     },[userdata.UserId])
     
-    console.log(beingfollowed)
+    //sending following request
     const Followingrequest=()=>{
 
         //todo response gelene kadar bekle hamleye izin verme
@@ -269,7 +270,7 @@ console.log(Mydata);
         
            
     }
-
+    //Aactivate notification bell
     const NotificationActivate = ()=>{
 
         if(Preventspam.current){
@@ -286,7 +287,7 @@ console.log(Mydata);
         }
        
     }
-
+    //handling sorting bar
     const Handleoptions=(optiontype)=>{
         
         const optionobj={...options};
@@ -299,9 +300,34 @@ console.log(Mydata);
         setoptions(optionobj);
     }
 
+    const Editwindowhandler=(isforedit,close)=>{
+
+        if(isforedit){
+        
+            seteditforsettings(true)
+            
+        }
+
+        if(close){
+
+            seteditforsettings(false)
+            
+        }
+
+        setactiveedit(!activeedit)
+    }
+    /*
+    const Profileupdate = () =>{
+
+        UpdateProfile({
+            
+        })
+    }
+    */
+
     return (
         <Exteriordiv editactive={activeedit}>
-            <Editwindow closefunc={()=>setactiveedit(false)} editdata={profiledata} active={activeedit} />
+            <Editwindow isWindowforedit={editforsettings} closefunc={()=>Editwindowhandler(false,true)} editdata={profiledata} active={activeedit} />
             <Innerdiv>
                 <Imagesection>
                     <BackgroundImage ImageforBack={"/way.jpg"} /> 
@@ -334,14 +360,15 @@ console.log(Mydata);
                         : 
                           Timetorender &&
                             (<ButtonHolder>
-                                <Button onClick={()=>setactiveedit(!activeedit)} endIcon={<Person></Person>} variant="contained" style={{color:"white",backgroundColor:"#e63946",textTransform:"none",borderRadius:"25px"}}>Profili Duzenle</Button>
+                                <Button onClick={()=>Editwindowhandler(true,false)} style={{borderRadius:"25px",marginRight:"10px"}} variant="contained"><Settings></Settings></Button>
+                                <Button onClick={()=>Editwindowhandler(false,false)} endIcon={<Person></Person>} variant="contained" style={{color:"white",backgroundColor:"#e63946",textTransform:"none",borderRadius:"25px"}}>Profili Duzenle</Button>
                             </ButtonHolder>)
                     }     
                 </Imagesection>
                 <Contentpart>
                      <Usersection>
                          <ProfileImageholder>
-                             <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile="https://storage.googleapis.com/mynext-a074a.appspot.com/pexels-greg-contreras-3177801.jpg"></Porfileimage>
+                             <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile="/car.jpg"></Porfileimage>
                          </ProfileImageholder>
                          <h4>{profiledata.firstname + " " + profiledata.lastname}</h4>
                          <span style={{color:"#6c757d"}}>UI designer</span>
