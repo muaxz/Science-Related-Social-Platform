@@ -327,7 +327,7 @@ console.log(Mydata);
 
     return (
         <Exteriordiv editactive={activeedit}>
-            <Editwindow isWindowforedit={editforsettings} closefunc={()=>Editwindowhandler(false,true)} editdata={profiledata} active={activeedit} />
+            <Editwindow isWindowforsettings={editforsettings} closefunc={()=>Editwindowhandler(false,true)} editdata={profiledata} active={activeedit} />
             <Innerdiv>
                 <Imagesection>
                     <BackgroundImage ImageforBack={"/way.jpg"} /> 

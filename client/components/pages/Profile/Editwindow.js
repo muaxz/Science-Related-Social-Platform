@@ -6,6 +6,7 @@ import {Black,Porfileimage} from "../../styledcomponents/button"
 import {TextField,Button} from "@material-ui/core"
 import Cropper from  "react-image-crop"
 import axios from 'axios'
+import Switch from "react-switch"
 import "react-image-crop/dist/ReactCrop.css"
 
 const Exterior = styled.div`
@@ -27,20 +28,7 @@ position:relative;
 padding:10px;
 `
 
-const Holderforupicon = styled.div`
-position:absolute;
-transition-duration:0.5s;
-top:-45px;
-left:${({slipvalue})=>{
-    if(slipvalue == 1){
-        return "55px"
-    }else if(slipvalue == 2){
-        return "250px"
-    }else{
-        return "440px"
-    }
-}};
-`
+
 
 const Background = styled.div`
 display:flex;
@@ -107,6 +95,8 @@ margin-bottom:40px;
 `
 
 const Childsofselection = styled.div`
+position:relative;
+top:${({innercolor})=>innercolor ? "10px" : "0"};
 background-color:${({innercolor})=>innercolor ? "#7de2d1" : "#ff0a54"};
 display:flex;
 align-items:center;
@@ -117,13 +107,25 @@ height:38px;
 cursor:pointer;
 transition-duration:0.18s;
 padding:5px;
-&:hover{
-    background-color:
-}
+`
+
+const Holderforupicon = styled.div`
+position:absolute;
+transition-duration:0.3s;
+top:-45px;
+left:${({slipvalue})=>{
+    if(slipvalue == 1){
+        return "55px"
+    }else if(slipvalue == 2){
+        return "250px"
+    }else{
+        return "440px"
+    }
+}};
 `
 
 //email,password,notification
-export default function Editwindow({isWindowforedit,updatefunc,active,editdata,closefunc}){
+export default function Editwindow({isWindowforsettings,updatefunc,active,editdata,closefunc}){
 
     console.log(editdata)
     const [file,setfile] = useState({
@@ -160,7 +162,7 @@ export default function Editwindow({isWindowforedit,updatefunc,active,editdata,c
     const [iscropperactive,setcropperactive] = useState(false)
     const [userinfo,setuserinfo] = useState({
         musername:{
-            activate:isWindowforedit ? false : true,
+            activate:false,
             value:editdata.username,
             label:"Kullanici Adi",
             warning:false,
@@ -168,7 +170,7 @@ export default function Editwindow({isWindowforedit,updatefunc,active,editdata,c
             msg:""
         },
         firstname:{
-            activate:isWindowforedit ? false : true,
+            activate:false,
             value:editdata.firstname,
             label:"Ad",
             warning:false,
@@ -176,7 +178,7 @@ export default function Editwindow({isWindowforedit,updatefunc,active,editdata,c
             msg:""
         },
         surname:{
-            activate:isWindowforedit ? false : true,
+            activate:false,
             value:editdata.lastname,
             label:"Soyad",
             warning:false,
@@ -184,7 +186,7 @@ export default function Editwindow({isWindowforedit,updatefunc,active,editdata,c
             msg:""
         },
         personaltext:{
-            activate:isWindowforedit ? false : true,
+            activate:false,
             value:editdata.Personaltext,
             label:"Kisisel Bilgiler",
             warning:false,
@@ -192,13 +194,58 @@ export default function Editwindow({isWindowforedit,updatefunc,active,editdata,c
             msg:""
         },
         email:{
-            activate:isWindowforedit ? true : false,
+            activate:false,
             value:editdata.email,
             label:"E-Posta",
             warning:false,
             multiline:false,
             msg:"E-postani degistirmek istersen, yeni girdigin adrese bir kod gonderilicek lutfen onu gir."
         },
+        Currentpassword:{
+            activate:false,
+            value:"",
+            label:"Eski Sifreniz",
+            warning:false,
+            multiline:false,
+            msg:""
+        }, 
+        Validationpassword:{
+            activate:false,
+            value:"",
+            label:"Eski sifrenizi tekrar girin",
+            warning:false,
+            multiline:false,
+            msg:""
+        }, 
+        Newpassword:{
+            activate:false,
+            value:"",
+            label:"Yeni sifre",
+            warning:false,
+            multiline:false,
+            msg:""
+        },
+        Notifications:{
+            activate:false,
+            value:{
+                Whenfollow:{
+                    value:false,
+                    msg:"Biri seni takip ettiginde bildirim al"
+                },
+                Whenlike:{
+                    value:false,
+                    msg:"Biri senin icerigini begendiginde bildirim al"
+                },
+                Whencomment:{
+                    value:false,
+                    msg:"Biri icerigine yorum yaptiginda bildirim al"
+                }
+            },
+            label:"",
+            warning:false,
+            multiline:false,
+            msg:""
+        }
       
     })
     const [selectionchilds,setselectionchilds] = useState({
@@ -210,18 +257,45 @@ export default function Editwindow({isWindowforedit,updatefunc,active,editdata,c
 
     useEffect(()=>{
 
-        const copy = {...userinfo}
-      
-        for (const key in copy){
-            copy[key].activate = isWindowforedit ? false : true
-            if(copy[key].label == "E-Posta"){
-                    copy[key].activate = isWindowforedit ? true : false
+     
+            const copy = {...userinfo}
+            for (const key in copy){
+                copy[key].activate = false
+                console.log(copy[key].activate)
             }
-        }
 
-        setuserinfo(copy)
-      
-    },[isWindowforedit])
+    
+            if(isWindowforsettings){
+
+                if(selected == 1){
+
+                    copy["email"].activate = true 
+
+                }else if(selected == 2){
+                    
+                    copy["Currentpassword"].activate = true 
+                    copy["Validationpassword"].activate = true 
+                    copy["Newpassword"].activate = true 
+
+                }else{//selected 3
+                    copy["Notifications"].activate = true
+                }
+
+            }else{
+                if(active){
+                    for (const key in copy) {
+                        if(key == "musername" || key == "personaltext" || key == "firstname" || key == "surname"){
+                            copy[key].activate = true
+                        
+                        }
+                    }
+                }
+            }
+            
+    
+            setuserinfo(copy)
+
+    },[active,selected])
 
     useEffect(()=>{
         setcropperactive(false)
@@ -274,10 +348,15 @@ export default function Editwindow({isWindowforedit,updatefunc,active,editdata,c
         
     }
 
-    const Inputhandler = (key,event)=>{
+    const Inputhandler = (key,event,subkey)=>{
 
         const mutated = {...userinfo}
-        mutated[key].value=event.target.value
+        if(key == "Notifications"){
+            mutated[key]["value"][subkey]["value"]= !mutated[key]["value"][subkey]["value"]
+        }else{
+            mutated[key].value=event.target.value
+        }
+       
         setuserinfo(mutated)
     }
 
@@ -361,7 +440,7 @@ export default function Editwindow({isWindowforedit,updatefunc,active,editdata,c
      
 
         try{
-
+            //move this to api file
             await axios.post(`user/updateprofile`,formData,{withCredentials:true});
    
          }catch(err){
@@ -373,10 +452,12 @@ export default function Editwindow({isWindowforedit,updatefunc,active,editdata,c
     }
 
     const Selectionhandler=(keyname,index)=>{
+        
         const copy = {...selectionchilds}
         for (const key in copy) {
            copy[key] = false
         }
+        
         copy[keyname] = true
         setselected(index+1)
         setselectionchilds(copy)
@@ -399,7 +480,7 @@ export default function Editwindow({isWindowforedit,updatefunc,active,editdata,c
             <Exterior getcropper={iscropperactive} active={active}>
                 <Inner>
                     {
-                        isWindowforedit &&
+                        isWindowforsettings &&
                         (<Selectionbar>
                             {
                                 Object.keys(selectionchilds).map((item,index)=>{
@@ -422,13 +503,10 @@ export default function Editwindow({isWindowforedit,updatefunc,active,editdata,c
                         :
 
                              (<> 
-                                    { !isWindowforedit &&  
+                                    { !isWindowforsettings &&  
 
                                         (<>
                                             <Background ImageforBack={src.Backimage}>
-                                                <div style={{position:"absolute",top:"225px",right:"10px",zIndex:"1000"}}>
-                                                    <Button onClick={()=>Sendupdates()} style={{textTransform:"capitalize",borderRadius:"25px"}} color="secondary" variant="contained">Kaydet</Button>
-                                                </div>
                                                 <Labelimage  htmlFor="file"></Labelimage>
                                                 <CameraAlt style={{color:"white"}}></CameraAlt>
                                                 <input onChange={(e)=>Updatefile(e,"Backimage")} name="upload" accept="image/png, image/gif, image/jpeg" id="file" type="file" style={{display:"none"}}></input>
@@ -440,33 +518,53 @@ export default function Editwindow({isWindowforedit,updatefunc,active,editdata,c
                                                     <input onChange={(e)=>Updatefile(e,"Profileimage")} accept="image/png, image/gif, image/jpeg" id="file2" type="file" style={{display:"none"}}></input>
                                                 </Porfileimage>
                                             </ProfileImageholder>
+                                            <div style={{position:"absolute",top:"225px",right:"10px",zIndex:"300"}}>
+                                                    <Button onClick={()=>Sendupdates()} style={{textTransform:"capitalize",borderRadius:"25px"}} color="secondary" variant="contained">Kaydet</Button>
+                                            </div>
                                         </>)
 
                                     }
                                   
-                                <Information isforedit={isWindowforedit}>
+                                <Information isforedit={isWindowforsettings}>
+
                                     {
-                                        isWindowforedit &&
+                                        isWindowforsettings &&
                                         <Holderforupicon slipvalue={selected}>
                                            <ArrowDropUp style={{fontSize:"80px",color:"#e9ecef"}}></ArrowDropUp>
                                         </Holderforupicon>
                                     }
                                    
                                     {
-                                        Object.keys(userinfo).map((item,index)=>{
+                                        Object.keys(userinfo).map((item,index)=>{   
 
-                                            return (<Inputholder displayed={userinfo[item].activate}>
-                                                        <TextField   
-                                                            multiline={userinfo[item].multiline}
-                                                            rows={4}
-                                                            onChange={(e)=>Inputhandler(item,e)}
-                                                            style={{width:"100%"}}
-                                                            label={userinfo[item].label}
-                                                            variant="outlined"
-                                                            value={userinfo[item].value}
-                                                            helperText={userinfo[item].msg}
-                                                        ></TextField>
-                                                </Inputholder>)
+                                            var subelements = null
+                                            if(typeof userinfo[item].value !== "string"){
+                                                var subelements = Object.keys(userinfo[item].value).map((subitem,subindex)=>(//sub values of noitification phase
+                                                <Inputholder displayed={userinfo[item].activate}>  
+                                                <div style={{display:"flex",justifyContent:"space-between"}}>
+                                                    <p style={{textTransform:"capitalize"}}>{userinfo[item]["value"][subitem]["msg"]}</p>
+                                                    <Switch onColor='#ff002b' andleDiameter={20} onChange={()=>Inputhandler(item,"",subitem)} checkedIcon={true} uncheckedIcon={true} checked={userinfo[item]["value"][subitem]["value"]}></Switch>
+                                                </div>
+                                                </Inputholder>))
+
+                                            }else{
+
+                                                subelements = (<Inputholder displayed={userinfo[item].activate}>
+                                                                <TextField   
+                                                                    multiline={userinfo[item].multiline}
+                                                                    rows={4}
+                                                                    onChange={(e)=>Inputhandler(item,e)}
+                                                                    style={{width:"100%"}}
+                                                                    label={userinfo[item].label}
+                                                                    variant="outlined"
+                                                                    value={userinfo[item].value}
+                                                                    helperText={userinfo[item].msg}
+                                                                ></TextField>
+                                                             </Inputholder>)
+
+                                            }
+
+                                            return subelements
                                         })
                                     }
                                 </Information>
