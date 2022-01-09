@@ -24,8 +24,7 @@ z-index:100;
 opacity:${({up})=>up ? "1" : "0"};
 `
 //TODO socket io handle functions on serverside
-
-const socket=io("http://localhost:3001");
+const socket = io("http://localhost:3001");
 
 export default function Mainlayout({children}) {
 
@@ -39,6 +38,13 @@ export default function Mainlayout({children}) {
     const userouter=useRouter();
     
     console.log(userouter.pathname);
+    useEffect(()=>{
+
+        if(userdata.UserId){
+            socket.emit("create",userdata.UserId)
+        }
+        
+    },[userdata])
 
     useEffect(() => {
     

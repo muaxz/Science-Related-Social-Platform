@@ -5,7 +5,7 @@ import {Porfileimage} from "../styledcomponents/button";
 import Link from "next/link";
 import {useRouter} from "next/router"
 import Icon from "../UI/Icon"
-import {AddComment, feed, Feedback,Send} from "@material-ui/icons"
+import {AddComment,feed,Feedback,Send,Delete, Edit} from "@material-ui/icons"
 import {calculatedate} from "../../utilsfunc"
 import useClickoutside from "../../hooks/Clikcoutisde";
 import { TextField , Button,InputAdornment} from '@material-ui/core';
@@ -201,7 +201,7 @@ left:${({iscomment})=>iscomment ? "-60px" : "0px"};
 `
 
 //içerik sayısı,takipçi sayısı,
-function Contentcard({Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid}){
+function Contentcard({imagefilename,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid}){
     
     const[elements,setelements]=useState({
         Like:{
@@ -406,13 +406,34 @@ function Contentcard({Childlength,Answerhandler,readlater,draft,profileimage,con
                 <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-v" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
                 {
                     visible && 
+                    
                     (<Optionwindow active={true}>
-                        <Optionholder>
-                            <Feedback></Feedback>
-                            <div style={{marginLeft:"8px"}}>
-                                <p>Bildir</p>
-                            </div>
-                        </Optionholder>
+                        {
+                            userid == userdata.UserId ? 
+                            <>
+                                <Optionholder>
+                                    <Edit></Edit>
+                                    <div style={{marginLeft:"8px"}}>
+                                        <p>Duzenle</p>
+                                    </div>
+                                </Optionholder>
+                                <Optionholder>
+                                    <Delete></Delete>
+                                    <div style={{marginLeft:"8px"}}>
+                                        <p>Yorumu Sil</p>
+                                    </div>
+                                </Optionholder>
+                            </>
+                            :
+                            <Optionholder>
+                                <Feedback></Feedback>
+                                <div style={{marginLeft:"8px"}}>
+                                    <p>Bildir</p>
+                                </div>
+                            </Optionholder>
+
+                        }
+                       
                    </Optionwindow>)
                 }
               </div>
@@ -427,7 +448,7 @@ function Contentcard({Childlength,Answerhandler,readlater,draft,profileimage,con
                             pathname:`/profile/${userid}`,
                             query:{name:"Post"}
                         }}>
-                        <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={profileimage}></Porfileimage>
+                        <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={`https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${imagefilename}?alt=media&token=${imagetoken}`}></Porfileimage>
                         </Link>
                     </Profileimageholder>
                     <div style={{marginLeft:"10px",fontSize:"15px"}}><p style={{color:"black"}}>

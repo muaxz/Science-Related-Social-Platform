@@ -17,4 +17,5 @@ const Comment=sequlize.define("Comment",{
 Comment.hasMany(Comment,{as:"subcomments"});
 
 
+
 module.exports=Comment;

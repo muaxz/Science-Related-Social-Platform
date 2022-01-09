@@ -21,7 +21,7 @@ export const Global=createGlobalStyle`
  *{
      box-sizing:border-box;
      margin:0px;
-     font-family: 'Poppins', sans-serif;
+     font-family: 'Raleway', sans-serif;
  }
 
  body {
@@ -36,7 +36,6 @@ export const Global=createGlobalStyle`
 export const Porfileimage=styled.div(({width,height,profile})=>`
 width:${width};
 height:${height};
-background-color:white;
 border-radius:50%;
 cursor:pointer;
 background-image:url(${profile});
@@ -75,8 +74,8 @@ export const Spinner = styled.div`
   border-bottom: 2px solid lightgrey;
   border-left: 2px solid #6c757d;
   background: transparent;
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
 `;
 

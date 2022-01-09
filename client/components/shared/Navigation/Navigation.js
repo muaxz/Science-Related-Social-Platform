@@ -209,7 +209,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
 
     },[visible2])
 
-    const Logout =()=>{
+    const Logout=()=>{
         logout({
             setlogged:setlogged,
             setuserdata:setuserdata,

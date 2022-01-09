@@ -155,7 +155,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
         } 
     })
    
-console.log(Mydata);
+  console.log(Mydata);
 
    useEffect(()=>{
       //sadece paignation zaten query değişince ilk 10 value serverside tarafından çekiliyor
@@ -327,7 +327,13 @@ console.log(Mydata);
 
     return (
         <Exteriordiv editactive={activeedit}>
-            <Editwindow isWindowforsettings={editforsettings} closefunc={()=>Editwindowhandler(false,true)} editdata={profiledata} active={activeedit} />
+            {
+                activeedit &&
+
+                (<Editwindow isWindowforsettings={editforsettings} closefunc={()=>Editwindowhandler(false,true)} editdata={Mydata} active={activeedit} />)
+
+            }
+           
             <Innerdiv>
                 <Imagesection>
                     <BackgroundImage ImageforBack={"/way.jpg"} /> 

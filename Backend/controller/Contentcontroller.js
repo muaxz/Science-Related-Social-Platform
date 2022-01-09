@@ -165,9 +165,7 @@ exports.createrelation=async (req,res,next)=>{
         Useruserid:UserId,
       }
       })
-     
     
-      
     }
     else{
 
@@ -195,7 +193,7 @@ exports.createrelation=async (req,res,next)=>{
     
             
             //ToDo changable
-            io.emit("Notification","");
+            io.sockets.in(UserIdofcontent).emit("Notification","");
             
           }
 
@@ -218,8 +216,7 @@ exports.getusercontent=async(req,res,next)=>{
   const {UserId} = req.userdata
   //burada serverda tutaln user geliyor
   //burada ekstra bir kontrol gerekli
-  console.log(UserId)
-  console.log(id)
+
   if(UserId == id){//UserId is current, id is coming from outside
 
         var latestparams="";
@@ -292,7 +289,7 @@ exports.getusercontent=async(req,res,next)=>{
 //namechange
 exports.getcontent=async (req,res,next)=>{
 
-  const {id}=req.params;
+  const {id} = req.params;
 
   try {
     //TODO including comments and users (with nested include)

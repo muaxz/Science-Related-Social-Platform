@@ -3,6 +3,8 @@ const User=require("../models/Usermodel");
 const bcrypt=require("bcrypt");
 const {v4}=require("uuid");
 
+
+
 exports.login = async (req,res,next)=>{
 
    try{
@@ -13,7 +15,7 @@ exports.login = async (req,res,next)=>{
          
 
       console.log("heyyyyyooooooo buradaaaaaa");
-      
+    
       if(user){
 
          const mydata={
@@ -24,7 +26,7 @@ exports.login = async (req,res,next)=>{
             Userimage:user.imageurl,
          }
          
-         await bcrypt.compare(password,user.password,(err,result)=>{
+         bcrypt.compare(password,user.password,(err,result)=>{
             console.log(result);
             if(result == true){
                
@@ -61,7 +63,6 @@ exports.login = async (req,res,next)=>{
 exports.register = async (req,res,next)=>{
 
   const  {name,surname,email,password}=req.body.userdata;
-   console.log(email);
 
   try{
 
@@ -75,7 +76,7 @@ exports.register = async (req,res,next)=>{
       else{
 
          const hashedpassword= await bcrypt.hash(password,10);
-   
+         
          await User.create({
             id:v4(),
             firstname:name,
@@ -84,7 +85,7 @@ exports.register = async (req,res,next)=>{
             password:hashedpassword,
             Notification:{
                Whenfollow:true,
-               Whenpost:true,
+
                Whenlike:true,
                Whencomment:true,
             }

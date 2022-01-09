@@ -55,6 +55,10 @@ exports.getcomments=async (req,res,next)=>{
   
     const comments = await Comment.findAll({
       where:{ContentId:id},
+      include:{
+        model:User,
+        attributes:["firstname","lastname","id","imageurl","imagetoken"]
+      },
       limit:Last == "true" ? 1 : 10,
       offset:Last == "true" ? 0 : ordernumb-10,
       order:[['createdAt',"DESC"]]
@@ -79,7 +83,11 @@ exports.getcomments=async (req,res,next)=>{
   
         let subComments = await Comment.findAll({
             where: {
-                CommentId:comment.id
+                CommentId:comment.id,
+            },
+            include:{
+              model:User,
+              attributes:["firstname","lastname","id","imageurl","imagetoken"]
             },
         });
   

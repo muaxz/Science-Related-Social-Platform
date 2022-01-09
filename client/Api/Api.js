@@ -172,15 +172,13 @@ export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setconten
       }
       else{
 
-        setTimeout(() => {
           setcontentdata(Mydata)
-        }, 1000);
-       
+ 
       }
 
-      setTimeout(() => {
-        setspinner(false);
-      }, 1000);
+    
+      return setspinner(false);
+    
      
     }    
     else{
@@ -592,4 +590,24 @@ export const UpdateNotificationactive = async ({FollowedId,Prevent,FollowerId,cu
        
   }
 
+}//user alert activated or not
+
+export const UpdateProfile = async ({userdata,typeofupdate,setuploading,setsuccesfulupload})=>{
+  
+  try {
+
+          
+          const {data} = await axios.post(`/user/updateprofile/${typeofupdate}`,userdata,{withCredentials:true})
+          console.log("buradaxx")
+          setuploading(false)
+          setsuccesfulupload("SUCCESSFUL")
+          setTimeout(() => {
+            setsuccesfulupload("")
+          },3000);
+
+          
+  }catch (error) {
+    console.log(error)
+    setsuccesfulupload("ERROR")
+  }
 }

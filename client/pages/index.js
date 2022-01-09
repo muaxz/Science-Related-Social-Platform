@@ -30,11 +30,16 @@ Home.layout=(children)=>{
 export async function getServerSideProps({req,res}){
 
     try {
+        
         if(req.headers.cookie){
+
             var {data} = await axios.get(`http://localhost:3001/content/gethome/10/Felsefe`,{headers:{Cookie:req.headers.cookie}})
+
         }
         else{
+
             var {data} =await axios.get(`http://localhost:3001/content/gethome/10/Felsefe`)
+
         }
        
 

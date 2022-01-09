@@ -5,7 +5,7 @@ import uniqid from "uniqid"
 
 
 var lengthcounter = 0
-function Belowcomment({parentId,Answerhandler,mylist,postId,content,showwindow,like,retweet,comment,readlater,profileimage,title,titleimage,username,usersurname,subtitle,date}){
+function Belowcomment({imagetoken,imagefilename,Answerhandler,mylist,postId,content,showwindow,like,retweet,comment,readlater,profileimage,title,titleimage,username,usersurname,subtitle,date,userid}){
     
     const Contentdiv =
     (<Contentcard 
@@ -20,10 +20,13 @@ function Belowcomment({parentId,Answerhandler,mylist,postId,content,showwindow,l
     profileimage={"/black.jpg"}
     title={title}//no need
     titleimage={"yaprak.jpg"}
-    username={"Duhan"}
-    usersurname={"Öztürk"}
+    username={username}
+    usersurname={usersurname}
     subtitle={subtitle}//no need
     date={date}
+    imagefilename={imagefilename}
+    imagetoken={imagetoken}
+    userid={userid}
     Answerhandler={Answerhandler}
     Childlength={mylist.length}
     >
@@ -55,13 +58,15 @@ function Belowcomment({parentId,Answerhandler,mylist,postId,content,showwindow,l
                     profileimage={"/black.jpg"}
                     title={item.title}//no need
                     titleimage={"yaprak.jpg"}
-                    username={"Duhan"}
-                    usersurname={"Öztürk"}
+                    username={item.User.firstname}
+                    usersurname={item.User.lastname}
+                    userid={item.User.id}
+                    imagefilename={item.User.imageurl}
+                    imagetoken={item.User.imagetoken}
                     subtitle={item.subtitle}//no need
                     date={item.createdAt}
                     mylist={item.takeit}
                     Answerhandler={Answerhandler}
-                    parentId={item.parentId}
                 ></Belowcomment>)
             })
             :null

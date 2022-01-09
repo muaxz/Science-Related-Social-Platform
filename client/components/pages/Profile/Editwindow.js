@@ -1,13 +1,15 @@
 import { CameraAlt } from '@material-ui/icons'
-import React, { useState,useEffect} from 'react'
+import React, { useState,useEffect,useReducer} from 'react'
 import styled from "styled-components"
 import {ArrowDropUp,Email,Lock,Notifications} from "@material-ui/icons"
-import {Black,Porfileimage} from "../../styledcomponents/button"
+import {Black,Porfileimage,Spinner} from "../../styledcomponents/button"
 import {TextField,Button} from "@material-ui/core"
 import Cropper from  "react-image-crop"
 import axios from 'axios'
+import {UpdateProfile} from "../../../Api/Api"
 import Switch from "react-switch"
 import "react-image-crop/dist/ReactCrop.css"
+import Validate from "validator"
 
 const Exterior = styled.div`
 display:${({active})=>active ? "block" : "none"};
@@ -21,15 +23,14 @@ height:${({getcropper})=>getcropper ? "350px" : "580px"};
 background-color:white;
 border-radius:10px;
 z-index:1000;
-overflow:${({getcropper})=>getcropper ? "visible" : "auto"};;
+
 `
 const Inner = styled.div`
 position:relative;
 padding:10px;
+overflow:auto;
+height:580px;
 `
-
-
-
 const Background = styled.div`
 display:flex;
 cursor:pointer;
@@ -49,12 +50,12 @@ transition:0.4s;
     opacity:1;
 }
 `
-
 const ProfileImageholder=styled.div`
 position:absolute;
 top:160px;
 opacity:0.8;
 left:30px;
+z-index:1;
 transition:0.4s;
 &:hover{
     opacity:1;
@@ -73,7 +74,6 @@ padding-right:20px;
 padding-bottom:20px;
 border-radius:20px;
 `
-
 const Labelimage=styled.label`
 position:absolute;
 width:100%;
@@ -124,19 +124,44 @@ left:${({slipvalue})=>{
 }};
 `
 
+const ProfileuploadedDiv = styled.div`
+position:fixed;
+transition-duration:0.5s;
+top:500px;
+opacity:${({successful})=> successful ? "1" : "0"};
+left:${({successful})=> successful ? "20px" : "5px"};
+padding:10px;
+border-radius:10px;
+z-index:1000;
+background-color:#403d58;
+color:white;
+box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+`
+
+
 //email,password,notification
+
 export default function Editwindow({isWindowforsettings,updatefunc,active,editdata,closefunc}){
 
     console.log(editdata)
+    console.log(editdata.backgroundurl)
     const [file,setfile] = useState({
         Backimage:"",
         Profileimage:""
     })
     const [crop,setcrop] = useState({aspect:16/16,height:200,width:100,x:50,y:50})
     const [src,setsrc] = useState({
-        Backimage:"",
-        Profileimage:""
+        Profileimage:{
+            token:editdata.imagetoken,
+            name:editdata.imageurl
+        },
+        Backimage:{
+            token:editdata.backgroundtoken,
+            name:editdata.backgroundurl
+        }
     })
+    const [uploading,setuploading] = useState(false)
+    const [succesfulupload,setsuccesfulupload] = useState("")
     const [imagetype,setimagetype] = useState("")
     const [image,setimage] = useState(null)
     const [result,setresult] = useState({
@@ -163,11 +188,12 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
     const [userinfo,setuserinfo] = useState({
         musername:{
             activate:false,
-            value:editdata.username,
+            value:"sa",
             label:"Kullanici Adi",
             warning:false,
             multiline:false,
-            msg:""
+            msg:"",
+            errormsg:""
         },
         firstname:{
             activate:false,
@@ -175,7 +201,8 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             label:"Ad",
             warning:false,
             multiline:false,
-            msg:""
+            msg:"",
+            errormsg:""
         },
         surname:{
             activate:false,
@@ -183,15 +210,17 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             label:"Soyad",
             warning:false,
             multiline:false,
-            msg:""
+            msg:"",
+            errormsg:""
         },
         personaltext:{
             activate:false,
-            value:editdata.Personaltext,
+            value:"sa",
             label:"Kisisel Bilgiler",
             warning:false,
             multiline:true,
-            msg:""
+            msg:"",
+            errormsg:""
         },
         email:{
             activate:false,
@@ -199,7 +228,8 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             label:"E-Posta",
             warning:false,
             multiline:false,
-            msg:"E-postani degistirmek istersen, yeni girdigin adrese bir kod gonderilicek lutfen onu gir."
+            msg:"E-postani degistirmek istersen, yeni girdigin adrese bir kod gonderilicek lutfen onu gir.",
+            errormsg:"Gecerli Bir E-posta adresi girin !"
         },
         Currentpassword:{
             activate:false,
@@ -207,38 +237,41 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             label:"Eski Sifreniz",
             warning:false,
             multiline:false,
-            msg:""
-        }, 
-        Validationpassword:{
-            activate:false,
-            value:"",
-            label:"Eski sifrenizi tekrar girin",
-            warning:false,
-            multiline:false,
-            msg:""
+            msg:"",
+            errormsg:"Eski sifreni yanlis girdin galiba, tekrar dene !"
         }, 
         Newpassword:{
             activate:false,
             value:"",
-            label:"Yeni sifre",
+            label:"Yeni sifrenizi girin",
             warning:false,
             multiline:false,
-            msg:""
+            msg:"",
+            errormsg:"Make sure that your password has at least 6 length and contains one upper, one lower character and one number."
+        }, 
+        ValidationNewpassword:{
+            activate:false,
+            value:"",
+            label:"Yeni sifrenizi tekrar girin",
+            warning:false,
+            multiline:false,
+            msg:"",
+            errormsg:"Girdiginiz sifreler ayni degil"
         },
         Notifications:{
             activate:false,
             value:{
                 Whenfollow:{
-                    value:false,
-                    msg:"Biri seni takip ettiginde bildirim al"
+                    value:editdata.Notification.Whenfollow,
+                    msg:"Biri takip ettiginde"
                 },
                 Whenlike:{
-                    value:false,
-                    msg:"Biri senin icerigini begendiginde bildirim al"
+                    value:editdata.Notification.Whenlike,
+                    msg:"Biri icerik begendiginde"
                 },
                 Whencomment:{
-                    value:false,
-                    msg:"Biri icerigine yorum yaptiginda bildirim al"
+                    value:editdata.Notification.Whencomment,
+                    msg:"Biri yorum yaptiginda"
                 }
             },
             label:"",
@@ -261,6 +294,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             const copy = {...userinfo}
             for (const key in copy){
                 copy[key].activate = false
+                copy[key].warning  = false
                 console.log(copy[key].activate)
             }
 
@@ -274,14 +308,15 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                 }else if(selected == 2){
                     
                     copy["Currentpassword"].activate = true 
-                    copy["Validationpassword"].activate = true 
                     copy["Newpassword"].activate = true 
+                    copy["ValidationNewpassword"].activate = true 
 
                 }else{//selected 3
                     copy["Notifications"].activate = true
                 }
 
             }else{
+
                 if(active){
                     for (const key in copy) {
                         if(key == "musername" || key == "personaltext" || key == "firstname" || key == "surname"){
@@ -290,13 +325,15 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                         }
                     }
                 }
+
             }
             
     
             setuserinfo(copy)
+            
 
     },[active,selected])
-
+    
     useEffect(()=>{
         setcropperactive(false)
     },[active])
@@ -314,6 +351,29 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
 
     },[src])
     */
+    const Inputerrorhandler = (type,value)=>{
+        switch (type) {
+            case "username":
+                break;
+            case "firstname":
+                break;
+            case "email":
+                return Validate.isEmail(value)
+            case "password":
+                console.log(value.New)
+                console.log(value.Newvalidation)
+                if(value.New !== value.Newvalidation)
+                return {state:"Unequal",validate:false}
+
+                if(!Validate.isStrongPassword(value.New,{minSymbols:0,minNumbers:1,minLowercase:1,minUppercase:1,minLength:6}))
+                return {state:"Strong",validate:false};
+
+                return {state:"Success",validate:true}
+                //newpassword character checking
+            default:
+                break;
+        }
+    }
 
     const ToCanvas = async ()=>{
        
@@ -355,13 +415,13 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             mutated[key]["value"][subkey]["value"]= !mutated[key]["value"][subkey]["value"]
         }else{
             mutated[key].value=event.target.value
+            mutated[key].warning = false
         }
        
         setuserinfo(mutated)
     }
 
     const Updatefile = (event,type)=>{
-
         if(type == "Backimage"){
             setcrop({
                 aspect:16/9,
@@ -412,15 +472,67 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         //value of cropper width height x and y
     }
 
-    const Sendupdates = async ()=>{
+    const Sendupdates = async (typeofupdate)=>{
 
         const values = {}
-        for (const key in userinfo){
-            values[key] = userinfo[key].value
+        const copy = {...userinfo}
+        var updateFor = ""
+
+        if(!isWindowforsettings){
+            console.log("IN UPDATE")
+            updateFor = "Profile"
+            values.backcrop = result.Backimage.cropvalues
+            values.profile  = result.Profileimage.cropvalues
+            
+            for (const key in userinfo){
+                if(key == "email")
+                break
+                values[key] = userinfo[key].value
+            }
+
+        }else if(typeofupdate == 1){
+
+            updateFor = "Email"
+            if(!Inputerrorhandler("email",userinfo["email"].value)){
+                copy["email"].warning = true
+                copy["email"].msg = "Gecerli Bir E-posta adresi girin !"
+                return setuserinfo(copy)
+            }
+           
+            values["email"] = userinfo["email"].value
+            
+        }else if(typeofupdate == 2){
+
+            updateFor = "Password"
+            const {state,validate} = Inputerrorhandler("password",{Current:userinfo["Currentpassword"].value,New:userinfo["Newpassword"].value,Newvalidation:userinfo["ValidationNewpassword"].value})
+        
+           
+            if(!validate){
+
+                if(state == "Unequal"){
+
+                    copy["ValidationNewpassword"].warning = true   
+
+                }else{
+
+                    copy["Newpassword"].warning = true
+
+                }
+
+                return setuserinfo(copy)
+            }
+
+            values["Currentpassword"] = userinfo["Currentpassword"].value
+            values["Newpassword"] = userinfo["Newpassword"].value
+            values["NewValidation"] = userinfo["ValidationNewpassword"].value
+            
+        }else{
+
+            updateFor = "Notification"
+            values["Notifications"] = userinfo["Notifications"]["value"]
+
         }
 
-        values.backcrop = result.Backimage.cropvalues
-        values.profile  = result.Profileimage.cropvalues
 
         const formData=new FormData();
 
@@ -438,16 +550,13 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         formData.append("Profilevalues",JSON.stringify(values))
         
      
-
-        try{
-            //move this to api file
-            await axios.post(`user/updateprofile`,formData,{withCredentials:true});
-   
-         }catch(err){
-   
-            return console.log("UPLOAD ERRORRRRRRR");
-            
-         }
+        setuploading(true)
+        UpdateProfile({
+            userdata:formData,
+            typeofupdate:updateFor,
+            setuploading:setuploading,
+            setsuccesfulupload:setsuccesfulupload,
+        })
 
     }
 
@@ -479,6 +588,15 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             <img style={{visibility:"hidden",position:"absolute"}} id="Profileimg" src={src["Profileimage"]}></img>
             <Exterior getcropper={iscropperactive} active={active}>
                 <Inner>
+                    <ProfileuploadedDiv successful={succesfulupload == "SUCCESSFUL" ? true : false}>Profil Basariyla Guncellendi</ProfileuploadedDiv>
+                    <div style={{position:"absolute",top:isWindowforsettings ? "500px":"250px",right:"40px",zIndex:"300"}}>
+                        <Button onClick={()=>Sendupdates(selected)} style={{textTransform:"capitalize",borderRadius:"25px"}} color="secondary" variant="contained">
+                            {
+                                uploading ? (<Spinner style={{marginRight:"5px"}}></Spinner>) : null
+                            }
+                            Kaydet
+                        </Button>
+                    </div>
                     {
                         isWindowforsettings &&
                         (<Selectionbar>
@@ -506,21 +624,19 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                                     { !isWindowforsettings &&  
 
                                         (<>
-                                            <Background ImageforBack={src.Backimage}>
+                                            <Background ImageforBack={src.Backimage.token ? `https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${src.Backimage.name}?alt=media&token=${src.Backimage.token}` : "/yaprak.jpg"}>
                                                 <Labelimage  htmlFor="file"></Labelimage>
                                                 <CameraAlt style={{color:"white"}}></CameraAlt>
                                                 <input onChange={(e)=>Updatefile(e,"Backimage")} name="upload" accept="image/png, image/gif, image/jpeg" id="file" type="file" style={{display:"none"}}></input>
                                             </Background>
-                                            <ProfileImageholder>
-                                                <Porfileimage style={{display:"flex",justifyContent:"center",alignItems:"center"}} width="80px" height="80px" profile={src.Profileimage}>
+                                            <ProfileImageholder isHavingprofile={src.Profileimage.token}>
+                                                <Porfileimage profile={src.Profileimage.token ? `https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${src.Profileimage.name}?alt=media&token=${src.Profileimage.token}` : "/yaprak.jpg"} style={{display:"flex",justifyContent:"center",alignItems:"center"}} width="80px" height="80px" >
                                                     <Labelimage htmlFor="file2"></Labelimage>
                                                     <CameraAlt style={{color:"white"}}></CameraAlt>
                                                     <input onChange={(e)=>Updatefile(e,"Profileimage")} accept="image/png, image/gif, image/jpeg" id="file2" type="file" style={{display:"none"}}></input>
                                                 </Porfileimage>
                                             </ProfileImageholder>
-                                            <div style={{position:"absolute",top:"225px",right:"10px",zIndex:"300"}}>
-                                                    <Button onClick={()=>Sendupdates()} style={{textTransform:"capitalize",borderRadius:"25px"}} color="secondary" variant="contained">Kaydet</Button>
-                                            </div>
+                                            
                                         </>)
 
                                     }
@@ -538,19 +654,21 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                                         Object.keys(userinfo).map((item,index)=>{   
 
                                             var subelements = null
-                                            if(typeof userinfo[item].value !== "string"){
+                                            if(typeof userinfo[item].value == "object"){
+
                                                 var subelements = Object.keys(userinfo[item].value).map((subitem,subindex)=>(//sub values of noitification phase
-                                                <Inputholder displayed={userinfo[item].activate}>  
-                                                <div style={{display:"flex",justifyContent:"space-between"}}>
-                                                    <p style={{textTransform:"capitalize"}}>{userinfo[item]["value"][subitem]["msg"]}</p>
-                                                    <Switch onColor='#ff002b' andleDiameter={20} onChange={()=>Inputhandler(item,"",subitem)} checkedIcon={true} uncheckedIcon={true} checked={userinfo[item]["value"][subitem]["value"]}></Switch>
-                                                </div>
-                                                </Inputholder>))
+                                                    <Inputholder displayed={userinfo[item].activate}>  
+                                                        <div style={{display:"flex",justifyContent:"space-between"}}>
+                                                            <p style={{textTransform:"capitalize"}}>{userinfo[item]["value"][subitem]["msg"]}</p>
+                                                            <Switch onColor='#ff002b' andleDiameter={20} onChange={()=>Inputhandler(item,"",subitem)} checkedIcon={true} uncheckedIcon={true} checked={userinfo[item]["value"][subitem]["value"]}></Switch>
+                                                        </div>
+                                                    </Inputholder>))
 
                                             }else{
 
                                                 subelements = (<Inputholder displayed={userinfo[item].activate}>
                                                                 <TextField   
+                                                                    error={userinfo[item].warning}
                                                                     multiline={userinfo[item].multiline}
                                                                     rows={4}
                                                                     onChange={(e)=>Inputhandler(item,e)}
@@ -558,7 +676,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                                                                     label={userinfo[item].label}
                                                                     variant="outlined"
                                                                     value={userinfo[item].value}
-                                                                    helperText={userinfo[item].msg}
+                                                                    helperText={!userinfo[item].warning ? userinfo[item].msg : userinfo[item].errormsg}
                                                                 ></TextField>
                                                              </Inputholder>)
 

@@ -18,7 +18,6 @@ export default function Routerguard({children}){
         
         if(userdata.UserId){
 
-
             if(myrouter.pathname == "/[userıd]/liked" || myrouter.pathname == "/[userıd]/saved"){
                 
                 if(myrouter.query.userıd == userdata.UserId){

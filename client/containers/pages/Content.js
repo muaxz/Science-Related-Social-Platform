@@ -78,7 +78,7 @@ export default function Content({Contentdata,comments,id}){
     const {userdata}=useContext(createusercontext);
     //const {id}=router.query;
   
-   
+    console.log(commentlist)
     useEffect(()=>{
 
         if(numberofcomment > 0){

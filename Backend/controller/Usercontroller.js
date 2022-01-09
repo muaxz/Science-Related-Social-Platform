@@ -6,6 +6,7 @@ const UserUsermodel=require("../models/UserUser");
 const Notificationmodel=require("../models/Notificationmodel");
 const Comment = require("../models/Commentmodel");
 const User = require("../models/Usermodel");
+const bcrypt=require("bcrypt");
 
 
 //search bar
@@ -76,7 +77,7 @@ exports.getuserprofile = async (req,res,next)=>{
      
      const Myuserdata=await Usermodel.findOne({
          where:{id:UserId}, 
-         attributes:["id","firstname","lastname","imageurl","Role","Personaltext","username","backgroundurl","email"],
+         attributes:["id","firstname","lastname","imageurl","Role","Personaltext","username","backgroundurl","email","Notification","backgroundtoken","imagetoken"],
          include:[{
            model:Usermodel,
            as:"Followed",
@@ -314,6 +315,7 @@ exports.createuserrelation = async (req,res,next)=>{
   //follower ıd is our current active user
   //tokenm validation git
   try {
+
      if(checkiffollow){
 
       await UserUsermodel.destroy({
@@ -338,10 +340,11 @@ exports.createuserrelation = async (req,res,next)=>{
         UserId:FollowerId,
       })
 
-      io.emit("Notification","notify");
+      
+      //payload currentuserID == SenderID
+      io.sockets.to(FollowedId).emit("Notification","");
       //burada tekrar tetikliyoruz
-
-     }
+      }
 
      res.json({data:"success"})
 
@@ -421,88 +424,122 @@ exports.updatenotification = async (req,res,next)=>{
 
 exports.updateprofile = async (req,res,next)=>{
   //bunlardan once upload middleware
-
+  const {typeofupdate} = req.params
   const Urldata = req.urlconfig
   console.log(Urldata)
-  console.log(JSON.parse(req.body.Profilevalues))
-  
   var controllerforusername = false
 
   const userprofiledata = JSON.parse(req.body.Profilevalues)
+  
 
   const {UserId} = req.userdata
   
-  try {
-       //kullanici adi alinmis ise yeniden degistir
+  if(typeofupdate == "Profile"){
 
-      //esitleme yapildi
-       if(true){
-
-                const UN = await User.findOne({where:{username:userprofiledata.musername}})
-        
-                if(UN){
-
-                    controllerforusername = false
-
-                }
-                else{
-
-                    controllerforusername = true
-
-                }
-        
-                
-                if(controllerforusername){
-
-                    const myuser = await User.findByPk(UserId)
-                    console.log("update phase in")
-                    var willbeupdated = {
-                      email:"bursa@hotmail.com",
-                      firstname:userprofiledata.firstname,
-                      lastname:userprofiledata.surname,
-                      username:userprofiledata.musername,
-                      imagetoken:Urldata["1"].token,
-                      backgroundtoken:Urldata["0"].token,
-                      imageurl:Urldata["1"].filename,
-                      backgroundurl:Urldata["0"].filename,
-                      Personaltext:userprofiledata.personaltext,
-                      }
-
-                    if(Urldata["0"].type == "Profile"){
-                      delete willbeupdated.backgroundtoken
-                      delete willbeupdated.backgroundurl
-                    }else if(Urldata["0"].type == "Background"){
-                      delete willbeupdated.imagetoken
-                      delete willbeupdated.imageurl
-                    }
-
-                    console.log(willbeupdated)
-
-                    await myuser.update(willbeupdated)
-    
-                     return res.json({state:"success"})
-
-                }
-                else{
-
-                     return res.json({state:"Uniqe username required !!"})
-
-                }
-              
-       }
-       else{
-
-          return res.json()
-
-       }
+      try {
       
+        const UN = await User.findOne({where:{username:userprofiledata.musername}})
 
-  } catch (error){
-     console.log(error)
-     next()
-     return
-  }
+        //farkli bir userin kullanici adi
+        if(UN && UN.id !== UserId){
 
+            controllerforusername = false
+            //burada bir hata donucek
+
+        }
+        else{
+
+            controllerforusername = true
+
+        }
+
+        
+        if(controllerforusername){
+
+            const myuser = await User.findByPk(UserId)
+            //Attributes gonna be updated
+            var willbeupdated = {
+                firstname:userprofiledata.firstname,
+                lastname:userprofiledata.surname,
+                username:userprofiledata.musername,
+                Personaltext:userprofiledata.personaltext,
+              }
+
+            if(Urldata["0"].type == "Profile"){
+
+              delete willbeupdated.backgroundtoken
+              delete willbeupdated.backgroundurl
+              willbeupdated["imagetoken"] = Urldata["0"].token
+              willbeupdated["imageurl"] = Urldata["0"].filename
+
+            }else if(Urldata["0"].type == "Background"){
+
+              delete willbeupdated.imagetoken
+              delete willbeupdated.imageurl
+              willbeupdated["backgroundtoken"] = Urldata["0"].token
+              willbeupdated["backgroundurl"] = Urldata["0"].filename
+
+            }
+            else if(Urldata["0"].type == "Back&Profile"){
+              
+              willbeupdated["backgroundtoken"] = Urldata["0"].token
+              willbeupdated["backgroundurl"] = Urldata["0"].filename
+              willbeupdated["imagetoken"] = Urldata["1"].token
+              willbeupdated["imageurl"] = Urldata["1"].filename
+
+            }
+
+            console.log(willbeupdated)
+
+            await myuser.update(willbeupdated)
+
+            return res.json({state:"success"})
+
+        }
+        else{
+
+            return res.json({state:"Uniqe username required !!"})
+
+        }
+      } catch (error) {
+        console.log(error)
+      }
+             
+  }else if(typeofupdate == "Email"){
+    //code will be send to current email adress to verify the user is our real user
+  }else if(typeofupdate == "Password"){
+
+      const currentuser =  await User.findOne({where:{id:UserId}})
   
+      bcrypt.compare(userprofiledata.Currentpassword, currentuser.password,async(err,result)=>{
+        
+        if(!result)
+        return res.json({state:"Eski sifre yanlis !"})  
+        
+        const hashedpassword = await bcrypt.hash(userprofiledata.Newpassword,10);
+
+        await currentuser.update({password:hashedpassword})
+
+     });
+
+  }else{
+
+    try {
+        var newobj = {}
+      
+        for (const key in userprofiledata.Notifications) {
+          newobj[key] = userprofiledata.Notifications[key].value
+        }
+    
+        await User.update({Notification:{...newobj}},{where:{id:UserId}})
+        return res.json({state:"successful"})
+
+    } catch (error) {
+      
+      console.log(error)
+      return next()
+    }
+  
+  }
 
 }

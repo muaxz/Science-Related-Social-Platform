@@ -22,7 +22,7 @@ function Commentpart({Producecomment,list,spinner,handleanswer}){
             if(comment.takeit.length > 0){
                 numobj[index] += comment.takeit.length
                 comment.takeit.forEach(element => {
-                    Lengthcalcualter(element)
+                    Lengthcalcualter(element,index)
                 });
               
             }

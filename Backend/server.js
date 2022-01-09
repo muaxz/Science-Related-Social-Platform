@@ -13,7 +13,7 @@ const Commentrouter=require("./routes/Commentrouter");
 const Upload=require("./routes/upload");
 const UserUser=require("./models/UserUser");
 const Myserver=require("http").createServer(app);
-const io=require("socket.io")(Myserver,{cors:{origin:"http://localhost:3000"}})
+const io = require("socket.io")(Myserver,{cors:{origin:"http://localhost:3000"}})
 const Userrouter=require("./routes/userrouter");
 const Notifyrouter=require("./routes/Notificationroute");
 const Hr = require("sequelize-hierarchy")
@@ -24,6 +24,11 @@ const fileupload = require("express-fileupload")
 
 io.on("connection",(socket)=>{ 
     console.log("connection on socket io...");
+    socket.on("create",(UserId)=>{
+        socket.join(UserId)
+        console.log(UserId)
+    })
+  //ilk connection oldugunda online olan herkesi odaya kat ayri ayri yerlestir
 })
 
 

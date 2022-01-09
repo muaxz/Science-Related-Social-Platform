@@ -161,7 +161,7 @@ export default function Home({mydata}){
 
   
     useEffect(()=>{
-        console.log(document.cookie);
+
         
         if(!selectionlist[selectedkey].stoprequesting && bottom){
            
@@ -270,9 +270,6 @@ export default function Home({mydata}){
     return (
         <div style={{height:`${windowlist.list.length > 0 ? "100vh" : "100%"}`,overflow:windowlist.list.length > 0 ? "hidden": "visible"}}> 
             <Container>
-                <TitleDiv>
-                    <h3 style={{color:"white"}}><FormatQuote style={{transform:"rotateY(180deg)"}}></FormatQuote> Bil ki nezaket başkasını rahatsız etmemek değil, asıl başkası için rahatsızlık duymaktır.<FormatQuote></FormatQuote></h3>
-                </TitleDiv>
                 {windowlist.list.length > 0 ?
 
                   <Showfollower setlist={()=>setwindowlist(prev=>{return {...prev,list:[]}})} attribute={windowlist.attribute} list={windowlist.list}></Showfollower>
@@ -304,7 +301,7 @@ export default function Home({mydata}){
                                 </InnershortDiv>
                                 </ShortDiv> 
 
-                       <div style={{textAlign:"center",display:"flex",justifyContent:"center",marginBottom:"10px",marginTop:"20px"}}>
+                       <div style={{textAlign:"center",display:"flex",justifyContent:"center",marginBottom:"20px",marginTop:"30px"}}>
                                 {
                                     spinner ? <Spinner></Spinner> : null
                                 }
