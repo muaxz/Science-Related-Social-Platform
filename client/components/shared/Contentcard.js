@@ -1,7 +1,7 @@
 import React,{useState,useEffect,useContext} from 'react'
 import styled,{keyframes} from "styled-components";
 import {createusercontext} from "../../context/Usercontext";
-import {Porfileimage} from "../styledcomponents/button";
+import {Porfileimage,Spinner} from "../styledcomponents/button";
 import Link from "next/link";
 import {useRouter} from "next/router"
 import Icon from "../UI/Icon"
@@ -58,6 +58,7 @@ flex-direction:column;
 const Contentdiv=styled.div`
 padding: ${({iscomment})=>iscomment ? "15px": "0px"};
 padding-left:15px;
+width:100%;
 padding-right:15px;
 flex:1;
 `
@@ -201,7 +202,7 @@ left:${({iscomment})=>iscomment ? "-60px" : "0px"};
 `
 
 //içerik sayısı,takipçi sayısı,
-function Contentcard({imagefilename,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid}){
+function Contentcard({imagefilename,Editcommenthandler,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,username,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid}){
     
     const[elements,setelements]=useState({
         Like:{
@@ -223,8 +224,11 @@ function Contentcard({imagefilename,imagetoken,Childlength,Answerhandler,readlat
         }
     });
     const {ref,visible,setvisible} = useClickoutside();
+    const [loading_commentedit,setloading_commentedit] = useState(false)
     const [commentanswer,setcommentanswer]=useState(false);
     const [answervalue,setanswervalue]=useState("");
+    const [editcomment,seteditcomment] = useState(false)
+    const [commenteditvalue,setcommenteditvalue] = useState(content)
     const {userdata} = useContext(createusercontext);
     const router = useRouter()
 
@@ -241,7 +245,6 @@ function Contentcard({imagefilename,imagetoken,Childlength,Answerhandler,readlat
             textforopiton="Taslaklardan kaldır"            
     }
     
-  
     useEffect(() =>{
 
 
@@ -326,6 +329,28 @@ function Contentcard({imagefilename,imagetoken,Childlength,Answerhandler,readlat
        
     }
 
+    const Editcommentactiveness=(determiner)=>{
+
+        if(determiner == "cancel"){
+
+            seteditcomment(false)
+            setcommenteditvalue(content)
+            return;
+
+        }else if(determiner == "save"){
+            setloading_commentedit(true)
+            Editcommenthandler({
+                message:commenteditvalue,
+                commentID:postId,
+                setloading:setloading_commentedit
+            })
+        }
+
+        seteditcomment(true)
+        setvisible(false)//turning off option window
+        setcommentanswer(false)//turning off other things
+    }
+
     const Makeacomment=()=>{
         Answerhandler(answervalue,postId)
         setanswervalue("")
@@ -334,6 +359,7 @@ function Contentcard({imagefilename,imagetoken,Childlength,Answerhandler,readlat
 
 
     return (
+
        <Outsidediv  draft={draft} iscomment={iscomment}>
 
            {
@@ -351,12 +377,12 @@ function Contentcard({imagefilename,imagetoken,Childlength,Answerhandler,readlat
            }
             
            {
-              //left arrow
+              //Comment Left Icon
               iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-6px",top:"8px",color:"#faf9f9"}}></Icon> : null
            }
 
            {
-            //option section
+            //Options on top right
             !iscomment ?  
                 
                <div ref={ref}>   
@@ -411,7 +437,7 @@ function Contentcard({imagefilename,imagetoken,Childlength,Answerhandler,readlat
                         {
                             userid == userdata.UserId ? 
                             <>
-                                <Optionholder>
+                                <Optionholder onClick={Editcommentactiveness}>
                                     <Edit></Edit>
                                     <div style={{marginLeft:"8px"}}>
                                         <p>Duzenle</p>
@@ -442,20 +468,20 @@ function Contentcard({imagefilename,imagetoken,Childlength,Answerhandler,readlat
            {
                 !draft &&
                 <Profilediv>
-                <div style={{display:'flex',alignItems:"center",height:"100%",marginLeft:"5px"}}>
-                    <Profileimageholder length={Childlength} iscomment={iscomment}>
-                        <Link href={{
-                            pathname:`/profile/${userid}`,
-                            query:{name:"Post"}
-                        }}>
-                        <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={`https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${imagefilename}?alt=media&token=${imagetoken}`}></Porfileimage>
-                        </Link>
-                    </Profileimageholder>
-                    <div style={{marginLeft:"10px",fontSize:"15px"}}><p style={{color:"black"}}>
-                        <strong>{username+" "+usersurname}</strong></p>
-                        <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{calculatedate(date).time + " " + calculatedate(date).express + " Önce"}</span></div>
-                    </div>           
-                </div>
+                    <div style={{display:'flex',alignItems:"center",height:"100%",marginLeft:"5px"}}>
+                        <Profileimageholder length={Childlength} iscomment={iscomment}>
+                            <Link href={{
+                                pathname:`/profile/${userid}`,
+                                query:{name:"Post"}
+                            }}>
+                              <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={`https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${imagefilename}?alt=media&token=${imagetoken}`}></Porfileimage>
+                            </Link>
+                        </Profileimageholder>
+                        <div style={{marginLeft:"10px",fontSize:"15px"}}><p style={{color:"black"}}>
+                            <strong>{username+" "+usersurname}</strong></p>
+                            <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{calculatedate(date).time + " " + calculatedate(date).express + " Önce"}</span></div>
+                        </div>           
+                    </div>
                 </Profilediv>
            }
 
@@ -474,18 +500,38 @@ function Contentcard({imagefilename,imagetoken,Childlength,Answerhandler,readlat
                         iscomment ? 
                         
                             <Contentdiv iscomment={iscomment}>     
-                                <p style={{textAlign:"left",wordBreak:"break-word"}}>{content}</p> 
+                                {
+                                    editcomment ?
+
+                                    <TextField 
+                                    InputProps={{endAdornment:
+                                        <InputAdornment>
+                                            <Button disabled={loading_commentedit} startIcon={loading_commentedit ? <Spinner></Spinner> : null} onClick={()=>Editcommentactiveness("save")} style={{backgroundColor:loading_commentedit ? "lightgrey":"#e63946",color:"white",textTransform:"capitalize",position:"relative",bottom:"10px",marginRight:"5px"}} variant="contained" size="small">
+                                                Kaydet
+                                            </Button>
+                                            <Button onClick={()=>Editcommentactiveness("cancel")} color="primary" style={{textTransform:"capitalize",position:"relative",bottom:"10px"}} variant="contained" size="small">
+                                                iptal
+                                            </Button>
+                                        </InputAdornment>}} 
+                                        style={{width:"100%"}} 
+                                        onChange={(e)=>setcommenteditvalue(e.target.value)} 
+                                        value={commenteditvalue}>
+                                    </TextField> 
+
+                                    : 
+
+                                     <p style={{textAlign:"left",wordBreak:"break-word"}}>{commenteditvalue}</p> 
+                                }
+        
                             </Contentdiv>   
                             : 
 
                             !draft ?
 
                             <Contentdiv iscomment={iscomment}>
-                            
                                 <h3 style={{marginBottom:"10px",color:"#A70909"}}>{title}</h3>
-                                
                                 <Link href="/content/[id]" as={`/content/${postId}`}>
-                                    <p style={{textAlign:"left",wordBreak:"bre",cursor:"pointer"}}>While the Crypto Professors may set specific requirements for some....</p> 
+                                    <p style={{textAlign:"left",wordBreak:"break-word",cursor:"pointer"}}>While the Crypto Professors may set specific requirements for some....</p> 
                                 </Link>
                             </Contentdiv>
 
@@ -494,8 +540,8 @@ function Contentcard({imagefilename,imagetoken,Childlength,Answerhandler,readlat
                       
                     <Toolbar foruser={foruser}>
                         {
-                            !iscomment && 
-                            (<İconholder howercolor="green" style={{flex:1}}>
+                           !iscomment && 
+                           (<İconholder howercolor="green" style={{flex:1}}>
                                 <Icons  howercolor="0, 255, 0, 0.2" ismarked={elements.reshow.ismarked} animation={elements.reshow.animation} color={"green"}  onClick={()=>Countplus("reshow")}  className="fas fa-retweet fa-sm"></Icons>
                                 <Spanfor onClick={()=>showwindow(elements["reshow"].array,"Reshow")}>{elements.reshow.number}</Spanfor>
                            </İconholder>)

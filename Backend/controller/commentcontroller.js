@@ -53,16 +53,16 @@ exports.getcomments=async (req,res,next)=>{
 
     var ordernumb=parseInt(order);
   
-    const comments = await Comment.findAll({
-      where:{ContentId:id},
-      include:{
-        model:User,
-        attributes:["firstname","lastname","id","imageurl","imagetoken"]
-      },
-      limit:Last == "true" ? 1 : 10,
-      offset:Last == "true" ? 0 : ordernumb-10,
-      order:[['createdAt',"DESC"]]
-    })
+      const comments = await Comment.findAll({
+        where:{ContentId:id},
+        include:{
+          model:User,
+          attributes:["firstname","lastname","id","imageurl","imagetoken"]
+        },
+        limit:Last == "true" ? 1 : 10,
+        offset:Last == "true" ? 0 : ordernumb-10,
+        order:[['createdAt',"DESC"]]
+      })
   
    
       
@@ -79,7 +79,7 @@ exports.getcomments=async (req,res,next)=>{
 
       const getSubCategoriesRecursive = async (comment) => {
   
-        const mutated ={...comment.dataValues}
+        const mutated = {...comment.dataValues}
   
         let subComments = await Comment.findAll({
             where: {
@@ -100,9 +100,8 @@ exports.getcomments=async (req,res,next)=>{
                 childs.push(getSubCategoriesRecursive(subcoms))
           
             });
+
             mutated["takeit"] = await Promise.all(childs)
-         
-          
         }
         else mutated["takeit"] = []; 
        
@@ -171,6 +170,26 @@ exports.porduceanswer = async(req,res,next)=>{
      return;
   } 
 
+}
+
+exports.editcomment = async(req,res,next)=>{
+
+    const {message,commentID} = req.body
+    console.log("in comment edit")
+    try {
+
+       await Comment.update({
+        Message:message
+       },{where:{id:commentID}})
+
+       res.json({state:"SUCCESS"})
+
+    } catch (error) {
+      
+      next()
+      return;
+
+    }
 }
 
 

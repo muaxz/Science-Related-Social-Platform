@@ -2,7 +2,7 @@ import React, { useEffect,useState,useRef, useContext,useCallback} from 'react'
 import Icon from "../../components/UI/Icon";
 import styled from "styled-components";
 import {Porfileimage} from "../../components/styledcomponents/button";
-import {Producecommentreq,Commentreq,Commentanswerreq} from "../../Api/Api";
+import {Producecommentreq,Commentreq,Commentanswerreq,Editcomment} from "../../Api/Api";
 import {createusercontext} from "../../context/Usercontext";
 import Commentpart from '../../components/pages/Content/Commentsection/Commentpart';
 import useScroll from "../../hooks/Scroll"
@@ -144,6 +144,16 @@ export default function Content({Contentdata,comments,id}){
           })
 
     }
+
+    const EditCommentFunc=({commentID,message,setloading})=>{
+        console.log("burada")
+        Editcomment({
+            commentID:commentID,
+            message:message,
+            setloading:setloading
+        })
+
+    }
    
     return (
         <div style={{maxWidth:"950px",margin:"auto"}}>
@@ -193,7 +203,7 @@ export default function Content({Contentdata,comments,id}){
             <hr></hr>
             <p>{commentlist.length+ " Yorum"}</p>
             <Commentdiv>
-                <Commentpart handleanswer={Answerhandler} spinner={activeproduce} list={commentlist} Producecomment={Produce}></Commentpart>
+                <Commentpart  Editcommenthandler={EditCommentFunc} handleanswer={Answerhandler} spinner={activeproduce} list={commentlist} Producecomment={Produce}></Commentpart>
             </Commentdiv>
         </div>
         

@@ -3,7 +3,7 @@ import Contentcard from "../../shared/Contentcard"
 import uniqid from "uniqid"
 
 function Contentmap({contentlist,relationfunc,norecord}) {
-
+    console.log(contentlist)
     var textfornorecord = ""
     if(norecord == "Reshow"){
          textfornorecord = "Kullanıcının işaretlediği gönderi yok..."

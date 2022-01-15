@@ -592,22 +592,49 @@ export const UpdateNotificationactive = async ({FollowedId,Prevent,FollowerId,cu
 
 }//user alert activated or not
 
-export const UpdateProfile = async ({userdata,typeofupdate,setuploading,setsuccesfulupload})=>{
+export const UpdateProfile = async ({userdata,typeofupdate,setuploading,setsuccesfulupload,userinfo,setuserinfo})=>{
   
   try {
 
-          
           const {data} = await axios.post(`/user/updateprofile/${typeofupdate}`,userdata,{withCredentials:true})
-          console.log("buradaxx")
-          setuploading(false)
-          setsuccesfulupload("SUCCESSFUL")
-          setTimeout(() => {
-            setsuccesfulupload("")
-          },3000);
-
           
+          if(!data.state){
+
+             const copy = {...userinfo}
+             copy["Currentpassword"].warning = true
+             setuserinfo(copy)
+             
+          }else{
+
+              setsuccesfulupload("SUCCESSFUL")
+              setTimeout(() => {
+                setsuccesfulupload("")
+              },3000);
+
+          }
+
+          setuploading(false)
+
   }catch (error) {
     console.log(error)
     setsuccesfulupload("ERROR")
   }
+}
+
+export const Editcomment = async({commentID,message,setloading})=>{
+
+      try {
+
+        const {data} = await axios.post(`/comment/EditComment`,{commentID:commentID,message:message},{withCredentials:true})
+
+        if(data.state == "SUCCESS"){
+          setTimeout(() => {
+            setloading(false)
+          }, 1000);
+         
+        }
+
+      } catch (error) {
+          console.log(error)
+      } 
 }

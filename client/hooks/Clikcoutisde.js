@@ -1,15 +1,16 @@
 import React,{useEffect,useState,useRef} from 'react'
 
-export default function useClickoutside(){
+function useClickoutside(){
     
-    const ref=useRef();
+    const ref = useRef();
     const [visible,setvisible]=useState(false);
-    
+    console.log("sa")
     const handleclick=(event)=>{  
-
 
         if(ref.current && !ref.current.contains(event.target)){
             setvisible(false);
+            
+            
         }  
         
     }
@@ -22,7 +23,7 @@ export default function useClickoutside(){
         document.removeEventListener("click",handleclick);
       }
 
-    },)
+    },[])
 
     return {
       visible,
@@ -30,5 +31,7 @@ export default function useClickoutside(){
       ref
     }
 }
+
+export default  useClickoutside;
 
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import ContextProvider from "../context/Usercontext";
+import Usercontextprovider from "../context/Usercontext";
 import Head from "next/head"
 import Router,{useRouter} from "next/router"
 import NProgress from 'nprogress'; 
@@ -14,12 +14,12 @@ Router.events.on('routeChangeError', () => NProgress.done());
 
 const Myapp=({Component,pageProps})=>{
    
-    const Layout=Component.layout || ((page)=>page);
+    const Layout = Component.layout || ((page)=>page);
         
     
     return (
        <>
-          <ContextProvider>   
+          <Usercontextprovider>   
                   <Head>
                     <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Slabo+27px&display=swap&family=Domine&display=swap&family=Rajdhani:wght@500&display=swap&family=Tinos:ital@1&display=swap&family=IBM+Plex+Serif:wght@500&display=swap&family=Poppins:ital,wght@1,300&display=swap&family=Raleway&display=swap" rel="stylesheet"></link>
                     <link rel="stylesheet" type="text/css" charset="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" /> 
@@ -28,7 +28,7 @@ const Myapp=({Component,pageProps})=>{
                     <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Slabo+27px&display=swap&family=Domine&display=swap&family=Rajdhani:wght@500&display=swap&family=Tinos:ital@1&display=swap&family=IBM+Plex+Serif:wght@500&display=swap&family=Inter:wght@700&display=swap" rel="stylesheet"></link>
                   </Head>
                   {Layout(<Component {...pageProps}/>)}
-          </ContextProvider>
+          </Usercontextprovider>
       </>
    )
 }

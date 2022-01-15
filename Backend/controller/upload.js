@@ -20,7 +20,8 @@ const getupload=multer({
 module.exports=(req,res,next)=>{
 
                 //checking phase
-               
+                const userprofile = JSON.parse(req.body.Profilevalues)
+                console.log(userprofile)
                 const {typeofupdate} = req.params
                 console.log(typeofupdate)
                 var Allowupload = false
@@ -55,6 +56,7 @@ module.exports=(req,res,next)=>{
                                 req.files["upload"].cordinates = userprofile.profile
             
                             }else if(userprofile["profile"].width == ""){
+                                
                                 numberoffiles = 1
                                 whichfile = "Background"
                                 req.files["upload"].cordinates = userprofile.backcrop

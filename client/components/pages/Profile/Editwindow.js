@@ -188,7 +188,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
     const [userinfo,setuserinfo] = useState({
         musername:{
             activate:false,
-            value:"sa",
+            value:editdata.username,
             label:"Kullanici Adi",
             warning:false,
             multiline:false,
@@ -215,7 +215,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         },
         personaltext:{
             activate:false,
-            value:"sa",
+            value:editdata.personaltext,
             label:"Kisisel Bilgiler",
             warning:false,
             multiline:true,
@@ -362,6 +362,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             case "password":
                 console.log(value.New)
                 console.log(value.Newvalidation)
+            
                 if(value.New !== value.Newvalidation)
                 return {state:"Unequal",validate:false}
 
@@ -556,6 +557,8 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             typeofupdate:updateFor,
             setuploading:setuploading,
             setsuccesfulupload:setsuccesfulupload,
+            userinfo:userinfo,
+            setuserinfo:setuserinfo
         })
 
     }

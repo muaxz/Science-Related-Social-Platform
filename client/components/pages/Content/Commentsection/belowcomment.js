@@ -5,12 +5,12 @@ import uniqid from "uniqid"
 
 
 var lengthcounter = 0
-function Belowcomment({imagetoken,imagefilename,Answerhandler,mylist,postId,content,showwindow,like,retweet,comment,readlater,profileimage,title,titleimage,username,usersurname,subtitle,date,userid}){
+function Belowcomment({Editcommenthandler,imagetoken,imagefilename,Answerhandler,mylist,commentID,content,showwindow,like,retweet,comment,readlater,profileimage,title,titleimage,username,usersurname,subtitle,date,userid}){
     
     const Contentdiv =
     (<Contentcard 
     iscomment={true}
-    postId={postId}//no need
+    postId={commentID}//no need
     content={content}
     showwindow={(stateoflist)=>setlist(stateoflist)}
     like={[]}//bu bir obje array
@@ -29,6 +29,7 @@ function Belowcomment({imagetoken,imagefilename,Answerhandler,mylist,postId,cont
     userid={userid}
     Answerhandler={Answerhandler}
     Childlength={mylist.length}
+    Editcommenthandler={Editcommenthandler}
     >
     </Contentcard>)
     
@@ -41,13 +42,14 @@ function Belowcomment({imagetoken,imagefilename,Answerhandler,mylist,postId,cont
         }
         <div style={{marginTop:"20px",marginLeft:"60px"}}>
             {
+                
             mylist.length > 0 ?
 
             mylist.map((item,index)=>{
                 return (<Belowcomment
                     key={uniqid()}
                     iscomment={true}
-                    postId={item.id}//no need
+                    commentID={item.id}//no need
                     content={item.Message}
                     showwindow={(stateoflist)=>setlist(stateoflist)}
                     like={[]}//bu bir obje array
@@ -67,6 +69,7 @@ function Belowcomment({imagetoken,imagefilename,Answerhandler,mylist,postId,cont
                     date={item.createdAt}
                     mylist={item.takeit}
                     Answerhandler={Answerhandler}
+                    Editcommenthandler={Editcommenthandler}
                 ></Belowcomment>)
             })
             :null

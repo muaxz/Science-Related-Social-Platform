@@ -426,7 +426,6 @@ exports.updateprofile = async (req,res,next)=>{
   //bunlardan once upload middleware
   const {typeofupdate} = req.params
   const Urldata = req.urlconfig
-  console.log(Urldata)
   var controllerforusername = false
 
   const userprofiledata = JSON.parse(req.body.Profilevalues)
@@ -510,11 +509,11 @@ exports.updateprofile = async (req,res,next)=>{
   }else if(typeofupdate == "Password"){
 
       const currentuser =  await User.findOne({where:{id:UserId}})
-  
+      console.log(currentuser.password)
       bcrypt.compare(userprofiledata.Currentpassword, currentuser.password,async(err,result)=>{
         
         if(!result)
-        return res.json({state:"Eski sifre yanlis !"})  
+        return res.json({state:false})  
         
         const hashedpassword = await bcrypt.hash(userprofiledata.Newpassword,10);
 

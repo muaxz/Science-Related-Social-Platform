@@ -161,7 +161,8 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
       //sadece paignation zaten query değişince ilk 10 value serverside tarafından çekiliyor
       var Leakcontrolloer = true;
       var Requestpermission = false;
-
+      
+      //sadece scroll down oldugunda
       if(Requestpermission){
             setspinner(true);
             Getuserprofilecontent({
@@ -170,7 +171,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                 setdata:setcontentdata,
                 setspinner:setspinner,
                 paignation:false,
-                ownerpost:query.name == "Post" ? "true" : "fasle",
+                ownerpost:query.name == "Post" ? "true" : "false",
                 Leakcontrolloer:Leakcontrolloer,
                 order:10,
                 currentdata:contentdata,
@@ -179,10 +180,9 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
 
       return ()=>{
          Leakcontrolloer=false;
-         Requestpermission=true;
       }
 
-   },[query])
+   },[bottom])
 
     useEffect(()=>{
 
