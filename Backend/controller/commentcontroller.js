@@ -49,18 +49,18 @@ exports.getcomments=async (req,res,next)=>{
 
   try {
 
-    const {id,Last,order} = req.params;
+    const {id,Last,order,isforanswer} = req.params;
 
-    var ordernumb=parseInt(order);
-  
+      var ordernumb=parseInt(order);
+      var controlforonlyOnecomment = isforanswer == "true" ? "id" : "ContentId"
+      var whereclause = {}
+      whereclause[controlforonlyOnecomment] = id
       const comments = await Comment.findAll({
-        where:{ContentId:id},
+        where:{...whereclause},
         include:{
           model:User,
           attributes:["firstname","lastname","id","imageurl","imagetoken"]
         },
-        limit:Last == "true" ? 1 : 10,
-        offset:Last == "true" ? 0 : ordernumb-10,
         order:[['createdAt',"DESC"]]
       })
   
@@ -79,17 +79,17 @@ exports.getcomments=async (req,res,next)=>{
 
       const getSubCategoriesRecursive = async (comment) => {
   
-        const mutated = {...comment.dataValues}
-  
-        let subComments = await Comment.findAll({
-            where: {
-                CommentId:comment.id,
-            },
-            include:{
-              model:User,
-              attributes:["firstname","lastname","id","imageurl","imagetoken"]
-            },
-        });
+          const mutated = {...comment.dataValues}
+          //1: contentId, childhas:parentID,mainparent
+          let subComments = await Comment.findAll({
+              where: {
+                  CommentId:comment.id,
+              },
+              include:{
+                model:User,
+                attributes:["firstname","lastname","id","imageurl","imagetoken"]
+              },
+          });
   
         
         
@@ -126,7 +126,6 @@ exports.getcomments=async (req,res,next)=>{
                   console.log(arr)
                   trial=false
                   Willbesend.data = arr 
-                  Willbesend.trial = {name:"sa"}
                   return res.json(Willbesend)
   
                 }
@@ -137,7 +136,6 @@ exports.getcomments=async (req,res,next)=>{
         else{
   
           Willbesend.data = []
-          Willbesend.trial = {name:"sa"}
           return res.json(Willbesend)
   
         }
@@ -160,7 +158,6 @@ exports.porduceanswer = async(req,res,next)=>{
         Message:Message,
         CommentId:CommentId,//burası bir üstündeki commentin id si
         UserId:UserId,
-        parentId:CommentId
     })
 
     return res.json({state:"success"})

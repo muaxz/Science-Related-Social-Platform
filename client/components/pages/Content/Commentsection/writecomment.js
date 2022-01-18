@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {Porfileimage} from "../../../styledcomponents/button"
+import {Porfileimage} from "../../../styledcomponents/Globalstyles"
 import styled,{keyframes} from "styled-components";
 import {TextField,Button} from "@material-ui/core"
 import {AddComment} from "@material-ui/icons"

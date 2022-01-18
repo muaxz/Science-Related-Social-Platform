@@ -3,11 +3,11 @@ import {createusercontext} from "../context/Usercontext";
 import styled,{createGlobalStyle} from "styled-components";
 import {useRouter} from "next/router"
 import Head from "next/head";
-import {loginreq,resigterreq} from "../Api/Api";
+import {loginreq,resigterreq} from "../Api/requests";
 import Window from "../components/UI/window";
 import {TextField,Button,InputAdornment} from '@material-ui/core';
 import {withStyles,makeStyles} from '@material-ui/core/styles';
-import {Global} from "../components/styledcomponents/button"
+import {Global} from "../components/styledcomponents/Globalstyles"
 import Guardlayout from "../containers/Layout/routerguard";
 import {AccountCircle,EmailOutlined,Lock,ArrowRight, ArrowLeft,SupervisorAccount,SupervisedUserCircleSharp, SupervisorAccountRounded, SupervisorAccountSharp, AccountCircleSharp, AccountCircleRounded, Person, Home, ArrowRightAltRounded, ChevronRight, Assignment} from "@material-ui/icons"
 

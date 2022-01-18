@@ -1,8 +1,8 @@
 import React from 'react'
-import {Black} from "../../styledcomponents/button";
+import {Black} from "../../styledcomponents/Globalstyles";
 import styled from "styled-components";
-import Usercard from "../../shared/Usercard";
-import {Createuserrelation} from "../../../Api/Api"
+import Usercard from "../../shared/Cards/Usercard";
+import {Createuserrelation} from "../../../Api/requests"
 import {ThumbUp} from "@material-ui/icons"
 
 const Rtlikewindow=styled.div`

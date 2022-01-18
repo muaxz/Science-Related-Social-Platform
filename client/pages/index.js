@@ -1,6 +1,5 @@
-import React,{useEffect,useState,useContext,useReducer,useCallback} from 'react'
+import React from 'react'
 import Head from "next/head";
-import {Global} from "../components/styledcomponents/button";
 import Main from "../containers/pages/Home";
 import Mainlayout from "../containers/Layout/mainlayout";
 import axios from 'axios';

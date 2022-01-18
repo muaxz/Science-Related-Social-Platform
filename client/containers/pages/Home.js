@@ -1,12 +1,12 @@
 import React, {useEffect,useState,useContext} from 'react'
-import Contentcard from "../../components/shared/Contentcard";
+import Contentcard from "../../components/shared/Cards/Contentcard";
 import styled from "styled-components";
-import {Homereq,Createrelationreq,Notificationreq} from "../../Api/Api";
+import {Homereq,Createrelationreq,Notificationreq} from "../../Api/requests";
 import {createusercontext} from "../../context/Usercontext";
 import {makeStyles} from "@material-ui/core/styles"
 import Showfollower from "../../components/pages/Main/Showfoller";
 import useScroll from "../../hooks/Scroll";
-import {Spinner} from "../../components/styledcomponents/button"
+import {Spinner} from "../../components/styledcomponents/Globalstyles"
 import uniqid from "uniqid";
 import { ArrowBackIos, ArrowForwardIos, FormatQuote } from '@material-ui/icons';
 
@@ -323,7 +323,7 @@ export default function Home({mydata}){
                                 profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
                                 title={item.title}
                                 titleimage={"yaprak.jpg"}
-                                username={item.personal !== null ? item.personal.firstname : "notyet"}
+                                userfirstname={item.personal !== null ? item.personal.firstname : "notyet"}
                                 usersurname={item.personal !== null ? item.personal.lastname : "notyet"}//bir obje props
                                 userid={item.personal !== null ? item.personal.id: "notyet"}
                                 subtitle={item.subtitle}

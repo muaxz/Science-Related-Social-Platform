@@ -2,7 +2,7 @@ import React from 'react'
 import Head from "next/head";
 import Mainlayout from "../../../containers/Layout/mainlayout";
 import Profile from "../../../containers/pages/Profile";
-import {Global} from "../../../components/styledcomponents/button"
+import {Global} from "../../../components/styledcomponents/Globalstyles"
 import axious from "axios";
 
 
@@ -31,9 +31,9 @@ export async function getServerSideProps({query}){
             axious.get(`user/getusercount/${query.username}`),
             axious.get(`user/getuserprofilecontent/${query.username}/${query.name == "Post" ? "true" : "false"}/${query.name}/10`)
         ])
-          
+        //users?age=15&gender=m&
         if(recieve[0].data && recieve[0].data.error || recieve[1].data && recieve[1].data.error){
-s
+
             return {
                 redirect:{
                     destination:"/500"

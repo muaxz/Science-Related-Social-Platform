@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from "styled-components";
-import {Black} from "../styledcomponents/button";
+import {Black} from "../styledcomponents/Globalstyles";
 import {Button} from "@material-ui/core"
 import {Error} from "@material-ui/icons"
 

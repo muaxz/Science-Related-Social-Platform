@@ -1,6 +1,6 @@
 import React,{useContext, useEffect,useState} from 'react'
 import styled from "styled-components";
-import Contentcard from "../../components/shared/Contentcard";
+import Contentcard from "../../components/shared/Cards/Contentcard";
 import {Getusercontent,Createrelationreq,DeletePost} from "../../Api/Api"
 import {createusercontext} from "../../context/Usercontext"
 import useScroll from "../../hooks/Scroll";

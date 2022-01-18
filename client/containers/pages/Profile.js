@@ -1,9 +1,9 @@
 import React,{useEffect,useState,useContext,useCallback, useRef} from 'react'
 import styled from "styled-components";
 import {createusercontext} from "../../context/Usercontext"
-import {Porfileimage} from "../../components/styledcomponents/button"
-import {Createuserrelation,Getuserprofilecontent,Createrelationreq,UpdateNotificationactive} from "../../Api/Api"
-import Contentcard from "../../components/shared/Contentcard";
+import {Porfileimage} from "../../components/styledcomponents/Globalstyles"
+import {Createuserrelation,Getuserprofilecontent,Createrelationreq,UpdateNotificationactive} from "../../Api/requests"
+import Contentcard from "../../components/shared/Cards/Contentcard";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
 import useScroll from "../../hooks/Scroll";
@@ -316,6 +316,8 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
 
         setactiveedit(!activeedit)
     }
+
+  
     /*
     const Profileupdate = () =>{
 

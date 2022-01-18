@@ -1,14 +1,14 @@
 import React,{useState,useEffect,useContext} from 'react'
 import styled from "styled-components";
-import Lefttoolbar from "../../components/shared/Lefttoolbar";
-import Navigation from "../../components/shared/Navigation/Navigation";
-import {Global} from "../../components/styledcomponents/button";
-import {Black} from "../../components/styledcomponents/button"
+import Lefttoolbar from "../../components/shared/Navigation/SideBar/Lefttoolbar";
+import Navigation from "../../components/shared/Navigation/Navbar/Navigation";
+import {Global} from "../../components/styledcomponents/Globalstyles";
+import {Black} from "../../components/styledcomponents/Globalstyles"
 import {createusercontext} from "../../context/Usercontext";
 import {useRouter} from "next/router"
 import io from "socket.io-client";
 import Icon from "../../components/UI/Icon";
-import {NotificationCountreq,Notificationreq,UpdateNotificationcount} from "../../Api/Api"
+import {NotificationCountreq,Notificationreq,UpdateNotificationcount} from "../../Api/requests"
 
 
 const Bigdiv=styled.div`

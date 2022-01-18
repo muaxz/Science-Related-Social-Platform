@@ -2,11 +2,11 @@ import { CameraAlt } from '@material-ui/icons'
 import React, { useState,useEffect,useReducer} from 'react'
 import styled from "styled-components"
 import {ArrowDropUp,Email,Lock,Notifications} from "@material-ui/icons"
-import {Black,Porfileimage,Spinner} from "../../styledcomponents/button"
+import {Black,Porfileimage,Spinner} from "../../styledcomponents/Globalstyles"
 import {TextField,Button} from "@material-ui/core"
 import Cropper from  "react-image-crop"
 import axios from 'axios'
-import {UpdateProfile} from "../../../Api/Api"
+import {UpdateProfile} from "../../../Api/requests"
 import Switch from "react-switch"
 import "react-image-crop/dist/ReactCrop.css"
 import Validate from "validator"
@@ -143,8 +143,7 @@ box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2
 
 export default function Editwindow({isWindowforsettings,updatefunc,active,editdata,closefunc}){
 
-    console.log(editdata)
-    console.log(editdata.backgroundurl)
+    
     const [file,setfile] = useState({
         Backimage:"",
         Profileimage:""

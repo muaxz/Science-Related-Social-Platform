@@ -6,8 +6,9 @@ var rendered = 0
 
 function Commentpart({Editcommenthandler,Producecomment,list,spinner,handleanswer}){
     
-    console.log(list)
-    const mutated = {...list}
+
+    const mutated = [...list]
+  
     
     const numobj = {}
 
@@ -17,21 +18,33 @@ function Commentpart({Editcommenthandler,Producecomment,list,spinner,handleanswe
         
     }
 
-    const Lengthcalcualter = (comment,index)=>{
-             
+    const Lengthcalcualter = (comment,MainparentID,index,answerTo)=>{
+
+            var Topcomment = ""
+
+            if(comment.ContentId !== null){
+                Topcomment = comment
+            }
+            comment.Mainparent = MainparentID
+            comment.AnswerTo = answerTo
+            
+
             if(comment.takeit.length > 0){
                 numobj[index] += comment.takeit.length
                 comment.takeit.forEach(element => {
-                    Lengthcalcualter(element,index)
+                    Lengthcalcualter(element,MainparentID,index,comment.User.firstname)
                 });
-              
             }
             else return
+
+            if(Topcomment !== ""){
+                Topcomment["allchilds"] = numobj[index]
+            }
     }
 
-    for (let i = 0; i < list.length; i++) {
+    for (let i = 0; i < mutated.length; i++) {
         
-        Lengthcalcualter(list[i],i)
+        Lengthcalcualter(mutated[i],mutated[i].id,i,"")
     }
 
     console.log(numobj)
@@ -39,7 +52,7 @@ function Commentpart({Editcommenthandler,Producecomment,list,spinner,handleanswe
     return (
         <div style={{padding:"20px"}}>
             <Writecomment spinner={spinner} Producecomment={Producecomment}></Writecomment>
-            <Belowcomment Editcommenthandler={Editcommenthandler} Answerhandler={handleanswer} mylist={list}></Belowcomment>
+            <Belowcomment Editcommenthandler={Editcommenthandler} Answerhandler={handleanswer} mylist={mutated}></Belowcomment>
         </div>
     )
 }

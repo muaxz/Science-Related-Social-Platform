@@ -1,8 +1,8 @@
 import React, { useEffect,useState,useRef, useContext,useCallback} from 'react'
 import Icon from "../../components/UI/Icon";
 import styled from "styled-components";
-import {Porfileimage} from "../../components/styledcomponents/button";
-import {Producecommentreq,Commentreq,Commentanswerreq,Editcomment} from "../../Api/Api";
+import {Porfileimage} from "../../components/styledcomponents/Globalstyles";
+import {Producecommentreq,Commentreq,Commentanswerreq,Editcomment} from "../../Api/requests";
 import {createusercontext} from "../../context/Usercontext";
 import Commentpart from '../../components/pages/Content/Commentsection/Commentpart';
 import useScroll from "../../hooks/Scroll"
@@ -134,23 +134,27 @@ export default function Content({Contentdata,comments,id}){
 
     },[userdata.UserId])
 
-    const Answerhandler=(Answer,UpperId)=>{
+    const Answerhandler=(Answer,UpperId,MainparentID)=>{
           console.log("BURADAAA")
           Commentanswerreq({
               UppercommentId:UpperId,
               UserId:userdata.UserId,
               Answer:Answer,
-              ContentId:id
+              ContentId:id,//post
+              MainparentID:MainparentID,
+              setcommentlist:setcommentlist,
+              commentlist:commentlist
           })
 
     }
 
-    const EditCommentFunc=({commentID,message,setloading})=>{
+    const EditCommentFunc=({commentID,message,setloading,seteditcomment})=>{
         console.log("burada")
         Editcomment({
             commentID:commentID,
             message:message,
-            setloading:setloading
+            setloading:setloading,
+            seteditcomment:seteditcomment
         })
 
     }

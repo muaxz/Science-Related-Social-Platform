@@ -13,8 +13,6 @@ exports.login = async (req,res,next)=>{
      
       const user=await User.findOne({where:{email:email}});
          
-
-      console.log("heyyyyyooooooo buradaaaaaa");
     
       if(user){
 

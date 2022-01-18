@@ -1,14 +1,15 @@
 import React,{useRef} from 'react'
-import Contentcard from "../../../shared/Contentcard";
+import Contentcard from "../../../shared/Cards/Contentcard";
 import uniqid from "uniqid"
 //deneme
 
 
 var lengthcounter = 0
-function Belowcomment({Editcommenthandler,imagetoken,imagefilename,Answerhandler,mylist,commentID,content,showwindow,like,retweet,comment,readlater,profileimage,title,titleimage,username,usersurname,subtitle,date,userid}){
+function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,imagetoken,imagefilename,Answerhandler,mylist,commentID,content,showwindow,like,retweet,comment,readlater,profileimage,title,titleimage,userfirstname,usersurname,subtitle,date,userid}){
     
     const Contentdiv =
     (<Contentcard 
+    mainparentID={mainparentID}
     iscomment={true}
     postId={commentID}//no need
     content={content}
@@ -20,7 +21,7 @@ function Belowcomment({Editcommenthandler,imagetoken,imagefilename,Answerhandler
     profileimage={"/black.jpg"}
     title={title}//no need
     titleimage={"yaprak.jpg"}
-    username={username}
+    userfirstname={userfirstname}
     usersurname={usersurname}
     subtitle={subtitle}//no need
     date={date}
@@ -30,6 +31,8 @@ function Belowcomment({Editcommenthandler,imagetoken,imagefilename,Answerhandler
     Answerhandler={Answerhandler}
     Childlength={mylist.length}
     Editcommenthandler={Editcommenthandler}
+    isMainparent={isMainparent}
+    Answer_To={Answer_To}
     >
     </Contentcard>)
     
@@ -48,6 +51,10 @@ function Belowcomment({Editcommenthandler,imagetoken,imagefilename,Answerhandler
             mylist.map((item,index)=>{
                 return (<Belowcomment
                     key={uniqid()}
+                    allchildlength={item.allchilds}
+                    Answer_To={item.AnswerTo}
+                    isMainparent={item.ContentId}
+                    mainparentID={item.Mainparent}
                     iscomment={true}
                     commentID={item.id}//no need
                     content={item.Message}
@@ -60,7 +67,7 @@ function Belowcomment({Editcommenthandler,imagetoken,imagefilename,Answerhandler
                     profileimage={"/black.jpg"}
                     title={item.title}//no need
                     titleimage={"yaprak.jpg"}
-                    username={item.User.firstname}
+                    userfirstname={item.User.firstname}
                     usersurname={item.User.lastname}
                     userid={item.User.id}
                     imagefilename={item.User.imageurl}
