@@ -629,7 +629,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                                             <Background ImageforBack={src.Backimage.token ? `https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${src.Backimage.name}?alt=media&token=${src.Backimage.token}` : "/yaprak.jpg"}>
                                                 <Labelimage  htmlFor="file"></Labelimage>
                                                 <CameraAlt style={{color:"white"}}></CameraAlt>
-                                                <input onChange={(e)=>Updatefile(e,"Backimage")} name="upload" accept="image/png, image/gif, image/jpeg" id="file" type="file" style={{display:"none"}}></input>
+                                                <input  onChange={(e)=>Updatefile(e,"Backimage")}  accept="image/png, image/gif, image/jpeg" id="file" type="file" style={{display:"none"}}></input>
                                             </Background>
                                             <ProfileImageholder isHavingprofile={src.Profileimage.token}>
                                                 <Porfileimage profile={src.Profileimage.token ? `https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${src.Profileimage.name}?alt=media&token=${src.Profileimage.token}` : "/yaprak.jpg"} style={{display:"flex",justifyContent:"center",alignItems:"center"}} width="80px" height="80px" >
@@ -656,7 +656,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                                         Object.keys(userinfo).map((item,index)=>{   
 
                                             var subelements = null
-                                            if(typeof userinfo[item].value == "object"){
+                                            if(item == "Notifications"){
 
                                                 var subelements = Object.keys(userinfo[item].value).map((subitem,subindex)=>(//sub values of noitification phase
                                                     <Inputholder displayed={userinfo[item].activate}>  

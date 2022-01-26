@@ -1,12 +1,19 @@
 import axios from 'axios';
 import React,{useRef,useState,useEffect,useContext} from 'react'
 import styled from "styled-components";
-import {producereq} from "../../Api/Api";
+import {producereq} from "../../Api/requests";
 import {Button as Corebutton} from "@material-ui/core";
 import {createusercontext} from "../../context/Usercontext"
-import {Button,Global} from "../../components/styledcomponents/button";
+import {Button,Global} from "../../components/styledcomponents/Globalstyles";
 import Window from "../../components/UI/window";
 
+
+
+
+
+
+
+/* ckeditor5-image/theme/imagestyle.css */
 
 
 const Ckeholder=styled.div`
@@ -138,18 +145,43 @@ export default function MyEditor (){
     
     useEffect(()=>{
         const {CKEditor}=require( '@ckeditor/ckeditor5-react' )
+
         editorRef.current = {
             CKE: CKEditor,
             ClassicEditor: require( '@ckeditor/ckeditor5-build-classic' )
         }
-      setEditorLoaded(true)
+
+        
+
+        setEditorLoaded(true)
     }, [])
+
+    useEffect(()=>{
+      const editor = document.querySelector("#editor")
+      if(editor){
+          editorRef.current.ClassicEditor.create(document.querySelector("#editor"),{
+            fontFamily: {
+              options: [
+                  'default',
+                  'Ubuntu, Arial, sans-serif',
+                  'Ubuntu Mono, Courier New, Courier, monospace'
+              ]
+          },
+          toolbar: [
+              'heading', 'bulletedList', 'numberedList', 'fontFamily', 'undo', 'redo'
+          ]
+        })
+      }
+    },[editorLoaded])
+
+   
   
     const changehandler=(event,editör,value)=>{
        const muteted={...contentpart};
        muteted[value]= value == "content" ? editör.getData() : event.target.value;
        setcontentpart(muteted);
-       console.log(muteted);
+       
+       console.log(muteted[value])
     }
 
     const filechange=(event)=>{
@@ -255,21 +287,22 @@ export default function MyEditor (){
               {
                   editorLoaded ? (
                       <CKE 
+                        style={{height:"400px"}}
                         config={
                             { 
+                          
                               ckfinder:{
                                  uploadUrl:"http://localhost:3001/upload"
                               },
-                              placeholder: "Placeholder text...",
+                              placeholder: "Yazmaya Baslayabilirsin :)",
                               //toolbar:['heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList']
                             }
                           } 
-                        editor={ClassicEditor}
-                        onInit={(editor) => {
-                          //
-                        }}
+                        
+                        onReady={()=> console.log(document.querySelector("#editor"))}
                         onChange={(event,editör)=>changehandler(event,editör,"content")}
                         data={contentpart["content"]}
+                        editor={ClassicEditor}
                        
                       />
                     ) : (

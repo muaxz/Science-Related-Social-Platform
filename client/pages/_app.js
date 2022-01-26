@@ -4,6 +4,8 @@ import Head from "next/head"
 import Router,{useRouter} from "next/router"
 import NProgress from 'nprogress'; 
 import 'nprogress/nprogress.css';
+import "../styles.css"
+
 
 
 
@@ -21,6 +23,8 @@ const Myapp=({Component,pageProps})=>{
        <>
           <Usercontextprovider>   
                   <Head>
+                    <link rel="stylesheet"/>
+                    <link rel="stylesheet" href="path/to/assets/content-styles.css" type="text/css"/>
                     <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Slabo+27px&display=swap&family=Domine&display=swap&family=Rajdhani:wght@500&display=swap&family=Tinos:ital@1&display=swap&family=IBM+Plex+Serif:wght@500&display=swap&family=Poppins:ital,wght@1,300&display=swap&family=Raleway&display=swap" rel="stylesheet"></link>
                     <link rel="stylesheet" type="text/css" charset="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" /> 
                     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />

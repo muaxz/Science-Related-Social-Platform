@@ -20,6 +20,36 @@ const getupload=multer({
 module.exports=(req,res,next)=>{
 
                 //checking phase
+                console.log(req.files)
+
+                const blob = firebase.bucket.file(req.files.upload.name)
+                            const generatedToken = v4()
+                            console.log(generatedToken)
+                            const blobwriter = blob.createWriteStream({
+                                    metadata:{
+                                            contentType:"image/png",
+                                            metadata:{
+                                                 firebaseStorageDownloadTokens: generatedToken //generating uniqe token
+                                            }
+                                                    
+                                    }
+                            })
+                                
+                            blobwriter.on("error",(err)=>{
+                                    console.log(err)
+                                    console.log("heree")
+                            })
+                                
+                            blobwriter.on("finish",(data)=>{
+
+                                res.json({uploaded:true,url:`https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${req.files.upload.name}?alt=media&token=${generatedToken}`})
+                            
+                            })
+            
+                            blobwriter.end(req.files.upload.data)
+
+                            
+                /*
                 const userprofile = JSON.parse(req.body.Profilevalues)
                 console.log(userprofile)
                 const {typeofupdate} = req.params
@@ -131,5 +161,6 @@ module.exports=(req,res,next)=>{
                                         
                                     }
                 }
+                */
                      
 }

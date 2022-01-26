@@ -6,6 +6,9 @@ import {Producecommentreq,Commentreq,Commentanswerreq,Editcomment} from "../../A
 import {createusercontext} from "../../context/Usercontext";
 import Commentpart from '../../components/pages/Content/Commentsection/Commentpart';
 import useScroll from "../../hooks/Scroll"
+import Parser from "react-html-parser"
+
+
 
 
 
@@ -66,7 +69,7 @@ padding:5px;
 //todo map array to create attribute list
 
 export default function Content({Contentdata,comments,id}){
-
+    console.log(Contentdata)
     const {current}=useRef([{icon:"fas fa-bookmark",desc:"Gönderiyi Kaydet"},{icon:"fas fa-thumbs-up",desc:"Gönderiyi Beğen"},{icon:"fas fa-retweet",desc:"Gönderiyi Profil Sayfamda Göster"}])
     const {bottom} = useScroll();
     const [content,setcontent]=useState(Contentdata);
@@ -186,26 +189,16 @@ export default function Content({Contentdata,comments,id}){
                     <ContentDiv>
                         <h2 style={{marginBottom:"10px",color:"#e63946"}}> The state plans to pay around 20 percent</h2>
                         <h3 style={{marginBottom:"10px"}}>The structre of the culture in ottoman empire</h3>
-                        <div>
-                            <p>
-                            The state plans to pay around 20 percent of the project from its central budget. The rest will come from a $1.5 billion Chinese bank loan to Hungary. The documents say that all the work will be done by Chinese, not Hungarian, workers and all the material will be Chinese.
-
-                            “The Chinese are doing everything, while we’re doing only one thing: paying,” Karacsony said.
-
-                            Hungary’s government follows the economic thinking known as “Eastern Opening.” It favors increased diplomacy and trade with countries like China, Russia, Turkey and others in Central Asia. Although it joined the European Union in 2004, the Orban government often has disputes with other E.U. members.
-
-                            Peter Kreko is the director of the Budapest-based research company Political Capital. He believes the Fudan project is part of China’s efforts to increase soft power. And he said the project could help China’s spy operations.
-
-                            Hungary is a popular place for Russian and Chinese spies because the government shows, Kreko said, “the lack of willingness of intelligence forces to push back malign foreign influence.”
-
-                            Neither the Hungarian government’s spokesperson nor the ministry leading the project answered requests for comments.
-                            </p>
+                        <div style={{wordBreak:"break-word"}} id="editor" className="ck-content">
+                            
+                            {Parser(Contentdata.content)}
+                            
                         </div>
                     </ContentDiv>
                 </div>
             </Exteriorcontent>
-            <hr></hr>
-            <p>{commentlist.length+ " Yorum"}</p>
+            <hr style={{clear:"right"}}></hr>
+            <p style={{clear:"right"}}>{commentlist.length+ " Yorum"}</p>
             <Commentdiv>
                 <Commentpart  Editcommenthandler={EditCommentFunc} handleanswer={Answerhandler} spinner={activeproduce} list={commentlist} Producecomment={Produce}></Commentpart>
             </Commentdiv>
