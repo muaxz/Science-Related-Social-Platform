@@ -148,7 +148,7 @@ export default function MyEditor (){
 
         editorRef.current = {
             CKE: CKEditor,
-            ClassicEditor: require( '@ckeditor/ckeditor5-build-classic' )
+            ClassicEditor: require( "ckeditor5-custom-build/build/ckeditor" )
         }
 
         
@@ -287,10 +287,22 @@ export default function MyEditor (){
               {
                   editorLoaded ? (
                       <CKE 
-                        style={{height:"400px"}}
+                        
+                      image={{
+                          styles:{
+                              // Defining custom styling options for the images.
+                                options: [ {
+                                    name: 'side',
+                                    
+                                    title: 'Side image new',
+                                    className: 'image-side',
+                                    modelElements: [ 'imageBlock' ]}]
+                            },
+                        }}   
+                        
                         config={
                             { 
-                          
+                              
                               ckfinder:{
                                  uploadUrl:"http://localhost:3001/upload"
                               },
@@ -298,7 +310,6 @@ export default function MyEditor (){
                               //toolbar:['heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList']
                             }
                           } 
-                        
                         onReady={()=> console.log(document.querySelector("#editor"))}
                         onChange={(event,editör)=>changehandler(event,editör,"content")}
                         data={contentpart["content"]}

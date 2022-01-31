@@ -1,8 +1,5 @@
-/*
- * CKEditor 5 (v31.1.0) content styles.
- * Generated on Tue, 25 Jan 2022 13:46:49 GMT.
- * For more information, check out https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/content-styles.html
- */
+
+
 
  :root {
     --ck-color-image-caption-background: hsl(0, 0%, 97%);
@@ -23,10 +20,13 @@
 }
 
 /* ckeditor5-image/theme/imagestyle.css */
+
 .ck-content{
-    max-width:582px;
+    max-width:582px; 
     
 }
+
+
 .ck-content .image-style-block-align-left,
 .ck-content .image-style-block-align-right {
     max-width: calc(100% - var(--ck-image-style-spacing));

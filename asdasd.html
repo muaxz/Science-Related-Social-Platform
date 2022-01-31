@@ -6,40 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .mydiv{
-            display:flex;
-            max-width:900px;
-            margin:20px auto;
-            margin-right: 20px;
-            margin-left: 20px;
-            background-color: burlywood;
+        :root{
+            --colorfordiv:red;
+            --widthofdiv:2em;
+        }
 
+        div{
+            background-color: var(--colorfordiv);
+            width:var(--widthofdiv*2em);
         }
-        .subdivA{
-           height:100px;
-           word-break: break-all;
-           flex: 1;
-           flex-shrink: 0;
-           background-color: blue;
-        }
-         .subdivB{
-            width:400px;
-            background-color: yellow;
-        }
-        .subdivC{
-            width:300px;
-            background-color: aquamarine;
-        }
-        
+
+
     </style>
     
 </head>
 <body>
+    <div>
+            asdasdas
+    </div>
    <script>
-
-       var array = [1,2,3]
-       var newarray = array.map((item)=>[item+1])
-       console.log(newarray)
+       
    </script>
 </body>
 </html>
