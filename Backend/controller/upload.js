@@ -20,7 +20,7 @@ const getupload=multer({
 module.exports=(req,res,next)=>{
 
                 //checking phase
-                console.log(req.files)
+                console.log(req.body)
 
                 const blob = firebase.bucket.file(req.files.upload.name)
                             const generatedToken = v4()
