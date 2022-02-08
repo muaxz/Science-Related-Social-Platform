@@ -1,2 +1,3 @@
 node_modules
-client/trial1.js
+client/node_modules
+client/.next

@@ -9,6 +9,7 @@ function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,im
     
     const Contentdiv =
     (<Contentcard 
+    Animateforcomment={true}
     mainparentID={mainparentID}
     iscomment={true}
     postId={commentID}//no need
@@ -49,6 +50,7 @@ function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,im
             mylist.length > 0 ?
 
             mylist.map((item,index)=>{
+               
                 return (<Belowcomment
                     key={uniqid()}
                     allchildlength={item.allchilds}

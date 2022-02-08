@@ -52,20 +52,32 @@ exports.getcomments=async (req,res,next)=>{
     const {id,Last,order,isforanswer} = req.params;
 
       var ordernumb=parseInt(order);
+      var offsetborder = 0;
+      var limitborder = 10;
+      var whereclause ={};
+
+      if(Last == "true" || isforanswer == "true"){
+        offsetborder = 0;
+        limitborder = 1;
+      }else{
+        offsetborder = ordernumb
+      }
+
       var controlforonlyOnecomment = isforanswer == "true" ? "id" : "ContentId"
-      var whereclause = {}
       whereclause[controlforonlyOnecomment] = id
+
       const comments = await Comment.findAll({
         where:{...whereclause},
         include:{
           model:User,
           attributes:["firstname","lastname","id","imageurl","imagetoken"]
         },
+        limit:limitborder,
+        offset:offsetborder,
         order:[['createdAt',"DESC"]]
       })
-  
-   
-      
+
+      console.log(comments)
   
       const arr = []
       const Willbesend = {}
@@ -120,12 +132,13 @@ exports.getcomments=async (req,res,next)=>{
                   arr.push(value)
                
                   donework +=i
-                  console.log(value)
+                
                   
                 if(donework == totalvalue && trial){
-                  console.log(arr)
+                  
                   trial=false
                   Willbesend.data = arr 
+                  
                   return res.json(Willbesend)
   
                 }
@@ -141,6 +154,7 @@ exports.getcomments=async (req,res,next)=>{
         }
 
   } catch (error) {
+    console.log(error)
     next()
     return;
   }

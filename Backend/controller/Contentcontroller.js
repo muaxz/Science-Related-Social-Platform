@@ -83,7 +83,7 @@ exports.gethome=async(req,res,next)=>{
       },
       attributes:["id","titleimage","title","subtitle","content","createdAt","updatedAt"],
       limit:10,
-      offset:newnum-10,
+      offset:newnum,
      
       include:[
         {
@@ -126,7 +126,12 @@ exports.gethome=async(req,res,next)=>{
         {
           model:User,
           as:"personal",
-          attributes:["id","firstname","imageurl","lastname","Role"]
+          attributes:["id","firstname","imageurl","lastname","Role"],
+          include:{
+            model:User,
+            as:"Followed",
+            attributes:["id"]
+          }
           //burada user -> user many-to-many girilebilir takipçiler için
         },
         {

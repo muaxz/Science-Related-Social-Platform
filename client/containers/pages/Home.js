@@ -127,7 +127,7 @@ export default function Home({mydata}){
     const [errormsg,seterror]=useState(false);
     const [selectionlist,setselectionlist] = useState({
         Felsefe:{
-            selected:false,
+            selected:true,
             stoprequesting:false,
         },
         Metafizik:{
@@ -151,7 +151,7 @@ export default function Home({mydata}){
             stoprequesting:false,
         },    
     })
-    const [selectedkey,setselectedkey]=useState("Uzay");
+    const [selectedkey,setselectedkey]=useState("Felsefe");
     const [windowlist,setwindowlist]=useState({
         list:[],
         attribute:"",
@@ -159,7 +159,7 @@ export default function Home({mydata}){
     const [stoprequesting,setstopreq]=useState(false);
     const [spinner,setspinner]=useState(false);
 
-  
+    console.log(mydata)
     useEffect(()=>{
 
         
@@ -189,11 +189,13 @@ export default function Home({mydata}){
         setselectionlist(selectionlist);
 
         setspinner(true);
-        setorder(10);
+        setorder(0);
         Homereq({
             currentdata:contentdata,
             setcontentdata:setcontentdata,
-            order:10,
+            setselection:setselectionlist,
+            selectionlist:selectionlist,
+            order:0,
             setspinner:setspinner,
             category:keyname,
             paignation:false,
@@ -217,7 +219,7 @@ export default function Home({mydata}){
     useEffect(()=>{
         console.log(bottom);
         if(bottom){
-            setorder(contentdata.length+10); 
+            setorder(contentdata.length); 
         }
 
     },[bottom])
@@ -240,6 +242,7 @@ export default function Home({mydata}){
        if(keyname == selectedkey){
          return;
        }
+       
        else{
            
             const Mutated = {...selectionlist};
@@ -320,7 +323,7 @@ export default function Home({mydata}){
                                 comment={item.allcomments}
                                 readlater={item.Readlater}
                                 key={uniqid()}//key numarası
-                                profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
+                                followeds={item.personal.Followed}
                                 title={item.title}
                                 titleimage={"yaprak.jpg"}
                                 userfirstname={item.personal !== null ? item.personal.firstname : "notyet"}

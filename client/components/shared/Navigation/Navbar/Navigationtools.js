@@ -7,6 +7,7 @@ import Link from "next/link";
 import {calculatedate} from "../../../../utilsfunc"
 import {logout} from "../../../../Api/requests"
 import {createusercontext} from "../../../../context/Usercontext"
+import {CreateNightMode} from "../../../../context/Nightmode"
 
 const Option1div=styled.div`
 width:100%;
@@ -25,6 +26,7 @@ background-color:${({check})=> check == false ? "#EBEBEB" : ""};
 
 export default function Navigationtools({optnumber,optname,Navdata,Logout}){
     const {setlogged,setuserdata,setspinner,logged} = useContext(createusercontext)
+    const {nightmode,setisnight} = useContext(CreateNightMode)
     console.log(setlogged)
     const [toggle,settogle]=useState(false);
 
@@ -95,9 +97,9 @@ export default function Navigationtools({optnumber,optname,Navdata,Logout}){
      
                     return (<Option1div key={index} check={item.Facecheck}>
                               <Link href={{pathname:`${myitemobj.href}/${item[myitemobj.idname]}`,query:{name:"Post"}}}>
-                                <div style={{display:"flex"}}>
+                                <div style={{display:"flex",alignItems:"center"}}>
                                      <div>
-                                      <Porfileimage profile="/black.jpg" width="50px" height="50px"/>
+                                      <Porfileimage profile="/alpay.PNG" width="50px" height="50px"/>
                                      </div>
                                      <Icon className={myitemobj.Icon} Iconconfig={{position:"absolute",top:"40px",right:"10px",color:"white",backcolor:myitemobj.color,width:"30px",height:"30px",lineheight:myitemobj.lh}}></Icon>
                                      {/*<Icon className={"fas fa-star fa-sm"} Iconconfig={{position:"absolute",top:"-8px",right:"-2px",color:"#72ddf7",width:"17px",height:"17px",lineheight:"17px"}}></Icon>*/}
@@ -138,7 +140,7 @@ export default function Navigationtools({optnumber,optname,Navdata,Logout}){
                             <p style={{fontSize:"13px"}}></p>
                         </div>
                         <div style={{marginLeft:"auto"}}>
-                          <Switch  checkedIcon={false} uncheckedIcon={false} onChange={()=>settogle(!toggle)} checked={toggle}></Switch>
+                          <Switch  checkedIcon={false} uncheckedIcon={false} onChange={()=>setisnight(!nightmode)} checked={nightmode}></Switch>
                         </div>
                     </Option1div>
                     <Option1div onClick={()=>Logout()}>

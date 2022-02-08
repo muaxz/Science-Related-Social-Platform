@@ -3,7 +3,7 @@ import Head from "next/head";
 import Mainlayout from "../../containers/Layout/mainlayout";
 import Usercontent from "../../containers/pages/Usercontent";
 import Guardlayout from "../../containers/Layout/routerguard";
-import {Global} from "../../components/styledcomponents/button"
+import {Global} from "../../components/styledcomponents/Globalstyles"
 import axios from 'axios';
 import ContextProvider from "../../context/Usercontext";
 

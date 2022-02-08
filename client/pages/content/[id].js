@@ -34,7 +34,7 @@ export async function getServerSideProps({query}){
         
         const recieve = await axious.all([
         axious.get(`content/${query.id}`),
-        axious.get(`comment/${query.id}/false/10/false`)
+        axious.get(`comment/${query.id}/false/0/false`)
         ])
         //ilk 10 comment için istek atılıcak
         //eğer burası null ise 404 olarak hata döndür redirect to 404.js

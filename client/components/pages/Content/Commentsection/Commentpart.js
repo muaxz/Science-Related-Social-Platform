@@ -47,7 +47,7 @@ function Commentpart({Editcommenthandler,Producecomment,list,spinner,handleanswe
         Lengthcalcualter(mutated[i],mutated[i].id,i,"")
     }
 
-    console.log(numobj)
+    
 
     return (
         <div style={{padding:"20px",clear:"right"}}>

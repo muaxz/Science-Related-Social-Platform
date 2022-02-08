@@ -9,6 +9,7 @@ import {AddComment,feed,Feedback,Send,Delete, Edit} from "@material-ui/icons"
 import {calculatedate} from "../../../utilsfunc"
 import useClickoutside from "../../../hooks/Clikcoutisde";
 import { TextField , Button,InputAdornment} from '@material-ui/core';
+import {CreateNightMode} from "../../../context/Nightmode"
 
 
 const Likeanimaton=keyframes`
@@ -19,16 +20,32 @@ const Likeanimaton=keyframes`
 70% {font-size:10px}
 100% {font-size:16px}
 `
+
+const Newcommentanimation=keyframes`
+0% {background-color:lightgrey}
+50% {background-color:grey}
+100% {background-color:lightgrey}
+`
+
 const Outsidediv=styled.div`
 position:relative;
 margin:auto;
 height:${({draft})=> draft ? "300px" : ""};
 margin-bottom:30px;
 width:100%;
-background-color:${({iscomment})=>!iscomment ? "#faf9f9": "#faf9f9"};
+background-color:${({nightmode})=> !nightmode ? "#faf9f9": "#1F1B24"};
 border-radius:7px;
 box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+animation-duration:2s;
+animation-timing-function:ease-in-out;
+animation-name:${({animation,timing})=>{
+    if(timing.time < 3 && animation &&timing.express == "Saniye"){
+        return Newcommentanimation
+    }
 
+    return ""
+}};
+animation-iteration-count:3;
 `
 
 //This is for draft page
@@ -180,7 +197,7 @@ left:${({iscomment})=>iscomment ? "-60px" : "0px"};
 `
 
 //içerik sayısı,takipçi sayısı,
-function Contentcard({Answer_To,mainparentID,imagefilename,Editcommenthandler,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent}){
+function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent}){
     
     const[elements,setelements]=useState({
         Like:{
@@ -202,12 +219,14 @@ function Contentcard({Answer_To,mainparentID,imagefilename,Editcommenthandler,im
         }
     });
     const {ref,visible,setvisible} = useClickoutside();
+    const {nightmode,setisnight} = useContext(CreateNightMode)
     const [loading_commentedit,setloading_commentedit] = useState(false)
     const [commentanswer,setcommentanswer]=useState(false);
     const [answervalue,setanswervalue]=useState("");
     const [editcomment,seteditcomment] = useState(false)
     const [commenteditvalue,setcommenteditvalue] = useState(content)
     const {userdata} = useContext(createusercontext);
+    const [isfollowing,setisfollowing] = useState(false);
     const router = useRouter()
 
 
@@ -257,6 +276,15 @@ function Contentcard({Answer_To,mainparentID,imagefilename,Editcommenthandler,im
                     currentelements["Readlater"].ismarked=true;
                 }
             })
+            
+            if(followeds){
+                followeds.forEach((user)=>{
+                    if(user.id == userdata.UserId){
+                        setisfollowing(true)
+                    }
+                })
+            }
+           
    
        }
        
@@ -331,6 +359,7 @@ function Contentcard({Answer_To,mainparentID,imagefilename,Editcommenthandler,im
     }
 
     const Makeacomment=()=>{
+  
         Answerhandler(answervalue,postId,mainparentID)
         setanswervalue("")
         setcommentanswer(false)
@@ -339,7 +368,7 @@ function Contentcard({Answer_To,mainparentID,imagefilename,Editcommenthandler,im
 
     return (
 
-       <Outsidediv  draft={draft} iscomment={iscomment}>
+       <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={calculatedate(date)} draft={draft} iscomment={iscomment}>
 
            {
                //draft cover
@@ -376,8 +405,10 @@ function Contentcard({Answer_To,mainparentID,imagefilename,Editcommenthandler,im
                                         <Optionholder style={{display:userdata.UserId ? "flex" : "none"}}>
                                             <Icon className="fas fa-user-minus" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
                                             <div style={{marginLeft:"8px",color:"#757575"}}>
-                                                <p style={{color:"black"}}>Duhan Öztürk'ü takipten çık</p>
-                                                <p style={{fontSize:"13px"}}>Bu kullanıcıdan gelen bildirimleri görme</p>
+                                                <span style={{color:"black",textTransform:"capitalize"}}>{userfirstname}</span>
+                                                <span style={{color:"black",textTransform:"capitalize",marginLeft:"5px"}}>{usersurname+`'i`}</span>
+                                                <span style={{marginLeft:"10px"}}>{isfollowing ? "Takipten Cik" : "Takip Et"}</span>
+                                                <p style={{fontSize:"13px",textTransform:"capitalize"}}>Bu kullanıcıdan gelen bildirimleri görme</p>
                                             </div>
                                         </Optionholder>
                                         <Optionholder>
@@ -453,10 +484,10 @@ function Contentcard({Answer_To,mainparentID,imagefilename,Editcommenthandler,im
                                 pathname:`/profile/${userid}`,
                                 query:{name:"Post"}
                             }}>
-                              <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={`https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${imagefilename}?alt=media&token=${imagetoken}`}></Porfileimage>
+                              <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={imagefilename ?  `https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${imagefilename}?alt=media&token=${imagetoken}` : "/realuserphoto.png"}></Porfileimage>
                             </Link>
                         </Profileimageholder>
-                        <div style={{marginLeft:"10px",fontSize:"15px"}}><p style={{color:"black"}}>
+                        <div style={{marginLeft:"10px",fontSize:"15px",textTransform:"capitalize"}}><p style={{color:"black"}}>
                             <strong>{userfirstname+" "+usersurname}</strong></p>
                             <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{calculatedate(date).time + " " + calculatedate(date).express + " Önce"}</span></div>
                         </div>           

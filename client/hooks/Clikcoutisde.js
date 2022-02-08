@@ -4,7 +4,7 @@ function useClickoutside(){
     
     const ref = useRef();
     const [visible,setvisible]=useState(false);
-    console.log("sa")
+  
     const handleclick=(event)=>{  
 
         if(ref.current && !ref.current.contains(event.target)){

@@ -1,7 +1,7 @@
 import React,{useContext, useEffect,useState} from 'react'
 import styled from "styled-components";
 import Contentcard from "../../components/shared/Cards/Contentcard";
-import {Getusercontent,Createrelationreq,DeletePost} from "../../Api/Api"
+import {Getusercontent,Createrelationreq,DeletePost} from "../../Api/requests"
 import {createusercontext} from "../../context/Usercontext"
 import useScroll from "../../hooks/Scroll";
 import { Bookmark, BookmarkBorderOutlined, BookmarkBorderRounded, ThumbUpAlt } from '@material-ui/icons';
@@ -44,7 +44,7 @@ padding-right:10px;
 `
 
 export default function Usercontent({params,mydata}){
-    
+    console.log(mydata)
     const {bottom}=useScroll();
     const [data,setdata]=useState(mydata);
     const {userdata}=useContext(createusercontext)
@@ -118,7 +118,7 @@ export default function Usercontent({params,mydata}){
     }
 
     const Deleteitem=(index)=>{
-         console.log(index);
+    
          const mydata=[...data];
          mydata.splice(index,1);
          setdata(mydata);
@@ -175,8 +175,8 @@ export default function Usercontent({params,mydata}){
                                     profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
                                     title={item.Content ? item.Content.title : item.title}
                                     titleimage={"/yaprak.jpg"}
-                                    username={"Duhan"}
-                                    usersurname={"Öztürk"}//bir obje props
+                                    userfirstname={item.Content.personal.firstname}
+                                    usersurname={item.Content.personal.lastname}//bir obje props
                                     subtitle={item.Content ? item.Content.subtitle : item.subtitle}
                                     date={item.Content ? item.Content.createdAt : item.createdAt}
                                     like={[]}//bu bir obje array

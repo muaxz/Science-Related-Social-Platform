@@ -69,7 +69,7 @@ padding:5px;
 //todo map array to create attribute list
 
 export default function Content({Contentdata,comments,id}){
-    console.log(Contentdata)
+   
     const {current}=useRef([{icon:"fas fa-bookmark",desc:"Gönderiyi Kaydet"},{icon:"fas fa-thumbs-up",desc:"Gönderiyi Beğen"},{icon:"fas fa-retweet",desc:"Gönderiyi Profil Sayfamda Göster"}])
     const {bottom} = useScroll();
     const [content,setcontent]=useState(Contentdata);
@@ -79,9 +79,10 @@ export default function Content({Contentdata,comments,id}){
     const [actives,seterrmsg]=useState(false);
     const [activeproduce,setactiveproduce]=useState(false);
     const {userdata}=useContext(createusercontext);
+    console.log(commentlist)
     //const {id}=router.query;
   
-    console.log(commentlist)
+ 
     useEffect(()=>{
 
         if(numberofcomment > 0){
@@ -91,8 +92,8 @@ export default function Content({Contentdata,comments,id}){
                 contentId:id,
                 setcomment:setcommentlist,
                 commentlist:commentlist,
-                last:true,
-                order:commentlist.length+10,
+                last:"true",
+                order:commentlist.length,
                 setactiveproduce:setactiveproduce,
                 seterrmsg:seterrmsg,
             })
@@ -108,8 +109,8 @@ export default function Content({Contentdata,comments,id}){
                 contentId:id,
                 setcomment:setcommentlist,
                 commentlist:commentlist,
-                last:false,
-                order:commentlist.length+10,
+                last:"false",
+                order:commentlist.length,
                 setactiveproduce:setactiveproduce,
                 seterrmsg:seterrmsg,
             })
@@ -125,7 +126,7 @@ export default function Content({Contentdata,comments,id}){
     },[id])
     
     const Produce=useCallback((message)=>{
-        console.log(content.personal.id)
+        
         Producecommentreq({
             ContentId:id,
             UserId:userdata.UserId,
@@ -138,7 +139,7 @@ export default function Content({Contentdata,comments,id}){
     },[userdata.UserId])
 
     const Answerhandler=(Answer,UpperId,MainparentID)=>{
-          console.log("BURADAAA")
+        
           Commentanswerreq({
               UppercommentId:UpperId,
               UserId:userdata.UserId,

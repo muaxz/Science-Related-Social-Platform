@@ -130,7 +130,7 @@ export const Producecommentreq=async ({Message,TakerId,setnumbercom,setwindow,Us
     if(Errorhandler({data,seterrmsg})){    
         setnumbercom(prev=>prev+1)
         return;
-        //we route işlemi
+     
     }
     else{ 
       console.log("falselan");
@@ -145,18 +145,20 @@ export const Producecommentreq=async ({Message,TakerId,setnumbercom,setwindow,Us
 }
 
 export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setcontentdata,order,setstopreq,category,paignation,selectionlist,setselection})=>{
+
   try {
 
     const{data}=await axios.get(`content/gethome/${order}/${category}`,{withCredentials:true})
-    console.log(data);
+    console.log(data.data.length);
     if(Errorhandler({data,seterrmsg,setwindow})){
+   
 
-      if(data.data.length == 0){
+      if(!data.data.length){
 
+        console.log("stopped request")
         const selections = {...selectionlist};
         selections[category].stoprequesting = true;
         setselection(selectionlist);
-        console.log("stopped request")
 
       }
 
@@ -176,7 +178,7 @@ export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setconten
  
       }
 
-    
+   
       return setspinner(false);
     
      
@@ -256,9 +258,12 @@ export const Commentreq=async({contentId,setactiveproduce,setcomment,seterrmsg,s
       var Current=[...commentlist];
       var Mydata=[...data.data];
       console.log(Mydata)
-      if(last){
 
-        setcomment(Mydata.concat(Current));
+      if(last == "true"){
+        var concated = Mydata.concat(Current) 
+        console.log(concated)
+        setcomment([])
+        setcomment(concated);
         
         //push metodu bir diziyi bir dizinin içine pushluyor fakat concat elemanları
 
@@ -556,7 +561,9 @@ export const Commentanswerreq = async({UppercommentId,Answer,UserId,seterrmsg,se
     
     if(Errorhandler({data,seterrmsg,setwindow})){   
        const onlyOnecomment = await axios.get(`comment/${MainparentID}/false/10/true`)
+       console.log(onlyOnecomment)
        const copyofcommentlist = [...commentlist]
+       console.log(copyofcommentlist)
        const Indexofelement = copyofcommentlist.findIndex((item)=>item.id == MainparentID)
        copyofcommentlist.splice(Indexofelement,1,onlyOnecomment.data.data[0])
        setcommentlist(copyofcommentlist)
