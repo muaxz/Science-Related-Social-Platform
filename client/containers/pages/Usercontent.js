@@ -175,8 +175,8 @@ export default function Usercontent({params,mydata}){
                                     profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
                                     title={item.Content ? item.Content.title : item.title}
                                     titleimage={"/yaprak.jpg"}
-                                    userfirstname={item.Content.personal.firstname}
-                                    usersurname={item.Content.personal.lastname}//bir obje props
+                                    userfirstname={item.Content ? item.Content.personal.firstname : ""}
+                                    usersurname={item.Content ? item.Content.personal.lastname : ""}//bir obje props
                                     subtitle={item.Content ? item.Content.subtitle : item.subtitle}
                                     date={item.Content ? item.Content.createdAt : item.createdAt}
                                     like={[]}//bu bir obje array

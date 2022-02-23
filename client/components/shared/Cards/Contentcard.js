@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useContext} from 'react'
+import React,{useState,useEffect,useContext,useMemo} from 'react'
 import styled,{keyframes} from "styled-components";
 import {createusercontext} from "../../../context/Usercontext";
 import {Porfileimage,Spinner} from "../../styledcomponents/Globalstyles";
@@ -365,10 +365,11 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
         setcommentanswer(false)
     }
 
+    const Calculatetime = useMemo(()=>calculatedate(date),[])
 
     return (
 
-       <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={calculatedate(date)} draft={draft} iscomment={iscomment}>
+       <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={Calculatetime} draft={draft} iscomment={iscomment}>
 
            {
                //draft cover
@@ -395,7 +396,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
                 
                <div ref={ref}>   
       
-                    <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:draft ? "white" : "#2A2A2A",zindex:"500"}}></Icon>
+                    <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:draft ? "white" : "#2A2A2A"}}></Icon>
                     {
                         visible ?
                         <Optionwindow active={true}>
@@ -489,7 +490,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
                         </Profileimageholder>
                         <div style={{marginLeft:"10px",fontSize:"15px",textTransform:"capitalize"}}><p style={{color:"black"}}>
                             <strong>{userfirstname+" "+usersurname}</strong></p>
-                            <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{calculatedate(date).time + " " + calculatedate(date).express + " Önce"}</span></div>
+                            <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{Calculatetime.time + " " + calculatedate(date).express + " Önce"}</span></div>
                         </div>           
                     </div>
                 </Profilediv>

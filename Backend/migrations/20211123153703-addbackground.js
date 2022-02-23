@@ -1,14 +1,9 @@
-'use strict';
-
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.addColumn("users","backgroundurl",{
-       type:Sequelize.TEXT,
-    })
+    return Promise.resolve()
   },
 
   down: function(queryInterface) {
-    return queryInterface.removeColumn("users","backgroundurl")
+    return Promise.resolve()
   }
 };
-

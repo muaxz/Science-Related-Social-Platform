@@ -12,6 +12,7 @@ import {NotificationCountreq,Notificationreq,UpdateNotificationcount} from "../.
 
 
 const Bigdiv=styled.div`
+padding-top:50px;
 `
 
 const Goupicon=styled.div`

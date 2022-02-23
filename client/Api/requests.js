@@ -436,9 +436,11 @@ export const Createuserrelation=async({UserId,Prevent,FollowedId,checkiffollow})
       FollowedId:FollowedId,
       checkiffollow:checkiffollow,
     })
+    /*
     setTimeout(() => {
       Prevent.current = true
     }, 2000);
+    */
     
     if(Errorhandler({data,seterrmsg,setwindow})){
       
@@ -649,4 +651,37 @@ export const Editcomment = async({commentID,message,setloading,seteditcomment})=
       } catch (error) {
           console.log(error)
       } 
+}
+
+export const Userprofilefollowlist = async({requestType,UserId,SetFollowList,FollowList})=>{
+
+    try {
+
+      const {data} = await axios.get(`/user/getuserprofilefollowlist/${requestType}/${UserId}`)
+      console.log(data.data)
+      if(!data.data.length){
+         
+      }
+      SetFollowList(data.data)
+      
+
+    } catch (error){
+
+      console.log(error)
+
+    }
+
+}
+
+export const ReportUserReq = async({checkBoxValue,message,ContentId})=>{
+
+    try {
+
+      const {data} = await axios.post(`/user/reportUser`,{reportedContentId:ContentId,checkBoxValue:checkBoxValue,message:message})
+
+
+    } catch (error) {
+      console.log(error)
+    }
+
 }

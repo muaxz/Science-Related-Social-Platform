@@ -20,9 +20,9 @@ const getupload=multer({
 module.exports=(req,res,next)=>{
 
                 //checking phase
-                console.log(req.body)
+                console.log(req.files)
 
-                const blob = firebase.bucket.file(req.files.upload.name)
+                const blob = firebase.bucket.file(req.files.files.name)
                             const generatedToken = v4()
                             console.log(generatedToken)
                             const blobwriter = blob.createWriteStream({
@@ -42,11 +42,11 @@ module.exports=(req,res,next)=>{
                                 
                             blobwriter.on("finish",(data)=>{
 
-                                res.json({uploaded:true,url:`https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${req.files.upload.name}?alt=media&token=${generatedToken}`})
+                                res.json({uploaded:true,url:`https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${req.files.files.name}?alt=media&token=${generatedToken}`})
                             
                             })
             
-                            blobwriter.end(req.files.upload.data)
+                            blobwriter.end(req.files.files.data)
 
                             
                 /*

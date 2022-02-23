@@ -62,6 +62,9 @@ const User = sequlize.define("User",{
             return this.setDataValue("Notification",JSON.stringify(value));
         },
               //bir obje olucak ve içeriği :{likepost:true,sharepost:false:,like:comment}
+    },
+    ReportSum:{
+        type:Sequlize.INTEGER
     }
     
 })

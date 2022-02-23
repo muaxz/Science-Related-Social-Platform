@@ -1,11 +1,12 @@
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return Promise.resolve()
+    return queryInterface.addColumn("users","ReportSum",{
+      type:Sequelize.INTEGER,
+    })
   },
 
-  down: function(queryInterface,Sequelize) {
-    return queryInterface.removeColumn("comments","UserforUserID")
+  down: function(queryInterface) {
+    return queryInterface.removeColumn("users","ReportSum")
   }
 };
-
 

@@ -25,9 +25,8 @@ background-color:${({check})=> check == false ? "#EBEBEB" : ""};
 `
 
 export default function Navigationtools({optnumber,optname,Navdata,Logout}){
-    const {setlogged,setuserdata,setspinner,logged} = useContext(createusercontext)
+    
     const {nightmode,setisnight} = useContext(CreateNightMode)
-    console.log(setlogged)
     const [toggle,settogle]=useState(false);
 
     let Myoption = null;

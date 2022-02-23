@@ -2,7 +2,7 @@ import React,{useEffect,useState,useContext,useCallback, useRef} from 'react'
 import styled from "styled-components";
 import {createusercontext} from "../../context/Usercontext"
 import {Porfileimage} from "../../components/styledcomponents/Globalstyles"
-import {Createuserrelation,Getuserprofilecontent,Createrelationreq,UpdateNotificationactive} from "../../Api/requests"
+import {Createuserrelation,Getuserprofilecontent,Createrelationreq,UpdateNotificationactive,Userprofilefollowlist} from "../../Api/requests"
 import Contentcard from "../../components/shared/Cards/Contentcard";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
@@ -10,6 +10,7 @@ import useScroll from "../../hooks/Scroll";
 import { EditRounded, Notifications, NotificationsActive,Settings,Person} from '@material-ui/icons';
 import Contentmap from "../../components/pages/Profile/contentmap";
 import Editwindow from "../../components/pages/Profile/Editwindow"
+import Followlist from '../../components/pages/Profile/followlists';
 
 
 const Exteriordiv=styled.div`
@@ -122,6 +123,19 @@ margin:auto;
 }
 `
 
+const LabelsUnderCounts = styled.p`
+background-color:lightgrey;
+border-radius:25px;
+margin-top:5px;
+padding:7px;
+cursor:pointer;
+&:hover{
+    background-color:white;
+    color:#bfd200;
+    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+}
+`
+
 
 export default function Profile({Mydata,Counts,Contentdata,query}){
 
@@ -140,6 +154,9 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
     const[spinner,setspinner]=useState(false);
     const[activeedit,setactiveedit] = useState(false);
     const[editforsettings,seteditforsettings] = useState(false)
+    const[showfollowinglist,setshowfollowinglist] = useState("")
+    const[FollowList,SetFollowList] = useState([]);
+
     const[options,setoptions]=useState({
         Post:{
             name:"Gönderiler",
@@ -155,7 +172,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
         } 
     })
    
-  console.log(Mydata);
+ 
 
    useEffect(()=>{
       //sadece paignation zaten query değişince ilk 10 value serverside tarafından çekiliyor
@@ -233,6 +250,8 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
 
       setprofiledata({...Mydata})
       setcontentdata([...Contentdata])
+      setshowfollowinglist("")
+      setactiveedit(false)
 
     },[query])
     //
@@ -253,6 +272,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
 
         //todo response gelene kadar bekle hamleye izin verme
        if(Preventspam2.current){
+
             Preventspam2.current = false
             setbeingfollowed(!beingfollowed);
 
@@ -316,6 +336,21 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
 
         setactiveedit(!activeedit)
     }
+
+    const ShowFollowList = (requestType)=>{
+        
+        Userprofilefollowlist({
+            requestType:requestType,
+            UserId:query.username,
+            SetFollowList:SetFollowList,
+            FollowList:FollowList
+        })
+
+        setshowfollowinglist(requestType)
+
+    }
+
+    
 
   
     /*
@@ -383,15 +418,15 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                          <div style={{display:"flex",marginTop:"10px",marginBottom:"40px",justifyContent:"space-around"}}>
                             <div>
                                 <P>{Counts.Followedcount}</P>
-                                <P>Takipçi</P>
+                                <LabelsUnderCounts  onClick={()=>ShowFollowList("FOLLOWER")}>Takipçi</LabelsUnderCounts>
                             </div>
                             <div>
                                 <P>{Counts.Followercount}</P>
-                                <P>Takip Edilen</P>
+                                <LabelsUnderCounts  onClick={()=>ShowFollowList("FOLLOWING")}>Takip Edilen</LabelsUnderCounts>
                             </div>
                             <div>
                                 <P>{Counts.Contentcount}</P>
-                                <P>Gönderi</P>
+                                <LabelsUnderCounts  >Gönderi</LabelsUnderCounts>
                             </div>
                          </div>
                          <Description style={{width:"80%",margin:"auto"}}>
@@ -401,25 +436,31 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                          </Description>
                      </Usersection>
                      <Contentsection>
-                            <Optionbar>
                             {
-                               Object.keys(options).map((item)=>(
-                                   <Link  href={{
-                                       pathname:`/profile/${query.username}`,
-                                       query:{name:`${item}`}
-                                   }}     
-                                   scroll={false}                             
-                                   >
-                                      <Options applyborder={options[item].bottom} onClick={()=>Handleoptions(item)}>{options[item].name}</Options>
-                                   </Link>
-                               ))
+                                showfollowinglist.length == 0 &&
+
+                                <Optionbar>
+                                    {
+                                        Object.keys(options).map((item)=>(
+                                            <Link  
+                                                href={{
+                                                    pathname:`/profile/${query.username}`,
+                                                    query:{name:item}
+                                                }}     
+                                                scroll={false}                             
+                                            >
+                                                <Options applyborder={options[item].bottom} onClick={()=>Handleoptions(item)}>{options[item].name}</Options>
+                                            </Link>
+                                        ))
+                                    }
+                                </Optionbar>
                             }
-                            </Optionbar>
-                            {/*TODO separate this map function*/}
+                            
+                           
                            <div style={{paddingRight:"10px",paddingLeft:"10px",maxWidth:"700px",margin:"auto"}}>
-
-                              <Contentmap  norecord={query.name} relationfunc={Relationrequest} contentlist={Contentdata}/> 
-
+                                {
+                                  showfollowinglist.length > 0 ? <Followlist type={showfollowinglist} goBackToContent={()=>setshowfollowinglist("")} list={FollowList}></Followlist> : <Contentmap  norecord={query.name} relationfunc={Relationrequest} contentlist={Contentdata}/> 
+                                }
                            </div>
                      </Contentsection>
                 </Contentpart>

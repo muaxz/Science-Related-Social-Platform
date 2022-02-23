@@ -1,10 +1,11 @@
 const Usercontent = require("../models/UserContent");
 const Usermodel=require("../models/Usermodel");
-const {Op} = require("sequelize")
+const {Op, where} = require("sequelize")
 const Contentmodel=require("../models/Contentmodel");
 const UserUsermodel=require("../models/UserUser");
 const Notificationmodel=require("../models/Notificationmodel");
 const Comment = require("../models/Commentmodel");
+const reportModel = require("../models/ReportModel")
 const User = require("../models/Usermodel");
 const bcrypt=require("bcrypt");
 
@@ -92,6 +93,7 @@ exports.getuserprofile = async (req,res,next)=>{
            through:{
             attributes:["FollowedId","Active","FollowerId","createdAt","updatedAt"]
           }
+          
          }]
      })
 
@@ -268,6 +270,45 @@ exports.getuserprofilecontent = async(req,res,next)=>{
   }
 
 
+}
+
+exports.getuserprofilefollowlist = async (req,res,next)=>{
+
+    const {UserId,requestType} = req.params
+
+    try {
+
+        var listWillbesend = []
+        var searchOptions = {whereClause:{}}
+        searchOptions.whereClause[requestType == "FOLLOWING" ? "Follower" : "Followed"] = UserId
+        searchOptions.whichpart = (requestType == "FOLLOWING" ? "Followedpart" : "Followerpart") 
+
+        listWillbesend = await UserUsermodel.findAll({
+            where:{...searchOptions.whereClause},
+            include:{
+              model:User,
+              as:searchOptions.whichpart,
+              attributes:["id","firstname","lastname","imageurl","imagetoken","backgroundurl","backgroundtoken"],
+              include:[{
+                model:User,
+                as:"Followed",
+                attributes:["id"]
+              },{
+                model:User,
+                as:"Follower",
+                attributes:["id"]
+              }]
+            }
+        })
+
+      
+
+      res.json({data:listWillbesend})
+     
+
+    } catch (error) {
+      console.log(error)
+    }
 }
 
 exports.getuserprofilecount = async (req,res,next)=>{
@@ -509,8 +550,8 @@ exports.updateprofile = async (req,res,next)=>{
   }else if(typeofupdate == "Password"){
 
       const currentuser =  await User.findOne({where:{id:UserId}})
-      console.log(currentuser.password)
-      bcrypt.compare(userprofiledata.Currentpassword, currentuser.password,async(err,result)=>{
+    
+      bcrypt.cofmpare(userproiledata.Currentpassword, currentuser.password,async(err,result)=>{
         
         if(!result)
         return res.json({state:false})  
@@ -540,5 +581,25 @@ exports.updateprofile = async (req,res,next)=>{
     }
   
   }
+
+}
+
+exports.reportUser = async(req,res,next)=>{
+
+    try{
+
+      const {reportedContentId,message,checkBoxValue} = req.body;
+
+      await reportModel.create({
+        ReportMessage:message,
+        ReportCheckBox:checkBoxValue,
+        ContentId:reportedContentId,
+      })
+
+      res.json({state:"success"})
+
+    } catch (error) {
+      return next();
+    }
 
 }

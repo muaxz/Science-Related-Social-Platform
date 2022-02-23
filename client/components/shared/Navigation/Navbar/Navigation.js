@@ -342,7 +342,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
 
                                                 <div style={{display:"flex"}}>
                                                     <div>
-                                                        <Porfileimage profile="/black.jpg" width="45px" height="45px"/>
+                                                        <Porfileimage profile="/led.jpg" width="45px" height="45px"/>
                                                     </div>
                                                     <div style={{paddingLeft:"10px"}}>
                                                         <p style={{fontWeight:"600"}}>{item.firstname+" "+item.lastname}</p>
@@ -397,10 +397,10 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                             })
                             
                         }
-
+                         
                          <Link href={{
-                            pathname:`/profile/${userdata.UserId}`,
-                            query:{name:"Post"}
+                                pathname:`/profile/${userdata.UserId}`,
+                                query:{name:"Post"}
                             }}> 
                            <Porfileimage width="35px" height="35px" profile="/car.jpg"/>
                          </Link>

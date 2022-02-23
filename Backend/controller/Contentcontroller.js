@@ -242,7 +242,7 @@ exports.getusercontent=async(req,res,next)=>{
               break;       
         }
 
-        var Datawillsend = null;
+        var Datawillsend = [];
         
         try {
           
@@ -254,8 +254,11 @@ exports.getusercontent=async(req,res,next)=>{
                     Userforuserid:id,
                   }
               })  
+       
+             
 
           }
+          
           else{
 
                 Datawillsend = await Usercontent.findAll({

@@ -3,7 +3,9 @@ const jwt=require("jsonwebtoken");
 module.exports=(req,res,next)=>{
 
     const token = req.cookies["myauth"];
+    console.log("here")
     console.log(token)
+    console.log("here")
    
     if(token){
 

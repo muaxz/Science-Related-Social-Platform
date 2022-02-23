@@ -41,9 +41,10 @@ background-position: center;
 
 const ContentDiv=styled.div`
 max-width:650px;
-padding-top:20px;
+padding-top:30px;
 width:100%;
 padding-right:25px;
+border-right:2px solid lightgrey;
 @media (max-width:940px){
     justify-content:center;
     padding-left:25px;
@@ -281,7 +282,7 @@ export default function Home({mydata}){
                 
                 }
                 <Flexdiv>
-                    <ContentDiv style={{maxWidth:"650px",minHeight:"600px",paddingTop:"30px",width:"100%",paddingRight:"30px"}}>
+                    <ContentDiv>
                             <ShortDiv>
                                 <Iconholder onClick={()=>Setslidevalue("Back")} leftvalue="0" rightvalue={""}>
                                    <i style={{color:"red"}} class="fas fa-chevron-left"></i>
@@ -304,7 +305,7 @@ export default function Home({mydata}){
                                 </InnershortDiv>
                                 </ShortDiv> 
 
-                       <div style={{textAlign:"center",display:"flex",justifyContent:"center",marginBottom:"20px",marginTop:"30px"}}>
+                       <div style={{textAlign:"center",display:"flex",justifyContent:"center"}}>
                                 {
                                     spinner ? <Spinner></Spinner> : null
                                 }

@@ -134,6 +134,40 @@ export default function MyEditor (){
       UserId:"",
     });
     
+    function uploadAdapter(loader) {
+      return {
+        upload: () => {
+          return new Promise((resolve, reject) => {
+            const body = new FormData();
+            loader.file.then((file) => {
+              body.append("files", file);
+              // let headers = new Headers();
+              // headers.append("Origin", "http://localhost:3000");
+              fetch(`http://localhost:3001/upload`, {
+                method: "post",
+                body: body
+                // mode: "no-cors"
+              })
+                .then((res) => res.json())
+                .then((res) => {
+                  resolve({default:res.url})
+                  console.log(res)
+                 
+                })
+                .catch((err) => {
+                  reject(err);
+                });
+            });
+          });
+        }
+      };
+    }
+
+    function uploadPlugin(editor) {
+      editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+        return uploadAdapter(loader);
+      };
+    }
 
     useEffect(()=>{
 
@@ -287,29 +321,12 @@ export default function MyEditor (){
               {
                   editorLoaded ? (
                       <CKE 
-                        
-                      image={{
-                          styles:{
-                              // Defining custom styling options for the images.
-                                options: [ {
-                                    name: 'side',
-                                    
-                                    title: 'Side image new',
-                                    className: 'image-side',
-                                    modelElements: [ 'imageBlock' ]}]
-                            },
-                        }}   
-                        
-                        config={
-                            { 
+                        config={{ 
                               
-                              ckfinder:{
-                                 uploadUrl:"http://localhost:3001/upload"
-                              },
+                              extraPlugins:[uploadPlugin],
                               placeholder: "Yazmaya Baslayabilirsin :)",
                               //toolbar:['heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList']
-                            }
-                          } 
+                          }} 
                         onReady={()=> console.log(document.querySelector("#editor"))}
                         onChange={(event,editör)=>changehandler(event,editör,"content")}
                         data={contentpart["content"]}

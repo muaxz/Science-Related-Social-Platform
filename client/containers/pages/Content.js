@@ -6,7 +6,9 @@ import {Producecommentreq,Commentreq,Commentanswerreq,Editcomment} from "../../A
 import {createusercontext} from "../../context/Usercontext";
 import Commentpart from '../../components/pages/Content/Commentsection/Commentpart';
 import useScroll from "../../hooks/Scroll"
+import useClickOutside from "../../hooks/Clikcoutisde"
 import Parser from "react-html-parser"
+import ReportWindow from "../../components/pages/Content/reportWindow"
 
 
 
@@ -47,6 +49,7 @@ align-items:center;
 
 const Attribute=styled.div`
 display:${({active})=>active ? "block" : "none"};
+padding:8px;
 position:absolute;
 top:35px;
 right:35px;
@@ -70,14 +73,16 @@ padding:5px;
 
 export default function Content({Contentdata,comments,id}){
    
-    const {current}=useRef([{icon:"fas fa-bookmark",desc:"Gönderiyi Kaydet"},{icon:"fas fa-thumbs-up",desc:"Gönderiyi Beğen"},{icon:"fas fa-retweet",desc:"Gönderiyi Profil Sayfamda Göster"}])
+    const {current}=useRef([{icon:"fas fa-bookmark",desc:"Gönderiyi Kaydet"},{icon:"fas fa-thumbs-up",desc:"Gönderiyi Beğen"},{icon:"fas fa-retweet",desc:"Gönderiyi Profil Sayfamda Göster"},{icon:"fa-solid fa-circle-exclamation",desc:"Gonderiyi Bildir"}])
     const {bottom} = useScroll();
+    const {visible,setvisible,ref} = useClickOutside();
     const [content,setcontent]=useState(Contentdata);
     const [commentlist,setcommentlist]=useState(comments);
     const [numberofcomment,setnumbercom]=useState(0);
     const [active,setactive]=useState(false);
     const [actives,seterrmsg]=useState(false);
     const [activeproduce,setactiveproduce]=useState(false);
+    const [isReportActive,setisReportActive]=useState(false);
     const {userdata}=useContext(createusercontext);
     console.log(commentlist)
     //const {id}=router.query;
@@ -160,20 +165,30 @@ export default function Content({Contentdata,comments,id}){
             setloading:setloading,
             seteditcomment:seteditcomment
         })
+    }
 
+    const AttributeCaseHandler = (whichAttribute)=>{
+
+        if(whichAttribute == "fa-solid fa-circle-exclamation"){
+              setisReportActive(true)
+              setvisible(false)
+        }
     }
    
     return (
         <div style={{maxWidth:"950px",margin:"auto"}}>
+            {
+                isReportActive && (<ReportWindow ContentId={id} setActiveFunc={()=>setisReportActive(false)}></ReportWindow>)
+            }
             <Exteriorcontent>
                 <div>
-                    <ImageDiv>
+                    <ImageDiv ref={ref}>
                         <img src={"/car.jpg"} style={{objectFit:"cover",width:"100%",height:"100%"}} ></img>
-                        <Icon  activefunc={()=>setactive(!active)} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",top:"10px",right:"10px",color:"white",borderRadius:"50%",width:"25px",height:"25px"}}></Icon>
-                        <Attribute active={active}>
+                        <Icon  activefunc={()=>setvisible(true)} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",top:"10px",right:"10px",color:"black",borderRadius:"50%",width:"25px",height:"25px",backcolor:"lightgrey",hovercolor:"black",backcolor:"grey",lineheight:"25px"}}></Icon>
+                        <Attribute active={visible}>
                             {current.map(item=>(
-                            <Attributeholder key={item.icon}>
-                                <Icon className={item.icon} Iconconfig={{width:"28px",height:"28px"}}></Icon>
+                            <Attributeholder onClick={()=>AttributeCaseHandler(item.icon)} key={item.icon}>
+                                <Icon className={item.icon} Iconconfig={{width:"28px",height:"28px",lineheight:"30px"}}></Icon>
                                 <span style={{marginLeft:"5px",fontSize:"13px"}}>{item.desc}</span>
                             </Attributeholder>  
                             ))}

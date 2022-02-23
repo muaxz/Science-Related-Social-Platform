@@ -3,10 +3,11 @@ import Head from "next/head";
 import Mainlayout from "../../containers/Layout/mainlayout";
 import Guardlayout from "../../containers/Layout/routerguard";
 import Usercontent from "../../containers/pages/Usercontent";
-import {Global} from "../../components/styledcomponents/button"
+import {Global} from "../../components/styledcomponents/Globalstyles"
 import axios from 'axios';
 
 export default function Draftpage({content}) {
+    console.log(content)
     return (
         <React.Fragment>
             <Head>
@@ -19,11 +20,11 @@ export default function Draftpage({content}) {
     )
 }
 
-export async function getServerSideProps({query}){
+export async function getServerSideProps({query,req}){
 
     try {
 
-        const {data} =await axios.get(`http://localhost:3001/content/usercontent/Draft/${query.userid}/10`)
+        const {data}  =await axios.get(`http://localhost:3001/content/usercontent/Draft/${query.userid}/10`,{headers:{Cookie:req.headers.cookie}})
 
         if(data && data.error){
 
