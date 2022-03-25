@@ -165,7 +165,7 @@ color:white;
 //ToDo 
 export default function Navigation({Data,Count,Reloadfunc,Update}){
  
-
+    console.log(Data)
     const {logged,spinner,userdata,setspinner,setuserdata,setlogged} = useContext(createusercontext);
     const {ref,visible,setvisible} = useClickoutsie();
     const {ref:ref2,visible:visible2,setvisible:setvisible2} = useClickoutsie();
@@ -309,7 +309,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                     <Input onKeyUp={Keyupfunction} value={inputvalue} onChange={Changehandler} placeholder="Ara"></Input>
                     {
                         inputvalue.length <= 0 ?
-                        <div style={{position:"absolute",right:"15px",top:"10px",width:"20px"}}>
+                        <div style={{position:"absolute",right:"15px",top:"13px",width:"20px"}}>
                            <Iconsecure className="fas fa-search"></Iconsecure>
                         </div>
                         :

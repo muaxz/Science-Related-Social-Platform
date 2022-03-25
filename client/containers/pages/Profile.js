@@ -202,12 +202,8 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
    },[bottom])
 
     useEffect(()=>{
-
-        const optionobj={...options};
-        optionobj[query.name].bottom=true;
-        setoptions(optionobj);
-
-    },[])
+        Handleoptions(query.name)
+    },[query])
 
     useEffect(()=>{
          

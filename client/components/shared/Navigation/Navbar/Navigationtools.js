@@ -61,7 +61,8 @@ export default function Navigationtools({optnumber,optname,Navdata,Logout}){
             {name:"Follow",idname:"UserId",desc:"Seni Takip Etti",Icon:"fas fa-user-plus fa-sm",color:"#ee6055",lh:"30px",href:"/profile"},
             {name:"Comment",idname:"ContentId",desc:"Gönderine Yorum Yaptı.",Icon:"fas fa-comment-dots",color:"#adb5bd",lh:"30px",href:"/content"},
             {name:"Post",desc:"Yeni Bir Gönderi Paylaştı",Icon:"fas fa-edit",color:"#fca311",lh:"30px"},
-            {name:"Debate",desc:"Yeni Bir grup Oluşturdu.",Icon:""}];
+            {name:"Message",desc:"Mod Feedback !",Icon:"",idname:"ContentId",href:"/content"},
+        ];
 
         if(Navdata.length == 0)
         {
@@ -93,17 +94,20 @@ export default function Navigationtools({optnumber,optname,Navdata,Logout}){
                     if(item.ContentId == null && item.CommentId == null){
                            
                     }
+
+                    var ReportDiv = <p style={{fontWeight:"bold",fontSize:"15px"}}>{item.ReportMessage}</p>
+                    
      
                     return (<Option1div key={index} check={item.Facecheck}>
                               <Link href={{pathname:`${myitemobj.href}/${item[myitemobj.idname]}`,query:{name:"Post"}}}>
                                 <div style={{display:"flex",alignItems:"center"}}>
                                      <div>
-                                      <Porfileimage profile="/alpay.PNG" width="50px" height="50px"/>
+                                      <Porfileimage profile={!item.User ?  "warning.png" : "/alpay.PNG"} width="50px" height="50px"/>
                                      </div>
                                      <Icon className={myitemobj.Icon} Iconconfig={{position:"absolute",top:"40px",right:"10px",color:"white",backcolor:myitemobj.color,width:"30px",height:"30px",lineheight:myitemobj.lh}}></Icon>
                                      {/*<Icon className={"fas fa-star fa-sm"} Iconconfig={{position:"absolute",top:"-8px",right:"-2px",color:"#72ddf7",width:"17px",height:"17px",lineheight:"17px"}}></Icon>*/}
                                      <div style={{marginLeft:"20px"}}>
-                                        <p style={{fontWeight:"bold",fontSize:"15px"}}>{item.User.firstname + " " + item.User.lastname + " , (Osmanlı Halkınını Eğitim Seviyesi...)"}</p>
+                                        {!item.UserId ? ReportDiv : <p style={{fontWeight:"bold",fontSize:"15px"}}>{item.User.firstname + " " + item.User.lastname + " , (Osmanlı Halkınını Eğitim Seviyesi...)"}</p> }
                                         <p style={{fontSize:"13px",color:"#757575",fontWeight:"bold"}}>{myitemobj.desc}</p>
                                         <p style={{fontSize:"13px",color:"#1780a1",fontWeight:"bold"}}>{calculatedate(item.createdAt).time + " " + calculatedate(item.createdAt).express} önce </p>
                                      </div>

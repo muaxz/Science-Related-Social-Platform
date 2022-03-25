@@ -2,7 +2,8 @@ const Content=require("../models/Contentmodel");
 const User=require("../models/Usermodel");
 const Usercontent=require("../models/UserContent");
 const Comment=require("../models/Commentmodel");
-const Seq=require("sequelize");
+const Report = require("../models/ReportModel")
+const {Op}=require("sequelize");
 const UserUser = require("../models/UserUser");
 const Notification=require("../models/Notificationmodel");
 
@@ -67,11 +68,57 @@ exports.produce=async (req,res,next)=>{
   }
 }
 
+exports.getAllContentsForModStuff = (req,res,next)=>{
+    
+    const {searchValue,category} = req.params; 
+    const WhereProperty = {}
+    if(searchValue !== "Default"){
+      WhereProperty.searchValue = searchValue
+    }
+    
+    WhereProperty.category = category
+
+    try {
+
+      const Contents = Content.findAll({
+        where:{
+          title:{[Op.startsWith]:`${searchValue}`},
+          category:category
+        },
+        include:{
+          model:User,
+          as:"personal",
+          attributes:["id","firstname","imageurl","lastname","Role"],
+        },
+      })
+
+      res.json({data:Contents})
+
+    } catch (error){
+
+      return next()
+
+    }
+
+}
+
+exports.contentSearchingForModStuff=()=>{
+
+  try {
+    
+  } catch (error) {
+    
+  }
+
+}
+
 exports.gethome=async(req,res,next)=>{
 
   
   const {number,category}=req.params;
-  var newnum=parseInt(number);//paramstand string olarak alıyoruz
+  console.log(number)
+  console.log(category)
+  var offsetValue = parseInt(number);//paramstand string olarak alıyoruz
 
   try {
     //beğenenler,yorumlar
@@ -83,7 +130,7 @@ exports.gethome=async(req,res,next)=>{
       },
       attributes:["id","titleimage","title","subtitle","content","createdAt","updatedAt"],
       limit:10,
-      offset:newnum,
+      offset:offsetValue,
      
       include:[
         {
@@ -300,7 +347,7 @@ exports.getcontent=async (req,res,next)=>{
   const {id} = req.params;
 
   try {
-    //TODO including comments and users (with nested include)
+    //TODO we need the post which has "published" attribute !!
     const Mycontent=await Content.findOne({
       where:{id:id},
       attributes:["id","titleimage","title","subtitle","content","catagories"],
@@ -332,5 +379,79 @@ exports.getcontent=async (req,res,next)=>{
     next();
     return;
   }
+}
+
+//Report section EDITOR STUFF !
+
+exports.getReportedPosts = async (req,res,next)=>{
+
+   const {UserId} = req.userdata;
+
+   const currentUser = await User.findOne({
+     where:{id:UserId}
+   })
+
+   try {
+
+     if(currentUser.Role == "Mod"){
+          var reports = await Report.findAll({
+            include:{
+              model:Content,
+              include:{
+                model:User,
+                as:"personal",
+                attributes:["id","firstname","lastname","imageurl"]
+              }
+            }
+        })
+     }
+
+    
+     return res.json({data:reports})
+     
+   } catch (error){
+
+     return next();
+
+   }
+     
+}
+
+
+exports.makeThePostUnpublic = async (req,res,next)=>{
+
+    const {contentID,publicValue} = req.body
+    console.log(publicValue)
+
+    try {
+      
+      await Content.update({phase:publicValue ? "Published" : "Unpublished" },{where:{id:contentID}})
+
+      return res.json({state:"success"})
+
+    } catch (error) {
+
+      return next();
+
+    }
+
+}
+
+exports.reportDeletion = async (req,res,next)=>{
+
+  const {reportID} = req.body
+
+  try {
+
+    await Report.destroy({where:{id:reportID}})
+
+    return res.json({state:"success"})
+
+  } catch (error) {
+
+    return next();
+
+  }
+
 }
 

@@ -43,7 +43,7 @@ const User = sequlize.define("User",{
     },
     Role:{
         type:Sequlize.ENUM,
-        values:["User","Admin","Editör"],
+        values:["User","Admin","Mod"],
         defaultValue:"User"
     },
     Banned:{

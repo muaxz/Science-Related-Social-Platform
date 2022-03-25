@@ -221,6 +221,15 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             msg:"",
             errormsg:""
         },
+        CurrentPasswordForEmail:{
+            activate:false,
+            value:"",
+            label:"Sifreniz",
+            warning:false,
+            multiline:false,
+            msg:"",
+            errormsg:"Sifreni yanlis girdin galiba, tekrar dene !"
+        },
         email:{
             activate:false,
             value:editdata.email,
@@ -294,7 +303,6 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             for (const key in copy){
                 copy[key].activate = false
                 copy[key].warning  = false
-                console.log(copy[key].activate)
             }
 
     
@@ -303,6 +311,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                 if(selected == 1){
 
                     copy["email"].activate = true 
+                    copy["CurrentPasswordForEmail"].activate = true
 
                 }else if(selected == 2){
                     

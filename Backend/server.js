@@ -20,6 +20,7 @@ const Hr = require("sequelize-hierarchy")
 const formidablemiddleware = require("express-formidable")
 const cookieparser = require("cookie-parser")
 const fileupload = require("express-fileupload")
+const port =  Process.env.PORT || 3000 
 
 
 
@@ -59,7 +60,7 @@ app.use((error,req,res,next)=>{
     return res.status(500).json({error:"Somethingwentwrong!"})
 })
 
-Myserver.listen("3001",()=>{console.log("server started")})
+Myserver.listen(port,()=>{console.log("server started")})
 
 
 

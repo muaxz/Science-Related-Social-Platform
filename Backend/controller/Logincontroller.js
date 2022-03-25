@@ -9,18 +9,18 @@ exports.login = async (req,res,next)=>{
 
    try{
 
-      const {email,password}=req.body.userdata;
+      const {email,password} = req.body.userdata;
      
-      const user=await User.findOne({where:{email:email}});
+      const user = await User.findOne({where:{email:email}});
          
     
       if(user){
 
-         const mydata={
+         const mydata = {
             UserId:user.id,
             Username:user.firstname,
             Usersurname:user.lastname,
-            Userrole:user.role,
+            Userrole:user.Role,
             Userimage:user.imageurl,
          }
          
@@ -83,7 +83,6 @@ exports.register = async (req,res,next)=>{
             password:hashedpassword,
             Notification:{
                Whenfollow:true,
-
                Whenlike:true,
                Whencomment:true,
             }

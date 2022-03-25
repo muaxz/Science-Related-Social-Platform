@@ -23,7 +23,12 @@
 
 .ck-content{
     max-width:582px; 
-    
+}
+
+.ck-content img{
+    max-width: 300px;
+    height: 200px;
+    object-fit: cover;
 }
 
 

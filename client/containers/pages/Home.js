@@ -9,6 +9,7 @@ import useScroll from "../../hooks/Scroll";
 import {Spinner} from "../../components/styledcomponents/Globalstyles"
 import uniqid from "uniqid";
 import { ArrowBackIos, ArrowForwardIos, FormatQuote } from '@material-ui/icons';
+import SelectionPart from "../../components/pages/Main/SelectionPart"
 
 
 
@@ -21,13 +22,9 @@ const CssTextField = makeStyles({
 });
 
 const Flexdiv=styled.div`
-display:flex;
-justify-content:space-between;
 max-width:1250px;
 width:100%;
-@media (max-width:940px){
-    justify-content:center;
-}
+margin:auto;
 `
 const TitleDiv=styled.div`
 width:100%;
@@ -40,11 +37,12 @@ background-position: center;
 `
 
 const ContentDiv=styled.div`
-max-width:650px;
-padding-top:30px;
+display:flex;
+flex-wrap:wrap;
+justify-content:space-between;
+width:1200px;
+padding-top:60px;
 width:100%;
-padding-right:25px;
-border-right:2px solid lightgrey;
 @media (max-width:940px){
     justify-content:center;
     padding-left:25px;
@@ -109,13 +107,26 @@ right:${({rightvalue})=>rightvalue};
 box-shadow:10px 10px 60px 30px white;
 `
 const Container=styled.div`
-padding-left:100px;
 @media (max-width:940px){
  padding-left:0;
 }
 `
 //flex-shrink kutuların belirlenen boyuttan aşagı inmemesini saglıyor
 
+const BackgroundHome = styled.div`
+position:relative;
+max-width:1600px;
+width:100%;
+height:400px;
+`
+
+const Trial = styled.div`
+position:absolute;
+bottom:0;
+height:50px;
+width:100%;
+box-shadow: rgba(50, 50, 93, 1) 0px 30px 60px -12px, rgba(222, 222, 222, 0.9) 0px 18px 36px -18px;
+`
 
 
 export default function Home({mydata}){
@@ -152,7 +163,7 @@ export default function Home({mydata}){
             stoprequesting:false,
         },    
     })
-    const [selectedkey,setselectedkey]=useState("Felsefe");
+    const [selectedKey,setSelectedKey]=useState("Felsefe");
     const [windowlist,setwindowlist]=useState({
         list:[],
         attribute:"",
@@ -160,50 +171,27 @@ export default function Home({mydata}){
     const [stoprequesting,setstopreq]=useState(false);
     const [spinner,setspinner]=useState(false);
 
-    console.log(mydata)
+    
+
     useEffect(()=>{
 
-        
-        if(!selectionlist[selectedkey].stoprequesting && bottom){
-           
-            setspinner(true);
-            Homereq({
-                currentdata:contentdata,
-                setcontentdata:setcontentdata,
-                order:order, 
-                setspinner:setspinner,
-                paignation:true,
-                selectionlist:selectionlist,
-                setselection:setselectionlist,
-                category:selectedkey,
-                seterrmsg:seterror,
-            })
+          if(bottom){
 
-        }
+                Homereq({
+                    currentdata:contentdata,
+                    setcontentdata:setcontentdata,
+                    order:order, 
+                    setspinner:setspinner,
+                    paignation:true,
+                    selectionlist:selectionlist,
+                    setselection:setselectionlist,
+                    category:selectedKey,
+                    seterrmsg:seterror,
+                })
+          }
 
     },[order])
 
-    const Requestagain=(keyname)=>{
-
-        const selections = {...selectionlist};
-        selections[keyname].stoprequesting = false;
-        setselectionlist(selectionlist);
-
-        setspinner(true);
-        setorder(0);
-        Homereq({
-            currentdata:contentdata,
-            setcontentdata:setcontentdata,
-            setselection:setselectionlist,
-            selectionlist:selectionlist,
-            order:0,
-            setspinner:setspinner,
-            category:keyname,
-            paignation:false,
-            seterrmsg:seterror,
-        })
-        
-    }
 
   
     const Setslidevalue=(value)=>{
@@ -218,9 +206,12 @@ export default function Home({mydata}){
 
 
     useEffect(()=>{
-        console.log(bottom);
+        
+
         if(bottom){
+
             setorder(contentdata.length); 
+
         }
 
     },[bottom])
@@ -236,30 +227,6 @@ export default function Home({mydata}){
         })
     }
     
-    const Selectionhander = (keyname) =>{
-        
-       window.scrollTo({top:350,behavior:"auto"})
-       
-       if(keyname == selectedkey){
-         return;
-       }
-       
-       else{
-           
-            const Mutated = {...selectionlist};
-
-            for (const key in Mutated) {
-                Mutated[key].selected=false;
-            }
-            Mutated[keyname].selected = true;
-    
-            Requestagain(keyname);
-            setselectionlist(Mutated);
-            setselectedkey(keyname)
-       }
-      
-      
-    }
 
     const Showfollowers=(statelist,type)=>{
         
@@ -273,66 +240,43 @@ export default function Home({mydata}){
 
     return (
         <div style={{height:`${windowlist.list.length > 0 ? "100vh" : "100%"}`,overflow:windowlist.list.length > 0 ? "hidden": "visible"}}> 
+               {windowlist.list.length > 0 ?
+
+                <Showfollower setlist={()=>setwindowlist(prev=>{return {...prev,list:[]}})} attribute={windowlist.attribute} list={windowlist.list}></Showfollower>
+
+                : null}
+                <BackgroundHome>
+                    <img style={{width:"100%",height:"100%",objectFit:"cover"}} src={"/fourrealman.jpg"}></img>
+                    <Trial></Trial>
+                </BackgroundHome>
             <Container>
-                {windowlist.list.length > 0 ?
-
-                  <Showfollower setlist={()=>setwindowlist(prev=>{return {...prev,list:[]}})} attribute={windowlist.attribute} list={windowlist.list}></Showfollower>
-
-                : null
-                
-                }
+                <SelectionPart keyName={selectedKey} setSelectedKey={setSelectedKey} listContent={contentdata} setListContent={setcontentdata}></SelectionPart>
                 <Flexdiv>
                     <ContentDiv>
-                            <ShortDiv>
-                                <Iconholder onClick={()=>Setslidevalue("Back")} leftvalue="0" rightvalue={""}>
-                                   <i style={{color:"red"}} class="fas fa-chevron-left"></i>
-                                </Iconholder>
-                                <Iconholder onClick={()=>Setslidevalue("forward")} leftvalue={""} rightvalue="0">
-                                   <i style={{color:"black"}} class="fas fa-chevron-right"></i>
-                                </Iconholder>   
-                                <InnershortDiv slidevalue={slidevalue+"px"}>
-                                    {
-                                        Object.keys(selectionlist).map((item)=>{
-
-                                            return (
-                                                <Selectionboxes selected={selectionlist[item].selected} onClick={()=>Selectionhander(item)}>
-                                                    <span>{item}</span>                           
-                                                </Selectionboxes>
-                                            )
-
-                                        })
-                                    }
-                                </InnershortDiv>
-                                </ShortDiv> 
-
-                       <div style={{textAlign:"center",display:"flex",justifyContent:"center"}}>
-                                {
-                                    spinner ? <Spinner></Spinner> : null
-                                }
-                        </div>
-
                         {
 
                             contentdata.map((item,index)=>(
-                                <Contentcard 
-                                postId={item.id}
-                                content={item.content}
-                                createrelationforsmh={createrelation}
-                                showwindow={(stateoflist,type)=>Showfollowers(stateoflist,type)}
-                                like={item.Like}//bu bir obje array
-                                retweet={item.Retweet}
-                                comment={item.allcomments}
-                                readlater={item.Readlater}
-                                key={uniqid()}//key numarası
-                                followeds={item.personal.Followed}
-                                title={item.title}
-                                titleimage={"yaprak.jpg"}
-                                userfirstname={item.personal !== null ? item.personal.firstname : "notyet"}
-                                usersurname={item.personal !== null ? item.personal.lastname : "notyet"}//bir obje props
-                                userid={item.personal !== null ? item.personal.id: "notyet"}
-                                subtitle={item.subtitle}
-                                date={item.createdAt}
-                                />
+                                <div style={{padding:"20px",maxWidth:"600px"}}>
+                                    <Contentcard 
+                                        postId={item.id}
+                                        content={item.content}
+                                        createrelationforsmh={createrelation}
+                                        showwindow={(stateoflist,type)=>Showfollowers(stateoflist,type)}
+                                        like={item.Like}//bu bir obje array
+                                        retweet={item.Retweet}
+                                        comment={item.allcomments}
+                                        readlater={item.Readlater}
+                                        key={uniqid()}//key numarası
+                                        followeds={item.personal.Followed}
+                                        title={item.title}
+                                        titleimage={"yaprak.jpg"}
+                                        userfirstname={item.personal !== null ? item.personal.firstname : "notyet"}
+                                        usersurname={item.personal !== null ? item.personal.lastname : "notyet"}//bir obje props
+                                        userid={item.personal !== null ? item.personal.id: "notyet"}
+                                        subtitle={item.subtitle}
+                                        date={item.createdAt}
+                                    /> 
+                                </div>
                             ))
                         }
                     </ContentDiv>

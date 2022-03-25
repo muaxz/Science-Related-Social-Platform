@@ -1,4 +1,4 @@
-const Notificationmodel=require("../models/Notificationmodel");
+const NotificationModel=require("../models/NotificationModel");
 const Usermodel=require("../models/Usermodel");
 const Contentmodel=require("../models/Contentmodel");
 const Commentmodel=require("../models/Commentmodel");
@@ -12,7 +12,7 @@ exports.getrows=async(req,res,next)=>{
     
     try {
 
-                const data = await Notificationmodel.findAll({
+                const data = await NotificationModel.findAll({
                     where:{
                         TakerId:{[Op.substring]:`${UserId}`}
                     },
@@ -51,7 +51,7 @@ exports.getcount = async(req,res,next)=>{
 
    try {
          
-    const count = await Notificationmodel.count({
+    const count = await NotificationModel.count({
         where:{
             Facecheck:false,
             TakerId:{[Op.substring]:`${UserId}`}
@@ -72,7 +72,7 @@ exports.Updatecount = async(req,res,next)=>{
     const {UserId} = req.params;
     try {
     
-        const record = await Notificationmodel.findAll({where:{
+        const record = await NotificationModel.findAll({where:{
                 Facecheck:false,
                 TakerId:{[Op.substring]:`${UserId}`}
             }
@@ -91,4 +91,30 @@ exports.Updatecount = async(req,res,next)=>{
          next();
          console.log(error)
     }
+}
+
+exports.sendReportMessage = async (req,res,next)=>{
+
+    const {reportMessage,TakerId,ContentId} = req.body
+    const io = req.app.get("socketio");
+    console.log("in report message")
+    try {
+
+       await NotificationModel.create({
+            attribute:"Message",
+            TakerId:[TakerId],
+            ContentId:ContentId,
+            ReportMessage:reportMessage,
+            UserId:null,
+        })
+
+        io.sockets.in(TakerId).emit("Notification","");
+        res.json("success")
+
+    } catch (error){
+        console.log(error)
+        return next();
+
+    }
+
 }

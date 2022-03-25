@@ -105,24 +105,12 @@ text-align:right;
 
 const Lefttoolbar=({makeactive,myactive})=>{
     
-    const {userdata,logged}=useContext(createusercontext);
-    const firstlist=useRef([{icon:"fas fa-bookmark",desc:"Kaydedilenler",path:`saved`},{icon:"fas fa-thumbs-up",desc:"Beğenilenler",path:`liked`}])
-    const secondlist=useRef([{icon:"fas fa-edit",desc:"Gönderilerim",path:"/gönderiler"},{icon:"fas fa-users",desc:"Tartışmalarım",path:"/tartışmalar"}])
-    const thirdlist=useRef([{icon:"fas fa-pencil-ruler",desc:"Taslaklar",path:`Drafts`}])
+    const {userdata,logged,Userrole}=useContext(createusercontext);
+    const firstlist = useRef([{icon:"fas fa-bookmark",desc:"Kaydedilenler",path:`saved`},{icon:"fas fa-thumbs-up",desc:"Beğenilenler",path:`liked`}])
+    const secondlist = useRef([{icon:"fas fa-edit",desc:"Gönderilerim",path:"/gönderiler"},{icon:"fas fa-pencil-ruler",desc:"Taslaklar",path:`Drafts`}])
+    const thirdlist = useRef([{icon:"fa-solid fa-flag",desc:"Raporlar",path:`reportcontrol`},{icon:"fa-solid fa-list-check",desc:"Gonderi Kontrol",path:`postcontrol`}])
     
-    useEffect(() => {
-
     
-        var myli = document.querySelector(".getli")
-        if(myli){
-            myli.addEventListener("mouseover",(e)=>{
-                e.stopPropagation()
-            })  
-        }
-       
-      
-
-    }, [userdata])
 
     return (
         <div>
@@ -181,19 +169,25 @@ const Lefttoolbar=({makeactive,myactive})=>{
                             ))}        
                         </ul>
                 </NavigationDiv>
-                <NavigationDiv>     
-                    <hr></hr>
-                        <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
+                <NavigationDiv>    
+                  <hr></hr>
+                    {
+                        userdata.Userrole == "Mod" ? 
+                        (<ul style={{width:"100%",display:"flex",padding:"0px",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
                             {thirdlist.current.map((item)=>(
-                                <Link href="/Drafts/[userid]" as={`/Drafts/${userdata.UserId}`}> 
+                                <Link href={`/${item.path}`}> 
                                     <Li leftbaractive={myactive}>
-                                        <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>   
+                                        <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>  
+                                        <span style={{position:"absolute",fontSize:"12px",top:"-5px",left:"5px",width:"20px",display:"block",height:"20px",textAlign:"center",lineHeight:"15px",backgroundColor:"#d90429",color:"white",borderRadius:"50%",border:"2px solid #11101d"}}>14</span>
                                         <Spanfordesc  leftbaractive={myactive}>{item.desc}</Spanfordesc> 
                                         <Rightsidedesc >{item.desc}</Rightsidedesc>
                                     </Li>
                                 </Link>
                             ))}        
-                        </ul>
+                        </ul>)
+                    : null
+                    } 
+                
                 </NavigationDiv>
                 </InnerDiv>
             </ExteriorDiv>

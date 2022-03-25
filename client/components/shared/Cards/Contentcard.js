@@ -5,10 +5,10 @@ import {Porfileimage,Spinner} from "../../styledcomponents/Globalstyles";
 import Link from "next/link";
 import {useRouter} from "next/router"
 import Icon from "../../UI/Icon"
-import {AddComment,feed,Feedback,Send,Delete, Edit} from "@material-ui/icons"
+import {AddComment,feed,Feedback,Send,Delete, Edit,FavoriteBorder} from "@material-ui/icons"
 import {calculatedate} from "../../../utilsfunc"
 import useClickoutside from "../../../hooks/Clikcoutisde";
-import { TextField , Button,InputAdornment} from '@material-ui/core';
+import { TextField , Button,InputAdornment,Checkbox} from '@material-ui/core';
 import {CreateNightMode} from "../../../context/Nightmode"
 
 
@@ -29,13 +29,12 @@ const Newcommentanimation=keyframes`
 
 const Outsidediv=styled.div`
 position:relative;
-margin:auto;
 height:${({draft})=> draft ? "300px" : ""};
-margin-bottom:30px;
 width:100%;
+margin-bottom:20px;
 background-color:${({nightmode})=> !nightmode ? "#faf9f9": "#1F1B24"};
 border-radius:7px;
-box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
 animation-duration:2s;
 animation-timing-function:ease-in-out;
 animation-name:${({animation,timing})=>{
@@ -90,6 +89,7 @@ display:${({foruser})=>foruser ? "block":"flex"};
 const Toolbar=styled.div`
 display:${({foruser})=>foruser ? "none" : "flex"};
 padding-left:15px;
+padding-bottom:5px;
 border-radius:5px;
 `
 
@@ -136,7 +136,6 @@ font-size:16px;
 transition-duration:0.5s;
 width:30px;
 height:30px;
-padding:5px;
 border-radius:50%;
 cursor:pointer;
 animation-duration:0.3s;
@@ -403,15 +402,18 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
                             {
                                 !draft ?
                                   <React.Fragment>
-                                        <Optionholder style={{display:userdata.UserId ? "flex" : "none"}}>
-                                            <Icon className="fas fa-user-minus" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
-                                            <div style={{marginLeft:"8px",color:"#757575"}}>
-                                                <span style={{color:"black",textTransform:"capitalize"}}>{userfirstname}</span>
-                                                <span style={{color:"black",textTransform:"capitalize",marginLeft:"5px"}}>{usersurname+`'i`}</span>
-                                                <span style={{marginLeft:"10px"}}>{isfollowing ? "Takipten Cik" : "Takip Et"}</span>
-                                                <p style={{fontSize:"13px",textTransform:"capitalize"}}>Bu kullanıcıdan gelen bildirimleri görme</p>
-                                            </div>
-                                        </Optionholder>
+                                        {
+                                            userid !== userdata.UserId &&
+                                            <Optionholder style={{display:userdata.UserId ? "flex" : "none"}}>
+                                                <Icon className="fas fa-user-minus" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                                <div style={{marginLeft:"8px",color:"#757575"}}>
+                                                    <span style={{color:"black",textTransform:"capitalize"}}>{userfirstname}</span>
+                                                    <span style={{color:"black",textTransform:"capitalize",marginLeft:"5px"}}>{usersurname+`'i`}</span>
+                                                    <span style={{marginLeft:"10px"}}>{isfollowing ? "Takipten Cik" : "Takip Et"}</span>
+                                                    <p style={{fontSize:"13px",textTransform:"capitalize"}}>Bu kullanıcıdan gelen bildirimleri görme</p>
+                                                </div>
+                                            </Optionholder>   
+                                        }
                                         <Optionholder>
                                             <Icon className="fas fa-link" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
                                             <div style={{marginLeft:"8px",color:"#757575"}}>
@@ -438,7 +440,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
               </div>
 
               : 
-              //comment report
+              //Comment Report 
               <div ref={ref}>
                 <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-v" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
                 {
@@ -502,7 +504,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
 
                     <Imageholder>
                         <Imagediv>
-                                <Img src={titleimage}></Img>
+                                <Img style={{borderRadius:"7px"}} src={titleimage}></Img>
                         </Imagediv>
                     </Imageholder>
                }

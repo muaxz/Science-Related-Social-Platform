@@ -244,11 +244,15 @@ export default function MyEditor (){
     
     const Submitpost=(typeofsubmit)=>{
 
-        if(typeofsubmit == "Waiting"){
-          textref.current="Postun Editöre Gönderildi"
+        if(typeofsubmit == "Published"){
+
+          textref.current="Postun Yayinlandi !"
+
         }
         else{
+
           textref.current="Taslak Olarak kaydedildi"
+          
         }
         
         producereq({
@@ -282,7 +286,7 @@ export default function MyEditor (){
                   <p style={{marginBottom:"10px",color:"white"}}>Tahmini Yayınlanma Süresi</p>
                   <Input style={{padding:"6px"}}  value="2013-01-08" type="date"  onChange={(event)=>changehandler(event,"","title")} placeholder="Başlık..."></Input>
               </InputHolder>
-            <InputHolder><Corebutton onClick={()=>Submitpost("Waiting")}  style={{width:"100%",backgroundColor:"#ef233c",textTransform:"capitalize"}} color="secondary" variant="contained">Gönder</Corebutton></InputHolder>
+            <InputHolder><Corebutton onClick={()=>Submitpost("Published")}  style={{width:"100%",backgroundColor:"#ef233c",textTransform:"capitalize"}} color="secondary" variant="contained">Gönder</Corebutton></InputHolder>
             <InputHolder><Corebutton onClick={()=>Submitpost("Draft")}   style={{width:"100%",backgroundColor:"#2ec4b6",textTransform:"capitalize"}} color="secondary" variant="contained">Taslak Olarak Sakla</Corebutton></InputHolder>
         </Leftside>
         <Postdiv>

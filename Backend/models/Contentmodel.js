@@ -27,7 +27,7 @@ const Content=sequlize.define("Content",{
     },
     phase:{
         type:Sequlize.ENUM,
-        values:["Waiting","Published","NotAllowed","Draft"],
+        values:["Published","Unpublished","Draft"],
         allowNull:true,
     },
     catagories:{

@@ -73,7 +73,7 @@ padding:5px;
 
 export default function Content({Contentdata,comments,id}){
    
-    const {current}=useRef([{icon:"fas fa-bookmark",desc:"Gönderiyi Kaydet"},{icon:"fas fa-thumbs-up",desc:"Gönderiyi Beğen"},{icon:"fas fa-retweet",desc:"Gönderiyi Profil Sayfamda Göster"},{icon:"fa-solid fa-circle-exclamation",desc:"Gonderiyi Bildir"}])
+    const attributeList =useRef([{icon:"fas fa-bookmark",desc:"Gönderiyi Kaydet"},{icon:"fas fa-thumbs-up",desc:"Gönderiyi Beğen"},{icon:"fas fa-retweet",desc:"Gönderiyi Profil Sayfamda Göster"},{icon:"fa-solid fa-circle-exclamation",desc:"Gonderiyi Bildir"}])
     const {bottom} = useScroll();
     const {visible,setvisible,ref} = useClickOutside();
     const [content,setcontent]=useState(Contentdata);
@@ -87,7 +87,19 @@ export default function Content({Contentdata,comments,id}){
     console.log(commentlist)
     //const {id}=router.query;
   
- 
+    useEffect(()=>{
+   
+      if(userdata.UserId && userdata.UserId == Contentdata.personal.id){
+
+        var currentRef = attributeList.current;
+        currentRef.splice(3,1);
+        attributeList.current = currentRef
+         
+      }
+
+    },[userdata])
+    
+
     useEffect(()=>{
 
         if(numberofcomment > 0){
@@ -186,7 +198,7 @@ export default function Content({Contentdata,comments,id}){
                         <img src={"/car.jpg"} style={{objectFit:"cover",width:"100%",height:"100%"}} ></img>
                         <Icon  activefunc={()=>setvisible(true)} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",top:"10px",right:"10px",color:"black",borderRadius:"50%",width:"25px",height:"25px",backcolor:"lightgrey",hovercolor:"black",backcolor:"grey",lineheight:"25px"}}></Icon>
                         <Attribute active={visible}>
-                            {current.map(item=>(
+                            {attributeList.current.map(item=>(
                             <Attributeholder onClick={()=>AttributeCaseHandler(item.icon)} key={item.icon}>
                                 <Icon className={item.icon} Iconconfig={{width:"28px",height:"28px",lineheight:"30px"}}></Icon>
                                 <span style={{marginLeft:"5px",fontSize:"13px"}}>{item.desc}</span>

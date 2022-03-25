@@ -64,7 +64,6 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
 export const logout = async({setspinner,setuserdata,setlogged})=>{
 
   try {
-
       await axios.get("/logout",{withCredentials:true})
       setlogged(false)
       setuserdata({})
@@ -144,7 +143,7 @@ export const Producecommentreq=async ({Message,TakerId,setnumbercom,setwindow,Us
 
 }
 
-export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setcontentdata,order,setstopreq,category,paignation,selectionlist,setselection})=>{
+export const Homereq=async({currentdata,seterrmsg,setwindow,setcontentdata,order,setstopreq,category,paignation,selectionlist,setselection})=>{
 
   try {
 
@@ -178,10 +177,6 @@ export const Homereq=async({currentdata,setspinner,seterrmsg,setwindow,setconten
  
       }
 
-   
-      return setspinner(false);
-    
-     
     }    
     else{
       return;
@@ -685,3 +680,46 @@ export const ReportUserReq = async({checkBoxValue,message,ContentId})=>{
     }
 
 }
+
+//Editor stuff
+
+export const makeThePostUnpublic= async ({contentID,publicValue})=>{
+
+    try {
+      
+      const {data} = await axios.post("/content/makeUnpublic",{contentID:contentID,publicValue})
+
+      console.log(data)
+
+    } catch (error) {
+      
+    }
+
+} 
+
+export const deleteTheReport= async ({reportID})=>{
+
+  try {
+    
+    const {data} = await axios.post("/content/deleteReport",{reportID:reportID})
+
+    console.log(data)
+
+  } catch (error) {
+    
+  }
+
+} 
+
+export const sendReportMessage = async ({TakerId,ContentId,reportMessage})=>{
+
+  try {
+    
+    const {data} = await axios.post("/notification/sendMessage",{ContentId:ContentId,TakerId:TakerId,reportMessage:reportMessage})
+
+    console.log(data)
+
+  } catch (error) {
+
+  }
+}  

@@ -15,7 +15,7 @@ const Notification=sequlize.define("Notification",{
     },
     attribute:{
       type:Sequlize.ENUM,
-      values:["Like","Reshow","Follow","Comment","Post","Debate"],
+      values:["Like","Reshow","Follow","Comment","Post","Message"],
       allownull:true,
     },
     TakerId:{
@@ -31,6 +31,9 @@ const Notification=sequlize.define("Notification",{
     Facecheck:{
         type:Sequlize.BOOLEAN,
         defaultValue:false,
+    },
+    ReportMessage:{
+        type:Sequlize.STRING(255),
     }
    
 })
