@@ -16,11 +16,9 @@ const Myserver=require("http").createServer(app);
 const io = require("socket.io")(Myserver,{cors:{origin:"http://localhost:3000"}})
 const Userrouter=require("./routes/userrouter");
 const Notifyrouter=require("./routes/Notificationroute");
-const Hr = require("sequelize-hierarchy")
-const formidablemiddleware = require("express-formidable")
 const cookieparser = require("cookie-parser")
 const fileupload = require("express-fileupload")
-const port =  Process.env.PORT || 3000 
+const port =  process.env.PORT || 3000 
 
 
 
