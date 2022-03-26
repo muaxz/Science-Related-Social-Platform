@@ -1,6 +1,6 @@
 const Usercontent = require("../models/UserContent");
 const Usermodel=require("../models/Usermodel");
-const {Op, where} = require("sequelize")
+const {Op} = require("sequelize")
 const Contentmodel=require("../models/Contentmodel");
 const UserUsermodel=require("../models/UserUser");
 const Notificationmodel=require("../models/Notificationmodel");
@@ -10,7 +10,7 @@ const User = require("../models/Usermodel");
 const bcrypt=require("bcrypt");
 
 
-//search bar
+//Searching User
 exports.getusername = async(req,res,next)=>{
    
   const {input} = req.params;
@@ -73,7 +73,7 @@ exports.getuserdata=async(req,res,next)=>{
 exports.getuserprofile = async (req,res,next)=>{
 
   const {UserId}=req.params;
-  console.log("getuserpfoile İÇİNDEE" + UserId)
+
   try {
      
      const Myuserdata=await Usermodel.findOne({
@@ -101,7 +101,7 @@ exports.getuserprofile = async (req,res,next)=>{
 
   } catch (error){
      next();
-     console.log(error)
+    
      return;
   }
 
@@ -529,7 +529,7 @@ exports.updateprofile = async (req,res,next)=>{
 
             }
 
-            console.log(willbeupdated)
+        
 
             await myuser.update(willbeupdated)
 
@@ -542,16 +542,16 @@ exports.updateprofile = async (req,res,next)=>{
 
         }
       } catch (error) {
-        console.log(error)
+        return next();
       }
              
   }else if(typeofupdate == "Email"){
     //code will be send to current email adress to verify the user is our real user
   }else if(typeofupdate == "Password"){
 
-      const currentuser =  await User.findOne({where:{id:UserId}})
-    
-      bcrypt.cofmpare(userproiledata.Currentpassword, currentuser.password,async(err,result)=>{
+        const currentuser =  await User.findOne({where:{id:UserId}})
+     
+        bcrypt.compare(userprofiledata.Currentpassword, currentuser.password,async(err,result)=>{
         
         if(!result)
         return res.json({state:false})  
@@ -576,7 +576,7 @@ exports.updateprofile = async (req,res,next)=>{
 
     } catch (error) {
       
-      console.log(error)
+    
       return next()
     }
   

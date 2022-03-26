@@ -13,7 +13,7 @@ exports.produce=async (req,res,next)=>{
  
   const {title,content,subtitle,catagories,UserId,processtype}=req.body;
 
-  console.log("USERIDDD  "+processtype);
+  
 
   try {  
  
@@ -63,7 +63,7 @@ exports.produce=async (req,res,next)=>{
 
   }catch(err){
       next();
-      console.log(err)
+
       return;
   }
 }

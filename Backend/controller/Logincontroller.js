@@ -51,7 +51,7 @@ exports.login = async (req,res,next)=>{
    }
    catch(err){
         //server error
-        console.log(err);
+      
         next();
         return;
    }

@@ -20,11 +20,11 @@ const getupload=multer({
 module.exports=(req,res,next)=>{
 
                 //checking phase
-                console.log(req.files)
-
+                
+                
                 const blob = firebase.bucket.file(req.files.files.name)
                             const generatedToken = v4()
-                            console.log(generatedToken)
+                         
                             const blobwriter = blob.createWriteStream({
                                     metadata:{
                                             contentType:"image/png",
@@ -36,8 +36,7 @@ module.exports=(req,res,next)=>{
                             })
                                 
                             blobwriter.on("error",(err)=>{
-                                    console.log(err)
-                                    console.log("heree")
+                                  
                             })
                                 
                             blobwriter.on("finish",(data)=>{

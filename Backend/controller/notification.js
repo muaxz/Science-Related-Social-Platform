@@ -8,7 +8,7 @@ exports.getrows=async(req,res,next)=>{
 
     const {UserId,Order,last} =req.params;
 
-    console.log("countt "+typeof(last));
+  
     
     try {
 
@@ -89,7 +89,7 @@ exports.Updatecount = async(req,res,next)=>{
 
     } catch (error) {
          next();
-         console.log(error)
+        
     }
 }
 
@@ -97,7 +97,7 @@ exports.sendReportMessage = async (req,res,next)=>{
 
     const {reportMessage,TakerId,ContentId} = req.body
     const io = req.app.get("socketio");
-    console.log("in report message")
+  
     try {
 
        await NotificationModel.create({
@@ -112,7 +112,7 @@ exports.sendReportMessage = async (req,res,next)=>{
         res.json("success")
 
     } catch (error){
-        console.log(error)
+       
         return next();
 
     }

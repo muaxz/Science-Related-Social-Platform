@@ -9,9 +9,7 @@ exports.produce=async (req,res,next)=>{
         //content-userId gerekli
         const {contentdata:{Message,ContentId,UserId,TakerId}}=req.body;
         const io = req.app.get("socketio");
-        console.log(UserId)
-        console.log(TakerId)
-        console.log(UserId == TakerId)
+       
     
       
         try {  
@@ -77,7 +75,7 @@ exports.getcomments=async (req,res,next)=>{
         order:[['createdAt',"DESC"]]
       })
 
-      console.log(comments)
+   
   
       const arr = []
       const Willbesend = {}
@@ -154,7 +152,7 @@ exports.getcomments=async (req,res,next)=>{
         }
 
   } catch (error) {
-    console.log(error)
+   
     next()
     return;
   }
@@ -186,7 +184,7 @@ exports.porduceanswer = async(req,res,next)=>{
 exports.editcomment = async(req,res,next)=>{
 
     const {message,commentID} = req.body
-    console.log("in comment edit")
+  
     try {
 
        await Comment.update({
