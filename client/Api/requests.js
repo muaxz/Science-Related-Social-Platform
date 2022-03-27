@@ -92,7 +92,7 @@ export const resigterreq=async({setbackenderror,userdata,setactive,seterrmsg})=>
       console.log("sorun var");
   }
 }
-
+//Content produce
 export const producereq=async({contentdata,seterrmsg,setwindow,router,typeofsubmit})=>{
 
   try{
@@ -315,7 +315,7 @@ export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwi
  
 
   } catch (err) {
-    console.log(err);
+    setspinner(false);
   }
 }
 

@@ -18,15 +18,15 @@ const Userrouter=require("./routes/userrouter");
 const Notifyrouter=require("./routes/Notificationroute");
 const cookieparser = require("cookie-parser")
 const fileupload = require("express-fileupload")
-const port =  process.env.PORT || 3000 
+const port =  process.env.PORT || 3001 
 
 
 
 io.on("connection",(socket)=>{ 
-    console.log("connection on socket io...");
+  
     socket.on("create",(UserId)=>{
         socket.join(UserId)
-        console.log(UserId)
+        
     })
   //ilk connection oldugunda online olan herkesi odaya kat ayri ayri yerlestir
 })
@@ -40,7 +40,7 @@ app.use(cors({origin:"http://localhost:3000",credentials:true}));
 
 DB.sync()
 .then(()=>{
-    console.log("deleted");
+  
 })
 
 app.use(cookieparser())
@@ -58,7 +58,7 @@ app.use((error,req,res,next)=>{
     return res.status(500).json({error:"Somethingwentwrong!"})
 })
 
-Myserver.listen(port,()=>{console.log("server started")})
+Myserver.listen(port,()=>{})
 
 
 
