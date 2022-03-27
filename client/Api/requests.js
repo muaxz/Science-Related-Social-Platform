@@ -315,7 +315,7 @@ export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwi
  
 
   } catch (err) {
-    setspinner(false);
+    setspinner(true);
   }
 }
 
