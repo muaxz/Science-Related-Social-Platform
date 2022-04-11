@@ -134,8 +134,7 @@ exports.contentSearchingForModStuff=()=>{
 
 exports.gethome=async(req,res,next)=>{
 
-  
-  const {UserId} = req.userdata;
+  const {number,category} = req.params;
   console.log(number)
   console.log(category)
   var offsetValue = parseInt(number);//paramstand string olarak alıyoruz

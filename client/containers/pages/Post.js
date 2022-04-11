@@ -17,6 +17,7 @@ import Window from "../../components/UI/window";
 
 
 const Ckeholder=styled.div`
+max-width:540;
 width:82%;
 padding:10px;
 margin:auto;
@@ -184,8 +185,6 @@ export default function MyEditor (){
             CKE: CKEditor,
             ClassicEditor: require( "ckeditor5-custom-build/build/ckeditor" )
         }
-
-        
 
         setEditorLoaded(true)
     }, [])

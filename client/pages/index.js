@@ -30,19 +30,9 @@ export async function getServerSideProps({req,res}){
 
     try {
         
-        if(req.headers.cookie){
+        var {data} =await axios.get(`http://localhost:3001/content/gethome/0/Felsefe`)
 
-            var {data} = await axios.get(`http://localhost:3001/content/gethome/0/Felsefe`,{headers:{Cookie:req.headers.cookie}})
-
-        }
-        else{
-
-            var {data} =await axios.get(`http://localhost:3001/content/gethome/0/Felsefe`)
-
-        }
-       
-
-
+    
         if(data && data.error){
 
             return {

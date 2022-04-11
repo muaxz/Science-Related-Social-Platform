@@ -1,7 +1,8 @@
 import React, { useState,useEffect } from 'react';
 import styled from "styled-components";
 import {Black} from "../../components/styledcomponents/Globalstyles"
-import {HighlightOffOutlined} from "@material-ui/icons"
+import {HighlightOffOutlined,SecurityOutlined} from "@material-ui/icons"
+import HtmlParser from "react-html-parser"
 
 const ExteriorDiv = styled.div`
 max-width:1200px;
@@ -15,14 +16,14 @@ const InnerDiv = styled.div`
 display:flex;
 flex-wrap:wrap;
 width:100%;
-justify-content:center;
 `
 
 const CardOutside = styled.div`
 width:400px;
 height:200px;
-padding-right:10px;
-padding-bottom:10px;
+padding-right:15px;
+padding-bottom:15px;
+cursor:pointer;
 `
 
 const CardOutsideSingle = styled.div`
@@ -41,13 +42,13 @@ const CardInner = styled.div`
 position:relative;
 display:flex;
 height:100%;
-cursor:pointer;
-overflow:hidden;
 padding:10px;
 word-break:break-word;
 width:100%;
-background-color:lightgrey;
+overflow:auto;
+background-color:#F7F5F2;
 border-radius:10px;
+box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 `
 
 const TitleImageDiv = styled.div`
@@ -84,6 +85,13 @@ top:10px;
 right:10px;
 `
 
+const CheckedIcon = styled.div`
+position:absolute;
+top:10px;
+right:10px;
+`
+
+
 const Postcontrol=({contentData})=>{
     const [selectedCard,setSelectedCard] = useState({});
     const [extendValue,setExtend] = useState(false);
@@ -107,17 +115,20 @@ const Postcontrol=({contentData})=>{
             <Black onClick={blackHandler} aktif={selectedCard.id ? true : false}></Black>
             {
                 selectedCard.id ?
-                <CardOutsideSingle extend={extendValue}>
+                <CardOutsideSingle extend={true}>
                         <CardInner>
-                            <CloseWindowIcon onClick={blackHandler}><HighlightOffOutlined style={{fontSize:"40px",color:"white"}}></HighlightOffOutlined></CloseWindowIcon>
+                            <CloseWindowIcon onClick={blackHandler}><HighlightOffOutlined style={{fontSize:"40px",color:"#F24A72"}}></HighlightOffOutlined></CloseWindowIcon>
                             <TitleImageDiv>
                                 <TitleImage src="/boxHistory.jpg"></TitleImage>
                             </TitleImageDiv>
-                            <ContentDiv>
+                            <div style={{flex:2,padding:"10px"}}>
+                                <div style={{textAlign:"center",marginBottom:"15px"}}>
                                     <TitleForSingle><b>{selectedCard.title}</b></TitleForSingle>
                                     <h4><b>{selectedCard.subtitle}</b></h4>
                                     <ContentPha>{"Post Sahibi : "+selectedCard.personal.firstname+" "+selectedCard.personal.lastname}</ContentPha>
-                            </ContentDiv>
+                                </div>
+                                <div id="editor" className="ck-content">{HtmlParser(selectedCard.content)}</div>
+                            </div>
                         </CardInner>
                 </CardOutsideSingle> : null
             }
@@ -128,6 +139,7 @@ const Postcontrol=({contentData})=>{
                         return (
                             <CardOutside extend={false} onClick={()=>setSelectedCard(item)}>
                                 <CardInner>
+                                    <CheckedIcon><SecurityOutlined style={{color:item.checked ? "#00C897" : "#E83A14"}}></SecurityOutlined></CheckedIcon>
                                     <TitleImageDiv>
                                         <TitleImage src="/boxHistory.jpg"></TitleImage>
                                     </TitleImageDiv>

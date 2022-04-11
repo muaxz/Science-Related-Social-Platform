@@ -172,7 +172,7 @@ const Lefttoolbar=({makeactive,myactive})=>{
                 <NavigationDiv>    
                   <hr></hr>
                     {
-                        userdata.Userrole == "Mod" ? 
+                        userdata.Userrole == "Mod" || userdata.Userrole == "Admin" ? 
                         (<ul style={{width:"100%",display:"flex",padding:"0px",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
                             {thirdlist.current.map((item)=>(
                                 <Link href={`/${item.path}`}> 
