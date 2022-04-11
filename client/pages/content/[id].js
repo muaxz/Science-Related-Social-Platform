@@ -33,7 +33,7 @@ export async function getServerSideProps({query}){
 
         
         const recieve = await axious.all([
-        axious.get(`content/${query.id}`),
+        axious.get(`content/Post/${query.id}`),
         axious.get(`comment/${query.id}/false/0/false`)
         ])
         //ilk 10 comment için istek atılıcak

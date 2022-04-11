@@ -27,13 +27,28 @@ ReportPage.layout=(children)=>{
 };
 
 export async function getServerSideProps({req,res}){
-   
+    
     try {
-        
-        const {data} = await axios.get("http://localhost:3001/content/getReports",{headers:{Cookie:req.headers.cookie}})
-        
+        var needRedirect = false;
+        if(req.headers.cookie){
+
+            var response = await axios.get("http://localhost:3001/content/getReports",{headers:{Cookie:req.headers.cookie}})
+            if(response.data.state == 404){
+                needRedirect = true;
+            }
+
+        }else needRedirect = true
+
+        if(needRedirect){
+            return {
+                redirect:{
+                    destination:"/404"
+                }
+            };
+        }
+
         return {
-            props:{content:data.data}
+            props:{content:response.data.data}
         }
 
     } catch (error) {

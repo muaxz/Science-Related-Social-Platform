@@ -68,31 +68,51 @@ exports.produce=async (req,res,next)=>{
   }
 }
 
-exports.getAllContentsForModStuff = (req,res,next)=>{
-    
+exports.getAllContentsForModStuff = async (req,res,next)=>{
+
+    const {UserId} = req.userdata;
     const {searchValue,category} = req.params; 
     const WhereProperty = {}
-    if(searchValue !== "Default"){
-      WhereProperty.searchValue = searchValue
+    
+    if(searchValue !== "Default" && category !== "null"){
+      WhereProperty.title = {[Op.startsWith]:`${searchValue}`}
+      WhereProperty.category = category
+    }
+    else if(searchValue !== "Default" && category == "null"){
+      WhereProperty.title = {[Op.startsWith]:`${searchValue}`}
+    }
+    else if(searchValue == "Default" && category !== "null"){
+      WhereProperty.category = category
     }
     
-    WhereProperty.category = category
+    //WhereProperty.category = {}
 
     try {
 
-      const Contents = Content.findAll({
-        where:{
-          title:{[Op.startsWith]:`${searchValue}`},
-          category:category
-        },
-        include:{
-          model:User,
-          as:"personal",
-          attributes:["id","firstname","imageurl","lastname","Role"],
-        },
+      const currentUser = await User.findOne({
+        where:{id:UserId}
       })
+      
+      if(currentUser.Role == "Mod" || currentUser.Role == "Admin"){
 
-      res.json({data:Contents})
+          var Contents = await Content.findAll({
+            where:WhereProperty,
+            include:{
+              model:User,
+              as:"personal",
+              attributes:["id","firstname","imageurl","lastname","Role"],
+            },
+          })
+
+      }else{
+
+        req.errorType = "404"
+        return next()
+
+      }
+
+  
+      return res.json({data:Contents})
 
     } catch (error){
 
@@ -115,7 +135,7 @@ exports.contentSearchingForModStuff=()=>{
 exports.gethome=async(req,res,next)=>{
 
   
-  const {number,category}=req.params;
+  const {UserId} = req.userdata;
   console.log(number)
   console.log(category)
   var offsetValue = parseInt(number);//paramstand string olarak alıyoruz
@@ -345,7 +365,7 @@ exports.getusercontent=async(req,res,next)=>{
 exports.getcontent=async (req,res,next)=>{
 
   const {id} = req.params;
-
+  
   try {
     //TODO we need the post which has "published" attribute !!
     const Mycontent=await Content.findOne({
@@ -386,14 +406,15 @@ exports.getcontent=async (req,res,next)=>{
 exports.getReportedPosts = async (req,res,next)=>{
 
    const {UserId} = req.userdata;
-
+   //add role field to web token to prevent uneccessary queries
    const currentUser = await User.findOne({
      where:{id:UserId}
    })
 
    try {
-
+     
      if(currentUser.Role == "Mod"){
+
           var reports = await Report.findAll({
             include:{
               model:Content,
@@ -404,9 +425,12 @@ exports.getReportedPosts = async (req,res,next)=>{
               }
             }
         })
+
+     }else{
+        req.errorType = "404"
+        return next();
      }
 
-    
      return res.json({data:reports})
      
    } catch (error){

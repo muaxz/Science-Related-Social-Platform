@@ -21,7 +21,6 @@ padding:10px;
 const LeftDiv = styled.div`
 flex:2;
 padding-right:10px;
-padding-top:10px;
 height:600px;
 overflow:auto;
 `
@@ -164,14 +163,18 @@ function ReportControl({reportList,controlType}){
     }
     
     useEffect(()=>{
-           const Reports = [...List]
-           for (let i = 0; i < Reports.length; i++) {
-                Reports[i].reportDetail = reportDetailHandler(Reports[i].ReportCheckBox)
-                Reports[i]._index_ = i
-                Reports[i].visibilityDetail = Reports[i].Content.phase == "Unpublished" ? false : true
-           }
-           setList(Reports)
-           setSelectedReport(List[0])
+        
+        if(List.length > 0){
+            const Reports = [...List]
+            for (let i = 0; i < Reports.length; i++) {
+                 Reports[i].reportDetail = reportDetailHandler(Reports[i].ReportCheckBox)
+                 Reports[i]._index_ = i
+                 Reports[i].visibilityDetail = Reports[i].Content.phase == "Unpublished" ? false : true
+            }
+            setList(Reports)
+            setSelectedReport(List[0])
+        }
+          
     },[])
    
     const SwhowOnRight = (index,item)=>{
@@ -262,12 +265,11 @@ function ReportControl({reportList,controlType}){
             
             <InnerDiv>
                 <LeftDiv>
-                    {
-                        true ? 
-                        <SearchBar>
-                            <div style={{paddingRight:"10px"}}>
+                   
+                            {/*<div style={{paddingRight:"10px"}}>
                                <TextField  variant='outlined' value={searchValues.text} onChange={(e)=>handleChange(e,"text")} label="Baslik Ara..."></TextField>
                             </div>
+                            
                             <div style={{flex:1}}>
                                 <FormControl fullWidth>
                                         
@@ -297,7 +299,7 @@ function ReportControl({reportList,controlType}){
                             </div>
                            
                         </SearchBar> : null
-                    }
+                        */}
                     {
                         List.length > 0 ?
                         
@@ -309,9 +311,7 @@ function ReportControl({reportList,controlType}){
                                      <BottomShadow opacityValue={0.7} bottomValue={20}></BottomShadow>
                                      <BottomShadow opacityValue={0.4} bottomValue={40}></BottomShadow>
                                      <BottomShadow opacityValue={0.1} bottomValue={60}></BottomShadow>
-                                      {item.Content.content}The Nairobi Expressway is Kenya’s first major public-private partnership, which started in October 2019. The Kenya National Highways Authority (KeNHA) has collaborated with the Chinese company, China Road and Bridge Corporation, for the design, construction, and financing of the 27-kilometer road.
-
-                                      Kenya hopes the $600 million toll road sparks modernization and increases tourism as it links Jomo Kenyatta International Airport east of the capital city with the Nairobi-Nakuru highway west of the capitol. In an interview with state outlet Kenya Broadcasting Corportation (KBC), Transport Cabinet Secretary James Macharia said the road will cut down on the city’s notorious traffic from as long as three hours during rush hour to as fast as 20 minutes. Macharia added it would save money lost in bad traffic and create more jobs.
+                                     <b>{item.Content.title}</b><br/>The Nairobi Expressway is Kenya’s first major public-private partnership, which started in October 2019. The Kenya National Highways Authority (KeNHA.
                                 </ContentBoxes>
                             )
                         })

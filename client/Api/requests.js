@@ -146,9 +146,10 @@ export const Producecommentreq=async ({Message,TakerId,setnumbercom,setwindow,Us
 export const Homereq=async({currentdata,seterrmsg,setwindow,setcontentdata,order,setstopreq,category,paignation,selectionlist,setselection})=>{
 
   try {
-
+    const trial =await axios.get(`content/gethome/${order}/${category}`,{withCredentials:true})
+    console.log(trial.status)
     const{data}=await axios.get(`content/gethome/${order}/${category}`,{withCredentials:true})
-    console.log(data.data.length);
+    
     if(Errorhandler({data,seterrmsg,setwindow})){
    
 

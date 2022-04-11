@@ -39,9 +39,7 @@ app.use(express.json());
 app.use(cors({origin:"http://localhost:3000",credentials:true}));
 
 DB.sync()
-.then(()=>{
-  
-})
+.then(()=>{})
 
 app.use(cookieparser())
 app.use(Loginrouter);
@@ -51,11 +49,13 @@ app.use("/user",Userrouter);
 app.use("/comment",Commentrouter);
 app.use("/notification",Notifyrouter);
 
+app.use("*",(req,res)=>{
+  
+    if(req.errorType == "404"){
+        return res.json({error:"Page Not Found!",state:404})
+    }
 
-//default error handler
-app.use((error,req,res,next)=>{
-
-    return res.status(500).json({error:"Somethingwentwrong!"})
+    return res.json({error:"Server Error",state:500})
 })
 
 Myserver.listen(port,()=>{})

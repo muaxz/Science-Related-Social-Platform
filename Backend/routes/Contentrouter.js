@@ -10,7 +10,8 @@ router.get("/usercontent/:catagory/:id/:order",verify,controller.getusercontent)
 router.get("/getReports",verify,controller.getReportedPosts)
 router.post("/makeUnpublic",controller.makeThePostUnpublic) // Editor STUFF
 router.post("/deleteReport",controller.reportDeletion)// EDITOR STUFF
-router.get("/:id",controller.getcontent);
+router.get("/getModContents/:searchValue/:category",verify,controller.getAllContentsForModStuff)
+router.get("/Post/:id",controller.getcontent);
 //router.delete("/delete/:id",controller.delete)
 //router.post("/update/:id",controller.delete)
 

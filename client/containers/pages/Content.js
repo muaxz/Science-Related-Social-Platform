@@ -15,6 +15,7 @@ import ReportWindow from "../../components/pages/Content/reportWindow"
 
 
 
+
 const Exteriorcontent=styled.div`
 background-color:${({iscomment})=>iscomment ? "" : "white"};
 max-width:950px;
