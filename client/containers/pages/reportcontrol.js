@@ -10,7 +10,7 @@ const ExteriorDiv = styled.div`
 max-width:1300px;
 height:600px;
 margin:auto;
-margin-top:40px;
+margin-top:80px;
 `
 
 const InnerDiv = styled.div`

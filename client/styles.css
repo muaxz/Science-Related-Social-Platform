@@ -24,9 +24,10 @@
 
 
 .ck-content img{
-    max-width: 300px;
+    max-width: 600px;
     height: 200px;
     object-fit: cover;
+   
 }
 
 
@@ -159,6 +160,7 @@
     clear: both;
     text-align: center;
     min-width: 50px;
+    margin: 0 auto;
 }
 /* ckeditor5-image/theme/image.css */
 .ck-content .image img {

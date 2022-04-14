@@ -17,7 +17,8 @@ const io = require("socket.io")(Myserver,{cors:{origin:"http://localhost:3000"}}
 const Userrouter=require("./routes/userrouter");
 const Notifyrouter=require("./routes/Notificationroute");
 const cookieparser = require("cookie-parser")
-const fileupload = require("express-fileupload")
+const fileupload = require("express-fileupload");
+const { application } = require("express");
 const port =  process.env.PORT || 3001 
 
 
@@ -52,7 +53,14 @@ app.use("/notification",Notifyrouter);
 app.use("*",(req,res)=>{
   
     if(req.errorType == "404"){
+
         return res.json({error:"Page Not Found!",state:404})
+
+    }
+    else if(req.errorType == "401"){
+
+        return res.json({error:"Page Not Found!",state:401})
+
     }
 
     return res.json({error:"Server Error",state:500})

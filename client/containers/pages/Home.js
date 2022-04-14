@@ -107,6 +107,7 @@ right:${({rightvalue})=>rightvalue};
 box-shadow:10px 10px 60px 30px white;
 `
 const Container=styled.div`
+padding:30px;
 @media (max-width:940px){
  padding-left:0;
 }

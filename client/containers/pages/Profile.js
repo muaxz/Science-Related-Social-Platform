@@ -14,7 +14,7 @@ import Followlist from '../../components/pages/Profile/followlists';
 
 
 const Exteriordiv=styled.div`
-max-width:1400px;
+max-width:1800px;
 padding-top:60px;
 width:100%;
 height:100vh;
@@ -28,6 +28,7 @@ padding-left:60px;
 
 const Innerdiv=styled.div`
 height:100%;
+width:100%;
 `
 
 const Imagesection=styled.div`
@@ -108,7 +109,7 @@ display:flex;
 align-items:center;
 position:absolute;
 bottom:10px;
-right:10px;
+right:70px;
 `
 
 const P = styled.p`

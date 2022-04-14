@@ -324,7 +324,6 @@ exports.getusercontent=async(req,res,next)=>{
              
 
           }
-          
           else{
 
                 Datawillsend = await Usercontent.findAll({
@@ -350,11 +349,16 @@ exports.getusercontent=async(req,res,next)=>{
         
           return res.json({data:Datawillsend})
 
-        } catch (error){
-          console.log(error);
+        } catch (error){ 
           next();
           return;
         }
+
+  }else{
+
+    req.errorType = "404"
+    return next()
+
   }
   
 }
@@ -412,7 +416,7 @@ exports.getReportedPosts = async (req,res,next)=>{
 
    try {
      
-     if(currentUser.Role == "Mod"){
+     if(currentUser.Role == "Mod" || currentUser.Role == "Admin"){
 
           var reports = await Report.findAll({
             include:{
@@ -441,11 +445,10 @@ exports.getReportedPosts = async (req,res,next)=>{
 }
 
 
-exports.makeThePostUnpublic = async (req,res,next)=>{
+exports.ContentChecking = async (req,res,next)=>{
 
     const {contentID,publicValue} = req.body
-    console.log(publicValue)
-
+    
     try {
       
       await Content.update({phase:publicValue ? "Published" : "Unpublished" },{where:{id:contentID}})

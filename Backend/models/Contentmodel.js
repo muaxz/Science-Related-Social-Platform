@@ -48,6 +48,10 @@ const Content=sequlize.define("Content",{
         type:Sequlize.STRING,
         defaultValue:"",
     },
+    checked:{
+        type:Sequlize.BOOLEAN,
+        defaultValue:false
+    }
 
 })
 

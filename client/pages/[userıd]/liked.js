@@ -5,6 +5,7 @@ import Guardlayout from "../../containers/Layout/routerguard";
 import Usercontent from "../../containers/pages/Usercontent";
 import {Global} from "../../components/styledcomponents/Globalstyles"
 import axios from 'axios';
+import {trial} from "../../Api/requests";
 
 
 export default function Liked({content}) {
@@ -24,12 +25,11 @@ export default function Liked({content}) {
 export async function getServerSideProps({query,req}){
 
     try {
-
+    
         if(req.headers.cookie){
-
-            var {data} = await axios.get(`http://localhost:3001/content/usercontent/Like/${query.userıd}/10`,{headers:{Cookie:req.headers.cookie}})
-
-        }
+            var data = await trial(query,req);
+            //var {data} = await axios.get(`http://localhost:3001/content/usercontent/Like/${query.userıd}/10`,{headers:{Cookie:req.headers.cookie}})
+        }   
         else{
             return {
                 redirect:{

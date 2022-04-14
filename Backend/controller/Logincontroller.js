@@ -15,7 +15,7 @@ exports.login = async (req,res,next)=>{
          
     
       if(user){
-
+         // TODO see if this code is necessary
          const mydata = {
             UserId:user.id,
             Username:user.firstname,
@@ -25,12 +25,12 @@ exports.login = async (req,res,next)=>{
          }
          
          bcrypt.compare(password,user.password,(err,result)=>{
-            console.log(result);
+            
             if(result == true){
                
                 //ToDo redis to store tokens
                 //ToDorefresh token
-               jwt.sign({UserId:user.id},"secretkey",(err,token)=>{
+               jwt.sign({UserId:user.id,UserRole:user.Role},"secretkey",(err,token)=>{
                   //public key or private key
                    res.cookie("myauth",token,{httpOnly:true,path:"/"})
                    return res.json({Userdata:mydata,token:token,auth:true});

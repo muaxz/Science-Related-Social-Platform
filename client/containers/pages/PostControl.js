@@ -1,7 +1,8 @@
 import React, { useState,useEffect } from 'react';
 import styled from "styled-components";
 import {Black} from "../../components/styledcomponents/Globalstyles"
-import {HighlightOffOutlined,SecurityOutlined} from "@material-ui/icons"
+import {HighlightOffOutlined,SecurityOutlined,VisibilityOff,Visibility} from "@material-ui/icons"
+import {Button} from "@material-ui/core"
 import HtmlParser from "react-html-parser"
 
 const ExteriorDiv = styled.div`
@@ -43,6 +44,7 @@ position:relative;
 display:flex;
 height:100%;
 padding:10px;
+padding-right:70px;
 word-break:break-word;
 width:100%;
 overflow:auto;
@@ -85,29 +87,31 @@ top:10px;
 right:10px;
 `
 
-const CheckedIcon = styled.div`
+const IconHolder = styled.div`
 position:absolute;
-top:10px;
-right:10px;
+top:${({top})=>top+"px"};
+right:${({right})=>right+"px"};
+`
+
+const ButtonHolderChecked = styled.div`
+position:absolute;
+top:20px;
+left:10px;
 `
 
 
 const Postcontrol=({contentData})=>{
     const [selectedCard,setSelectedCard] = useState({});
     const [extendValue,setExtend] = useState(false);
-    
-    useEffect(()=>{
-        if(selectedCard.id){
-            setTimeout(() => {
-                setExtend(true)
-            },60);
-        }
-    },[selectedCard])
-
+  
 
     const blackHandler = ()=>{
         setSelectedCard({})
         setExtend(false)
+    }
+
+    const CheckingHandler=(checkValue)=>{
+
     }
 
     return (
@@ -117,10 +121,11 @@ const Postcontrol=({contentData})=>{
                 selectedCard.id ?
                 <CardOutsideSingle extend={true}>
                         <CardInner>
-                            <CloseWindowIcon onClick={blackHandler}><HighlightOffOutlined style={{fontSize:"40px",color:"#F24A72"}}></HighlightOffOutlined></CloseWindowIcon>
-                            <TitleImageDiv>
-                                <TitleImage src="/boxHistory.jpg"></TitleImage>
-                            </TitleImageDiv>
+                            <ButtonHolderChecked>
+                                <Button onClick={()=>CheckingHandler("checked")} style={{marginRight:"10px",color:"green",textTransform:"capitalize"}} variant="contained">Check</Button>
+                                <Button onClick={()=>CheckingHandler("unpublic")} style={{marginRight:"10px",color:"#E83A14",textTransform:"capitalize"}}  variant="contained">Undo</Button>
+                            </ButtonHolderChecked>
+                            <CloseWindowIcon onClick={blackHandler}><HighlightOffOutlined style={{fontSize:"40px",color:"#F24A72",cursor:"pointer"}}></HighlightOffOutlined></CloseWindowIcon>
                             <div style={{flex:2,padding:"10px"}}>
                                 <div style={{textAlign:"center",marginBottom:"15px"}}>
                                     <TitleForSingle><b>{selectedCard.title}</b></TitleForSingle>
@@ -139,7 +144,12 @@ const Postcontrol=({contentData})=>{
                         return (
                             <CardOutside extend={false} onClick={()=>setSelectedCard(item)}>
                                 <CardInner>
-                                    <CheckedIcon><SecurityOutlined style={{color:item.checked ? "#00C897" : "#E83A14"}}></SecurityOutlined></CheckedIcon>
+                                    <IconHolder top="10" right="10"><SecurityOutlined style={{color:item.checked ? "#00C897" : "#E83A14"}}></SecurityOutlined></IconHolder>
+                                    {
+                                       item.phase == "Published" ? 
+                                       <IconHolder top="10" right="40"><Visibility style={{color:"#00C897"}}></Visibility></IconHolder> :
+                                       <IconHolder top="10" right="40"><VisibilityOff style={{color:"#E83A14"}}></VisibilityOff></IconHolder>
+                                    }
                                     <TitleImageDiv>
                                         <TitleImage src="/boxHistory.jpg"></TitleImage>
                                     </TitleImageDiv>

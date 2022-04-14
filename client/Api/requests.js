@@ -4,24 +4,37 @@ import Cookies from "universal-cookie"
 axios.defaults.baseURL="http://localhost:3001";
 
 
+export const trial=async (query,req)=>{
 
-const Errorhandler=({data,seterrmsg,setwindow,setcontextdata,setlogged,setspinner})=>{
+  var {data} = await axios.get(`http://localhost:3001/content/usercontent/Like/${query.userıd}/10`,{headers:{Cookie:req.headers.cookie}})
+
+  return data;
+}
+
+const Errorhandler=({data,seterrmsg,setwindow,setcontextdata,setlogged,setspinner,router})=>{
 
    if(data && data.error){
 
-      seterrmsg(true)
-      setwindow(true);
+      if(data.state == 404){
+
+          router.push("/404")
+
+      }else if(data.state == 500){
+
+          router.push("/500")
+
+      }else if(data.state == 401){
+
+        setcontextdata({});
+        setlogged(false);
+        setspinner(true);
+        localStorage.removeItem("TOKEN");
+        return false;
+
+      }
+
       return false;
 
-   }
-   else if(data == "Unauthorized"){
-      
-      setcontextdata({});
-      setlogged(false);
-      setspinner(true);
-      localStorage.removeItem("TOKEN");
-      return false;  
-      
    }
   
    return true;
@@ -32,8 +45,8 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
 
     try{
 
-      const{data}=await axios.post("/login",{userdata:userdata},{withCredentials:true})
-      console.log(data);
+      const {data} =await axios.post("/login",{userdata:userdata},{withCredentials:true})
+  
       
       if(data.wrong == "WP"){
 
@@ -64,7 +77,8 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
 export const logout = async({setspinner,setuserdata,setlogged})=>{
 
   try {
-      await axios.get("/logout",{withCredentials:true})
+      const response = await axios.get("/logout",{withCredentials:true})
+      console.log(response)
       setlogged(false)
       setuserdata({})
       setspinner(true)
@@ -76,8 +90,9 @@ export const logout = async({setspinner,setuserdata,setlogged})=>{
 
 
 export const resigterreq=async({setbackenderror,userdata,setactive,seterrmsg})=>{
-    console.log("")
+   
   try{
+
     const{data}=await axios.post("/register",{userdata:userdata})
     
     if(data.exist){
@@ -684,7 +699,7 @@ export const ReportUserReq = async({checkBoxValue,message,ContentId})=>{
 
 //Editor stuff
 
-export const makeThePostUnpublic= async ({contentID,publicValue})=>{
+export const checkTheContent= async ({contentID,publicValue,actionType})=>{
 
     try {
       
@@ -724,3 +739,13 @@ export const sendReportMessage = async ({TakerId,ContentId,reportMessage})=>{
 
   }
 }  
+
+export const CheckPosts = async ()=>{
+
+    try {
+      
+    } catch (error) {
+      
+    }
+    
+}

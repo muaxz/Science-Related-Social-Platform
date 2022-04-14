@@ -178,7 +178,9 @@ const Lefttoolbar=({makeactive,myactive})=>{
                                 <Link href={`/${item.path}`}> 
                                     <Li leftbaractive={myactive}>
                                         <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>  
-                                        <span style={{position:"absolute",fontSize:"12px",top:"-5px",left:"5px",width:"20px",display:"block",height:"20px",textAlign:"center",lineHeight:"15px",backgroundColor:"#d90429",color:"white",borderRadius:"50%",border:"2px solid #11101d"}}>14</span>
+                                        {
+                                           item.desc == "Raporlar" && <span style={{position:"absolute",fontSize:"12px",top:"-5px",left:"5px",width:"20px",display:"block",height:"20px",textAlign:"center",lineHeight:"15px",backgroundColor:"#d90429",color:"white",borderRadius:"50%",border:"2px solid #11101d"}}>14</span>
+                                        }
                                         <Spanfordesc  leftbaractive={myactive}>{item.desc}</Spanfordesc> 
                                         <Rightsidedesc >{item.desc}</Rightsidedesc>
                                     </Li>

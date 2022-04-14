@@ -8,7 +8,7 @@ router.post("/createrelation",controller.createrelation);//get the whole content
 router.get("/gethome/:number/:category",controller.gethome);//public short demonstraiton of contents
 router.get("/usercontent/:catagory/:id/:order",verify,controller.getusercontent)//contents user liked or saved
 router.get("/getReports",verify,controller.getReportedPosts)
-router.post("/makeUnpublic",controller.makeThePostUnpublic) // Editor STUFF
+router.post("/makeUnpublic",controller.ContentChecking) // Editor STUFF
 router.post("/deleteReport",controller.reportDeletion)// EDITOR STUFF
 router.get("/getModContents/:searchValue/:category",verify,controller.getAllContentsForModStuff)
 router.get("/Post/:id",controller.getcontent);
