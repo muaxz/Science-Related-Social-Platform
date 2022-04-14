@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import styled from "styled-components";
+import {checkTheContent} from "../../Api/requests"
 import {Black} from "../../components/styledcomponents/Globalstyles"
 import {HighlightOffOutlined,SecurityOutlined,VisibilityOff,Visibility} from "@material-ui/icons"
 import {Button} from "@material-ui/core"
@@ -95,8 +96,8 @@ right:${({right})=>right+"px"};
 
 const ButtonHolderChecked = styled.div`
 position:absolute;
-top:20px;
-left:10px;
+top:30px;
+left:30px;
 `
 
 
@@ -110,8 +111,12 @@ const Postcontrol=({contentData})=>{
         setExtend(false)
     }
 
-    const CheckingHandler=(checkValue)=>{
-
+    const CheckingHandler=(actionType)=>{
+        checkTheContent({
+            contentID:selectedCard.id,
+            publicValue:selectedCard.phase == "Published" ? false : true,
+            actionType:actionType
+        })
     }
 
     return (
@@ -122,8 +127,8 @@ const Postcontrol=({contentData})=>{
                 <CardOutsideSingle extend={true}>
                         <CardInner>
                             <ButtonHolderChecked>
-                                <Button onClick={()=>CheckingHandler("checked")} style={{marginRight:"10px",color:"green",textTransform:"capitalize"}} variant="contained">Check</Button>
-                                <Button onClick={()=>CheckingHandler("unpublic")} style={{marginRight:"10px",color:"#E83A14",textTransform:"capitalize"}}  variant="contained">Undo</Button>
+                                <Button endIcon={<SecurityOutlined style={{color:selectedCard.checked ? "#00C897" : "#E83A14"}}></SecurityOutlined>} onClick={()=>CheckingHandler("CHECK_POST")} style={{marginRight:"10px",color:selectedCard.checked ? "green" : "#E83A14",textTransform:"capitalize"}} variant="contained" disabled={selectedCard.checked}>{selectedCard.checked ? "Checked" : "Check"}</Button>
+                                <Button onClick={()=>CheckingHandler("CHANGE_PUBLIC")} style={{marginRight:"10px",color:"#E83A14",textTransform:"capitalize"}}  variant="contained">{selectedCard.phase == "Published" ? "Make Unpublic" : "Make Public"}</Button>
                             </ButtonHolderChecked>
                             <CloseWindowIcon onClick={blackHandler}><HighlightOffOutlined style={{fontSize:"40px",color:"#F24A72",cursor:"pointer"}}></HighlightOffOutlined></CloseWindowIcon>
                             <div style={{flex:2,padding:"10px"}}>

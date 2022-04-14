@@ -2,7 +2,7 @@ import React,{useEffect, useState} from 'react';
 import styled from 'styled-components';
 import Parser from "react-html-parser"
 import {IconButton,Button,TextField,FormControl,MenuItem,Select,InputLabel,Box} from "@material-ui/core"
-import {makeThePostUnpublic,deleteTheReport,sendReportMessage} from "../../Api/requests"
+import {checkTheContent,deleteTheReport,sendReportMessage} from "../../Api/requests"
 import {Delete,Email,VisibilityOff,Send} from "@material-ui/icons"
 import {Porfileimage} from "../../components/styledcomponents/Globalstyles"
 
@@ -235,9 +235,10 @@ function ReportControl({reportList,controlType}){
         setList(Reports)
         setSelectedReport(Reports[selectedReport._index_])
         setActiveCover("")
-        makeThePostUnpublic({
+        checkTheContent({
             contentID:Reports[selectedReport._index_].Content.id,
-            publicValue:selectedReport.visibilityDetail
+            publicValue:selectedReport.visibilityDetail,
+            actionType:"CHANGE_PUBLIC"
         })
     }
 

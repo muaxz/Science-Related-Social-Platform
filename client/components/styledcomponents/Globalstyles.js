@@ -66,6 +66,19 @@ export const rotate360 = keyframes`
   }
 `;
 
+export const SavedInfoDiv = styled.div`
+position:fixed;
+bottom:${({active})=>active ? "20px" : "10px"};
+left:100px;
+padding:20px;
+background-color:lightgrey;
+border-radius:7px;
+transition-duration:0.5s;
+z-index:${({active})=>active ? "100" : "-1"};
+opacity:${({active})=>active ? "1" : "0"}
+`
+
+
 export const Spinner = styled.div`
   animation: ${rotate360} 1s linear infinite;
   transform: translateZ(0);
@@ -78,6 +91,5 @@ export const Spinner = styled.div`
   height: 16px;
   border-radius: 50%;
 `;
-
 
 

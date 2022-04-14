@@ -703,13 +703,14 @@ export const checkTheContent= async ({contentID,publicValue,actionType})=>{
 
     try {
       
-      const {data} = await axios.post("/content/makeUnpublic",{contentID:contentID,publicValue})
+      const {data} = await axios.post("/content/checkContent",{contentID:contentID,publicValue:publicValue,actionType:actionType},{withCredentials:true})
+      
 
       console.log(data)
 
     } catch (error) {
-      
-    }
+    
+    } 
 
 } 
 

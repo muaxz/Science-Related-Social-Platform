@@ -5,8 +5,9 @@ import {Homereq,Createrelationreq,Notificationreq} from "../../Api/requests";
 import {createusercontext} from "../../context/Usercontext";
 import {makeStyles} from "@material-ui/core/styles"
 import Showfollower from "../../components/pages/Main/Showfoller";
+import {CreateUtilContext} from "../../context/UtilContext"
 import useScroll from "../../hooks/Scroll";
-import {Spinner} from "../../components/styledcomponents/Globalstyles"
+import {Spinner,SavedInfoDiv} from "../../components/styledcomponents/Globalstyles"
 import uniqid from "uniqid";
 import { ArrowBackIos, ArrowForwardIos, FormatQuote } from '@material-ui/icons';
 import SelectionPart from "../../components/pages/Main/SelectionPart"
@@ -134,6 +135,7 @@ export default function Home({mydata}){
     
     const {bottom}=useScroll();
     const [slidevalue,setslidevalue]=useState(-30);
+    const {savedWindow,setSavedWindow} = useContext(CreateUtilContext)
     const {userdata} = useContext(createusercontext)
     const [contentdata,setcontentdata]=useState(mydata);
     const [order,setorder]=useState(0);
@@ -217,15 +219,26 @@ export default function Home({mydata}){
 
     },[bottom])
 
-    const createrelation=(postId,attribute,typeofrelation,userid)=>{
+    const createrelation = async (postId,attribute,typeofrelation,userid)=>{
         
-        Createrelationreq({
+       await Createrelationreq({
             UserId:userdata.UserId,
             PostId:postId,
             attribute:attribute,
             relationtype:typeofrelation,
             UserIdofcontent:userid,
         })
+
+        if(attribute == "Readlater"){
+
+            setSavedWindow(true);
+
+            setTimeout(()=>{
+                setSavedWindow(false)
+            }, 5000);
+            
+        }
+
     }
     
 
@@ -241,10 +254,9 @@ export default function Home({mydata}){
 
     return (
         <div style={{height:`${windowlist.list.length > 0 ? "100vh" : "100%"}`,overflow:windowlist.list.length > 0 ? "hidden": "visible"}}> 
+               <SavedInfoDiv active={savedWindow}>Added To Saved Contents</SavedInfoDiv>
                {windowlist.list.length > 0 ?
-
                 <Showfollower setlist={()=>setwindowlist(prev=>{return {...prev,list:[]}})} attribute={windowlist.attribute} list={windowlist.list}></Showfollower>
-
                 : null}
                 <BackgroundHome>
                     <img style={{width:"100%",height:"100%",objectFit:"cover"}} src={"/fourrealman.jpg"}></img>

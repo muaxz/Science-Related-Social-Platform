@@ -405,7 +405,6 @@ exports.getcontent=async (req,res,next)=>{
 }
 
 //Report section EDITOR STUFF !
-
 exports.getReportedPosts = async (req,res,next)=>{
 
    const {UserId} = req.userdata;
@@ -447,11 +446,30 @@ exports.getReportedPosts = async (req,res,next)=>{
 
 exports.ContentChecking = async (req,res,next)=>{
 
-    const {contentID,publicValue} = req.body
-    
+    const {actionType,contentID,publicValue} = req.body
+    const {UserRole} = req.userdata;
+  
     try {
-      
-      await Content.update({phase:publicValue ? "Published" : "Unpublished" },{where:{id:contentID}})
+
+      if(UserRole == "Mod" || UserRole == "Admin"){
+
+          if(actionType == "CHECK_POST"){
+
+            await Content.update({checked:true},{where:{id:contentID}})
+    
+          }else{
+    
+            await Content.update({phase:publicValue ? "Published" : "Unpublished" },{where:{id:contentID}})
+    
+          }
+
+      }
+      else{
+          
+        req.errorType = "401"
+        return next()
+        
+      }
 
       return res.json({state:"success"})
 
