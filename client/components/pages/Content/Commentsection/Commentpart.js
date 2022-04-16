@@ -50,7 +50,7 @@ function Commentpart({Editcommenthandler,Producecomment,list,spinner,handleanswe
     
 
     return (
-        <div style={{padding:"20px",clear:"right"}}>
+        <div style={{clear:"right"}}>
             <Writecomment spinner={spinner} Producecomment={Producecomment}></Writecomment>
             <Belowcomment Editcommenthandler={Editcommenthandler} Answerhandler={handleanswer} mylist={mutated}></Belowcomment>
         </div>

@@ -4,6 +4,15 @@ import Cookies from "universal-cookie"
 axios.defaults.baseURL="http://localhost:3001";
 
 
+axios.interceptors.response.use(function (response) {
+  console.log("in interceptorsssss")
+  return response;
+}, function (error) {
+  // Any status codes that falls outside the range of 2xx cause this function to trigger
+  // Do something with response error
+  return Promise.reject(error);
+});
+
 export const trial=async (query,req)=>{
 
   var {data} = await axios.get(`http://localhost:3001/content/usercontent/Like/${query.userıd}/10`,{headers:{Cookie:req.headers.cookie}})
@@ -161,8 +170,6 @@ export const Producecommentreq=async ({Message,TakerId,setnumbercom,setwindow,Us
 export const Homereq=async({currentdata,seterrmsg,setwindow,setcontentdata,order,setstopreq,category,paignation,selectionlist,setselection})=>{
 
   try {
-    const trial =await axios.get(`content/gethome/${order}/${category}`,{withCredentials:true})
-    console.log(trial.status)
     const{data}=await axios.get(`content/gethome/${order}/${category}`,{withCredentials:true})
     
     if(Errorhandler({data,seterrmsg,setwindow})){
@@ -188,7 +195,7 @@ export const Homereq=async({currentdata,seterrmsg,setwindow,setcontentdata,order
 
       }
       else{
-
+          setcontentdata([]) // for preventing rerendering on contentcard, instead create from strach
           setcontentdata(Mydata)
  
       }
@@ -203,8 +210,8 @@ export const Homereq=async({currentdata,seterrmsg,setwindow,setcontentdata,order
   }
 }
 
-
-export const Createrelationreq=async({UserId,PostId,attribute,seterrmsg,setwindow,relationtype,UserIdofcontent})=>{
+//between post and user
+export const Createrelationreq=async({UserId,PostId,attribute,seterrmsg,setwindow,relationtype,UserIdofcontent,setSavedWindow})=>{
 
   try {
 
@@ -216,10 +223,12 @@ export const Createrelationreq=async({UserId,PostId,attribute,seterrmsg,setwindo
       UserIdofcontent:UserIdofcontent,
     })
 
-    if(Errorhandler({data,seterrmsg,setwindow}))
-    return;
-    else
-    return;
+    
+  
+    //if(Errorhandler({data,seterrmsg,setwindow}))
+    //return;
+    //else
+    //return;
     
   
   } catch (error) {
@@ -437,7 +446,7 @@ export const Getuserprofile=async({UserId,setuserdata})=>{
   }
   
 }
-
+//between user and user
 export const Createuserrelation=async({UserId,Prevent,FollowedId,checkiffollow})=>{
 
   try {

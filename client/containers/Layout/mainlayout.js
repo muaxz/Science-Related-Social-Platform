@@ -2,9 +2,9 @@ import React,{useState,useEffect,useContext} from 'react'
 import styled from "styled-components";
 import Lefttoolbar from "../../components/shared/Navigation/SideBar/Lefttoolbar";
 import Navigation from "../../components/shared/Navigation/Navbar/Navigation";
-import {Global} from "../../components/styledcomponents/Globalstyles";
-import {Black} from "../../components/styledcomponents/Globalstyles"
+import {Global,Black,SavedInfoDiv} from "../../components/styledcomponents/Globalstyles";
 import {createusercontext} from "../../context/Usercontext";
+import {CreateUtilContext} from "../../context/UtilContext";
 import {useRouter} from "next/router"
 import io from "socket.io-client";
 import Icon from "../../components/UI/Icon";
@@ -32,6 +32,7 @@ export default function Mainlayout({children}) {
     const [active,setactive]=useState(false);
     const [goup,setgoup]=useState(false);
     const {userdata} = useContext(createusercontext)
+    const {savedWindow,savedWindowText} = useContext(CreateUtilContext)
     const [navdata,setnavdata]=useState([]);
     const [countofdata,setcountdata]=useState(0);
     const [lastrecord,setlastrecord]=useState(0);
@@ -141,6 +142,7 @@ export default function Mainlayout({children}) {
     return (
         <Bigdiv>
             <Black onClick={()=>setactive(false)} aktif={active}></Black>
+            <SavedInfoDiv active={savedWindow}>{savedWindowText}</SavedInfoDiv>
             <Navigation Update={Updatecount} Reloadfunc={Reloadnav} Count={countofdata} Data={navdata}></Navigation>
             <Lefttoolbar myactive={active} makeactive={setactive}></Lefttoolbar>
             {/*this part will be changed*/}

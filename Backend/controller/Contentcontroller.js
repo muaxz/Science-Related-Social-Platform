@@ -142,7 +142,7 @@ exports.gethome=async(req,res,next)=>{
   try {
     //beğenenler,yorumlar
 
-    const Contents=await Content.findAll({
+    const Contents = await Content.findAll({
       //dizi[1].preferences[0].usercontent.attribute
       where:{
         catagories:category,
@@ -150,7 +150,6 @@ exports.gethome=async(req,res,next)=>{
       attributes:["id","titleimage","title","subtitle","content","createdAt","updatedAt"],
       limit:10,
       offset:offsetValue,
-     
       include:[
         {
           model:User,
@@ -458,8 +457,8 @@ exports.ContentChecking = async (req,res,next)=>{
             await Content.update({checked:true},{where:{id:contentID}})
     
           }else{
-    
-            await Content.update({phase:publicValue ? "Published" : "Unpublished" },{where:{id:contentID}})
+            
+            await Content.update({phase:publicValue},{where:{id:contentID}})
     
           }
 

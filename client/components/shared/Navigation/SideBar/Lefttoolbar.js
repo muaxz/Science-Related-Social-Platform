@@ -159,7 +159,7 @@ const Lefttoolbar=({makeactive,myactive})=>{
                     <hr></hr>
                         <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
                             {secondlist.current.map((item)=>(
-                                <Link href="/[stuff]" as={`${item.path}`}>
+                                <Link href={`/${item.path}/${userdata.UserId}`}>
                                     <Li leftbaractive={myactive}>
                                         <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>   
                                         <Spanfordesc  leftbaractive={myactive}>{item.desc}</Spanfordesc> 

@@ -68,13 +68,15 @@ export const rotate360 = keyframes`
 
 export const SavedInfoDiv = styled.div`
 position:fixed;
-bottom:${({active})=>active ? "20px" : "10px"};
+bottom:${({active})=>active ? "40px" : "10px"};
 left:100px;
 padding:20px;
-background-color:lightgrey;
+background-color:#97DBAE;
+font-weight:bold;
 border-radius:7px;
+color:white;
 transition-duration:0.5s;
-z-index:${({active})=>active ? "100" : "-1"};
+z-index:152;
 opacity:${({active})=>active ? "1" : "0"}
 `
 

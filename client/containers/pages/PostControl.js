@@ -1,10 +1,12 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useContext} from 'react';
 import styled from "styled-components";
 import {checkTheContent} from "../../Api/requests"
+import {CreateUtilContext} from "../../context/UtilContext"
 import {Black} from "../../components/styledcomponents/Globalstyles"
-import {HighlightOffOutlined,SecurityOutlined,VisibilityOff,Visibility} from "@material-ui/icons"
-import {Button} from "@material-ui/core"
+import {HighlightOffOutlined,SecurityOutlined,VisibilityOff,Visibility,Search} from "@material-ui/icons"
+import {Button,TextField,InputAdornment} from "@material-ui/core"
 import HtmlParser from "react-html-parser"
+
 
 const ExteriorDiv = styled.div`
 max-width:1200px;
@@ -36,7 +38,7 @@ top:${({extend})=>extend ? "55%" : "0"};
 left:${({extend})=>extend ? "50%" : "0"};
 transition-duration:0.4s;
 transform:${({extend})=>extend ? "translate(-50%,-50%)" : "translate(0,0)"};
-z-index:${({extend})=>extend ? "1000" : "0"};
+z-index:${({extend})=>extend ? "151" : "0"};
 padding-bottom:10px;
 `
 
@@ -100,35 +102,78 @@ top:30px;
 left:30px;
 `
 
+const InputHolder = styled.div`
+padding-bottom:10px;
+display:flex;
+align-items:center;
+`
+
 
 const Postcontrol=({contentData})=>{
+
     const [selectedCard,setSelectedCard] = useState({});
-    const [extendValue,setExtend] = useState(false);
+    const {setSavedWindow,setSavedWindowText} = useContext(CreateUtilContext)
+    const [contentDataState,setContentData] = useState(contentData)
   
 
     const blackHandler = ()=>{
         setSelectedCard({})
-        setExtend(false)
     }
 
-    const CheckingHandler=(actionType)=>{
-        checkTheContent({
+    const CheckingHandler = async (actionType,publicValue)=>{
+
+        await checkTheContent({
             contentID:selectedCard.id,
-            publicValue:selectedCard.phase == "Published" ? false : true,
+            publicValue:publicValue,
             actionType:actionType
         })
+
+        const contentCopy = [...contentDataState];
+        const IndexOfCopy = contentCopy.findIndex((item)=>item.id == selectedCard.id);
+
+        if(actionType == "CHECK_POST"){
+
+            contentCopy[IndexOfCopy].checked = true;
+            setSavedWindowText("Post Checked")
+            setSavedWindow(true);
+
+        }else{
+            
+            contentCopy[IndexOfCopy].phase = publicValue;
+            
+        }
+
+        setContentData(contentCopy)
+        setSelectedCard(contentCopy[IndexOfCopy])
     }
+
+    const SearchBarHandler = (event)=>{
+
+    }   
 
     return (
         <ExteriorDiv allowScroll={selectedCard.id ? true : false}>
             <Black onClick={blackHandler} aktif={selectedCard.id ? true : false}></Black>
+            <InputHolder>
+                <TextField 
+                   onChange={SearchBarHandler}
+                   size="small"
+                   InputProps={{
+                      style:{cursor:"pointer"},
+                      endAdornment: <InputAdornment position="end"><Search></Search></InputAdornment>,
+                    }} 
+                    variant="outlined" 
+                    label="Search For Title...">
+                </TextField>
+                <Button style={{marginLeft:"10px",fontWeight:"bold",textTransform:"capitalize"}} variant="contained">Search</Button>
+            </InputHolder>
             {
                 selectedCard.id ?
                 <CardOutsideSingle extend={true}>
                         <CardInner>
                             <ButtonHolderChecked>
-                                <Button endIcon={<SecurityOutlined style={{color:selectedCard.checked ? "#00C897" : "#E83A14"}}></SecurityOutlined>} onClick={()=>CheckingHandler("CHECK_POST")} style={{marginRight:"10px",color:selectedCard.checked ? "green" : "#E83A14",textTransform:"capitalize"}} variant="contained" disabled={selectedCard.checked}>{selectedCard.checked ? "Checked" : "Check"}</Button>
-                                <Button onClick={()=>CheckingHandler("CHANGE_PUBLIC")} style={{marginRight:"10px",color:"#E83A14",textTransform:"capitalize"}}  variant="contained">{selectedCard.phase == "Published" ? "Make Unpublic" : "Make Public"}</Button>
+                                <Button onClick={()=>CheckingHandler("CHECK_POST")} endIcon={<SecurityOutlined style={{color:selectedCard.checked ? "#00C897" : "#E83A14"}}></SecurityOutlined>} style={{marginRight:"10px",color:selectedCard.checked ? "green" : "#E83A14",textTransform:"capitalize"}} variant="contained" disabled={selectedCard.checked}>{selectedCard.checked ? "Checked" : "Check"}</Button>
+                                <Button onClick={()=>CheckingHandler("CHANGE_PUBLIC",selectedCard.phase == "Published" ? "Unpublished" : "Published")} style={{marginRight:"10px",color:"#E83A14",textTransform:"capitalize"}}  variant="contained">{selectedCard.phase == "Published" ? "Make Unpublic" : "Make Public"}</Button>
                             </ButtonHolderChecked>
                             <CloseWindowIcon onClick={blackHandler}><HighlightOffOutlined style={{fontSize:"40px",color:"#F24A72",cursor:"pointer"}}></HighlightOffOutlined></CloseWindowIcon>
                             <div style={{flex:2,padding:"10px"}}>

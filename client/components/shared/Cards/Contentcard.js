@@ -1,12 +1,11 @@
 import React,{useState,useEffect,useContext,useMemo} from 'react'
 import styled,{keyframes} from "styled-components";
 import {createusercontext} from "../../../context/Usercontext";
-import {CreateUtilContext} from "../../../context/UtilContext"
 import {Porfileimage,Spinner} from "../../styledcomponents/Globalstyles";
 import Link from "next/link";
 import {useRouter} from "next/router"
 import Icon from "../../UI/Icon"
-import {AddComment,feed,Feedback,Send,Delete, Edit,FavoriteBorder} from "@material-ui/icons"
+import {AddComment,feed,Feedback,Send,Delete, Edit,FavoriteBorder,SearchOutlined} from "@material-ui/icons"
 import {calculatedate} from "../../../utilsfunc"
 import useClickoutside from "../../../hooks/Clikcoutisde";
 import { TextField , Button,InputAdornment,Checkbox} from '@material-ui/core';
@@ -15,10 +14,11 @@ import {CreateNightMode} from "../../../context/Nightmode"
 
 const Likeanimaton=keyframes`
 0% {font-size:16px}
-25% {font-size:18px}
-50% {font-size:21px}
-65% {font-size:17}
-70% {font-size:10px}
+50% {font-size:10px}
+70% {font-size:3px}
+80% {font-size:10px}
+90% {font-size:21px}
+95% {font-size:18px}
 100% {font-size:16px}
 `
 
@@ -30,7 +30,7 @@ const Newcommentanimation=keyframes`
 
 const Outsidediv=styled.div`
 position:relative;
-height:${({draft})=> draft ? "300px" : ""};
+height:${({draft})=> draft ? "300px" : "100%"};
 width:100%;
 margin-bottom:20px;
 background-color:${({nightmode})=> !nightmode ? "#faf9f9": "#1F1B24"};
@@ -70,10 +70,10 @@ const Contentholder=styled.div`
 flex:2;
 display:flex;
 flex-direction:column;
-
 `
 const Contentdiv=styled.div`
 padding: ${({iscomment})=>iscomment ? "15px": "0px"};
+padding-bottom:10px;
 padding-left:15px;
 width:100%;
 padding-right:15px;
@@ -127,8 +127,6 @@ padding-bottom:10px;
 transition:all 0.3s;
 `
 
-
-
 const Icons=styled.i`
 display:flex;
 justify-content:center;
@@ -139,13 +137,13 @@ width:30px;
 height:30px;
 border-radius:50%;
 cursor:pointer;
-animation-duration:0.3s;
-animation-timing-function:ease-in-out;
+animation-duration:0.2s;
+animation-timing-function:linear;
 &:hover {
     background:rgba(${({howercolor})=>howercolor});
 };
 color:${({ismarked,color})=>ismarked ? color : "grey" };
-animation-name:${({animation})=>animation ? Likeanimaton : ""};
+animation-name:${({animation})=> animation ? Likeanimaton : ""};
 `
 const Optionwindow=styled.div`
 display:block;
@@ -197,7 +195,7 @@ left:${({iscomment})=>iscomment ? "-60px" : "0px"};
 `
 
 //içerik sayısı,takipçi sayısı,
-function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent}){
+function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent,key}){
     
     const[elements,setelements]=useState({
         Like:{
@@ -291,7 +289,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
        
        setelements(currentelements);
 
-    },[userdata])
+    },[userdata,key])
     
     //like , sign and save operations
     const Countplus=(elementtype)=>{
@@ -299,7 +297,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
         const currentelements={...elements};
   
        
-        if(currentelements[elementtype].ismarked==false && userdata.UserId){
+        if(!currentelements[elementtype].ismarked && userdata.UserId){
          
             currentelements[elementtype].ismarked=true;
             currentelements[elementtype].animation=true;
@@ -315,7 +313,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
             createrelationforsmh(postId,elementtype,"Create",userid);
                
         }
-        else if(currentelements[elementtype].ismarked==true && userdata.UserId){
+        else if(currentelements[elementtype].ismarked && userdata.UserId){
 
             currentelements[elementtype].ismarked = false;
             currentelements[elementtype].animation=false;
@@ -324,7 +322,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
                currentelements[elementtype].array.splice(0,1);
             }
 
-            createrelationforsmh(postId,elementtype,"Destroy");
+            createrelationforsmh(postId,elementtype,"Destroy",userid);
 
         }
         else{

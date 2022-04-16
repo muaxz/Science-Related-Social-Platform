@@ -9,7 +9,7 @@ import { Bookmark, BookmarkBorderOutlined, BookmarkBorderRounded, ThumbUpAlt } f
 const Exteriordiv=styled.div`
 width:100%;
 padding-left:90px;
-padding-top:25px;
+padding-top:80px;
 margin:auto;
 @media (max-width:940px){
     padding-left:10px;
@@ -24,13 +24,14 @@ margin:auto;
 const Innerdiv=styled.div`
 display:flex;
 padding-top:20px;
-justify-content:flex-start;
 flex-wrap:wrap;
 `
 
 const Contentholder=styled.div`
-width:25%;
-padding-right:10px;
+max-width:340px;
+height:320px;
+padding-right:25px;
+padding-top:25px;
 @media (max-width:1200px){
     width:33%;
 }
@@ -141,8 +142,8 @@ export default function Usercontent({params,mydata}){
                                 :
                                 <ThumbUpAlt></ThumbUpAlt>
                         }
-                        <span style={{paddingLeft:"5px",color:"#6c757d"}}>
-                            {`(${data.length})`}
+                        <span style={{paddingLeft:"5px",color:"#6c757d",fontSize:"20px",fontWeight:"bold"}}>
+                            {data.length}
                         </span>
                         </div>
 

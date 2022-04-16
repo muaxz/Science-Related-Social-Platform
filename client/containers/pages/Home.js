@@ -1,4 +1,4 @@
-import React, {useEffect,useState,useContext} from 'react'
+import React, {useEffect,useState,useContext,useMemo} from 'react'
 import Contentcard from "../../components/shared/Cards/Contentcard";
 import styled from "styled-components";
 import {Homereq,Createrelationreq,Notificationreq} from "../../Api/requests";
@@ -135,7 +135,7 @@ export default function Home({mydata}){
     
     const {bottom}=useScroll();
     const [slidevalue,setslidevalue]=useState(-30);
-    const {savedWindow,setSavedWindow} = useContext(CreateUtilContext)
+    const {setSavedWindow,setSavedWindowText} = useContext(CreateUtilContext)
     const {userdata} = useContext(createusercontext)
     const [contentdata,setcontentdata]=useState(mydata);
     const [order,setorder]=useState(0);
@@ -173,6 +173,7 @@ export default function Home({mydata}){
     });
     const [stoprequesting,setstopreq]=useState(false);
     const [spinner,setspinner]=useState(false);
+  
 
     
 
@@ -196,7 +197,9 @@ export default function Home({mydata}){
     },[order])
 
 
-  
+
+
+    /*
     const Setslidevalue=(value)=>{
 
        if(value == "Back" && slidevalue >= 20){
@@ -206,6 +209,7 @@ export default function Home({mydata}){
         setslidevalue(slidevalue+220)
        }
     }
+    */
 
 
     useEffect(()=>{
@@ -221,27 +225,23 @@ export default function Home({mydata}){
 
     const createrelation = async (postId,attribute,typeofrelation,userid)=>{
         
-       await Createrelationreq({
+        await Createrelationreq({
             UserId:userdata.UserId,
             PostId:postId,
             attribute:attribute,
             relationtype:typeofrelation,
             UserIdofcontent:userid,
+            setSavedWindow:setSavedWindow,
         })
 
-        if(attribute == "Readlater"){
-
-            setSavedWindow(true);
-
-            setTimeout(()=>{
-                setSavedWindow(false)
-            }, 5000);
-            
+        if(attribute == "Readlater" && typeofrelation == "Create"){
+            setSavedWindow(true)
+            setSavedWindowText("Added To Saved Posts")
         }
 
     }
     
-
+    
     const Showfollowers=(statelist,type)=>{
         
         const Mutatedwindow={...windowlist};
@@ -254,7 +254,7 @@ export default function Home({mydata}){
 
     return (
         <div style={{height:`${windowlist.list.length > 0 ? "100vh" : "100%"}`,overflow:windowlist.list.length > 0 ? "hidden": "visible"}}> 
-               <SavedInfoDiv active={savedWindow}>Added To Saved Contents</SavedInfoDiv>
+              
                {windowlist.list.length > 0 ?
                 <Showfollower setlist={()=>setwindowlist(prev=>{return {...prev,list:[]}})} attribute={windowlist.attribute} list={windowlist.list}></Showfollower>
                 : null}
@@ -279,7 +279,7 @@ export default function Home({mydata}){
                                         retweet={item.Retweet}
                                         comment={item.allcomments}
                                         readlater={item.Readlater}
-                                        key={uniqid()}//key numarası
+                                        key={index}//key numarası
                                         followeds={item.personal.Followed}
                                         title={item.title}
                                         titleimage={"yaprak.jpg"}
