@@ -1,6 +1,6 @@
 import React, { useState,useEffect,useContext} from 'react';
 import styled from "styled-components";
-import {checkTheContent} from "../../Api/requests"
+import {checkTheContent,SearchContents} from "../../Api/requests"
 import {CreateUtilContext} from "../../context/UtilContext"
 import {Black} from "../../components/styledcomponents/Globalstyles"
 import {HighlightOffOutlined,SecurityOutlined,VisibilityOff,Visibility,Search} from "@material-ui/icons"
@@ -114,6 +114,7 @@ const Postcontrol=({contentData})=>{
     const [selectedCard,setSelectedCard] = useState({});
     const {setSavedWindow,setSavedWindowText} = useContext(CreateUtilContext)
     const [contentDataState,setContentData] = useState(contentData)
+    const [searchValue,setSearchValue] = useState("");
   
 
     const blackHandler = ()=>{
@@ -147,16 +148,31 @@ const Postcontrol=({contentData})=>{
         setSelectedCard(contentCopy[IndexOfCopy])
     }
 
-    const SearchBarHandler = (event)=>{
+    const InputSearcHandler = (event)=>{
 
+         if(event.key == "Enter"){
+            return ButtonSearcHandler()
+         }
+         
+         setSearchValue(event.target.value)
     }   
+
+    const ButtonSearcHandler=()=>{
+        
+        if(searchValue.length <= 0) return
+        
+        SearchContents(searchValue,setContentData)
+    
+    }
 
     return (
         <ExteriorDiv allowScroll={selectedCard.id ? true : false}>
             <Black onClick={blackHandler} aktif={selectedCard.id ? true : false}></Black>
-            <InputHolder>
-                <TextField 
-                   onChange={SearchBarHandler}
+            <InputHolder id="SearchBar">
+                <TextField
+                   onChange={InputSearcHandler} 
+                   onKeyPress={InputSearcHandler}
+                   value={searchValue}
                    size="small"
                    InputProps={{
                       style:{cursor:"pointer"},
@@ -165,7 +181,7 @@ const Postcontrol=({contentData})=>{
                     variant="outlined" 
                     label="Search For Title...">
                 </TextField>
-                <Button style={{marginLeft:"10px",fontWeight:"bold",textTransform:"capitalize"}} variant="contained">Search</Button>
+                <Button onClick={ButtonSearcHandler} style={{marginLeft:"10px",fontWeight:"bold",textTransform:"capitalize"}} variant="contained">Search</Button>
             </InputHolder>
             {
                 selectedCard.id ?
@@ -190,7 +206,7 @@ const Postcontrol=({contentData})=>{
           
             <InnerDiv>
                 {
-                    contentData.map((item,index)=>{
+                    contentDataState.map((item,index)=>{
                         return (
                             <CardOutside extend={false} onClick={()=>setSelectedCard(item)}>
                                 <CardInner>

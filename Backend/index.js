@@ -17,8 +17,12 @@ const io = require("socket.io")(Myserver,{cors:{origin:"http://localhost:3000"}}
 const Userrouter=require("./routes/userrouter");
 const Notifyrouter=require("./routes/Notificationroute");
 const cookieparser = require("cookie-parser")
+const Session = require("express-session")
 const fileupload = require("express-fileupload");
-const { application } = require("express");
+//const csurf = require("csurf");
+const Token = require("csrf")
+//var csrfProtection = csrf({cookie:true})
+
 const port =  process.env.PORT || 3001 
 
 
@@ -27,22 +31,48 @@ io.on("connection",(socket)=>{
   
     socket.on("create",(UserId)=>{
         socket.join(UserId)
-        
     })
   //ilk connection oldugunda online olan herkesi odaya kat ayri ayri yerlestir
 })
 
+DB.sync()
+.then(()=>{})
 
+app.use(Session({
+   secret:"secret csrf-token",
+   resave:false,
+   saveUninitialized:true,
+   cookie:{}
+}))
+
+app.use(cookieparser())
 app.use(fileupload())
 app.set("socketio",io)
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
-app.use(cors({origin:"http://localhost:3000",credentials:true}));
+app.use(cors({origin:"http://localhost:3000",credentials:true,exposedHeaders:"csrf-token"}));
 
-DB.sync()
-.then(()=>{})
 
-app.use(cookieparser())
+//routes.............................................
+
+app.use("*",(req,res,next)=>{
+
+    console.log(req.session.firstCsrf)
+   
+    if(!req.session.firstCsrf){
+      
+        const csrf = new Token();
+        const secret = csrf.secretSync();
+        const createdToken  = csrf.create(secret);
+        req.session.csrfSecret = secret;
+        req.session.firstCsrf = true;
+        res.header("csrf-token",createdToken)
+    }
+
+    next()
+
+})
+
 app.use(Loginrouter);
 app.use("/content",Contentrouter);
 app.use("/upload",Upload);

@@ -20,7 +20,6 @@ const Myapp=({Component,pageProps})=>{
    
     const Layout = Component.layout || ((page)=>page);
         
-    
     return (
        <>
          <UtilContextProvider>

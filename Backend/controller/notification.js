@@ -109,7 +109,7 @@ exports.sendReportMessage = async (req,res,next)=>{
         })
 
         io.sockets.in(TakerId).emit("Notification","");
-        res.json("success")
+        res.json("success");
 
     } catch (error){
        

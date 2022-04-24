@@ -9,7 +9,7 @@ position:absolute;
 left:50%;
 transform:translate(-50%,-50%);
 width:300px;
-height:200px;
+height:220px;
 text-align:center;
 transition:${({aktif})=>aktif ? "top 0.4s" : "top 0.4s, z-index 0.6s"};
 top:${({aktif})=>aktif ? "50%" : "200px"};

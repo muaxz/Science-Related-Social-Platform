@@ -1,5 +1,6 @@
 import React,{createContext,useState,useEffect} from 'react'
 import {Contextdata} from "../Api/requests";
+import router from "next/router"
 
 export const createusercontext=createContext();
 
@@ -12,23 +13,14 @@ const Usercontext=({children})=>{
     const[spinner,setspinner]=useState(false);
     
     useEffect(()=>{
-        
-        const token=localStorage.getItem("TOKEN");   
-        
-        //if(token){
 
-            Contextdata({
-                Token:token,
-                setcontextdata:setuserdata,
-                setlogged:setlogged,
-                setspinner:setspinner,
-                setallowaction:setallowaction,
-            })
-
-        //}
-        //else{
-            
-        //}
+        Contextdata({
+            setuserdata:setuserdata,
+            setlogged:setlogged,
+            setspinner:setspinner,
+            setallowaction:setallowaction,
+            router:router
+        })
 
     },[]);
 

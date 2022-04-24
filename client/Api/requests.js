@@ -1,11 +1,29 @@
 import axios from "axios";
-import Cookies from "universal-cookie"
+
 
 axios.defaults.baseURL="http://localhost:3001";
 
+axios.defaults.withCredentials = true;
 
 axios.interceptors.response.use(function (response) {
-  console.log("in interceptorsssss")
+  //dont forget to use that checking
+
+  if(typeof window !== "undefined"){
+
+    if(response.headers["csrf-token"] && response.config.method == "post"){
+      //only post methods can set the token again 
+       localStorage.setItem("csrf-token", response.headers["csrf-token"]) 
+
+    }else if(!localStorage.getItem("csrf-token") && response.config.method == "get" && response.headers["csrf-token"]){
+       //setting token once 
+       localStorage.setItem("csrf-token", response.headers["csrf-token"]) 
+
+    }
+
+
+
+  }
+  
   return response;
 }, function (error) {
   // Any status codes that falls outside the range of 2xx cause this function to trigger
@@ -13,14 +31,32 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
-export const trial=async (query,req)=>{
 
-  var {data} = await axios.get(`http://localhost:3001/content/usercontent/Like/${query.userıd}/10`,{headers:{Cookie:req.headers.cookie}})
+axios.interceptors.request.use(function (config) {
+  // Do something before request is sent
+  if(typeof window !== "undefined"){
 
-  return data;
-}
+    if(localStorage.getItem("csrf-token")){
 
-const Errorhandler=({data,seterrmsg,setwindow,setcontextdata,setlogged,setspinner,router})=>{
+      config.headers.common["csrf-token"] = localStorage.getItem("csrf-token")
+      
+    }
+
+  }
+
+  return config;
+  
+}, function (error) {
+  // Do something with request error
+  return Promise.reject(error);
+});
+
+
+
+
+
+
+export const Errorhandler=({data,seterrmsg,setwindow,setuserdata,setlogged,setspinner,router})=>{
 
    if(data && data.error){
 
@@ -34,10 +70,10 @@ const Errorhandler=({data,seterrmsg,setwindow,setcontextdata,setlogged,setspinne
 
       }else if(data.state == 401){
 
-        setcontextdata({});
+        setuserdata({});
         setlogged(false);
         setspinner(true);
-        localStorage.removeItem("TOKEN");
+        //router.push("/")
         return false;
 
       }
@@ -53,8 +89,8 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
     
 
     try{
-
-      const {data} =await axios.post("/login",{userdata:userdata},{withCredentials:true})
+      
+      const {data} =await axios.post("/login",{userdata:userdata})
   
       
       if(data.wrong == "WP"){
@@ -73,7 +109,6 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
         setlogged(true);
         setuserdata(data.Userdata);
         setspinner(true);
-        localStorage.setItem("TOKEN",data.token);//http cookie only ile store edicez
         router.push("/");
       }
 
@@ -83,18 +118,24 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
     
 }
 
-export const logout = async({setspinner,setuserdata,setlogged})=>{
-
+export const logout = async({setlogged,setuserdata,router,setspinner})=>{
+  
   try {
-      const response = await axios.get("/logout",{withCredentials:true})
-      console.log(response)
+
+      const response = await axios.get("/logout")
+      localStorage.removeItem("csrf-token")
       setlogged(false)
       setuserdata({})
-      setspinner(true)
-      console.log(logged)
+      router.push("/")
+
+      
   } catch (error) {
-    ///
+
+     router.push(error)
+
   }
+
+
 }
 
 
@@ -104,13 +145,14 @@ export const resigterreq=async({setbackenderror,userdata,setactive,seterrmsg})=>
 
     const{data}=await axios.post("/register",{userdata:userdata})
     
-    if(data.exist){
+    if(data.warning == "exist"){
         setbackenderror("EXİST")
         setactive(true)
     }
     else{
         console.log("Başarılı kayıt")
     }
+
   }catch(err){
       seterrmsg(true)
       console.log("sorun var");
@@ -168,9 +210,10 @@ export const Producecommentreq=async ({Message,TakerId,setnumbercom,setwindow,Us
 }
 
 export const Homereq=async({currentdata,seterrmsg,setwindow,setcontentdata,order,setstopreq,category,paignation,selectionlist,setselection})=>{
-
+ 
   try {
-    const{data}=await axios.get(`content/gethome/${order}/${category}`,{withCredentials:true})
+    
+    const {data} = await axios.get(`content/gethome/${order}/${category}`)
     
     if(Errorhandler({data,seterrmsg,setwindow})){
    
@@ -215,13 +258,13 @@ export const Createrelationreq=async({UserId,PostId,attribute,seterrmsg,setwindo
 
   try {
 
-    const{data}=await axios.post(`content/createrelation`,{
+    const {data} =await axios.post(`content/createrelation`,{
       UserId:UserId,
       PostId:PostId,
       attribute:attribute,
       relationtype:relationtype,
       UserIdofcontent:UserIdofcontent,
-    })
+    },{withCredentials:true})
 
     
   
@@ -246,7 +289,7 @@ export const Contentreq=async({contentId,setcontent,seterrmsg,setwindow})=>{
     const{data}=await axios.get(`content/${contentId}`);
     
     if(Errorhandler({data,seterrmsg,setwindow})){ 
-      console.log(data.data);
+       console.log(data.data);
        setcontent(data.data);
 
        
@@ -311,7 +354,7 @@ export const Commentreq=async({contentId,setactiveproduce,setcomment,seterrmsg,s
 
 }
 
-export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwindow,setlogged,setallowaction})=>{
+export const Contextdata=async ({setspinner,setuserdata,seterrmsg,setwindow,setlogged,setallowaction,router})=>{
  
   try {
 
@@ -319,7 +362,7 @@ export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwi
 
     console.log(data);
   
-    if(Errorhandler({data,seterrmsg,setwindow,setcontextdata,setlogged,setspinner})){ 
+    if(Errorhandler({data,seterrmsg,setwindow,setuserdata,setlogged,setspinner,router})){ 
 
       const mydata={ 
         UserId:data.userdata.id,
@@ -329,10 +372,10 @@ export const Contextdata=async ({Token,setspinner,setcontextdata,seterrmsg,setwi
         Userimage:data.userdata.imageurl,
      }
       
-      setcontextdata(mydata);
-      setspinner(true);
+      setuserdata(mydata);
       setlogged(true);  
-      setallowaction(true);    
+      setallowaction(true);  
+      setspinner(true);  
     }   
     else{
         return;
@@ -455,18 +498,12 @@ export const Createuserrelation=async({UserId,Prevent,FollowedId,checkiffollow})
       FollowerId:UserId,
       FollowedId:FollowedId,
       checkiffollow:checkiffollow,
-    })
-    /*
+    },{withCredentials:true})
+    
     setTimeout(() => {
       Prevent.current = true
     }, 2000);
-    */
     
-    if(Errorhandler({data,seterrmsg,setwindow})){
-      
-      return;
-    }
-    else return;
 
   } catch (error) {
        console.log("relation error")
@@ -485,12 +522,12 @@ export const Notificationreq=async({UserId,setnavdata,order,navdata,lastrow})=>{
     const Newdata=data.mydata;
     
     if(lastrow){
-      console.log("looo2")
+     
       setnavdata(Newdata.concat(Mycurrentdata));
 
     }
     else{
-      console.log("looo")
+     
       setnavdata(Mycurrentdata.concat(Newdata));
     }
     
@@ -629,7 +666,7 @@ export const UpdateNotificationactive = async ({FollowedId,Prevent,FollowerId,cu
 export const UpdateProfile = async ({userdata,typeofupdate,setuploading,setsuccesfulupload,userinfo,setuserinfo})=>{
   
   try {
-
+          
           const {data} = await axios.post(`/user/updateprofile/${typeofupdate}`,userdata,{withCredentials:true})
           
           if(!data.state){
@@ -650,7 +687,7 @@ export const UpdateProfile = async ({userdata,typeofupdate,setuploading,setsucce
           setuploading(false)
 
   }catch (error) {
-    console.log(error)
+
     setsuccesfulupload("ERROR")
   }
 }
@@ -706,7 +743,7 @@ export const ReportUserReq = async({checkBoxValue,message,ContentId})=>{
 
 }
 
-//Editor stuff
+// MODERATOR STUFF.........................................................
 
 export const checkTheContent= async ({contentID,publicValue,actionType})=>{
 
@@ -758,4 +795,18 @@ export const CheckPosts = async ()=>{
       
     }
     
+}
+
+export const SearchContents= async(searchValue,setContent)=>{
+
+    try {
+     
+      var {data} = await axios.get(`/content/getModContents/${searchValue}/null`,{withCredentials:true})
+   
+      setContent(data.data)
+
+    } catch (error) {
+      //push 500 
+    }
+
 }

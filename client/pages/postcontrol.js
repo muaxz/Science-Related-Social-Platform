@@ -1,11 +1,16 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import Head from "next/head";
 import PostControl from "../containers/pages/PostControl";
 import Mainlayout from "../containers/Layout/mainlayout";
+import {createusercontext} from "../context/Usercontext";
 import axios from 'axios';
 
 
-const PostControlPage=({content})=>{
+const PostControlPage=({error,content})=>{
+
+
+    if(error) return null;
+    
 
     return (
        <React.Fragment>
@@ -31,12 +36,24 @@ export async function getServerSideProps({req,res}){
     try {
 
         var needRedirect = false;
+       
 
         if(req.headers.cookie){
 
             var response = await axios.get("http://localhost:3001/content/getModContents/Default/null",{headers:{Cookie:req.headers.cookie}})
 
-            if(response.data.state == 404) needRedirect = true;
+            if(response.data.state == 404){
+
+                needRedirect = true
+                
+            }
+            else if(response.data.state == 401){
+
+                return {
+                    props:{error:401}
+                }
+
+            }
 
         }else needRedirect = true;
 

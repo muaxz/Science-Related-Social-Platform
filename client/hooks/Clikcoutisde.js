@@ -9,8 +9,6 @@ function useClickoutside(){
 
         if(ref.current && !ref.current.contains(event.target)){
             setvisible(false);
-            
-            
         }  
         
     }

@@ -36,11 +36,15 @@ export default function Navigationtools({optnumber,optname,Navdata,Logout}){
       title = "Oluştur"
       Myoption = <React.Fragment>
                     <Option1div>
-                        <Icon className="far fa-edit" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
-                        <div style={{marginLeft:"8px"}}>
-                            <p>Gönderi</p>
-                            <p style={{fontSize:"13px"}}>Sayfanda bir gönderi paylaş</p>
-                        </div>
+                        <Link href={"/post"}>
+                            <div>
+                                <Icon className="far fa-edit" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                <div style={{marginLeft:"8px"}}>
+                                    <p>Gönderi</p>
+                                    <p style={{fontSize:"13px"}}>Sayfanda bir gönderi paylaş</p>
+                                </div>
+                            </div>
+                        </Link>
                     </Option1div>
                     <Option1div>
                         <Icon className="fas fa-users " Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
@@ -97,7 +101,7 @@ export default function Navigationtools({optnumber,optname,Navdata,Logout}){
 
                     var ReportDiv = <p style={{fontWeight:"bold",fontSize:"15px"}}>{item.ReportMessage}</p>
                     
-     
+                    //if UserId does not exist, it means that this notification comes from MOD
                     return (<Option1div key={index} check={item.Facecheck}>
                               <Link href={{pathname:`${myitemobj.href}/${item[myitemobj.idname]}`,query:{name:"Post"}}}>
                                 <div style={{display:"flex",alignItems:"center"}}>

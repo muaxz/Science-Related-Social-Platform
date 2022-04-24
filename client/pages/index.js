@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Head from "next/head";
 import Main from "../containers/pages/Home";
 import Mainlayout from "../containers/Layout/mainlayout";
@@ -7,6 +7,7 @@ import axios from 'axios';
 
 const Home=({content})=>{
 
+    
     return (
        <React.Fragment>
            <Head>
@@ -29,10 +30,10 @@ Home.layout=(children)=>{
 export async function getServerSideProps({req,res}){
 
     try {
-        
-        var {data} =await axios.get(`http://localhost:3001/content/gethome/0/Felsefe`)
 
-    
+        var {data} = await axios.get(`http://localhost:3001/content/gethome/0/Felsefe`,req.headers.cookie ? {headers:{Cookie:req.headers.cookie}} : {})
+
+        
         if(data && data.error){
 
             return {

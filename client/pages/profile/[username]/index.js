@@ -8,7 +8,7 @@ import axious from "axios";
 
 export default function Stuff({profile,counts,contents,getquery}){
 
-    console.log(profile)
+  
     return (
         <React.Fragment>
             <Head>
@@ -21,15 +21,15 @@ export default function Stuff({profile,counts,contents,getquery}){
     )
 }
 
-export async function getServerSideProps({query}){ 
+export async function getServerSideProps({req,query}){ 
     
     try {
         
         
-        const recieve=await axious.all([
-            axious.get(`user/getuserprofile/${query.username}`),
-            axious.get(`user/getusercount/${query.username}`),
-            axious.get(`user/getuserprofilecontent/${query.username}/${query.name == "Post" ? "true" : "false"}/${query.name}/10`)
+        const recieve = await axious.all([
+            axious.get(`user/getuserprofile/${query.username}`,{headers:{Cookie:req.headers.cookie}}),
+            axious.get(`user/getusercount/${query.username}`,{headers:{Cookie:req.headers.cookie}}),
+            axious.get(`user/getuserprofilecontent/${query.username}/${query.name == "Post" ? "true" : "false"}/${query.name}/10`,{headers:{Cookie:req.headers.cookie}})
         ])
         //users?age=15&gender=m&
         if(recieve[0].data && recieve[0].data.error || recieve[1].data && recieve[1].data.error){

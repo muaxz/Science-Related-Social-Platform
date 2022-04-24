@@ -6,6 +6,7 @@ const Report = require("../models/ReportModel")
 const {Op}=require("sequelize");
 const UserUser = require("../models/UserUser");
 const Notification=require("../models/Notificationmodel");
+const firebase = require("../firebase/firebase")
 
 
 
@@ -122,21 +123,9 @@ exports.getAllContentsForModStuff = async (req,res,next)=>{
 
 }
 
-exports.contentSearchingForModStuff=()=>{
-
-  try {
-    
-  } catch (error) {
-    
-  }
-
-}
-
 exports.gethome=async(req,res,next)=>{
 
   const {number,category} = req.params;
-  console.log(number)
-  console.log(category)
   var offsetValue = parseInt(number);//paramstand string olarak alıyoruz
 
   try {
@@ -361,7 +350,6 @@ exports.getusercontent=async(req,res,next)=>{
   }
   
 }
-
 //Content sayfası
 //namechange
 exports.getcontent=async (req,res,next)=>{
@@ -402,7 +390,6 @@ exports.getcontent=async (req,res,next)=>{
     return;
   }
 }
-
 //Report section EDITOR STUFF !
 exports.getReportedPosts = async (req,res,next)=>{
 
@@ -441,7 +428,6 @@ exports.getReportedPosts = async (req,res,next)=>{
    }
      
 }
-
 
 exports.ContentChecking = async (req,res,next)=>{
 
@@ -497,4 +483,50 @@ exports.reportDeletion = async (req,res,next)=>{
   }
 
 }
+
+exports.uploadContentImage = async (req,res,next)=>{
+
+  try {
+
+                if(req.files.files.size/1024 < 3000){
+
+                    const blob = firebase.bucket.file(req.files.files.name)
+
+                            const generatedToken = v4()
+                         
+                            const blobwriter = blob.createWriteStream({
+                                    metadata:{
+                                            contentType:"image/png",
+                                            metadata:{
+                                                 firebaseStorageDownloadTokens: generatedToken //generating uniqe token
+                                            }
+                                                    
+                                    }
+                            })
+                                
+                            blobwriter.on("error",(err)=>{
+                                  
+                            })
+                                
+                            blobwriter.on("finish",(data)=>{
+
+                                res.json({uploaded:true,url:`https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${req.files.files.name}?alt=media&token=${generatedToken}`})
+                            
+                            })
+            
+                            blobwriter.end(req.files.files.data)
+                }else{
+
+                    res.json({uploaded:false,url:"ERROR",state:"Big Size File!"})
+
+                }
+              
+
+  } catch (error) {
+      return next()
+  }
+
+}
+
+
 

@@ -5,7 +5,9 @@ import Mainlayout from "../containers/Layout/mainlayout";
 import axios from 'axios';
 
 
-const ReportPage=({content})=>{
+const ReportPage=({error,content})=>{
+
+    if(error) return null;
 
     return (
        <React.Fragment>
@@ -29,22 +31,29 @@ ReportPage.layout=(children)=>{
 export async function getServerSideProps({req,res}){
     
     try {
+        
         var needRedirect = false;
         if(req.headers.cookie){
 
             var response = await axios.get("http://localhost:3001/content/getReports",{headers:{Cookie:req.headers.cookie}})
             if(response.data.state == 404){
                 needRedirect = true;
+            }else if(response.data.state == 401){
+                return {
+                    props:{error:401}
+                }
             }
 
         }else needRedirect = true
 
         if(needRedirect){
+
             return {
                 redirect:{
                     destination:"/404"
                 }
             };
+
         }
 
         return {

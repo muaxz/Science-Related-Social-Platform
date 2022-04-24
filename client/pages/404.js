@@ -4,7 +4,7 @@ import Mainlayout from '../containers/Layout/mainlayout'
 
 const Div = styled.div`
 text-align:center;
-padding-top:50px;
+padding-top:100px;
 `
 
 export default function Error404() {

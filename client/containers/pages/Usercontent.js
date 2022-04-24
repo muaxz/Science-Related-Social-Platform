@@ -45,7 +45,7 @@ padding-top:25px;
 `
 
 export default function Usercontent({params,mydata}){
-    console.log(mydata)
+   
     const {bottom}=useScroll();
     const [data,setdata]=useState(mydata);
     const {userdata}=useContext(createusercontext)
@@ -72,7 +72,7 @@ export default function Usercontent({params,mydata}){
      
     useEffect(()=>{
     
-
+       console.log("here")
        if(bottom && !stopscrolling){
 
            var count=ordercount;
@@ -107,7 +107,6 @@ export default function Usercontent({params,mydata}){
            
         }else{
 
-            console.log(attribute,postId)
             Deleteitem(index)
             Createrelationreq({
                 UserId:userdata.UserId,

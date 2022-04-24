@@ -9,6 +9,7 @@ import {TextField,Button,InputAdornment} from '@material-ui/core';
 import {withStyles,makeStyles} from '@material-ui/core/styles';
 import {Global} from "../components/styledcomponents/Globalstyles"
 import Guardlayout from "../containers/Layout/routerguard";
+import Validate from "validator"
 import {AccountCircle,EmailOutlined,Lock,ArrowRight, ArrowLeft,SupervisorAccount,SupervisedUserCircleSharp, SupervisorAccountRounded, SupervisorAccountSharp, AccountCircleSharp, AccountCircleRounded, Person, Home, ArrowRightAltRounded, ChevronRight, Assignment} from "@material-ui/icons"
 
 
@@ -158,34 +159,42 @@ const Login=()=>{
     const[currenturl,setcurrent]=useState("");
     const[backenderror,setbackenderror]=useState("")
     const[errormsg,seterror]=useState(false);
-    const[register,setregister]=useState("Login");
+    const[actionType,setActionType]=useState("Login");
     const[windowactive,setactive]=useState(false);
     const router=useRouter();
     const[inputs,setinputs]=useState({
 
         Login:{
+
             email:{
                 placeholder:"E-posta",
                 func:"Login",
                 value:"",
                 icon:"far fa-envelope",
                 focused:false,
+                helperText:"",
+                validation:true,
             },
             password:{
                 placeholder:"Şifre",
                 func:"Login",
                 value:"",
                 icon:"fas fa-unlock-alt",
-                focused:false
+                focused:false,
+                helperText:"",
+                validation:true,
             }
         },
         Register:{
+
             name:{
                placeholder:"İsim",
                func:"Register",
                value:"",
                icon:"fas fa-user",
                focused:false,
+               helperText:"",
+               validation:true,
             },
             surname:{
                 placeholder:"Soy İsim",
@@ -193,6 +202,8 @@ const Login=()=>{
                 value:"",
                 icon:"fas fa-user",
                 focused:false,
+                helperText:"",
+                validation:true,
             },
             email:{
                 placeholder:"E-posta",
@@ -200,6 +211,8 @@ const Login=()=>{
                 value:"",
                 icon:"far fa-envelope",
                 focused:false,
+                helperText:"This is not a proper email adress !",
+                validation:true,
             },
             password:{
                 placeholder:"Şifre",
@@ -207,7 +220,10 @@ const Login=()=>{
                 value:"",
                 icon:"fas fa-unlock-alt",
                 focused:false,
+                helperText:"Make sure that your password has at least 6 length and contains one upper, one lower character and one number.",
+                validation:true,
         }
+
     }});
     
 
@@ -215,7 +231,7 @@ const Login=()=>{
 
        console.log("rendered");
 
-       const random=Math.floor(Math.random() * 15);
+       const random = Math.floor(Math.random() * 15);
 
        /*axioss.get("https://api.pexels.com/v1/search?query=magic",{
         headers:{
@@ -234,28 +250,65 @@ const Login=()=>{
 
           switch(item){
               case "email":
-                  return <EmailOutlined style={{color:"white"}}></EmailOutlined>
+                  return <EmailOutlined  style={{color:"white"}}></EmailOutlined>
               case "password":
                   return <Lock style={{color:"white"}}></Lock>
               case "name":
+                  return <AccountCircle style={{color:"white"}}></AccountCircle> 
               case "surname":
                   return <AccountCircle style={{color:"white"}}></AccountCircle>        
           }
     }
+    //For Registering
+    const InputErrorHandler=(inputType,value)=>{
+      
+        switch (inputType) {
+            case "email":
+
+                if(!Validate.isEmail(value)){
+                    console.log(value)
+                    return {state:"notProperEmail",validate:false};
+                }
+                break;
+            case "password":
+    
+                if(!Validate.isStrongPassword(value,{minSymbols:0,minNumbers:1,minLowercase:1,minUppercase:1,minLength:6}))
+                return {state:"Strong",validate:false};
+                break;
+                //newpassword character checking
+            default:
+                break;
+        }
+
+        return {state:"Successful",validate:true};
+    }
 
     const Submithandler=()=>{
 
-        console.log("submit");
-
-        const currentinput={...inputs};
-        const ourdata={};
-        for (const key in currentinput[register]) {
-            ourdata[key]=currentinput[register][key].value.trim();
-        }        
         
 
-        switch(register){
+        const currentInputValues = {...inputs};
+        const ourdata={};
+        for (const key in currentInputValues[actionType]) {
+            ourdata[key]=currentInputValues[actionType][key].value.trim();
+            if(actionType == "Register" && (key == "email" || key == "password")){
+
+                const handlerResponse = InputErrorHandler(key,currentInputValues[actionType][key].value.trim())
+                if(!handlerResponse.validate){
+                  
+                    currentInputValues[actionType][key].validation = false;
+                    return setinputs(currentInputValues)
+
+                }
+            }
+        }        
+
+        
+        
+
+        switch(actionType){
             case "Login":
+                
                 loginreq({
                      setlogged:setlogged,
                      userdata:ourdata,
@@ -266,8 +319,10 @@ const Login=()=>{
                      setactive:setactive,
                      setspinner:setspinner,
                  })
+
                 break;
             case "Register":  
+
                 resigterreq({
                     setbackenderror:setbackenderror,
                     userdata:ourdata,
@@ -281,29 +336,31 @@ const Login=()=>{
     const chekciffocus=(typeoffocus,type)=>{
         
         const inputsget={...inputs};
-        inputsget[register][type].focused=typeoffocus == "focus" ? true : false;
+        inputsget[actionType][type].focused = typeoffocus == "focus" ? true : false;
         setinputs(inputsget);
     }
 
-    const changehandler=(e,type,section)=>{
+    const InputChangeHandler=(e,type,section)=>{
         const inputsget={...inputs};
         inputsget[type][section].value=e.target.value;
+        inputsget[type][section].validation=true;
         setinputs(inputsget);
     }
 
     var backenderrormessage="";
+    //TODO Delete this part
     if(errormsg){
         return <h2>Something Went Wrong...</h2>
     }
     
     if(backenderror == "EXİST"){
-      backenderrormessage="Girdğiniz email zaten kullanımda!"
+      backenderrormessage="Girdğin email zaten kullanımda!"
     }
     else if(backenderror == "WP"){
-      backenderrormessage="Girdiğiniz şifre yanlış!"
+      backenderrormessage="Girdiğin şifre yanlış!"
     }
     else if(backenderror == "WE"){
-      backenderrormessage="Girdiğiniz e-posta yanlış!"
+      backenderrormessage="Girdiğin e-posta yanlış!"
     }
     
     return (
@@ -313,11 +370,11 @@ const Login=()=>{
              
             </Head>
             <Global></Global>
-           <Window closefunction={()=>setactive(false)} active={windowactive} type="error">E-posta veya şifre yanlış!</Window>
+           <Window closefunction={()=>setactive(false)} active={windowactive} type="error">{backenderrormessage}</Window>
            <WindowDiv>    
-               <Registerloginholder onClick={register == "Login" ? ()=>setregister("Register") : ()=>setregister("Login")}>
+               <Registerloginholder onClick={()=>setActionType(actionType == "Login" ? "Register" : "Login")}>
                    {
-                       register == "Login" ?
+                       actionType == "Login" ?
                        <div style={{display:"flex"}}>
                            <Assignment style={{color:"white",borderRadius:"50%",fontSize:"30px"}}></Assignment>
                        </div>
@@ -330,10 +387,10 @@ const Login=()=>{
                </div>
                <p  style={{color:"white",flex:4,wordWrap:"break-word"}}>Hakikatin temsilcisinin en az olduğu zaman, onu dile getirmenin tehlikeli olduğu zaman değil, can sıkıcı olduğu zamandır.</p>
               
-               <div style={{width:register == "Register" ? "100%" : "70%",boxSizing:"border-box",flex:7,display:register == "Register" ? "flex" : "block",flexWrap:"wrap"}}>
+               <div style={{width:actionType == "Register" ? "100%" : "70%",boxSizing:"border-box",flex:7,display:actionType == "Register" ? "flex" : "block",flexWrap:"wrap"}}>
                    {
-                        Object.keys(inputs[register]).map(item=>
-                        (<InputHolder  checkregister={register == "Register" ? true:false} key={item}>
+                        Object.keys(inputs[actionType]).map(item=>
+                        (<InputHolder  checkregister={actionType == "Register" ? true:false} key={item}>
                            <TextField 
                             InputProps={{
                                 style:{color:"white"},
@@ -341,31 +398,33 @@ const Login=()=>{
                             }}
                             className={stylesget.root} 
                             type={item == "password" ? "password" : ""}
-                            onChange={(e)=>changehandler(e,register,item)} 
+                            onChange={(e)=>InputChangeHandler(e,actionType,item)} 
                             onFocus={()=>chekciffocus("focus",item)}     
                             onBlur={()=>chekciffocus("remove",item)} 
-                            value={inputs[register][item].value}
-                            focused={inputs[register][item].value !== "" || inputs[register][item].focused == true ? true : false} 
-                            size="small"   
-                            label={inputs[register][item].placeholder} 
+                            value={inputs[actionType][item].value}
+                            focused={inputs[actionType][item].value !== "" || inputs[actionType][item].focused == true ? true : false} 
+                            size="small"
+                            error={!inputs[actionType][item].validation}   
+                            helperText={!inputs[actionType][item].validation ? inputs[actionType][item].helperText : ""}
+                            label={inputs[actionType][item].placeholder} 
                             variant='outlined'></TextField>
                         </InputHolder>
                         ))
                     }   
                     {
-                        register == "Login" ? <p style={{color:"#EB3232"}}>Şifreni mi unuttun?</p> : ""
+                        actionType == "Login" ? <p style={{color:"#EB3232"}}>Forget Password ?</p> : ""
                     }
                 </div>    
                 <div style={{display:"flex",flex:"3",width:"100%"}}> 
                         <InputHolder>
                             {
-                                register == "Login" ?
+                                actionType == "Login" ?
                                 <Button  
                                     style={{width:"50%"}}
                                     inputProps={{style:{color:"red"}}}   
                                     variant="contained"
                                     endIcon={<ChevronRight style={{fontSize:"30px"}}></ChevronRight>}
-                                    onClick={register == "Login" ? Submithandler : ()=>setregister("Login")}>
+                                    onClick={actionType == "Login" ? Submithandler : ()=>setActionType("Login")}>
                                     Giriş Yap 
                                 </Button>  
                                 :  

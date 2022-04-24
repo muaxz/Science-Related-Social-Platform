@@ -6,6 +6,7 @@ import useClickoutsie from '../../../../hooks/Clikcoutisde';
 import {createusercontext} from "../../../../context/Usercontext";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
+import router from "next/router";
 import {Getusersforsearchbar,logout} from "../../../../Api/requests"
 import { AccountCircle, Home,Assignment} from '@material-ui/icons';
 
@@ -165,7 +166,7 @@ color:white;
 //ToDo 
 export default function Navigation({Data,Count,Reloadfunc,Update}){
  
-    console.log(Data)
+    
     const {logged,spinner,userdata,setspinner,setuserdata,setlogged} = useContext(createusercontext);
     const {ref,visible,setvisible} = useClickoutsie();
     const {ref:ref2,visible:visible2,setvisible:setvisible2} = useClickoutsie();
@@ -210,10 +211,12 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
     },[visible2])
 
     const Logout=()=>{
+
         logout({
             setlogged:setlogged,
             setuserdata:setuserdata,
-            setspinner:setspinner
+            setspinner:setspinner,
+            router:router
         })
     }
 
@@ -332,9 +335,9 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
 
                                 :
             
-                                usersforsearch.map((item)=>{
+                                usersforsearch.map((item,index)=>{
                                    
-                                    return(<Searchelements onClick={()=>setinputvalue("")}>
+                                    return(<Searchelements key={index} onClick={()=>setinputvalue("")}>
                                             <Link href={{
                                                 pathname:`/profile/${item.id}`,
                                                 query:{name:"Post"}

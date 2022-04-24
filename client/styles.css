@@ -22,6 +22,9 @@
 /* ckeditor5-image/theme/imagestyle.css */
 
 
+.ck-content .imageDisplayNone{
+    display: none;
+}
 
 .ck-content img{
     max-width: 600px;

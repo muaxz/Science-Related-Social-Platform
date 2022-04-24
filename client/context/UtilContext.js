@@ -11,6 +11,7 @@ const NightmodeContext = ({children})=>{
             setSavedWindow(false)
         }, 4000);
     },[savedWindow])
+    
     return (
       <CreateUtilContext.Provider value={{savedWindow:savedWindow,setSavedWindow:setSavedWindow,savedWindowText:savedWindowText,setSavedWindowText:setSavedWindowText}}>
           {children}

@@ -5,8 +5,9 @@ const {v4}=require("uuid");
 
 
 
-exports.login = async (req,res,next)=>{
 
+exports.login = async (req,res,next)=>{
+  
    try{
 
       const {email,password} = req.body.userdata;
@@ -32,8 +33,10 @@ exports.login = async (req,res,next)=>{
                 //ToDorefresh token
                jwt.sign({UserId:user.id,UserRole:user.Role},"secretkey",(err,token)=>{
                   //public key or private key
-                   res.cookie("myauth",token,{httpOnly:true,path:"/"})
+                   console.log("eyyoo heree")
+                   res.cookie("myauth",token,{httpOnly:true,path:"/",secure:true})
                    return res.json({Userdata:mydata,token:token,auth:true});
+                        
                })
                
             }  
@@ -51,12 +54,11 @@ exports.login = async (req,res,next)=>{
    }
    catch(err){
         //server error
-      
+        console.log(err)
         next();
         return;
    }
 }
-
 
 exports.register = async (req,res,next)=>{
 
@@ -64,7 +66,7 @@ exports.register = async (req,res,next)=>{
 
   try{
 
-      const user=await User.findOne({where:{email:email}});
+      const user = await User.findOne({where:{email:email}});
    
       if(user){
 
@@ -101,7 +103,7 @@ exports.register = async (req,res,next)=>{
 }
 
 exports.logout = async(req,res,next)=>{
-    console.log("Logout aloooooooooooooo")
+    res.clearCookie("connect.sid")
     res.clearCookie("myauth",{path:"/"})
     res.json({state:"success"})
 

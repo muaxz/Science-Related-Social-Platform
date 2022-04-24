@@ -368,8 +368,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             case "email":
                 return Validate.isEmail(value)
             case "password":
-                console.log(value.New)
-                console.log(value.Newvalidation)
+                
             
                 if(value.New !== value.Newvalidation)
                 return {state:"Unequal",validate:false}
@@ -482,13 +481,13 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
     }
 
     const Sendupdates = async (typeofupdate)=>{
-
+        //TODO look for parts for seperation
         const values = {}
         const copy = {...userinfo}
         var updateFor = ""
 
         if(!isWindowforsettings){
-            console.log("IN UPDATE")
+            
             updateFor = "Profile"
             values.backcrop = result.Backimage.cropvalues
             values.profile  = result.Profileimage.cropvalues

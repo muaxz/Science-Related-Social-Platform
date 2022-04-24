@@ -121,7 +121,9 @@ max-width:1600px;
 width:100%;
 height:400px;
 `
+const Triala = styled.script`
 
+`
 const Trial = styled.div`
 position:absolute;
 bottom:0;

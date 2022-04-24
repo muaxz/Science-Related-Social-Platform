@@ -368,7 +368,6 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
     return (
 
        <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={Calculatetime} draft={draft} iscomment={iscomment}>
-
            {
                //draft cover
                draft ?

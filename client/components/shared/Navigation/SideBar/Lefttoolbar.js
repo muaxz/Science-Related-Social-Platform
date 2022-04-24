@@ -143,8 +143,8 @@ const Lefttoolbar=({makeactive,myactive})=>{
                 <NavigationDiv>
                     <hr></hr>
                         <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
-                            {firstlist.current.map((item)=>(
-                                <Link href={`/[userıd]/${item.path}`} as={`/${userdata.UserId}/${item.path}`}>
+                            {firstlist.current.map((item,index)=>(
+                                <Link key={index} href={`/[userıd]/${item.path}`} as={`/${userdata.UserId}/${item.path}`}>
                                     <Li className="getli" leftbaractive={myactive}>
                                         <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>   
                                         <Spanfordesc    leftbaractive={myactive}>{item.desc}</Spanfordesc> 
@@ -158,8 +158,8 @@ const Lefttoolbar=({makeactive,myactive})=>{
                 <NavigationDiv>     
                     <hr></hr>
                         <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
-                            {secondlist.current.map((item)=>(
-                                <Link href={`/${item.path}/${userdata.UserId}`}>
+                            {secondlist.current.map((item,index)=>(
+                                <Link key={index} href={`/${item.path}/${userdata.UserId}`}>
                                     <Li leftbaractive={myactive}>
                                         <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>   
                                         <Spanfordesc  leftbaractive={myactive}>{item.desc}</Spanfordesc> 
@@ -174,8 +174,8 @@ const Lefttoolbar=({makeactive,myactive})=>{
                     {
                         userdata.Userrole == "Mod" || userdata.Userrole == "Admin" ? 
                         (<ul style={{width:"100%",display:"flex",padding:"0px",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
-                            {thirdlist.current.map((item)=>(
-                                <Link href={`/${item.path}`}> 
+                            {thirdlist.current.map((item,index)=>(
+                                <Link key={index} href={`/${item.path}`}> 
                                     <Li leftbaractive={myactive}>
                                         <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>  
                                         {

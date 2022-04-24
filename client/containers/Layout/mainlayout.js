@@ -141,6 +141,7 @@ export default function Mainlayout({children}) {
     //
     return (
         <Bigdiv>
+            <input id='csrf-token' type='hidden' value=""></input>
             <Black onClick={()=>setactive(false)} aktif={active}></Black>
             <SavedInfoDiv active={savedWindow}>{savedWindowText}</SavedInfoDiv>
             <Navigation Update={Updatecount} Reloadfunc={Reloadnav} Count={countofdata} Data={navdata}></Navigation>

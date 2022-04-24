@@ -7,16 +7,14 @@ export default function Routerguard({children}){
 
     const myrouter = useRouter();
     const [controller,setcontroller]=useState(false);
-    const {userdata,logged} = useContext(createusercontext);
+    const {userdata,logged,spinner} = useContext(createusercontext);
 
     
     console.log(logged);
 
-    useEffect(()=>{
-     
-        const Token = localStorage.getItem("TOKEN");
+   
         
-        if(userdata.UserId){
+       if(spinner){
 
             if(myrouter.pathname == "/[userıd]/liked" || myrouter.pathname == "/[userıd]/saved"){
                 
@@ -72,9 +70,9 @@ export default function Routerguard({children}){
 
             }
             
-        }
+      }
 
-    },[userdata])
+ 
 
 
     return (
