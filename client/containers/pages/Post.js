@@ -292,12 +292,12 @@ export default function MyEditor (){
                                             defaultValue="default"
                                         >
                                             <MenuItem selected disabled value="default">
-                                                <em>Choose A Topic</em>
+                                                Choose A Topic
                                             </MenuItem>
-                                            <MenuItem value="Uzay">Ten</MenuItem>
-                                            <MenuItem value="Metafizik">Twenty</MenuItem>
-                                            <MenuItem value="Felsefe">Thirty</MenuItem>
-                                            <MenuItem value="Biyoloji">Ten</MenuItem>          
+                                            <MenuItem value="Uzay">Uzay</MenuItem>
+                                            <MenuItem value="Metafizik">Metafizik</MenuItem>
+                                            <MenuItem value="Felsefe">Felsefe</MenuItem>
+                                            <MenuItem value="Biyoloji">Biyoloji</MenuItem>          
                                         </Select>
                                        
                                     </FormControl>

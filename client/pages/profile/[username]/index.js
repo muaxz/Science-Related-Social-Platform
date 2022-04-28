@@ -3,12 +3,12 @@ import Head from "next/head";
 import Mainlayout from "../../../containers/Layout/mainlayout";
 import Profile from "../../../containers/pages/Profile";
 import {Global} from "../../../components/styledcomponents/Globalstyles"
-import axious from "axios";
+import axios from "axios";
 
 
 export default function Stuff({profile,counts,contents,getquery}){
 
-  
+    console.log(profile)
     return (
         <React.Fragment>
             <Head>
@@ -26,10 +26,10 @@ export async function getServerSideProps({req,query}){
     try {
         
         
-        const recieve = await axious.all([
-            axious.get(`user/getuserprofile/${query.username}`,{headers:{Cookie:req.headers.cookie}}),
-            axious.get(`user/getusercount/${query.username}`,{headers:{Cookie:req.headers.cookie}}),
-            axious.get(`user/getuserprofilecontent/${query.username}/${query.name == "Post" ? "true" : "false"}/${query.name}/10`,{headers:{Cookie:req.headers.cookie}})
+        const recieve = await axios.all([
+            axios.get(`user/getuserprofile/${query.username}`,req.headers.cookie ? {headers:{Cookie:req.headers.cookie}} : {}),
+            axios.get(`user/getusercount/${query.username}`,req.headers.cookie ? {headers:{Cookie:req.headers.cookie}} : {}),
+            axios.get(`user/getuserprofilecontent/${query.username}/${query.name == "Post" ? "true" : "false"}/${query.name}/10`,req.headers.cookie ? {headers:{Cookie:req.headers.cookie}} : {})
         ])
         //users?age=15&gender=m&
         if(recieve[0].data && recieve[0].data.error || recieve[1].data && recieve[1].data.error){

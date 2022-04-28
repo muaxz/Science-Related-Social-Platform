@@ -7,7 +7,7 @@ const csrfVerify = require("../controller/CsrfController")
 
 
 router.get("/getuserdata",Verifytoken,Usercontroller.getuserdata);//For context
-router.get("/getuserprofile/:UserId",Usercontroller.getuserprofile);//Profile page
+router.get("/getuserprofile/:UserId",Verifytoken,Usercontroller.getuserprofile);//Profile page
 router.get("/getusercount/:UserId",Usercontroller.getuserprofilecount);//Profile page
 router.post("/reportUser",csrfVerify,Verifytoken,Usercontroller.reportUser)
 router.post("/createuserrelation",csrfVerify,Verifytoken,Usercontroller.createuserrelation);
@@ -16,7 +16,7 @@ router.get("/getusername/:input",Usercontroller.getusername)//Search Bar
 router.get("/getuserdrafts/:UserId/:Order",Usercontroller.getuserdrafts);
 router.post("/deletepost",csrfVerify,Usercontroller.deletepost)// draft page
 router.get("/updateusernot/:FollowerId/:FollowedId/:currentactive",Usercontroller.updatenotification)
-router.post("/updateprofile/:typeofupdate",csrfVerify,Verifytoken,UploadMiddle,Usercontroller.updateprofile)
+router.post("/updateprofile/:typeofupdate",Verifytoken,UploadMiddle,Usercontroller.updateprofile)
 router.get("/getuserprofilefollowlist/:requestType/:UserId",Usercontroller.getuserprofilefollowlist)
 
 

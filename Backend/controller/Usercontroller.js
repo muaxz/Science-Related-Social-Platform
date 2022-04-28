@@ -8,6 +8,7 @@ const Comment = require("../models/Commentmodel");
 const reportModel = require("../models/ReportModel")
 const User = require("../models/Usermodel");
 const bcrypt=require("bcrypt");
+const nodemailer = require("nodemailer");
 
 
 //Searching User
@@ -41,12 +42,17 @@ exports.getusername = async(req,res,next)=>{
 //data of current user data
 exports.getuserdata=async(req,res,next)=>{
     
-    const currentuserid=req.userdata;
+    const currentuserid = req.userdata;
+    //userid
+    //role
+    //firstname
+    //surname
    
     try {
 
        const Myuserdata=await Usermodel.findOne({
-           where:{id:currentuserid.UserId}
+           where:{id:currentuserid.UserId},
+           attributes:{exclude:["password","ReportSum","email"]}
        })
 
        if(Myuserdata){
@@ -72,31 +78,43 @@ exports.getuserdata=async(req,res,next)=>{
 //profile pagedata
 exports.getuserprofile = async (req,res,next)=>{
 
-  const {UserId}=req.params;
+  const {UserId} = req.params;
+  var excludedAttributes = ["email","Notification","password","ReportSum","Role"]
+  if(req.userdata){
+
+    var {UserId:CurrentUserId} = req.userdata; 
+
+    if(CurrentUserId == UserId){
+        excludedAttributes = ["password","ReportSum","Role"]
+    }
+  
+  }
+
 
   try {
-     
-     const Myuserdata=await Usermodel.findOne({
-         where:{id:UserId}, 
-         attributes:["id","firstname","lastname","imageurl","Role","Personaltext","username","backgroundurl","email","Notification","backgroundtoken","imagetoken"],
-         include:[{
-           model:Usermodel,
-           as:"Followed",
-           attributes:["id"],
-           through:{
-            attributes:["FollowedId","Active","FollowerId","createdAt","updatedAt"]
-          }
-         },{
-           model:Usermodel,
-           as:"Follower",
-           attributes:["id"],
-           through:{
-            attributes:["FollowedId","Active","FollowerId","createdAt","updatedAt"]
-          }
-          
-         }]
-     })
 
+      const Myuserdata = await Usermodel.findOne({
+        where:{id:UserId}, 
+        attributes:{exclude:excludedAttributes},
+        include:[{
+          model:Usermodel,
+          as:"Followed",
+          attributes:["id"],
+          through:{
+           attributes:["FollowedId","Active","FollowerId","createdAt","updatedAt"]
+         }
+        },{
+          model:Usermodel,
+          as:"Follower",
+          attributes:["id"],
+          through:{
+           attributes:["FollowedId","Active","FollowerId","createdAt","updatedAt"]
+         }
+         
+        }]
+
+    })
+     
       return res.json({success:"success",userdata:Myuserdata});
 
   } catch (error){
@@ -364,8 +382,11 @@ exports.createuserrelation = async (req,res,next)=>{
       })
 
      }
+
      else{
 
+      const UserWillBeFollowed = await User.findOne({where:{id:FollowedId}});
+    
       await UserUsermodel.create({
         FollowerId:FollowerId,
         FollowedId:FollowedId,
@@ -374,16 +395,21 @@ exports.createuserrelation = async (req,res,next)=>{
         Active:false
       })
       
-      //burada zaten aynı kişiye takip atamaz
-      await Notificationmodel.create({
-        attribute:"Follow",
-        TakerId:[`${FollowedId}`],
-        UserId:FollowerId,
-      })
+        //karsi user icin notification gidip gitmemesi, takip edilen kisinin takip bildirimi al 
+        if(UserWillBeFollowed.Notification.Whenfollow == true){
 
-      
+          await Notificationmodel.create({
+            attribute:"Follow",
+            TakerId:[`${FollowedId}`],
+            UserId:FollowerId,
+          })
+
+          io.sockets.to(FollowedId).emit("Notification","");
+
+        }
+    
       //payload currentuserID == SenderID
-      io.sockets.to(FollowedId).emit("Notification","");
+     
       //burada tekrar tetikliyoruz
       }
 
@@ -468,9 +494,9 @@ exports.updateprofile = async (req,res,next)=>{
   const {typeofupdate} = req.params
   const Urldata = req.urlconfig
   var controllerforusername = false
-
   const userprofiledata = JSON.parse(req.body.Profilevalues)
   
+
 
   const {UserId} = req.userdata
   
@@ -479,7 +505,7 @@ exports.updateprofile = async (req,res,next)=>{
       try {
       
         const UN = await User.findOne({where:{username:userprofiledata.musername}})
-
+        console.log(UN)
         //farkli bir userin kullanici adi
         if(UN && UN.id !== UserId){
 
@@ -493,10 +519,11 @@ exports.updateprofile = async (req,res,next)=>{
 
         }
 
-        
+        console.log(controllerforusername)
         if(controllerforusername){
 
             const myuser = await User.findByPk(UserId)
+            console.log("herereerr")
             //Attributes gonna be updated
             var willbeupdated = {
                 firstname:userprofiledata.firstname,
@@ -546,7 +573,57 @@ exports.updateprofile = async (req,res,next)=>{
       }
              
   }else if(typeofupdate == "Email"){
-    //code will be send to current email adress to verify the user is our real user
+        /*
+        const currentuser =  await User.findOne({where:{id:UserId}})
+     
+        bcrypt.compare(userprofiledata.CurrentPasswordForEmail, currentuser.password,async(err,result)=>{
+        
+        if(!result) return res.json({state:false})   //wrong password
+        
+        const searchedEmail = await User.findOne({where:{email:userprofiledata.email}})
+
+        if(searchedEmail) return res.json({state:"Email Exist!"})
+        */
+
+
+        //send code to email to change email 
+        let testAccount = await nodemailer.createTestAccount();
+
+        // create reusable transporter object using the default SMTP transport
+        let transporter = nodemailer.createTransport({
+          host:"smtp-mail.outlook.com",
+          port:587,
+          auth: {
+            user:"bexsd@hotmail.com", // generated ethereal user
+            pass:"22312231a", // generated ethereal password
+          },
+        });
+      
+        // send mail with defined transport object
+        let info = await transporter.sendMail({
+          from: "bexsd@hotmail.com", // sender address
+          to: "muazozzer@gmail.com", // list of receivers
+          subject: "Hello ✔", // Subject line
+          text: "Hello world?", // plain text body
+          html: "<b>Hello world?</b>", // html body
+        },(err,info)=>{
+          if(err){
+            console.log(err)
+            return;
+          }
+          console.log("sa")
+          console.log(info.response)
+        });
+      
+        //console.log("Message sent: %s", info.messageId);
+        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+      
+        // Preview only available when sending through an Ethereal account
+        //console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+
+       //});
+    
   }else if(typeofupdate == "Password"){
 
         const currentuser =  await User.findOne({where:{id:UserId}})
@@ -557,6 +634,7 @@ exports.updateprofile = async (req,res,next)=>{
         return res.json({state:false})  
         
         const hashedpassword = await bcrypt.hash(userprofiledata.Newpassword,10);
+        
 
         await currentuser.update({password:hashedpassword})
 

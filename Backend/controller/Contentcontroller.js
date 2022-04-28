@@ -14,7 +14,6 @@ exports.produce=async (req,res,next)=>{
  
   const {title,content,subtitle,catagories,UserId,processtype}=req.body;
 
-  
 
   try {  
  
@@ -63,9 +62,7 @@ exports.produce=async (req,res,next)=>{
     return res.json({state:"success"});
 
   }catch(err){
-      next();
-
-      return;
+     return next();
   }
 }
 
