@@ -202,7 +202,7 @@ export default function MyEditor (){
       
        const mutatedValue ={...contentpart};
        mutatedValue[value] = (value == "content" ? editör.getData() : event.target.value)
-
+      
        const editorImageElements = document.querySelectorAll("figure")
        editorImageElements.forEach(element => {   
        
@@ -213,7 +213,7 @@ export default function MyEditor (){
           }
           
       });
-      
+      console.log(contentpart)
       if(mutatedValue[value].includes("ERROR") || mutatedValue [value].includes(`<figure class="image"><img></figure>`)) return;
         
 

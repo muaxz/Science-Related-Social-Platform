@@ -12,7 +12,7 @@ const firebase = require("../firebase/firebase")
 
 exports.produce=async (req,res,next)=>{
  
-  const {title,content,subtitle,catagories,UserId,processtype}=req.body;
+  const {title,content,subtitle,catagory,UserId,processtype}=req.body;
 
 
   try {  
@@ -22,13 +22,11 @@ exports.produce=async (req,res,next)=>{
         subtitle:subtitle,
         content:content,
         phase:processtype,
-        catagories:catagories == "" ? null : catagories,
+        catagories:catagory == "" ? null : catagory,
         UserforuserId:UserId,
         UserforcontentId:UserId,
     })
 
-    
-     
     //....................
     //produce için değil editör postu public yaptıgında gelen bildirim bu olucak
    
@@ -466,13 +464,18 @@ exports.ContentChecking = async (req,res,next)=>{
 exports.reportDeletion = async (req,res,next)=>{
 
   const {reportID} = req.body
+  const {UserRole} = req.userdata;
 
   try {
 
-    await Report.destroy({where:{id:reportID}})
+    if(UserRole == "Mod" || UserRole == "Admin"){
 
-    return res.json({state:"success"})
+      await Report.destroy({where:{id:reportID}})
 
+      return res.json({state:"success"})
+
+    }
+   
   } catch (error) {
 
     return next();
