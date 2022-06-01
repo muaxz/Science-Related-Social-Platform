@@ -32,10 +32,9 @@ const Outsidediv=styled.div`
 position:relative;
 height:${({draft})=> draft ? "300px" : "100%"};
 width:100%;
-margin-bottom:20px;
 background-color:${({nightmode})=> !nightmode ? "#faf9f9": "#1F1B24"};
 border-radius:7px;
-box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+box-shadow: rgba(100, 100, 111, 0.5) 0px 7px 29px 0px;
 animation-duration:2s;
 animation-timing-function:ease-in-out;
 animation-name:${({animation,timing})=>{

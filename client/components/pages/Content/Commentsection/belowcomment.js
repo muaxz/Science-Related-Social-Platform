@@ -64,8 +64,7 @@ function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,im
                     like={[]}//bu bir obje array
                     retweet={[]}
                     comment={[]}
-                    readlater={[]}
-                    key={index}//key numarası
+                    readlater={[]}//key numarası
                     profileimage={"/black.jpg"}
                     title={item.title}//no need
                     titleimage={"yaprak.jpg"}
@@ -91,7 +90,3 @@ function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,im
 
 export default React.memo(Belowcomment)
 
-
-/*
-
-*/

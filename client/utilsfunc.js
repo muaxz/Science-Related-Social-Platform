@@ -1,6 +1,7 @@
 export const calculatedate=(previousdate)=>{
+
     const currentTime = new Date();
-    const Prevdate=new Date(previousdate);  
+    const Prevdate = new Date(previousdate);  
     Prevdate.setMinutes(Prevdate.getMinutes()+Prevdate.getTimezoneOffset())
     currentTime.setMinutes(currentTime.getMinutes()+currentTime.getTimezoneOffset())
     const difference=Math.abs(currentTime-Prevdate);

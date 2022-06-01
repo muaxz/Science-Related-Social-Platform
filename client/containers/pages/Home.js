@@ -1,4 +1,5 @@
 import React, {useEffect,useState,useContext,useMemo} from 'react'
+import Image from "next/image"
 import Contentcard from "../../components/shared/Cards/Contentcard";
 import styled from "styled-components";
 import {Homereq,Createrelationreq,Notificationreq} from "../../Api/requests";
@@ -44,7 +45,7 @@ justify-content:space-between;
 width:1200px;
 padding-top:60px;
 width:100%;
-@media (max-width:940px){
+@media (max-width:1300px){
     justify-content:center;
     padding-left:25px;
 }
@@ -117,7 +118,6 @@ padding:30px;
 
 const BackgroundHome = styled.div`
 position:relative;
-max-width:1600px;
 width:100%;
 height:400px;
 `

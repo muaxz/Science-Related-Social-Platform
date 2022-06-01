@@ -26,7 +26,7 @@ const Token = require("csrf")
 const port =  process.env.PORT || 3001 
 
 
-console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
 io.on("connection",(socket)=>{ 
   
     socket.on("create",(UserId)=>{
@@ -57,7 +57,7 @@ app.use(cors({origin:"http://localhost:3000",credentials:true,exposedHeaders:"cs
 
 app.use("*",(req,res,next)=>{
 
-    console.log(req.session.firstCsrf)
+    
    
     if(!req.session.firstCsrf){
       

@@ -1,13 +1,17 @@
-const jwt=require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const User=require("../models/Usermodel");
 const bcrypt=require("bcrypt");
 const {v4}=require("uuid");
+const redis = require("redis")
 
 
 
+const client = redis.createClient();
+
+client.connect().then(()=>console.log("connecnted to redis server"))
 
 exports.login = async (req,res,next)=>{
-  
+   
    try{
 
       const {email,password} = req.body.userdata;
@@ -28,16 +32,35 @@ exports.login = async (req,res,next)=>{
          bcrypt.compare(password,user.password,(err,result)=>{
             
             if(result == true){
+                
+               jwt.sign({UserId:user.id,UserRole:user.Role},"secretkey",{expiresIn:"15s"},(err,accessToken)=>{
                
-                //ToDo redis to store tokens
-                //ToDorefresh token
-               jwt.sign({UserId:user.id,UserRole:user.Role},"secretkey",(err,token)=>{
-                  //public key or private key
-                   console.log("eyyoo heree")
-                   res.cookie("myauth",token,{httpOnly:true,path:"/",secure:true})
-                   return res.json({Userdata:mydata,token:token,auth:true});
-                        
+                   jwt.sign({UserId:user.id,UserRole:user.Role},"refresh-accessToken-key",async (err,refreshToken)=>{
+
+                     res.cookie("accessToken",accessToken,{httpOnly:true,path:"/",secure:true})
+                     res.cookie("refreshToken",refreshToken,{httpOnly:true,path:"/",secure:true})
+                     const RefreshTokens = await client.get("refreshTokens")
+                     console.log("redis stuff down  : ")
+                     console.log(RefreshTokens)
+                     if(RefreshTokens != null){
+
+                        const parsedArray = JSON.parse(RefreshTokens);
+                        parsedArray.push(refreshToken)
+                        client.set("refreshTokens",JSON.stringify(parsedArray))
+         
+                     }else{
+         
+                        client.set("refreshTokens",JSON.stringify([refreshToken]))
+         
+                     }
+                  
+                     return res.json({Userdata:mydata,accessToken:accessToken,refreshToken:refreshToken,auth:true});
+
+                   })
+                  
                })
+
+
                
             }  
             else{
@@ -103,8 +126,14 @@ exports.register = async (req,res,next)=>{
 }
 
 exports.logout = async(req,res,next)=>{
+    /*
+    const refreshToken = req.refreshToken;
+    const RefreshTokens = JSON.parse(await client.get("refreshTokens"))
+    const IndexOfRefreshToken = RefreshTokens.findIndex((item)=>item == refreshToken)//this refresh token gonna be deleted
+    RefreshTokens.splice(IndexOfRefreshToken,1);
+    client.set("refreshTokens",JSON.stringify(RefreshTokens));
+    */
     res.clearCookie("connect.sid")
-    res.clearCookie("myauth",{path:"/"})
+    res.clearCookie("accessToken",{path:"/"})
     res.json({state:"success"})
-
 }
