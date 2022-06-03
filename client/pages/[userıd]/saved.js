@@ -26,21 +26,34 @@ export async function getServerSideProps({query,req}){
 
     try {
 
-        const {data} = await axios.get(`http://localhost:3001/content/usercontent/Readlater/${query.userıd}/10`,{headers:{Cookie:req.headers.cookie}})
+        if(req.headers.cookie){
 
-        if(data && data.error){
+            var {data} = await axios.get(`http://localhost:3001/content/usercontent/Readlater/${query.userıd}/10`,{headers:{Cookie:req.headers.cookie}})
+
+            if(data && data.error){
+
+                return {
+                    redirect:{
+                        destination:"/500"
+                    }
+                };
+          
+            }
+
+            return { 
+                props:{content:data.data}
+            }
+
+        }else{
 
             return {
                 redirect:{
-                    destination:"/500"
+                    destination:"/404"
                 }
-            };
-      
-        }
+            }
 
-        return { 
-            props:{content:data.data}
         }
+    
 
     } catch (error){
          

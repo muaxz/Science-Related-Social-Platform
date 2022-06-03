@@ -20,8 +20,6 @@ axios.interceptors.response.use(function (response) {
 
     }
 
-
-
   }
   
   return response;
@@ -85,6 +83,10 @@ export const Errorhandler=({data,seterrmsg,setwindow,setuserdata,setlogged,setsp
    return true;
 }
 
+const RefreshReq = async () =>{
+  return await axios.get("/refresh",{},{withCredentials:true})
+}
+
 export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,seterrmsg,setbackenderror,setactive})=>{
     
 
@@ -106,6 +108,13 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
 
       }
       else{
+        /*
+        setInterval(async() => {
+          const response = await RefreshReq();
+          console.log(response)
+        }, 1000*30);
+        */
+
         setlogged(true);
         setuserdata(data.Userdata);
         setspinner(true);
@@ -371,7 +380,7 @@ export const Contextdata=async ({setspinner,setuserdata,seterrmsg,setwindow,setl
         Userrole:data.userdata.Role,
         Userimage:data.userdata.imageurl,
      }
-      
+      console.log("sadadasd")
       setuserdata(mydata);
       setlogged(true);  
       setallowaction(true);  
@@ -588,16 +597,12 @@ export const DeletePost = async({PostId,seterrmsg,setwindow})=>{
 
   try {
 
-    const{data}=await axios.post("user/deletepost",{
-      PostId:PostId
-    });
+    const {data} = await axios.delete(`content/deleteContent/${PostId}`);
     
     if(Errorhandler({data,seterrmsg,setwindow})){ 
        console.log(data.success);   
     }    
-    else{
-      return;
-    }
+    else return;
   
   } catch (error){
      

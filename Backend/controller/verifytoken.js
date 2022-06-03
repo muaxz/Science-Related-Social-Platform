@@ -3,12 +3,12 @@ const jwt=require("jsonwebtoken");
 module.exports=(req,res,next)=>{
 
     const token = req.cookies["accessToken"];
-    
+    console.log(token)
     if(token){
 
      //burada request objesine yeni bir eleman tanımlayailiyoruz
 
-        jwt.verify(token,"secretkey",(err,authdata)=>{
+        jwt.verify(token,"AccessToken-SecretKey",(err,authdata)=>{
             
             if(err){
 
@@ -18,7 +18,6 @@ module.exports=(req,res,next)=>{
             else{
                 
                 req.userdata = authdata;
-                req.accessToken = token;
                 next();
                 return;
 

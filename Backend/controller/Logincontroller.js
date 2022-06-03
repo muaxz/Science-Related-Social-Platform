@@ -33,7 +33,7 @@ exports.login = async (req,res,next)=>{
             
             if(result == true){
                 
-               jwt.sign({UserId:user.id,UserRole:user.Role},"secretkey",{expiresIn:"15s"},(err,accessToken)=>{
+               jwt.sign({UserId:user.id,UserRole:user.Role},"AccessToken-SecretKey",{expiresIn:"1h"},(err,accessToken)=>{
                
                    jwt.sign({UserId:user.id,UserRole:user.Role},"refresh-accessToken-key",async (err,refreshToken)=>{
 

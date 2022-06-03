@@ -14,7 +14,6 @@ const Content=sequlize.define("Content",{
          type:Sequlize.TEXT,
     },
     title:{
-      
         type:Sequlize.STRING,
         allowNull:false,      
     },
@@ -51,6 +50,10 @@ const Content=sequlize.define("Content",{
     checked:{
         type:Sequlize.BOOLEAN,
         defaultValue:false
+    },
+    Alias:{
+        type:Sequlize.STRING,
+        allowNull:true
     }
 
 })

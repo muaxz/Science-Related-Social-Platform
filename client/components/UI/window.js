@@ -14,6 +14,7 @@ text-align:center;
 transition:${({aktif})=>aktif ? "top 0.4s" : "top 0.4s, z-index 0.6s"};
 top:${({aktif})=>aktif ? "50%" : "200px"};
 z-index:${({aktif})=>aktif ? "180" : "-200"};
+opacity:${({aktif})=>aktif ? "1" : "0"};
 background-color:white;
 border-radius:10px;
 `
@@ -34,6 +35,9 @@ const Window=({children,active,type,closefunction})=>{
     else if(type == "confirm"){
        icon=<i className="fas fa-check-circle fa-2x" style={{color:"green",marginBottom:"10px"}}></i>
     }
+    else if(type == "garbage"){
+      icon=<i className="fa-solid fa-trash fa-2x" style={{color:"black",marginBottom:"10px"}}></i>
+    }
     return (
        <div>
          <Black onClick={closefunction} aktif={active}/>
@@ -45,7 +49,17 @@ const Window=({children,active,type,closefunction})=>{
                   </p>
             </Textbox>
             <div style={{paddingTop:"15px"}}>
-              <Button onClick={closefunction} variant="contained">OK</Button>
+               {
+                  type == "garbage" ? 
+                  
+                  (<React.Fragment>
+                     <Button style={{marginRight:"10px"}} onClick={()=>closefunction("DELETE")} variant="contained">Delete</Button>
+                     <Button onClick={()=>closefunction("CANCEL")} variant="contained">Cancel</Button>
+                  </React.Fragment>) 
+                  
+                  : <Button onClick={closefunction} variant="contained">OK</Button>
+               }
+
             </div>
          </External>
        </div>

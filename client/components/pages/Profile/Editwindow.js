@@ -188,7 +188,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         musername:{
             activate:false,
             value:editdata.username,
-            label:"Kullanici Adi",
+            label:"Username",
             warning:false,
             multiline:false,
             msg:"",
@@ -197,7 +197,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         firstname:{
             activate:false,
             value:editdata.firstname,
-            label:"Ad",
+            label:"Firstname",
             warning:false,
             multiline:false,
             msg:"",
@@ -206,7 +206,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         surname:{
             activate:false,
             value:editdata.lastname,
-            label:"Soyad",
+            label:"Surname",
             warning:false,
             multiline:false,
             msg:"",
@@ -215,7 +215,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         personaltext:{
             activate:false,
             value:editdata.personaltext,
-            label:"Kisisel Bilgiler",
+            label:"Personal Information",
             warning:false,
             multiline:true,
             msg:"",
@@ -604,7 +604,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                             {
                                 uploading ? (<Spinner style={{marginRight:"5px"}}></Spinner>) : null
                             }
-                            Kaydet
+                            Save
                         </Button>
                     </div>
                     {

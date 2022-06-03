@@ -121,9 +121,7 @@ position:relative;
 width:100%;
 height:400px;
 `
-const Triala = styled.script`
 
-`
 const Trial = styled.div`
 position:absolute;
 bottom:0;
@@ -284,7 +282,7 @@ export default function Home({mydata}){
                                         key={index}//key numarası
                                         followeds={item.personal.Followed}
                                         title={item.title}
-                                        titleimage={"yaprak.jpg"}
+                                        titleimage={item.titleimage != null ? item.titleimage : "/yaprak.jpg"}
                                         userfirstname={item.personal !== null ? item.personal.firstname : "notyet"}
                                         usersurname={item.personal !== null ? item.personal.lastname : "notyet"}//bir obje props
                                         userid={item.personal !== null ? item.personal.id: "notyet"}

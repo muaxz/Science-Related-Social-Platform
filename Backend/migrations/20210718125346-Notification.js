@@ -1,10 +1,13 @@
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return Promise.resolve()
+    return queryInterface.addColumn("contents","Alias",{
+      type:Sequelize.STRING,
+      allowNull:true
+    })
   },
 
   down: function(queryInterface) {
-    return Promise.resolve()
+    return queryInterface.removeColumn("contents","Alias")
   }
 };
 

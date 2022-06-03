@@ -7,7 +7,7 @@ import {Global} from "../../components/styledcomponents/Globalstyles"
 import axios from 'axios';
 
 export default function Draftpage({content}) {
-    console.log(content)
+  
     return (
         <React.Fragment>
             <Head>
@@ -54,13 +54,10 @@ export async function getServerSideProps({query,req}){
 
 Draftpage.layout=(children)=>{
     return (
-        <Mainlayout>
-           <Guardlayout>
-               <React.Fragment>
+        <Mainlayout>  
+            <React.Fragment>
                   {children}
-               </React.Fragment>
-           </Guardlayout>
+            </React.Fragment>  
         </Mainlayout>
-       
     )
 }

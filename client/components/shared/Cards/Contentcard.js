@@ -8,7 +8,7 @@ import Icon from "../../UI/Icon"
 import {AddComment,feed,Feedback,Send,Delete, Edit,FavoriteBorder,SearchOutlined} from "@material-ui/icons"
 import {calculatedate} from "../../../utilsfunc"
 import useClickoutside from "../../../hooks/Clikcoutisde";
-import { TextField , Button,InputAdornment,Checkbox} from '@material-ui/core';
+import { TextField ,Button,InputAdornment,Checkbox} from '@material-ui/core';
 import {CreateNightMode} from "../../../context/Nightmode"
 
 
@@ -30,7 +30,7 @@ const Newcommentanimation=keyframes`
 
 const Outsidediv=styled.div`
 position:relative;
-height:${({draft})=> draft ? "300px" : "100%"};
+height:100%;
 width:100%;
 background-color:${({nightmode})=> !nightmode ? "#faf9f9": "#1F1B24"};
 border-radius:7px;
@@ -45,17 +45,6 @@ animation-name:${({animation,timing})=>{
     return ""
 }};
 animation-iteration-count:3;
-`
-
-//This is for draft page
-const Softcover = styled.div`
-position:absolute;
-width:100%;
-height:100%;
-z-index:300;
-background-color:black;
-border-radius:7px;
-opacity:0.6;
 `
 
 const Imagediv=styled.div`
@@ -168,16 +157,7 @@ border-radius:6px;
 }
 `
 
-const Draftholder = styled.span`
-display:flex;
-flex-direction:column;
-align-items:center;
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-z-index:300;
-`
+
 
 //comment-answer section
 const Inputholder = styled.div`
@@ -234,9 +214,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
             break;
         case "Like":
             textforopiton="Beğenilen Gönderilerden kaldır"
-            break;
-        case "Draft":
-            textforopiton="Taslaklardan kaldır"            
+            break;  
     }
     
     useEffect(() =>{
@@ -366,21 +344,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
 
     return (
 
-       <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={Calculatetime} draft={draft} iscomment={iscomment}>
-           {
-               //draft cover
-               draft ?
-
-               <div>
-                    <Softcover/>
-                    <Draftholder>
-                        <Icon className="far fa-edit fa-lg" Iconconfig={{zindex:"400",hoverback:"white",hovercolor:"#d90429",backcolor:"#d90429",color:"white",width:"60px",height:"60px",lineheight:"60px"}}/>
-                        <p style={{paddingTop:"10px",color:"white",textAlign:"center"}}>Culture of the Ottoman Empire</p>
-                    </Draftholder>
-               </div> 
-               : null
-           }
-            
+       <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={Calculatetime}  iscomment={iscomment}>  
            {
               //Comment Left Icon
               iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-6px",top:"8px",color:"#faf9f9"}}></Icon> : null
@@ -392,15 +356,13 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
                 
                <div ref={ref}>   
       
-                    <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:draft ? "white" : "#2A2A2A"}}></Icon>
+                    <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
                     {
                         visible ?
                         <Optionwindow active={true}>
-                            {
-                                !draft ?
-                                  <React.Fragment>
-                                        {
-                                            userid !== userdata.UserId &&
+                           <React.Fragment>
+                                {
+                                       userid !== userdata.UserId &&
                                             <Optionholder style={{display:userdata.UserId ? "flex" : "none"}}>
                                                 <Icon className="fas fa-user-minus" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
                                                 <div style={{marginLeft:"8px",color:"#757575"}}>
@@ -410,16 +372,16 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
                                                     <p style={{fontSize:"13px",textTransform:"capitalize"}}>Bu kullanıcıdan gelen bildirimleri görme</p>
                                                 </div>
                                             </Optionholder>   
-                                        }
-                                        <Optionholder>
-                                            <Icon className="fas fa-link" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
-                                            <div style={{marginLeft:"8px",color:"#757575"}}>
-                                                <p style={{color:"black"}}>Paylaş</p>
-                                                <p style={{fontSize:"13px"}}>Bağlantı adresini kopyala</p>
-                                            </div>
-                                        </Optionholder> 
-                                  </React.Fragment> : null
-                            }
+                                }
+                                <Optionholder>
+                                    <Icon className="fas fa-link" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                        <div style={{marginLeft:"8px",color:"#757575"}}>
+                                            <p style={{color:"black"}}>Paylaş</p>
+                                            <p style={{fontSize:"13px"}}>Bağlantı adresini kopyala</p>
+                                        </div>
+                                </Optionholder> 
+                            </React.Fragment>
+                            
                             {
                                 foruser ?
                                 <Optionholder onClick={()=>createrelationforsmh(postId,foruseroption,"Destroy",indexnum,foruseroption)}>
@@ -474,10 +436,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
                 }
               </div>
            }
-
-           {
-                !draft &&
-                <Profilediv>
+            <Profilediv>
                     <div style={{display:'flex',alignItems:"center",height:"100%",marginLeft:"5px"}}>
                         <Profileimageholder isMainparent={isMainparent} length={Childlength} iscomment={iscomment}>
                             <Link href={{
@@ -492,12 +451,10 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
                             <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{Calculatetime.time + " " + calculatedate(date).express + " Önce"}</span></div>
                         </div>           
                     </div>
-                </Profilediv>
-           }
-
+            </Profilediv>
            <SecondPart foruser={foruser}>
                {
-                   iscomment || draft ? null : 
+                   iscomment ? null : 
 
                     <Imageholder>
                         <Imagediv>
@@ -540,18 +497,17 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
                                 }
         
                             </Contentdiv>   
+
                             : 
 
-                            !draft ?
-
-                            <Contentdiv iscomment={iscomment}>
+                           <Contentdiv iscomment={iscomment}>
                                 <h3 style={{marginBottom:"10px",color:"#A70909"}}>{title}</h3>
                                 <Link href="/content/[id]" as={`/content/${postId}`}>
                                     <p style={{textAlign:"left",wordBreak:"break-word",cursor:"pointer"}}>While the Crypto Professors may set specific requirements for some....</p> 
                                 </Link>
                             </Contentdiv>
 
-                            : null 
+                        
                     }
                       
                     <Toolbar foruser={foruser}>

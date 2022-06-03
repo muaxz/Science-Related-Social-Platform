@@ -17,17 +17,13 @@ const User = sequlize.define("User",{
         type:Sequlize.STRING,
         allownull:false,    
     },
-    imageurl:{
-        type:Sequlize.STRING,
-    },
-    imagetoken:{
-        type:Sequlize.STRING
-    },
-    backgroundtoken:{//NAME OF THE BACKGROUND IMAGE FILE
-        type:Sequlize.STRING
-    },
-    backgroundurl:{
+    mainUrl:{
         type:Sequlize.TEXT,
+        allownull:true
+    },
+    backgroundUrl:{
+        type:Sequlize.TEXT,
+        allownull:true
     },
     lastname:{
          type:Sequlize.STRING,

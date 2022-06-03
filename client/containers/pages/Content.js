@@ -227,7 +227,7 @@ export default function Content({Contentdata,comments,id}){
                 </div>
             </Exteriorcontent>
             <hr style={{clear:"right"}}></hr>
-            <p style={{clear:"right"}}>{commentlist.length+ " Yorum"}</p>
+            <p style={{clear:"right"}}>{commentlist.length+ " comments"}</p>
             <Commentdiv>
                 <Commentpart  Editcommenthandler={EditCommentFunc} handleanswer={Answerhandler} spinner={activeproduce} list={commentlist} Producecomment={Produce}></Commentpart>
             </Commentdiv>

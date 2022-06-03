@@ -6,6 +6,7 @@ const csrfverifyUser = require("../controller/CsrfController")
 
 
 router.post("/produce",verifyUser,controller.produce);
+router.delete("/deleteContent/:ContentID",verifyUser,controller.destroyContent);
 router.post("/createrelation",csrfverifyUser,controller.createrelation);//get the whole content for public content page
 router.get("/gethome/:number/:category",controller.gethome);//public short demonstraiton of contents
 router.get("/usercontent/:catagory/:id/:order",verifyUser,controller.getusercontent)//contents user liked or saved

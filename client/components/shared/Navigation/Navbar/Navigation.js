@@ -375,10 +375,10 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                    <InputHolder>
                         <Link  href="/login">
                          <Button variant="contained" style={{marginRight:"10px",textTransform:"capitalize"}} endIcon={<AccountCircle style={{fontSize:"25px"}}></AccountCircle>}>
-                           Giriş Yap
+                           Sign In
                          </Button>
                        </Link>
-                       <Button variant="contained"  style={{textTransform:"capitalize"}} endIcon={<Assignment style={{color:"white",borderRadius:"50%",fontSize:"25px"}}></Assignment>} color="secondary">Kayıt Ol</Button>
+                       <Button variant="contained"  style={{textTransform:"capitalize"}} endIcon={<Assignment style={{color:"white",borderRadius:"50%",fontSize:"25px"}}></Assignment>} color="secondary">Sign Up</Button>
                    </InputHolder>
 
                    :

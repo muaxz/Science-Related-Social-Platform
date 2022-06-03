@@ -75,7 +75,7 @@ export default function Commentsection({Producecomment,spinner}){
                     onChange={Changevalue}
                     color="secondary"
                     style={{width:"100%"}}
-                    label="Bir Yorum Yaz..."           
+                    label="Write a comment..."           
                     variant="outlined"
                     >
                     </TextField> 

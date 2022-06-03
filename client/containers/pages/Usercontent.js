@@ -1,6 +1,6 @@
 import React,{useContext, useEffect,useState} from 'react'
 import styled from "styled-components";
-import Contentcard from "../../components/shared/Cards/Contentcard";
+import DraftCard from "../../components/shared/Cards/DraftCard"
 import {Getusercontent,Createrelationreq,DeletePost} from "../../Api/requests"
 import {createusercontext} from "../../context/Usercontext"
 import useScroll from "../../hooks/Scroll";
@@ -29,7 +29,7 @@ flex-wrap:wrap;
 
 const Contentholder=styled.div`
 max-width:340px;
-height:320px;
+height:350px;
 padding-right:25px;
 padding-top:25px;
 @media (max-width:1200px){
@@ -86,13 +86,13 @@ export default function Usercontent({params,mydata}){
     var fornorecord = "";
 
     if(params == "Draft"){
-        fornorecord="henüz bir taslağın yok ):"
+        fornorecord="You did not create a draft yet ):"
     }
     else if(params == "Readlater"){
-        fornorecord="henüz bir gönderi kaydetmedin ):"
+        fornorecord="You did not save any content ):"
     }
     else if(params == "Like"){
-        fornorecord="henüz bir gönderi beğenmedin ):"
+        fornorecord="You did not like any content ):"
     }
     const Handlerelation=(postId,attribute,typeofrelation,index,isDraft)=>{
         
@@ -133,7 +133,7 @@ export default function Usercontent({params,mydata}){
                         params !== "Draft" ? 
 
                         <div style={{display:"flex",alignItems:"center",justifyContent:"center"}}>
-                        <h3 style={{paddingRight:"5px"}}>{params == "Like" ? "Beğenilen Gönderiler" : "Kaydedilen Gönderiler"} </h3>
+                        <h3 style={{paddingRight:"5px"}}>{params == "Like" ? "Liked Contents" : "Saved Contents"} </h3>
                         {
                                 params == "Readlater" ?
 
@@ -163,33 +163,13 @@ export default function Usercontent({params,mydata}){
                         {
                             data.map((item,index)=>{
                                 return (
-                                <Contentholder>
-                                    <Contentcard
-                                    foruser={true}
-                                    draft={params == "Draft" ? true : false}
-                                    iscomment={false}
-                                    postId={item.Content ? item.Content.id : item.id}
-                                    content={item.Content ? item.Content.content : item.content} 
-                                    indexnum={index}
-                                    key={item.Content ? item.Content.id : item.id}//key numarası
-                                    profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
-                                    title={item.Content ? item.Content.title : item.title}
-                                    titleimage={"/yaprak.jpg"}
-                                    userfirstname={item.Content ? item.Content.personal.firstname : ""}
-                                    usersurname={item.Content ? item.Content.personal.lastname : ""}//bir obje props
-                                    subtitle={item.Content ? item.Content.subtitle : item.subtitle}
-                                    date={item.Content ? item.Content.createdAt : item.createdAt}
-                                    like={[]}//bu bir obje array
-                                    retweet={[]}
-                                    comment={[]}
-                                    foruseroption={params}
-                                    createrelationforsmh={Handlerelation}
-                                    >
-                                    </Contentcard>
+                                <Contentholder key={index}>
+                                    <DraftCard
+                                        draftContent={item}
+                                    />
                                 </Contentholder>
                                 )
                             })
-                           
                         }
                     </Innerdiv>
                 </Exteriordiv>   

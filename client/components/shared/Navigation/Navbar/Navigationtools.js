@@ -57,7 +57,7 @@ export default function Navigationtools({optnumber,optname,Navdata,Logout}){
     }
     if(optnumber == 2){
 
-        title="Bildirimler"
+        title="Notifications"
 
         const Attriubtearray=[
             {name:"Like",idname:"ContentId",desc:"Senin Gönderini Beğendi.",Icon:"fas fa-thumbs-up",color:"#DD1F1F",lh:"30px",href:"/content"},
@@ -106,7 +106,7 @@ export default function Navigationtools({optnumber,optname,Navdata,Logout}){
                               <Link href={{pathname:`${myitemobj.href}/${item[myitemobj.idname]}`,query:{name:"Post"}}}>
                                 <div style={{display:"flex",alignItems:"center"}}>
                                      <div>
-                                      <Porfileimage profile={!item.User ?  "warning.png" : "/alpay.PNG"} width="50px" height="50px"/>
+                                      <Porfileimage profile={!item.User ?  "warning.png" : "/car.jpg"} width="50px" height="50px"/>
                                      </div>
                                      <Icon className={myitemobj.Icon} Iconconfig={{position:"absolute",top:"40px",right:"10px",color:"white",backcolor:myitemobj.color,width:"30px",height:"30px",lineheight:myitemobj.lh}}></Icon>
                                      {/*<Icon className={"fas fa-star fa-sm"} Iconconfig={{position:"absolute",top:"-8px",right:"-2px",color:"#72ddf7",width:"17px",height:"17px",lineheight:"17px"}}></Icon>*/}

@@ -19,14 +19,14 @@ const Notifyrouter=require("./routes/Notificationroute");
 const cookieparser = require("cookie-parser")
 const Session = require("express-session")
 const fileupload = require("express-fileupload");
+const Refreshrouter = require("./routes/RefreshToken")
+require("dotenv").config();
 //const csurf = require("csurf");
 const Token = require("csrf")
 //var csrfProtection = csrf({cookie:true})
 
 const port =  process.env.PORT || 3001 
-
-
-
+console.log(process.env.PRIVATE)
 io.on("connection",(socket)=>{ 
   
     socket.on("create",(UserId)=>{
@@ -79,6 +79,7 @@ app.use("/upload",Upload);
 app.use("/user",Userrouter);
 app.use("/comment",Commentrouter);
 app.use("/notification",Notifyrouter);
+app.use("/",Refreshrouter)
 
 app.use("*",(req,res)=>{
   

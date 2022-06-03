@@ -160,15 +160,15 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
 
     const[options,setoptions]=useState({
         Post:{
-            name:"Gönderiler",
+            name:"Posts",
             bottom:false,
         },
         Like:{
-            name:"Beğeniler",
+            name:"Likes",
             bottom:false,
         },
         Reshow:{
-            name:"İşaretler",
+            name:"Signs",
             bottom:false,
         } 
     })
@@ -401,7 +401,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                           Timetorender &&
                             (<ButtonHolder>
                                 <Button onClick={()=>Editwindowhandler(true,false)} style={{borderRadius:"25px",marginRight:"10px"}} variant="contained"><Settings></Settings></Button>
-                                <Button onClick={()=>Editwindowhandler(false,false)} endIcon={<Person></Person>} variant="contained" style={{color:"white",backgroundColor:"#e63946",textTransform:"none",borderRadius:"25px"}}>Profili Duzenle</Button>
+                                <Button onClick={()=>Editwindowhandler(false,false)} endIcon={<Person></Person>} variant="contained" style={{color:"white",backgroundColor:"#e63946",textTransform:"none",borderRadius:"25px"}}>Edit Profile</Button>
                             </ButtonHolder>)
                     }     
                 </Imagesection>
@@ -415,11 +415,11 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                          <div style={{display:"flex",marginTop:"10px",marginBottom:"40px",justifyContent:"space-around"}}>
                             <div>
                                 <P>{Counts.Followedcount}</P>
-                                <LabelsUnderCounts  onClick={()=>ShowFollowList("FOLLOWER")}>Takipçi</LabelsUnderCounts>
+                                <LabelsUnderCounts  onClick={()=>ShowFollowList("FOLLOWER")}>Followers</LabelsUnderCounts>
                             </div>
                             <div>
                                 <P>{Counts.Followercount}</P>
-                                <LabelsUnderCounts  onClick={()=>ShowFollowList("FOLLOWING")}>Takip Edilen</LabelsUnderCounts>
+                                <LabelsUnderCounts  onClick={()=>ShowFollowList("FOLLOWING")}>Following</LabelsUnderCounts>
                             </div>
                             <div>
                                 <P>{Counts.Contentcount}</P>
@@ -428,7 +428,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                          </div>
                          <Description style={{width:"80%",margin:"auto"}}>
                              <hr></hr>
-                             <p style={{padding:"15px"}}>You're not having that problem here. There is no negative space. Therefore, I don't believe flex-shrink.</p>
+                             <p style={{padding:"15px"}}>I am a designer. I love reading about the ideas of other people.</p>
                              <hr></hr>
                          </Description>
                      </Usersection>

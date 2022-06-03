@@ -7,18 +7,20 @@ const {Op}=require("sequelize");
 const UserUser = require("../models/UserUser");
 const Notification=require("../models/Notificationmodel");
 const firebase = require("../firebase/firebase")
+const {v4} = require("uuid")
 
 
 
 exports.produce=async (req,res,next)=>{
  
-  const {title,content,subtitle,catagory,UserId,processtype}=req.body;
+  const {title,content,subtitle,catagory,UserId,processtype,titleImageURL}=req.body;
 
 
   try {  
  
     const Obj = await Content.create({
         title:title,
+        titleimage:titleImageURL,
         subtitle:subtitle,
         content:content,
         phase:processtype,
@@ -62,6 +64,30 @@ exports.produce=async (req,res,next)=>{
   }catch(err){
      return next();
   }
+}
+
+exports.destroyContent = async(req,res,next)=>{
+  //tihs function gonna be used to destroy both draft type and normal type
+  const {ContentID} = req.params;
+  const {UserId} = req.userdata;
+
+  try {
+      
+      await Content.destroy({
+        where:{
+          Userforuserid:UserId,
+          id:ContentID,
+          phase:"Draft"
+        }
+      })  
+
+      res.json({state:"success"})
+
+  } catch (error) {
+   
+    return next();
+  }
+
 }
 
 exports.getAllContentsForModStuff = async (req,res,next)=>{
@@ -485,9 +511,8 @@ exports.reportDeletion = async (req,res,next)=>{
 }
 
 exports.uploadContentImage = async (req,res,next)=>{
-
+  console.log(req.files.files)
   try {
-
                 if(req.files.files.size/1024 < 3000){
 
                     const blob = firebase.bucket.file(req.files.files.name)
@@ -516,17 +541,20 @@ exports.uploadContentImage = async (req,res,next)=>{
             
                             blobwriter.end(req.files.files.data)
                 }else{
-
+                   
                     res.json({uploaded:false,url:"ERROR",state:"Big Size File!"})
 
                 }
               
 
   } catch (error) {
+      console.log(error)
       return next()
   }
 
 }
+
+
 
 
 
