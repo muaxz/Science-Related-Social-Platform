@@ -39,15 +39,11 @@ exports.getusername = async(req,res,next)=>{
 
 } 
 
-//data of current user data
+//data of current user data (Context Data)
 exports.getuserdata=async(req,res,next)=>{
     
     const currentuserid = req.userdata;
-    //userid
-    //role
-    //firstname
-    //surname
-   
+
     try {
 
        const Myuserdata=await Usermodel.findOne({
@@ -125,34 +121,11 @@ exports.getuserprofile = async (req,res,next)=>{
 
 }
 
-exports.getuserdrafts=async(req,res,next)=>{
-   
-  const {UserId} = req.params;
-
-  try {
-     
-    const Drafts = await Contentmodel.findAll({
-      where:{
-        Userforcontentid:UserId,
-        phase:"Draft"
-      },
-      limit:10,
-      offet:0,
-    })
-
-    res.json({success:"success",data:Drafts});
-
-  } catch (error){
-    next();
-    return;
-  }
-
-}
 //takip edenin mainuser oldugu edilenin
 exports.getuserprofilecontent = async(req,res,next)=>{
 
   const {UserId,ownerpost,category,order}=req.params;
-  console.log(ownerpost)
+  
 
   if(ownerpost == "true"){
 
@@ -165,7 +138,7 @@ exports.getuserprofilecontent = async(req,res,next)=>{
       include:[{
         model:Usermodel,
         as:"Like",
-        attributes:["id","firstname","lastname","imageurl","Role"],
+        attributes:["id","firstname","lastname","mainUrl","Role"],
         include:{
           model:Usermodel,
           as:"Followed",
@@ -188,7 +161,7 @@ exports.getuserprofilecontent = async(req,res,next)=>{
       {
         model:Usermodel,
         as:"Retweet",
-        attributes:["id","firstname","lastname","imageurl","Role"],
+        attributes:["id","firstname","lastname","mainUrl","Role"],
         include:{
           model:Usermodel,
           as:"Followed",
@@ -202,7 +175,7 @@ exports.getuserprofilecontent = async(req,res,next)=>{
       {
         model:Usermodel,
         as:"personal",
-        attributes:["id","firstname","imageurl","lastname","Role"]
+        attributes:["id","firstname","mainUrl","lastname","Role"]
         //burada user -> user many-to-many girilebilir takipçiler için
       },
       {
@@ -230,7 +203,7 @@ exports.getuserprofilecontent = async(req,res,next)=>{
               include:[{
                 model:Usermodel,
                 as:"Like",
-                attributes:["id","firstname","lastname","imageurl","Role"],
+                attributes:["id","firstname","lastname","mainUrl","Role"],
                 include:{
                   model:Usermodel,
                   as:"Followed",
@@ -253,7 +226,7 @@ exports.getuserprofilecontent = async(req,res,next)=>{
               {
                 model:Usermodel,
                 as:"Retweet",
-                attributes:["id","firstname","lastname","imageurl","Role"],
+                attributes:["id","firstname","lastname","mainUrl","Role"],
                 include:{
                   model:Usermodel,
                   as:"Followed",
@@ -267,7 +240,7 @@ exports.getuserprofilecontent = async(req,res,next)=>{
               {
                 model:Usermodel,
                 as:"personal",
-                attributes:["id","firstname","imageurl","lastname","Role"]
+                attributes:["id","firstname","mainUrl","lastname","Role"]
                 //burada user -> user many-to-many girilebilir takipçiler için
               },
               {
@@ -306,7 +279,7 @@ exports.getuserprofilefollowlist = async (req,res,next)=>{
             include:{
               model:User,
               as:searchOptions.whichpart,
-              attributes:["id","firstname","lastname","imageurl","imagetoken","backgroundurl","backgroundtoken"],
+              attributes:["id","firstname","lastname","mainUrl","backgroundUrl"],
               include:[{
                 model:User,
                 as:"Followed",
@@ -537,12 +510,12 @@ exports.updateprofile = async (req,res,next)=>{
               delete willbeupdated.backgroundtoken
               delete willbeupdated.backgroundurl
               willbeupdated["imagetoken"] = Urldata["0"].token
-              willbeupdated["imageurl"] = Urldata["0"].filename
+              willbeupdated["mainUrl"] = Urldata["0"].filename
 
             }else if(Urldata["0"].type == "Background"){
 
               delete willbeupdated.imagetoken
-              delete willbeupdated.imageurl
+              delete willbeupdated.mainUrl
               willbeupdated["backgroundtoken"] = Urldata["0"].token
               willbeupdated["backgroundurl"] = Urldata["0"].filename
 
@@ -552,7 +525,7 @@ exports.updateprofile = async (req,res,next)=>{
               willbeupdated["backgroundtoken"] = Urldata["0"].token
               willbeupdated["backgroundurl"] = Urldata["0"].filename
               willbeupdated["imagetoken"] = Urldata["1"].token
-              willbeupdated["imageurl"] = Urldata["1"].filename
+              willbeupdated["mainUrl"] = Urldata["1"].filename
 
             }
 
@@ -573,17 +546,17 @@ exports.updateprofile = async (req,res,next)=>{
       }
              
   }else if(typeofupdate == "Email"){
-        /*
+        
         const currentuser =  await User.findOne({where:{id:UserId}})
      
         bcrypt.compare(userprofiledata.CurrentPasswordForEmail, currentuser.password,async(err,result)=>{
         
-        if(!result) return res.json({state:false})   //wrong password
-        
+        if(!result) return res.json({state:false,EMAIL:"Password"}) //wrong password
+
         const searchedEmail = await User.findOne({where:{email:userprofiledata.email}})
 
-        if(searchedEmail) return res.json({state:"Email Exist!"})
-        */
+        if(searchedEmail) return res.json({state:false,EMAIL:"Exist"})
+        
 
 
         //send code to email to change email 
@@ -600,19 +573,19 @@ exports.updateprofile = async (req,res,next)=>{
         });
       
         // send mail with defined transport object
-        let info = await transporter.sendMail({
+        await transporter.sendMail({
           from: "bexsd@hotmail.com", // sender address
-          to: "muazozzer@gmail.com", // list of receivers
+          to: currentuser.email, // list of receivers
           subject: "Hello ✔", // Subject line
           text: "Hello world?", // plain text body
-          html: "<b>Hello world?</b>", // html body
+          html: "<b>Hello world?<h1>Press the link</h1></b>", // html body
         },(err,info)=>{
           if(err){
             console.log(err)
+            next()
             return;
           }
-          console.log("sa")
-          console.log(info.response)
+          res.json({state:"success"})
         });
       
         //console.log("Message sent: %s", info.messageId);
@@ -622,7 +595,7 @@ exports.updateprofile = async (req,res,next)=>{
         //console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
         // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 
-       //});
+       });
     
   }else if(typeofupdate == "Password"){
 
@@ -637,7 +610,7 @@ exports.updateprofile = async (req,res,next)=>{
         
 
         await currentuser.update({password:hashedpassword})
-
+        return res.json({state:"successful"})
      });
 
   }else{
@@ -666,13 +639,16 @@ exports.reportUser = async(req,res,next)=>{
 
     try{
 
-      const {reportedContentId,message,checkBoxValue} = req.body;
+      const {reportedContentId,message,checkBoxValue,reportedUserId} = req.body;
 
       await reportModel.create({
         ReportMessage:message,
         ReportCheckBox:checkBoxValue,
         ContentId:reportedContentId,
       })
+
+      const reportedUser = await User.findByPk(reportedUserId)
+      await reportedUser.update({ReportSum:reportedUser == null ? 1 : reportedUser.ReportSum+1})
 
       res.json({state:"success"})
 

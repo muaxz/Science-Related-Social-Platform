@@ -191,7 +191,7 @@ export default function Content({Contentdata,comments,id}){
     return (
         <div style={{maxWidth:"950px",margin:"auto"}}>
             {
-                isReportActive && (<ReportWindow ContentId={id} setActiveFunc={()=>setisReportActive(false)}></ReportWindow>)
+                isReportActive && (<ReportWindow ContentId={id} reportedUserId={Contentdata.personal.id} setActiveFunc={()=>setisReportActive(false)}></ReportWindow>)
             }
             <Exteriorcontent>
                 <div>

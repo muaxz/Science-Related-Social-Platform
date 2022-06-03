@@ -13,14 +13,14 @@ const {v4} = require("uuid")
 
 exports.produce=async (req,res,next)=>{
  
-  const {title,content,subtitle,catagory,UserId,processtype,titleImageURL}=req.body;
+  const {title,content,subtitle,catagory,UserId,processtype,titlemainUrl}=req.body;
 
 
   try {  
  
     const Obj = await Content.create({
         title:title,
-        titleimage:titleImageURL,
+        titleimage:titlemainUrl,
         subtitle:subtitle,
         content:content,
         phase:processtype,
@@ -122,7 +122,7 @@ exports.getAllContentsForModStuff = async (req,res,next)=>{
             include:{
               model:User,
               as:"personal",
-              attributes:["id","firstname","imageurl","lastname","Role"],
+              attributes:["id","firstname","mainUrl","lastname","Role"],
             },
           })
 
@@ -164,7 +164,7 @@ exports.gethome=async(req,res,next)=>{
         {
           model:User,
           as:"Like",
-          attributes:["id","firstname","lastname","imageurl","Role"],
+          attributes:["id","firstname","lastname","mainUrl","Role"],
           include:{
             model:User,
             as:"Followed",
@@ -187,7 +187,7 @@ exports.gethome=async(req,res,next)=>{
         {
           model:User,
           as:"Retweet",
-          attributes:["id","firstname","lastname","imageurl","Role"],
+          attributes:["id","firstname","lastname","mainUrl","Role"],
           include:{
             model:User,
             as:"Followed",
@@ -201,7 +201,7 @@ exports.gethome=async(req,res,next)=>{
         {
           model:User,
           as:"personal",
-          attributes:["id","firstname","imageurl","lastname","Role"],
+          attributes:["id","firstname","mainUrl","lastname","Role"],
           include:{
             model:User,
             as:"Followed",
@@ -347,7 +347,7 @@ exports.getusercontent=async(req,res,next)=>{
                   include:[{
                     model:User,
                     as:"personal",
-                    attributes:["id","firstname","imageurl","lastname","Role"]
+                    attributes:["id","firstname","mainUrl","lastname","Role"]
                   }    
                 ]
                 }
@@ -389,7 +389,7 @@ exports.getcontent=async (req,res,next)=>{
 
             {
               model:User,
-              attributes:["id","firstname","lastname","imageurl","Role"]
+              attributes:["id","firstname","lastname","mainUrl","Role"]
             }
 
           ],
@@ -399,7 +399,7 @@ exports.getcontent=async (req,res,next)=>{
         {
           model:User,
           as:"personal",
-          attributes:["id","firstname","lastname","imageurl","Role"],
+          attributes:["id","firstname","lastname","mainUrl","Role"],
         }
       ]
     })
@@ -430,7 +430,7 @@ exports.getReportedPosts = async (req,res,next)=>{
               include:{
                 model:User,
                 as:"personal",
-                attributes:["id","firstname","lastname","imageurl"]
+                attributes:["id","firstname","lastname","mainUrl","ReportSum"]
               }
             }
         })

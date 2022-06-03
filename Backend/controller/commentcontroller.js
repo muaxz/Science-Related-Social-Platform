@@ -68,7 +68,7 @@ exports.getcomments=async (req,res,next)=>{
         where:{...whereclause},
         include:{
           model:User,
-          attributes:["firstname","lastname","id","imageurl","imagetoken"]
+          attributes:["firstname","lastname","id","mainUrl"]
         },
         limit:limitborder,
         offset:offsetborder,
@@ -97,7 +97,7 @@ exports.getcomments=async (req,res,next)=>{
               },
               include:{
                 model:User,
-                attributes:["firstname","lastname","id","imageurl","imagetoken"]
+                attributes:["firstname","lastname","id","mainUrl"]
               },
           });
   

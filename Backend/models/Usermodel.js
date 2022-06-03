@@ -60,7 +60,8 @@ const User = sequlize.define("User",{
               //bir obje olucak ve içeriği :{likepost:true,sharepost:false:,like:comment}
     },
     ReportSum:{
-        type:Sequlize.INTEGER
+        type:Sequlize.INTEGER,
+        defaultValue:0
     }
     
 })

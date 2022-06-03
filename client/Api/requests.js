@@ -677,7 +677,20 @@ export const UpdateProfile = async ({userdata,typeofupdate,setuploading,setsucce
           if(!data.state){
 
              const copy = {...userinfo}
+             if(data.EMAIL == "Exist"){
+                         
+               copy["email"].warning = true
+               copy["email"].errormsg = "The email you entered is already available !"
+
+             }
+             else if(data.EMAIL == "Password"){
+
+              copy["CurrentPasswordForEmail"].warning = true
+
+             }
+             else 
              copy["Currentpassword"].warning = true
+
              setuserinfo(copy)
              
           }else{
@@ -735,11 +748,11 @@ export const Userprofilefollowlist = async({requestType,UserId,SetFollowList,Fol
 
 }
 
-export const ReportUserReq = async({checkBoxValue,message,ContentId})=>{
+export const ReportUserReq = async({checkBoxValue,message,ContentId,reportedUserId})=>{
 
     try {
 
-      const {data} = await axios.post(`/user/reportUser`,{reportedContentId:ContentId,checkBoxValue:checkBoxValue,message:message})
+      const {data} = await axios.post(`/user/reportUser`,{reportedContentId:ContentId,checkBoxValue:checkBoxValue,message:message,reportedUserId:reportedUserId})
 
 
     } catch (error) {

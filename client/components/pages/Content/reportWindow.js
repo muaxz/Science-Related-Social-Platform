@@ -37,7 +37,7 @@ var reportCategories = {
     3:"Hakaret"
 }
 
-function Reportwindow({setActiveFunc,ContentId}){
+function Reportwindow({setActiveFunc,ContentId,reportedUserId}){
     const [message,setmessage] = useState("")
     const [checkBox,setCheckBox] = useState({
         0:{
@@ -82,13 +82,15 @@ function Reportwindow({setActiveFunc,ContentId}){
                 value = key
             }
         }
-
+        
         ReportUserReq({
             message:message,
             checkBoxValue:value,
             ContentId:ContentId,
+            reportedUserId:reportedUserId
         })
 
+        setActiveFunc()
     }
 
     return (  
@@ -121,7 +123,7 @@ function Reportwindow({setActiveFunc,ContentId}){
                                 fullWidth
                                 />
                        </AddMessageDiv>
-                       <Button onClick={SubmitHandler} style={{color:"white",backgroundColor:"#B91646"}} fullWidth variant="contained">Gonder</Button>
+                       <Button onClick={SubmitHandler} style={{color:"white",backgroundColor:"#B91646"}} fullWidth variant="contained">Report</Button>
                    </InnerDiv>
             </ExteriorDiv>
         </div>

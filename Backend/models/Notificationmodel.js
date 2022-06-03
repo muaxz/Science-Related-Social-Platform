@@ -6,7 +6,6 @@ const Content=require("./Contentmodel");
 
 
 const Notification=sequlize.define("Notification",{
-
     id:{
         type:Sequlize.INTEGER,
         allownull:false,

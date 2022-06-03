@@ -9,7 +9,7 @@ exports.getrows=async(req,res,next)=>{
     const {UserId,Order,last} =req.params;
 
   
-    
+    //Handle It
     try {
 
                 const data = await NotificationModel.findAll({
@@ -21,7 +21,7 @@ exports.getrows=async(req,res,next)=>{
                     order:[["createdAt","DESC"]],
                     include:[{
                         model:Usermodel,
-                        attributes:["id","firstname","lastname","imageurl"]
+                        attributes:["id","firstname","lastname","mainUrl"]
                     },
                     {
                         model:Contentmodel,

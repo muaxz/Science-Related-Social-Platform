@@ -508,6 +508,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             }
            
             values["email"] = userinfo["email"].value
+            values["CurrentPasswordForEmail"] = userinfo["CurrentPasswordForEmail"].value
             
         }else if(typeofupdate == 2){
 
@@ -598,7 +599,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             <img style={{visibility:"hidden",position:"absolute"}} id="Profileimg" src={src["Profileimage"]}></img>
             <Exterior getcropper={iscropperactive} active={active}>
                 <Inner>
-                    <ProfileuploadedDiv successful={succesfulupload == "SUCCESSFUL" ? true : false}>Profil Basariyla Guncellendi</ProfileuploadedDiv>
+                    <ProfileuploadedDiv successful={succesfulupload == "SUCCESSFUL" ? true : false}>Profile updated successfully</ProfileuploadedDiv>
                     <div style={{position:"absolute",top:isWindowforsettings ? "500px":"250px",right:"40px",zIndex:"300"}}>
                         <Button onClick={()=>Sendupdates(selected)} style={{textTransform:"capitalize",borderRadius:"25px"}} color="secondary" variant="contained">
                             {
