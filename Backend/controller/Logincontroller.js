@@ -3,6 +3,7 @@ const User=require("../models/Usermodel");
 const bcrypt=require("bcrypt");
 const {v4}=require("uuid");
 const redis = require("redis")
+const Sendemail = require("../MiddleFunctions/SendEmail")
 
 
 
@@ -136,4 +137,22 @@ exports.logout = async(req,res,next)=>{
     res.clearCookie("connect.sid")
     res.clearCookie("accessToken",{path:"/"})
     res.json({state:"success"})
+}
+
+exports.resetPassword = async()=>{
+
+   const {email} = req.body;
+
+   try {
+
+      const emailResponse = await Sendemail(email,"")
+
+     
+      return res.json({state:emailResponse ? "success" : "Fail"})
+
+
+   } catch (error){
+      return next()
+   }
+
 }

@@ -9,6 +9,7 @@ const reportModel = require("../models/ReportModel")
 const User = require("../models/Usermodel");
 const bcrypt=require("bcrypt");
 const nodemailer = require("nodemailer");
+const Sendemail = require("../MiddleFunctions/SendEmail")
 
 
 //Searching User
@@ -557,43 +558,9 @@ exports.updateprofile = async (req,res,next)=>{
 
         if(searchedEmail) return res.json({state:false,EMAIL:"Exist"})
         
+        Sendemail(currentuser.email,{firstname:currentuser.firstname,surname:currentuser.lastname})
 
-
-        //send code to email to change email 
-        let testAccount = await nodemailer.createTestAccount();
-
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-          host:"smtp-mail.outlook.com",
-          port:587,
-          auth: {
-            user:"bexsd@hotmail.com", // generated ethereal user
-            pass:"22312231a", // generated ethereal password
-          },
-        });
-      
-        // send mail with defined transport object
-        await transporter.sendMail({
-          from: "bexsd@hotmail.com", // sender address
-          to: currentuser.email, // list of receivers
-          subject: "Hello ✔", // Subject line
-          text: "Hello world?", // plain text body
-          html: "<b>Hello world?<h1>Press the link</h1></b>", // html body
-        },(err,info)=>{
-          if(err){
-            console.log(err)
-            next()
-            return;
-          }
-          res.json({state:"success"})
-        });
-      
-        //console.log("Message sent: %s", info.messageId);
-        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-      
-        // Preview only available when sending through an Ethereal account
-        //console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+        return res.json({state:"success"})
 
        });
     
