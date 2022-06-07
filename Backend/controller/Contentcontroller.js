@@ -14,7 +14,7 @@ const {v4} = require("uuid")
 exports.produce=async (req,res,next)=>{
  
   const {title,content,subtitle,catagory,UserId,processtype,titlemainUrl}=req.body;
-
+  console.log(titlemainUrl)
 
   try {  
  
@@ -92,8 +92,8 @@ exports.destroyContent = async(req,res,next)=>{
 
 exports.getAllContentsForModStuff = async (req,res,next)=>{
 
-    const {UserId} = req.userdata;
-    const {searchValue,category} = req.params; 
+    const {UserRole} = req.userdata;
+    const {searchValue,category,order} = req.params; 
     const WhereProperty = {}
     
     if(searchValue !== "Default" && category !== "null"){
@@ -110,15 +110,13 @@ exports.getAllContentsForModStuff = async (req,res,next)=>{
     //WhereProperty.category = {}
 
     try {
-
-      const currentUser = await User.findOne({
-        where:{id:UserId}
-      })
       
-      if(currentUser.Role == "Mod" || currentUser.Role == "Admin"){
+      if(UserRole == "Mod" || UserRole == "Admin"){
 
           var Contents = await Content.findAll({
             where:WhereProperty,
+            limit:10,
+            offset:parseInt(order),
             include:{
               model:User,
               as:"personal",
@@ -300,7 +298,7 @@ exports.getusercontent=async(req,res,next)=>{
   if(UserId == id){//UserId is current, id is coming from outside
 
         var latestparams="";
-        var newnum=parseInt(order);
+
 
         switch (catagory) {
           case "Readlater":
@@ -341,7 +339,7 @@ exports.getusercontent=async(req,res,next)=>{
                   attribute:[`${latestparams}`],
                 },
                 limit:10,
-                offset:newnum-10,
+                offset:parseInt(order),
                 include:{
                   model:Content,
                   include:[{
@@ -553,6 +551,7 @@ exports.uploadContentImage = async (req,res,next)=>{
   }
 
 }
+
 
 
 

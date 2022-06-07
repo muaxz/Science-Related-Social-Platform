@@ -222,9 +222,20 @@ const Login=()=>{
                 focused:false,
                 helperText:"Make sure that your password has at least 6 length and contains one upper, one lower character and one number.",
                 validation:true,
+            },
+        }, 
+        ForgetPassword:{
+            email:{
+                placeholder:"e-mail",
+                func:"Register",
+                value:"",
+                icon:"far fa-envelope",
+                focused:false,
+                helperText:"This is not a proper email adress !",
+                validation:true,
+            }
         }
-
-    }});
+    });
     
 
     useEffect(()=>{
@@ -285,13 +296,11 @@ const Login=()=>{
 
     const Submithandler=()=>{
 
-        
-
         const currentInputValues = {...inputs};
         const ourdata={};
         for (const key in currentInputValues[actionType]) {
             ourdata[key]=currentInputValues[actionType][key].value.trim();
-            if(actionType == "Register" && (key == "email" || key == "password")){
+            if(actionType == "Register" || actionType == "ForgetPassword" && (key == "email" || key == "password")){
 
                 const handlerResponse = InputErrorHandler(key,currentInputValues[actionType][key].value.trim())
                 if(!handlerResponse.validate){
@@ -303,9 +312,7 @@ const Login=()=>{
             }
         }        
 
-        
-        
-
+    
         switch(actionType){
             case "Login":
                 
@@ -321,15 +328,16 @@ const Login=()=>{
                  })
 
                 break;
-            case "Register":  
 
+            case "Register":  
                 resigterreq({
                     setbackenderror:setbackenderror,
                     userdata:ourdata,
                     seterrmsg:seterror,
                     setactive:setactive,
                 })
-                
+                break;
+                 
         } 
     }
        
@@ -366,8 +374,7 @@ const Login=()=>{
     return (
        <ImageDiv urlget={currenturl} aktif={true}>
             <Head>
-              <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossOrigin="anonymous" />
-             
+              <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossOrigin="anonymous" />    
             </Head>
             <Global></Global>
            <Window closefunction={()=>setactive(false)} active={windowactive} type="error">{backenderrormessage}</Window>
@@ -386,7 +393,6 @@ const Login=()=>{
                   <Logo></Logo>
                </div>
                <p  style={{color:"white",flex:4,wordWrap:"break-word"}}>Hakikatin temsilcisinin en az olduğu zaman, onu dile getirmenin tehlikeli olduğu zaman değil, can sıkıcı olduğu zamandır.</p>
-              
                <div style={{width:actionType == "Register" ? "100%" : "70%",boxSizing:"border-box",flex:7,display:actionType == "Register" ? "flex" : "block",flexWrap:"wrap"}}>
                    {
                         Object.keys(inputs[actionType]).map(item=>
@@ -412,7 +418,7 @@ const Login=()=>{
                         ))
                     }   
                     {
-                        actionType == "Login" ? <p style={{color:"#EB3232"}}>Forget Password ?</p> : ""
+                        actionType == "Login" ? <p onClick={()=>setActionType("ForgetPassword")} style={{color:"#EB3232",cursor:"pointer"}}>Forget Password ?</p> : ""
                     }
                 </div>    
                 <div style={{display:"flex",flex:"3",width:"100%"}}> 

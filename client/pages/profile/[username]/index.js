@@ -13,7 +13,7 @@ export default function Stuff({profile,counts,contents,getquery}){
         <React.Fragment>
             <Head>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossOrigin="anonymous" />
-            <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Slabo+27px&display=swap&family=Domine&display=swap&family=Rajdhani:wght@500&display=swap&family=Tinos:ital@1&display=swap&family=Libre+Baskerville&display=swap&family=Shippori+Mincho:wght@600&display=swap&family=Amiri&display=swap&family=Poppins:ital,wght@1,300&display=swap&family=Inter:wght@700&display=swap&family=Roboto:wght@700&display=swap&family=Bebas+Neue&display=swap" rel="stylesheet" rel="stylesheet"></link>
+            <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Slabo+27px&display=swap&family=Domine&display=swap&family=Rajdhani:wght@500&display=swap&family=Tinos:ital@1&display=swap&family=Libre+Baskerville&display=swap&family=Shippori+Mincho:wght@600&display=swap&family=Amiri&display=swap&family=Poppins:ital,wght@1,300&display=swap&family=Inter:wght@700&display=swap&family=Roboto:wght@700&display=swap&family=Bebas+Neue&display=swap" rel="stylesheet"></link>
            </Head>
            <Global></Global>
            <Profile Counts={counts} Mydata={profile} query={getquery} Contentdata={contents}></Profile>
@@ -29,7 +29,7 @@ export async function getServerSideProps({req,query}){
         const recieve = await axios.all([
             axios.get(`user/getuserprofile/${query.username}`,req.headers.cookie ? {headers:{Cookie:req.headers.cookie}} : {}),
             axios.get(`user/getusercount/${query.username}`,req.headers.cookie ? {headers:{Cookie:req.headers.cookie}} : {}),
-            axios.get(`user/getuserprofilecontent/${query.username}/${query.name == "Post" ? "true" : "false"}/${query.name}/10`,req.headers.cookie ? {headers:{Cookie:req.headers.cookie}} : {})
+            axios.get(`user/getuserprofilecontent/${query.username}/${query.name == "Post" ? "true" : "false"}/${query.name}/0`,req.headers.cookie ? {headers:{Cookie:req.headers.cookie}} : {})
         ])
         //users?age=15&gender=m&
         if(recieve[0].data && recieve[0].data.error || recieve[1].data && recieve[1].data.error){

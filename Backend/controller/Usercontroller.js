@@ -134,7 +134,7 @@ exports.getuserprofilecontent = async(req,res,next)=>{
         Userforcontentid:UserId,
       },
       limit:10,
-      offset:0,
+      offset:parseInt(order),
       include:[{
         model:Usermodel,
         as:"Like",

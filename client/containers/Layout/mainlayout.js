@@ -39,7 +39,6 @@ export default function Mainlayout({children}) {
     const [lastrecordactive,setlastrecordactive]=useState(false);
     const userouter=useRouter();
     
-    console.log(userouter.pathname);
     useEffect(()=>{
 
         if(userdata.UserId){

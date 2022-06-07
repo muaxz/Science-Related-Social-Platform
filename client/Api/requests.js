@@ -408,11 +408,7 @@ export const Getusercontent=async({UserId,params,setdata,setwindow,seterrmsg,ord
           setstopscrolling(true);
        } 
         
-       
-       const Current=[...currentdata];
-       const Mydata=[...data.data];
-      //push metodu bir diziyi bi  r dizinin içine pushluyor fakat concat elemanları
-       setdata(Current.concat(Mydata));
+       setdata([...currentdata,...data.data]);
        
     }    
     else if(data == "Unauthroized"){
@@ -442,18 +438,20 @@ export const UpdateNotificationcount=async({UserId})=>{
 
 }
 
-export const Getuserprofilecontent=async({setspinner,setdata,category,UserId,ownerpost,order})=>{
+export const Getuserprofilecontent=async({setspinner,contentdata,setdata,category,UserId,ownerpost,order,paignation})=>{
 
   try {
 
     const{data}= await axios.get(`user/getuserprofilecontent/${UserId}/${ownerpost}/${category}/${order}`);
-    console.log(data.data);
+    
     if(Errorhandler({data})){ 
+    
+       if(paignation){
+          setdata([...contentdata,...data.data])
+       }
 
-       setdata([...data.data])
        setspinner(false)
-       
-
+      
     }    
     else if(data == "Unauthroized"){
        //
@@ -805,26 +803,30 @@ export const sendReportMessage = async ({TakerId,ContentId,reportMessage})=>{
   }
 }  
 
-export const CheckPosts = async ()=>{
-
-    try {
-      
-    } catch (error) {
-      
-    }
-    
-}
-
-export const SearchContents= async(searchValue,setContent)=>{
+export const SearchContentsForMods = async(searchValue,setContent)=>{
 
     try {
      
-      var {data} = await axios.get(`/content/getModContents/${searchValue}/null`,{withCredentials:true})
+      var {data} = await axios.get(`/content/getModContents/${searchValue}/null/0`,{withCredentials:true})
    
       setContent(data.data)
 
     } catch (error) {
       //push 500 
     }
+
+}
+
+export const GetContentsForMods = async ({order,setContent})=>{
+   
+  try {
+
+    var {data} = await axios.get(`/content/getModContents/Default/null/${order}`,{withCredentials:true})
+    
+    setContent(prev=>{return [...prev,...data.data]})
+
+  } catch (error) {
+    //push 500
+  }
 
 }

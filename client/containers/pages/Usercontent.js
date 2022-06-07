@@ -1,6 +1,7 @@
 import React,{useContext, useEffect,useState} from 'react'
 import styled from "styled-components";
 import DraftCard from "../../components/shared/Cards/DraftCard"
+import ContentCard from "../../components/shared/Cards/Contentcard"
 import {Getusercontent,Createrelationreq,DeletePost} from "../../Api/requests"
 import {createusercontext} from "../../context/Usercontext"
 import useScroll from "../../hooks/Scroll";
@@ -55,35 +56,23 @@ export default function Usercontent({params,mydata}){
     useEffect(() =>{
       
 
-        if(bottom && userdata.UserId){
-            
+        if(bottom && userdata.UserId && !stopscrolling){
+            console.log("inside")
             Getusercontent({
                 params:params,
                 UserId:userdata.UserId,
                 setdata:setdata,
-                order:ordercount,
+                order:data.length,
                 setstopscrolling:setstopscrolling,
                 currentdata:data,
             })
 
         }
 
-     },[ordercount])
-     
-    useEffect(()=>{
-    
-       console.log("here")
-       if(bottom && !stopscrolling){
-
-           var count=ordercount;
-           count+=data.length+10;
-           setordercount(count);
-
-       }
-
-    },[bottom])
+     },[bottom])
     
     var fornorecord = "";
+    var TheCardWillBeUsed = null;
 
     if(params == "Draft"){
         fornorecord="You did not create a draft yet ):"
@@ -94,6 +83,7 @@ export default function Usercontent({params,mydata}){
     else if(params == "Like"){
         fornorecord="You did not like any content ):"
     }
+    
     const Handlerelation=(postId,attribute,typeofrelation,index,isDraft)=>{
         
         if(isDraft == "Draft"){
@@ -164,9 +154,33 @@ export default function Usercontent({params,mydata}){
                             data.map((item,index)=>{
                                 return (
                                 <Contentholder key={index}>
-                                    <DraftCard
-                                        draftContent={item}
-                                    />
+                                    {
+                                       params == "Draft" ? <DraftCard draftContent={item}/> : 
+
+                                       (<ContentCard
+                                            foruser={true}
+                                            postId={item.Content.id}
+                                            content={item.Content}
+                                            createrelationforsmh={()=>""}
+                                            showwindow={()=>""}
+                                            like={[]}//bu bir obje array
+                                            retweet={[]}
+                                            comment={[]}
+                                            readlater={[]}
+                                            key={index}//key numarası
+                                            followeds={[]}
+                                            title={item.Content.title}
+                                            titleimage={item.Content.titleimage || "/yaprak.jpg"}
+                                            userfirstname={item.Content.personal.firstname || "notyet"}
+                                            usersurname={item.Content.personal.lastname || "notyet"}//bir obje props
+                                            userid={item.Content.personal.id || "notyet"}
+                                            subtitle={item.Content.subtitle}
+                                            date={item.Content.createdAt}
+                                       >
+
+                                       </ContentCard>)
+                                    }
+                                  
                                 </Contentholder>
                                 )
                             })

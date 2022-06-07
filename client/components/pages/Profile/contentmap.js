@@ -33,7 +33,7 @@ function Contentmap({contentlist,relationfunc,norecord}) {
                                         comment={item.personal ? item.allcomments : item.Content.allcomments}
                                         profileimage={"https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=pexels-martin-p%C3%A9chy-594610.jpg&fm=jpg"}
                                         title={item.personal ? item.title : item.Content.title}
-                                        titleimage={"/yaprak.jpg"}
+                                        titleimage={item.titleimage != null ? item.titleimage : "/yaprak.jpg"}
                                         userfirstname={item.personal ? item.personal.firstname : item.Content.personal.firstname}
                                         usersurname={item.personal ? item.personal.lastname : item.Content.personal.lastname}//bir obje props
                                         createrelationforsmh={relationfunc}

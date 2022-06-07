@@ -14,10 +14,9 @@ import Followlist from '../../components/pages/Profile/followlists';
 
 
 const Exteriordiv=styled.div`
-max-width:1800px;
 padding-top:60px;
 width:100%;
-height:100vh;
+height:100%;
 overflow:${({editactive})=>editactive ? "hidden" : "visible"};
 padding-bottom:20px;
 padding-left:60px;
@@ -174,30 +173,33 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
     })
    
  
-
+   console.log(bottom)
    useEffect(()=>{
       //sadece paignation zaten query değişince ilk 10 value serverside tarafından çekiliyor
       var Leakcontrolloer = true;
-      var Requestpermission = false;
+     
       
       //sadece scroll down oldugunda
-      if(Requestpermission){
+      //console.log("sa")
+      if(bottom){
             setspinner(true);
             Getuserprofilecontent({
                 UserId:query.username,
                 category:query.name,
                 setdata:setcontentdata,
                 setspinner:setspinner,
-                paignation:false,
+                contentdata:contentdata,
+                paignation:true,
                 ownerpost:query.name == "Post" ? "true" : "false",
                 Leakcontrolloer:Leakcontrolloer,
-                order:10,
+                order:contentdata.length,
                 currentdata:contentdata,
             })
       }
 
       return ()=>{
          Leakcontrolloer=false;
+       
       }
 
    },[bottom])
@@ -456,7 +458,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                            
                            <div style={{paddingRight:"10px",paddingLeft:"10px",maxWidth:"700px",margin:"auto"}}>
                                 {
-                                  showfollowinglist.length > 0 ? <Followlist type={showfollowinglist} goBackToContent={()=>setshowfollowinglist("")} list={FollowList}></Followlist> : <Contentmap  norecord={query.name} relationfunc={Relationrequest} contentlist={Contentdata}/> 
+                                  showfollowinglist.length > 0 ? <Followlist type={showfollowinglist} goBackToContent={()=>setshowfollowinglist("")} list={FollowList}></Followlist> : <Contentmap  norecord={query.name} relationfunc={Relationrequest} contentlist={contentdata}/> 
                                 }
                            </div>
                      </Contentsection>

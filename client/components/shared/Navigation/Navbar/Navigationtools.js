@@ -33,7 +33,7 @@ export default function Navigationtools({optnumber,optname,Navdata,Logout}){
     let title = "";
 
     if(optnumber == 1){
-      title = "Oluştur"
+      title = "Create"
       Myoption = <React.Fragment>
                     <Option1div>
                         <Link href={"/post"}>
@@ -124,26 +124,19 @@ export default function Navigationtools({optnumber,optname,Navdata,Logout}){
         }          
     }
     if(optnumber == 3){
-      title="Profil"
+      title="Profile"
       Myoption=( <React.Fragment>
                     <Option1div>
                         <Icon className="fas fa-user" Iconconfig={{width:"32px",height:"32px",backcolor:"#DEDEDE",lineheight:"32px"}}></Icon>
                         <div style={{marginLeft:"8px"}}>
-                            <p  style={{fontSize:"15px"}}>Profilim</p>
-                            <p style={{fontSize:"13px"}}></p>
-                        </div>
-                    </Option1div>
-                    <Option1div>
-                        <Icon className="fas fa-user-cog " Iconconfig={{width:"32px",height:"32px",backcolor:"#DEDEDE",lineheight:"32px"}}></Icon>
-                        <div style={{marginLeft:"8px"}}>
-                            <p style={{fontSize:"15px"}}>Profil Ayarları</p>
+                            <p  style={{fontSize:"15px"}}>My Profile</p>
                             <p style={{fontSize:"13px"}}></p>
                         </div>
                     </Option1div>
                     <Option1div>
                         <Icon className="fas fa-moon " Iconconfig={{width:"32px",backcolor:"#DEDEDE",height:"32px",lineheight:"32px"}}></Icon>
                         <div style={{marginLeft:"8px"}}>
-                            <p style={{fontSize:"15px"}}>Karanlık Mod</p>
+                            <p style={{fontSize:"15px"}}>Dark Mode</p>
                             <p style={{fontSize:"13px"}}></p>
                         </div>
                         <div style={{marginLeft:"auto"}}>
@@ -153,7 +146,7 @@ export default function Navigationtools({optnumber,optname,Navdata,Logout}){
                     <Option1div onClick={()=>Logout()}>
                         <Icon className="fas fa-sign-out-alt " Iconconfig={{width:"32px",backcolor:"#DEDEDE",height:"32px",lineheight:"32px"}}></Icon>
                         <div style={{marginLeft:"8px"}}>
-                            <p style={{fontSize:"15px"}}>Çıkış Yap</p>
+                            <p style={{fontSize:"15px"}}>Log Out</p>
                             <p style={{fontSize:"13px"}}></p>
                         </div>
                     </Option1div>       

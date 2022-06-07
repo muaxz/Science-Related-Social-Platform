@@ -214,7 +214,7 @@ export default function Home({mydata}){
 
     useEffect(()=>{
         
-
+        console.log("jererere")
         if(bottom){
 
             setorder(contentdata.length); 

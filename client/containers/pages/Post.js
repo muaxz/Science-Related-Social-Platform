@@ -7,7 +7,6 @@ import {Create} from "@material-ui/icons"
 import {createusercontext} from "../../context/Usercontext"
 import {Button,Global} from "../../components/styledcomponents/Globalstyles";
 import Window from "../../components/UI/window";
-import {useDropzone} from "react-dropzone"
 import Dropzone from "react-dropzone"
 
 
@@ -109,9 +108,6 @@ const rejectStyle = {
 
 export default function MyEditor (){
 
-
-   
-    
     const editorRef = useRef()
     const {userdata} = useContext(createusercontext);
     const [ editorLoaded, setEditorLoaded ] = useState( false )
@@ -131,7 +127,7 @@ export default function MyEditor (){
       content:"",
       title:"",
       subtitle:"",
-      titleImageURL:"",
+      titlemainUrl:"",
       catagory:"",
       UserId:"",
     });
@@ -242,14 +238,14 @@ export default function MyEditor (){
       const fileForm = new FormData();
       fileForm.append("files",titleFile[0])
       axios.post(`http://localhost:3001/content/uploadContentImage`,fileForm).then((res)=>{
-
+        console.log(res.data)
         if(!res.data.uploaded){
           windowInformRef.current = "The size of an image should be the most 4 MB"
           windowTypeRef.current = "error"
           return setwindowactive(true)
         }
 
-        setcontentpart(prev=>{return{...prev,titleImageURL:res.data.url}})
+        setcontentpart(prev=>{return{...prev,titlemainUrl:res.data.url}})
         const src = URL.createObjectURL(titleFile[0])
         setTitleImageSrc(src);
 

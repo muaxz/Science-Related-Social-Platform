@@ -9,11 +9,13 @@ export default function useScroll(){
         //
         document.addEventListener("scroll",(e)=>{
            
-            if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {  
+            if((window.innerHeight + Math.ceil(window.pageYOffset)) >= document.body.offsetHeight) {  
+              
                 setbottom(true);
                 
             }
             else{
+               
                 setbottom(false);
                
             }

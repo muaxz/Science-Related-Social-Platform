@@ -1,11 +1,12 @@
 import React, { useState,useEffect,useContext} from 'react';
 import styled from "styled-components";
-import {checkTheContent,SearchContents} from "../../Api/requests"
+import {checkTheContent,SearchContentsForMods,GetContentsForMods} from "../../Api/requests"
 import {CreateUtilContext} from "../../context/UtilContext"
 import {Black} from "../../components/styledcomponents/Globalstyles"
 import {HighlightOffOutlined,SecurityOutlined,VisibilityOff,Visibility,Search} from "@material-ui/icons"
 import {Button,TextField,InputAdornment} from "@material-ui/core"
 import HtmlParser from "react-html-parser"
+import useScroll from '../../hooks/Scroll';
 
 
 const ExteriorDiv = styled.div`
@@ -110,12 +111,22 @@ align-items:center;
 
 
 const Postcontrol=({contentData})=>{
-
+    const {bottom} = useScroll()
     const [selectedCard,setSelectedCard] = useState({});
     const {setSavedWindow,setSavedWindowText} = useContext(CreateUtilContext)
     const [contentDataState,setContentData] = useState(contentData)
     const [searchValue,setSearchValue] = useState("");
   
+    useEffect(()=>{
+        
+        if(bottom){
+            GetContentsForMods({
+                order:contentDataState.length,
+                setContent:setContentData,
+            })
+        }
+    
+    },[bottom])
 
     const blackHandler = ()=>{
         setSelectedCard({})
@@ -161,7 +172,7 @@ const Postcontrol=({contentData})=>{
         
         if(searchValue.length <= 0) return
         
-        SearchContents(searchValue,setContentData)
+        SearchContentsForMods(searchValue,setContentData)
     
     }
 
