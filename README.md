@@ -1,6 +1,6 @@
 <h1>The Purpose Of The Project</h1>
 
-The purpose of this project is to enable people to share their ideas about various topics, such as biology, physics, philosphy, history et cetera. People who are curios about different fields can easily benefit from this social platform. Another prupose of this project is to reduce unecessary attention to politics and direct people's attention to science and philosphy.
+The purpose of this project is to enable people to share their ideas about various topics, such as biology, physics, philosophy, history et cetera. People who are curious about different fields can easily benefit from this social platform. Another purpose of this project is to reduce unnecessary attention to politics and direct people's attention to science and philosophy.
 
 <hr>
 
