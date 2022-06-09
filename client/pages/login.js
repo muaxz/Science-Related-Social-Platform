@@ -350,6 +350,7 @@ const Login=()=>{
 
     const InputChangeHandler=(e,type,section)=>{
         const inputsget={...inputs};
+        console.log(e)
         inputsget[type][section].value=e.target.value;
         inputsget[type][section].validation=true;
         setinputs(inputsget);

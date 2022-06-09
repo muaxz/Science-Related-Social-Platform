@@ -2,7 +2,7 @@ import axios from 'axios';
 import React,{useRef,useState,useEffect,useContext,useMemo} from 'react'
 import styled from "styled-components";
 import {producereq} from "../../Api/requests";
-import {Button as Corebutton,TextField,InputAdornment,FormControl,Select,MenuItem} from "@material-ui/core";
+import {Button as Corebutton,TextField,InputAdornment,FormControl,Select,MenuItem,FormHelperText} from "@material-ui/core";
 import {Create} from "@material-ui/icons"
 import {createusercontext} from "../../context/Usercontext"
 import {Button,Global} from "../../components/styledcomponents/Globalstyles";
@@ -19,10 +19,8 @@ import Dropzone from "react-dropzone"
 
 
 const Ckeholder=styled.div`
-max-width:540;
-width:82%;
+max-width:980px;
 padding:10px;
-margin-left:70px;
 margin-top:10px;
 `
 
@@ -45,12 +43,12 @@ border-bottom-right-radius:8px;
 const Exterior=styled.div`
 display:flex;
 height:100vh;
-max-width:1000px;
+max-width:1300px;
 align-items:center;
 width:100%;
+flex-direction:row;
 margin:0 auto;
 @media (max-width:900px){
-display:block;
 width:80%;
 }
 `
@@ -60,21 +58,23 @@ display:flex;
 width:100%;
 height:600px;
 justify-content:center;
+@media (max-width:900px){
+  display:block;
+}
 `
 const Leftside=styled.div`
+display:flex;
+flex-direction:column;
 flex:1;
-height:100%;
-background-color:#f0c987;
 position:sticky;
+background-color:#f0c987;
 border-top-left-radius:8px;
 border-bottom-left-radius:8px;
 border-right:2px solid lightgrey;
 padding:10px;
 top:65px;
 @media (max-width:900px){
-  position:relative;
-  top:0;
-  }
+}
 `
 const baseStyle = {
   flex: 1,
@@ -124,12 +124,30 @@ export default function MyEditor (){
     const windowInformRef = useRef("");
     const windowTypeRef = useRef("");
     const [contentpart,setcontentpart] = useState({
-      content:"",
-      title:"",
-      subtitle:"",
-      titlemainUrl:"",
-      catagory:"",
-      UserId:"",
+      content:{
+        value:"",
+        isValid:true
+      },
+      title:{
+        value:"",
+        isValid:true
+      },
+      subtitle:{
+        value:"",
+        isValid:true
+      },
+      titlemainUrl:{
+        value:"",
+        isValid:true
+      },
+      catagory:{
+        value:"",
+        isValid:true
+      },
+      UserId:{
+        value:"",
+        isValid:true
+      },
     });
     
     function uploadAdapter(loader) {
@@ -171,9 +189,9 @@ export default function MyEditor (){
     }
 
     useEffect(()=>{
-
+        //Delete this unecessary
         const mutated={...contentpart};
-        mutated["UserId"] = userdata.UserId;
+        mutated["UserId"].value = userdata.UserId;
         setcontentpart(mutated);
 
     },[userdata])
@@ -185,35 +203,17 @@ export default function MyEditor (){
             CKE: CKEditor,
             ClassicEditor: require( "ckeditor5-custom-build/build/ckeditor" )
         }
-
         setEditorLoaded(true)
+    },[])
 
-    }, [])
-
-    useEffect(()=>{
-      const editor = document.querySelector("#editor")
-      if(editor){
-          editorRef.current.ClassicEditor.create(document.querySelector("#editor"),{
-            fontFamily: {
-              options: [
-                  'default',
-                  'Ubuntu, Arial, sans-serif',
-                  'Ubuntu Mono, Courier New, Courier, monospace'
-              ]
-          },
-          toolbar: [
-              'heading', 'bulletedList', 'numberedList', 'fontFamily', 'undo', 'redo'
-          ]
-        })
-      }
-    },[editorLoaded])
 
    
   
     const changeHandler=(event,editör,value)=>{
       
        const mutatedValue ={...contentpart};
-       mutatedValue[value] = (value == "content" ? editör.getData() : event.target.value)
+       mutatedValue[value].isValid = true;
+       mutatedValue[value].value = (value == "content" ? editör.getData() : event.target.value)
       
        const editorImageElements = document.querySelectorAll("figure")
        editorImageElements.forEach(element => {   
@@ -226,7 +226,7 @@ export default function MyEditor (){
           
       });
       
-      if(mutatedValue[value].includes("ERROR") || mutatedValue [value].includes(`<figure class="image"><img></figure>`)) return;
+      if(mutatedValue[value].value.includes("ERROR") || mutatedValue[value].value.includes(`<figure class="image"><img></figure>`)) return;
         
 
       setcontentpart(mutatedValue);
@@ -245,7 +245,7 @@ export default function MyEditor (){
           return setwindowactive(true)
         }
 
-        setcontentpart(prev=>{return{...prev,titlemainUrl:res.data.url}})
+        setcontentpart(prev=>{return{...prev,titlemainUrl:{value:res.data.url,isValid:true}}})
         const src = URL.createObjectURL(titleFile[0])
         setTitleImageSrc(src);
 
@@ -254,6 +254,19 @@ export default function MyEditor (){
       
     }
     
+    const InputisValidation=(value)=>{
+       var isValid = true;
+       const content = {...contentpart}
+       Object.keys(contentpart).forEach((key)=>{
+            if(contentpart[key].value == "" && key !== "subtitle"){
+                content[key].isValid = false;
+                setcontentpart(content)
+                isValid = false;
+            } 
+       })
+
+       return isValid;
+    }
     
     const Submitpost=(typeofsubmit)=>{
 
@@ -270,8 +283,16 @@ export default function MyEditor (){
 
         windowTypeRef.current = "confirm"
         
+        
+        if(!InputisValidation(contentpart)) false;
+
+        const dataWillBeSend = {}
+        for (const key in contentpart) {
+           dataWillBeSend[key] = contentpart[key].value
+        }
+
         producereq({
-          contentdata:contentpart,
+          contentdata:dataWillBeSend,
           seterrmsg:seterror, 
           typeofsubmit:typeofsubmit,
           setwindow:setwindowactive, 
@@ -289,35 +310,42 @@ export default function MyEditor (){
             <Window closefunction={()=>setwindowactive(false)} active={windowactive} type={windowTypeRef.current}> {windowInformRef.current} </Window>
             <Leftside> 
                   <InputHolder>
-                      <FormControl  size="small" fullWidth>
-                                            
-                                            <Select
-                                                onChange={(e)=>changeHandler(e,"","catagory")}
-                                                style={{backgroundColor:"white",color:"black"}}
-                                                variant="outlined"
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                inputProps={{ 'aria-label': 'Without label' }}
-                                                defaultValue="default"
-                                            >
-                                                <MenuItem selected disabled value="default">
-                                                    Choose A Topic
-                                                </MenuItem>
-                                                <MenuItem value="Uzay">Uzay</MenuItem>
-                                                <MenuItem value="Metafizik">Metafizik</MenuItem>
-                                                <MenuItem value="Felsefe">Felsefe</MenuItem>
-                                                <MenuItem value="Biyoloji">Biyoloji</MenuItem>          
-                                            </Select>
-                                          
-                                        </FormControl>
+                      <FormControl size="small" fullWidth>               
+                          <Select
+                              onChange={(e)=>changeHandler(e,"","catagory")}
+                              style={{backgroundColor:"white",color:"black"}}
+                              variant="outlined"
+                              labelId="demo-simple-select-label"
+                              id="demo-simple-select"
+                              inputProps={{ 'aria-label': 'Without label' }}
+                              defaultValue="default"
+                          >
+                              <MenuItem selected disabled value="default">
+                                  Choose A Topic
+                              </MenuItem>
+                              <MenuItem value="Uzay">Uzay</MenuItem>
+                              <MenuItem value="Metafizik">Metafizik</MenuItem>
+                              <MenuItem value="Felsefe">Felsefe</MenuItem>
+                              <MenuItem value="Biyoloji">Biyoloji</MenuItem>          
+                          </Select>
+                          <FormHelperText style={{color:"red"}}>{!contentpart["catagory"].isValid && "You appear to have forgotton to choose a topic."}</FormHelperText>
+                      </FormControl>
                   </InputHolder>
                 <InputHolder><Corebutton onClick={()=>Submitpost("Published")}  style={{width:"100%",backgroundColor:"#ef233c",textTransform:"none"}} color="secondary" variant="contained">Post it !</Corebutton></InputHolder>
                 <InputHolder><Corebutton onClick={()=>Submitpost("Draft")}   style={{width:"100%",backgroundColor:"#2ec4b6",textTransform:"none"}} color="secondary" variant="contained">Save it as a draft</Corebutton></InputHolder>
+                {
+                  titleImageSrc != null && 
+                ( <div style={{marginTop:"auto",borderRadius:"15px"}}>
+                    <div style={{width:"100%",height:"300px",alignSelf:"flex-end"}}>
+                          <img  alt='sa' src={titleImageSrc} style={{width:"100%",objectFit:"cover",height:"100%",borderRadius:"15px"}}></img>
+                    </div>
+                  </div>)
+                } 
             </Leftside>
             <RightPart>
                 <div>
                     <InputHolder>
-                        <TextField  onChange={(e)=>changeHandler(e,"","title")} InputProps={{style:{color:"black"},endAdornment: <InputAdornment position="end"><Create style={{color:"black"}}></Create></InputAdornment>,}} helperText="This field is mandatory for people to have a better general idea about your post." label="Title" size="small" variant="outlined" fullWidth></TextField>
+                        <TextField error={!contentpart["title"].isValid} onChange={(e)=>changeHandler(e,"","title")} InputProps={{style:{color:"black"},endAdornment: <InputAdornment position="end"><Create style={{color:"black"}}></Create></InputAdornment>,}} helperText="This field is mandatory for people to have a better general idea about your post." label="Title" size="small" variant="outlined" fullWidth></TextField>
                     </InputHolder>
                     <InputHolder>
                         <TextField onChange={(e)=>changeHandler(e,"","subtitle")} InputProps={{style:{color:"black"},endAdornment: <InputAdornment position="end"><Create style={{color:"black"}}></Create></InputAdornment>,}} helperText="Optional field" label="Sub Title" size="small" variant="outlined" fullWidth></TextField>
@@ -333,13 +361,6 @@ export default function MyEditor (){
                                 </section>
                               )}
                           </Dropzone>
-                          {
-                            titleImageSrc != null && 
-                              ( <div style={{width:"100%",height:"150px",marginTop:"20px"}}>
-                                  <img alt='sa' src={titleImageSrc} style={{width:"100%",objectFit:"contain",height:"100%"}}></img>
-                              </div>)
-                          }
-                         
                     </InputHolder>   
                 </div>
                 <Ckeholder>
@@ -349,20 +370,18 @@ export default function MyEditor (){
                             config={{ 
                                   
                                   extraPlugins:[uploadPlugin],
-                                  placeholder: "Start Typing Your ideas ...",
+                                  placeholder: "Start Typing Your ideas"
                                   //toolbar:['heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList']
                               }} 
                             onChange={(event,editör)=>changeHandler(event,editör,"content")}
                             value={contentpart.content}
-                            data={contentpart["content"]}
+                            data={contentpart["content"].value}
                             editor={ClassicEditor}
-                          
                           />
                         ) : (
-                          <div>Editor loading</div>
+                          <div>loading</div>
                         )
                   }
-                  
               </Ckeholder>
             </RightPart>
         </InnerDiv>

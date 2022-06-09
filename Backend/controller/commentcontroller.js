@@ -48,44 +48,40 @@ exports.getcomments=async (req,res,next)=>{
   try {
 
     const {id,Last,order,isforanswer} = req.params;
-
-      var ordernumb=parseInt(order);
-      var offsetborder = 0;
-      var limitborder = 10;
-      var whereclause ={};
+      //Change the last comment path
+      var orderNumber = parseInt(order);
+      var offsetValue = 0;
+      var limitBorder = 10;
+      var whereProperty ={};
 
       if(Last == "true" || isforanswer == "true"){
-        offsetborder = 0;
-        limitborder = 1;
+        offsetValue = 0;
+        limitBorder = 1;
       }else{
-        offsetborder = ordernumb
+        offsetValue = orderNumber
       }
 
       var controlforonlyOnecomment = isforanswer == "true" ? "id" : "ContentId"
-      whereclause[controlforonlyOnecomment] = id
+      whereProperty[controlforonlyOnecomment] = id
 
       const comments = await Comment.findAll({
-        where:{...whereclause},
+        where:{...whereProperty},
         include:{
           model:User,
           attributes:["firstname","lastname","id","mainUrl"]
         },
-        limit:limitborder,
-        offset:offsetborder,
+        limit:limitBorder,
+        offset:offsetValue,
         order:[['createdAt',"DESC"]]
       })
+
+      console.log(comments)
 
    
   
       const arr = []
       const Willbesend = {}
-      var donework = 0
-      var totalvalue = 0 
       var trial = true
-      
-      for (let m = 0; m < comments.length; m++) {
-           totalvalue+=m
-      }
 
       const getSubCategoriesRecursive = async (comment) => {
   
@@ -121,24 +117,16 @@ exports.getcomments=async (req,res,next)=>{
         if(comments.length > 0){
   
             for (let i = 0; i < comments.length; i++) {
-  
-              
-
+             
               getSubCategoriesRecursive(comments[i]).then((value)=>{
               
-                
                   arr.push(value)
-               
-                  donework +=i
                 
-                  
-                if(donework == totalvalue && trial){
-                  
-                  trial=false
-                  Willbesend.data = arr 
-                  
-                  return res.json(Willbesend)
-  
+                if(arr.length == comments.length){
+
+                    trial=false
+                    Willbesend.data = arr 
+                    return res.json(Willbesend)
                 }
   
             })
@@ -157,6 +145,27 @@ exports.getcomments=async (req,res,next)=>{
     return;
   }
 
+
+}
+
+exports.getLastComment = async ()=>{
+
+    try {
+
+      const comments = await Comment.findAll({
+        where:{...whereProperty},
+        include:{
+          model:User,
+          attributes:["firstname","lastname","id","mainUrl"]
+        },
+        limit:limitBorder,
+        offset:orderNumber,
+        order:[['createdAt',"DESC"]]
+      })
+
+    } catch (error) {
+      
+    }
 
 }
 

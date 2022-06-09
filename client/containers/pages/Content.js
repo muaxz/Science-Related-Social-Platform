@@ -76,6 +76,7 @@ export default function Content({Contentdata,comments,id}){
    
     const attributeList =useRef([{icon:"fas fa-bookmark",desc:"Gönderiyi Kaydet"},{icon:"fas fa-thumbs-up",desc:"Gönderiyi Beğen"},{icon:"fas fa-retweet",desc:"Gönderiyi Profil Sayfamda Göster"},{icon:"fa-solid fa-circle-exclamation",desc:"Gonderiyi Bildir"}])
     const {bottom} = useScroll();
+    const isInitialLoad = useRef(true)
     const {visible,setvisible,ref} = useClickOutside();
     const [content,setcontent]=useState(Contentdata);
     const [commentlist,setcommentlist]=useState(comments);
@@ -85,7 +86,7 @@ export default function Content({Contentdata,comments,id}){
     const [activeproduce,setactiveproduce]=useState(false);
     const [isReportActive,setisReportActive]=useState(false);
     const {userdata}=useContext(createusercontext);
-    console.log(commentlist)
+    
     //const {id}=router.query;
   
     useEffect(()=>{
@@ -100,11 +101,12 @@ export default function Content({Contentdata,comments,id}){
 
     },[userdata])
     
-
+    
     useEffect(()=>{
 
         if(numberofcomment > 0){
-            //ilk sayfa geldiginde isteği önlemk için
+    
+            //TODO Create a function for the coment req
             setactiveproduce(true);
             Commentreq({
                 contentId:id,
@@ -121,7 +123,8 @@ export default function Content({Contentdata,comments,id}){
 
     useEffect(()=>{
 
-       if(bottom){
+    
+       if(bottom && !isInitialLoad.current){
             
             Commentreq({
                 contentId:id,
@@ -132,8 +135,9 @@ export default function Content({Contentdata,comments,id}){
                 setactiveproduce:setactiveproduce,
                 seterrmsg:seterrmsg,
             })
-
        }
+
+       isInitialLoad.current = false;
 
     },[bottom])
 

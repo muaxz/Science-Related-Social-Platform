@@ -12,6 +12,7 @@ const Content=sequlize.define("Content",{
     },
     titleimage:{
          type:Sequlize.TEXT,
+         allowNull:false,
     },
     title:{
         type:Sequlize.STRING,
