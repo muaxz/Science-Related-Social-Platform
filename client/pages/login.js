@@ -3,7 +3,7 @@ import {createusercontext} from "../context/Usercontext";
 import styled,{createGlobalStyle} from "styled-components";
 import {useRouter} from "next/router"
 import Head from "next/head";
-import {loginreq,resigterreq} from "../Api/requests";
+import {loginreq,resigterreq,sendResetEmail,resetPassword} from "../Api/requests";
 import Window from "../components/UI/window";
 import {TextField,Button,InputAdornment} from '@material-ui/core';
 import {withStyles,makeStyles} from '@material-ui/core/styles';
@@ -11,6 +11,7 @@ import {Global} from "../components/styledcomponents/Globalstyles"
 import Guardlayout from "../containers/Layout/routerguard";
 import Validate from "validator"
 import {AccountCircle,EmailOutlined,Lock,ArrowRight, ArrowLeft,SupervisorAccount,SupervisedUserCircleSharp, SupervisorAccountRounded, SupervisorAccountSharp, AccountCircleSharp, AccountCircleRounded, Person, Home, ArrowRightAltRounded, ChevronRight, Assignment} from "@material-ui/icons"
+import axios from 'axios';
 
 
 
@@ -142,7 +143,6 @@ border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
-transition:0.09s ease-in;
 &:hover {
 color:#f50057;
 width:45px;
@@ -152,7 +152,7 @@ height:45px;
 
 
 
-const Login=()=>{
+const Login=({mode,token})=>{
     
     const stylesget=CssTextField();
     const{setlogged,setuserdata,setspinner}=useContext(createusercontext);
@@ -163,9 +163,7 @@ const Login=()=>{
     const[windowactive,setactive]=useState(false);
     const router=useRouter();
     const[inputs,setinputs]=useState({
-
         Login:{
-
             email:{
                 placeholder:"E-posta",
                 func:"Login",
@@ -186,7 +184,6 @@ const Login=()=>{
             }
         },
         Register:{
-
             name:{
                placeholder:"İsim",
                func:"Register",
@@ -227,34 +224,38 @@ const Login=()=>{
         ForgetPassword:{
             email:{
                 placeholder:"e-mail",
-                func:"Register",
+                func:"ForgetPassword",
                 value:"",
                 icon:"far fa-envelope",
                 focused:false,
                 helperText:"This is not a proper email adress !",
                 validation:true,
             }
-        }
+        },
+        PasswordReset:{
+            newPassword:{
+                placeholder:"New Password",
+                func:"PasswordReset",
+                value:"",
+                icon:"far fa-envelope",
+                focused:false,
+                helperText:"",
+                validation:true,
+            },
+            newPasswordAgain:{
+                placeholder:"New Password Again",
+                func:"PasswordReset",
+                value:"",
+                icon:"fas fa-unlock-alt",
+                focused:false,
+                helperText:"",
+                validation:true,
+            }
+        },
     });
     
-
     useEffect(()=>{
-
-       console.log("rendered");
-
-       const random = Math.floor(Math.random() * 15);
-
-       /*axioss.get("https://api.pexels.com/v1/search?query=magic",{
-        headers:{
-           "Authorization":"563492ad6f917000010000014adb809e89634602a896d8e62a850401",
-        }
-       })
-       .then((res)=>{
-            console.log(res.data.photos);  
-            setcurrent(res.data.photos[3].src.original);
-        })
-        */
- 
+        if(mode == "RESET") setActionType("PasswordReset")
     },[])
 
     const Rendericon=(item)=>{
@@ -337,7 +338,15 @@ const Login=()=>{
                     setactive:setactive,
                 })
                 break;
-                 
+            case "ForgetPassword":
+                sendResetEmail(ourdata)
+                break;
+            case "PasswordReset":
+                resetPassword({
+                    token:token,
+                    password:ourdata.newPassword
+                })    
+                
         } 
     }
        
@@ -350,7 +359,6 @@ const Login=()=>{
 
     const InputChangeHandler=(e,type,section)=>{
         const inputsget={...inputs};
-        console.log(e)
         inputsget[type][section].value=e.target.value;
         inputsget[type][section].validation=true;
         setinputs(inputsget);
@@ -361,7 +369,6 @@ const Login=()=>{
     if(errormsg){
         return <h2>Something Went Wrong...</h2>
     }
-    
     if(backenderror == "EXİST"){
       backenderrormessage="Girdğin email zaten kullanımda!"
     }
@@ -464,7 +471,42 @@ Login.layout=(children)=>{
     )
 }
 */
+export async function getServerSideProps(context){
 
+    try {   
+      
+      if(context.query.token){
 
+            const {data} = await axios.post("/resetPasswordTokenCheck",{token:context.query.token})
+            
+            if(data.state == "NotExist"){
+    
+                return {
+                    redirect:{
+                      destination:"/404"
+                    }
+                };
+    
+            }else if(data.state == "Exist"){
+
+                return {
+                    props:{mode:"RESET",token:context.query.token}
+                  }
+            }
+      }  
+
+      return {
+        props : {mode:""}
+      }
+
+    }catch (error) {
+        
+        return {
+            redirect:{
+               destination:"/500"
+            }
+         };
+    }
+}
 
 export default Login;

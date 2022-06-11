@@ -71,7 +71,6 @@ export const Errorhandler=({data,seterrmsg,setwindow,setuserdata,setlogged,setsp
         setuserdata({});
         setlogged(false);
         setspinner(true);
-        //router.push("/")
         return false;
 
       }
@@ -127,6 +126,38 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
     
 }
 
+export const resetPassword = async({token,password})=>{
+
+  try {
+
+   const {data}  = await axios.post("/resetPassword",{token,password})
+
+   console.log(data)
+
+  } catch (error) {
+
+      console.log(error)
+
+  }
+
+}
+
+export const sendResetEmail = async(user)=>{
+
+  try {
+
+   const {data}  = await axios.post("/sendResetEmail",{email:user.email})
+
+   console.log(data)
+
+  } catch (error) {
+
+      console.log(error)
+
+  }
+
+}
+
 export const logout = async({setlogged,setuserdata,router,setspinner})=>{
   
   try {
@@ -146,7 +177,6 @@ export const logout = async({setlogged,setuserdata,router,setspinner})=>{
 
 
 }
-
 
 export const resigterreq=async({setbackenderror,userdata,setactive,seterrmsg})=>{
    
@@ -369,7 +399,7 @@ export const Contextdata=async ({setspinner,setuserdata,seterrmsg,setwindow,setl
 
     const {data}=await axios.get(`/user/getuserdata`,{withCredentials:true});
 
-    console.log(data);
+    
   
     if(Errorhandler({data,seterrmsg,setwindow,setuserdata,setlogged,setspinner,router})){ 
 
@@ -380,7 +410,7 @@ export const Contextdata=async ({setspinner,setuserdata,seterrmsg,setwindow,setl
         Userrole:data.userdata.Role,
         Userimage:data.userdata.imageurl,
      }
-      console.log("sadadasd")
+     
       setuserdata(mydata);
       setlogged(true);  
       setallowaction(true);  
@@ -844,3 +874,5 @@ export const handleCommentLike = async({commentId,actionType})=>{
   }
 
 }
+
+

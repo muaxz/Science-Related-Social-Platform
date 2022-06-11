@@ -139,20 +139,61 @@ exports.logout = async(req,res,next)=>{
     res.json({state:"success"})
 }
 
-exports.resetPassword = async()=>{
+exports.sendResetEmail = async(req,res,next)=>{
 
    const {email} = req.body;
 
    try {
 
-      const emailResponse = await Sendemail(email,"")
+      const requestedUser = await User.findOne({where:{email:email}})
+      const passwordToken = jwt.sign({},"resetSecret",{expiresIn:"1h"});
+      await requestedUser.update({resetPasswordToken:passwordToken})
+      const emailResponse = await Sendemail(email,{firstname:requestedUser.firstname,surname:requestedUser.lastname,generatedLink:`http://localhost:3000/login?token=${passwordToken}`})
 
-     
       return res.json({state:emailResponse ? "success" : "Fail"})
 
-
    } catch (error){
+
+      return next()
+
+   }
+
+}
+
+exports.checkResetToken = async(req,res,next)=>{
+  
+   try {
+
+      const {token} = req.body
+      const requestedUser = await User.findOne({where:{resetPasswordToken:token}})
+     
+      if(!requestedUser) return res.json({state:"NotExist"})
+
+      return res.json({state:"Exist"})
+
+   } catch (error) {
       return next()
    }
 
 }
+
+exports.resetPassword = async (req,res,next)=>{
+   const {password,token} = req.body;
+   const requestedUser = await User.findOne({where:{resetPasswordToken:token}})
+   try {
+
+      jwt.verify(token,"secret",async (err,data)=>{
+         if(err) res.json({state:"error"})
+
+         const hashedpassword= await bcrypt.hash(password,10);
+
+         requestedUser.update({
+            password:hashedpassword
+         })
+      })
+
+   } catch (error) {
+       return next()
+   }
+
+}  

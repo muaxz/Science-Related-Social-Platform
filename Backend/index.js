@@ -38,12 +38,14 @@ io.on("connection",(socket)=>{
 DB.sync()
 .then(()=>{})
 
+/*
 app.use(Session({
    secret:"secret csrf-token",
    resave:false,
    saveUninitialized:true,
    cookie:{}
 }))
+*/
 
 app.use(cookieparser())
 app.use(fileupload())
@@ -55,10 +57,9 @@ app.use(cors({origin:"http://localhost:3000",credentials:true,exposedHeaders:"cs
 
 //routes.............................................
 
+/*
 app.use("*",(req,res,next)=>{
 
-    
-   
     if(!req.session.firstCsrf){
       
         const csrf = new Token();
@@ -72,6 +73,7 @@ app.use("*",(req,res,next)=>{
     next()
 
 })
+*/
 
 app.use(Loginrouter);
 app.use("/content",Contentrouter);

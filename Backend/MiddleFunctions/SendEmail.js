@@ -18,7 +18,10 @@ module.exports = async (targetEmail,payload)=>{
       
       const template = handlebar.compile(readHtml)
 
-      const htmlContent = template({firstname:payload.firstname,surname:payload.surname})
+     
+
+      const htmlContent = template({firstname:payload.firstname,surname:payload.surname,generatedLink:payload.generatedLink})
+    
       // send mail with defined transport object
       const emailRepsonse = await transporter.sendMail({
         from: "bexsd@hotmail.com", // sender address

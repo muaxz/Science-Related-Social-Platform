@@ -49,6 +49,9 @@ const User = sequlize.define("User",{
     Personaltext:{
         type:Sequlize.TEXT,
     },
+    resetPasswordToken:{
+        type:Sequlize.STRING
+    },
     Notification:{
         type:Sequlize.STRING,
         get:function(){
