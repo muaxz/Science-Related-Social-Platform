@@ -2,6 +2,8 @@
 
 The purpose of this project is to enable people to share their ideas about various topics, such as biology, physics, philosophy, history et cetera. People who are curious about different fields can easily benefit from this social platform. Another purpose of this project is to reduce unnecessary attention to politics and direct people's attention to science and philosophy.
 
+
+
 <hr>
 
 ![pages4](https://user-images.githubusercontent.com/78638595/171491462-4bb39a14-4a5d-49e5-9fc3-9d873b1de520.png) Showing posts that a user liked
