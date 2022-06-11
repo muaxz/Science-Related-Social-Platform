@@ -11,6 +11,10 @@ const Comment=sequlize.define("Comment",{
     Message:{
         type:Sequlize.STRING,
     },
+    likeNumber:{
+        type:Sequlize.TEXT,
+        defaultValue:"[]"
+    }
 })
 
 

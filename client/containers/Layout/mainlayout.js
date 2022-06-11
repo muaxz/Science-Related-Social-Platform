@@ -5,6 +5,7 @@ import Navigation from "../../components/shared/Navigation/Navbar/Navigation";
 import {Global,Black,SavedInfoDiv} from "../../components/styledcomponents/Globalstyles";
 import {createusercontext} from "../../context/Usercontext";
 import {CreateUtilContext} from "../../context/UtilContext";
+import {CreateNightMode} from "../../context/Nightmode";
 import {useRouter} from "next/router"
 import io from "socket.io-client";
 import Icon from "../../components/UI/Icon";
@@ -12,7 +13,7 @@ import {NotificationCountreq,Notificationreq,UpdateNotificationcount} from "../.
 
 
 const Bigdiv=styled.div`
-
+background-Color:${({isNight})=> isNight ? "#041C32" : ""};
 `
 
 const Goupicon=styled.div`
@@ -32,6 +33,7 @@ export default function Mainlayout({children}) {
     const [active,setactive]=useState(false);
     const [goup,setgoup]=useState(false);
     const {userdata} = useContext(createusercontext)
+    const {nightmode} = useContext(CreateNightMode)
     const {savedWindow,savedWindowText} = useContext(CreateUtilContext)
     const [navdata,setnavdata]=useState([]);
     const [countofdata,setcountdata]=useState(0);
@@ -139,7 +141,7 @@ export default function Mainlayout({children}) {
 
     //
     return (
-        <Bigdiv>
+        <Bigdiv isNight={nightmode}>
             <input id='csrf-token' type='hidden' value=""></input>
             <Black onClick={()=>setactive(false)} aktif={active}></Black>
             <SavedInfoDiv active={savedWindow}>{savedWindowText}</SavedInfoDiv>

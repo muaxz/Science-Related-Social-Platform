@@ -8,7 +8,7 @@ import axios from "axios";
 
 export default function Stuff({profile,counts,contents,getquery}){
 
-    console.log(profile)
+    
     return (
         <React.Fragment>
             <Head>

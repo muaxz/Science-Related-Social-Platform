@@ -4,7 +4,7 @@ import Belowcomment from "./belowcomment";
 
 var rendered = 0
 
-function Commentpart({Editcommenthandler,Producecomment,list,spinner,handleanswer}){
+function Commentpart({Editcommenthandler,Producecomment,list,spinner,handleanswer,commentRelationHandler}){
     
 
     const mutated = [...list]
@@ -50,9 +50,9 @@ function Commentpart({Editcommenthandler,Producecomment,list,spinner,handleanswe
     
 
     return (
-        <div style={{clear:"right"}}>
+        <div>
             <Writecomment spinner={spinner} Producecomment={Producecomment}></Writecomment>
-            <Belowcomment Editcommenthandler={Editcommenthandler} Answerhandler={handleanswer} mylist={mutated}></Belowcomment>
+            <Belowcomment commentRelationHandler={commentRelationHandler} Editcommenthandler={Editcommenthandler} Answerhandler={handleanswer} mylist={mutated}></Belowcomment>
         </div>
     )
 }

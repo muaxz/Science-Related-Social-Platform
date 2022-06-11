@@ -73,15 +73,24 @@ exports.destroyContent = async(req,res,next)=>{
   const {UserId} = req.userdata;
 
   try {
-      
-      await Content.destroy({
-        where:{
-          Userforuserid:UserId,
-          id:ContentID,
-          phase:"Draft"
-        }
-      })  
 
+      const resp = await Content.destroy({
+          where:{
+            Userforuserid:UserId,
+            id:ContentID,
+          }
+      }) 
+      
+      if(resp == 1){
+
+          await Usercontent.destroy({
+            where:{
+              ContentId:ContentID
+            }
+        })
+
+      }
+    
       res.json({state:"success"})
 
   } catch (error) {
@@ -512,38 +521,39 @@ exports.reportDeletion = async (req,res,next)=>{
 exports.uploadContentImage = async (req,res,next)=>{
   console.log(req.files.files)
   try {
-                if(req.files.files.size/1024 < 3000){
+        if(req.files.files.size/1024 < 3000){
+        const generatedTokenForName = v4()
+        const blob = firebase.bucket.file(generatedTokenForName)
 
-                    const blob = firebase.bucket.file(req.files.files.name)
+                const generatedToken = v4()
+              
+                const blobwriter = blob.createWriteStream({
+                        metadata:{
+                                contentType:"image/png",
+                                metadata:{
+                                      firebaseStorageDownloadTokens: generatedToken //generating uniqe token
+                                    
+                                },
+                                        
+                        }
+                })
+                    
+                blobwriter.on("error",(err)=>{
+                      
+                })
+                    
+                blobwriter.on("finish",(data)=>{
 
-                            const generatedToken = v4()
-                         
-                            const blobwriter = blob.createWriteStream({
-                                    metadata:{
-                                            contentType:"image/png",
-                                            metadata:{
-                                                 firebaseStorageDownloadTokens: generatedToken //generating uniqe token
-                                            }
-                                                    
-                                    }
-                            })
-                                
-                            blobwriter.on("error",(err)=>{
-                                  
-                            })
-                                
-                            blobwriter.on("finish",(data)=>{
+                    res.json({uploaded:true,url:`https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${generatedTokenForName}?alt=media&token=${generatedToken}`})
+                
+                })
 
-                                res.json({uploaded:true,url:`https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${req.files.files.name}?alt=media&token=${generatedToken}`})
-                            
-                            })
+                blobwriter.end(req.files.files.data)
+        }else{
             
-                            blobwriter.end(req.files.files.data)
-                }else{
-                   
-                    res.json({uploaded:false,url:"ERROR",state:"Big Size File!"})
+            res.json({uploaded:false,url:"ERROR",state:"Big Size File!"})
 
-                }
+        }
               
 
   } catch (error) {

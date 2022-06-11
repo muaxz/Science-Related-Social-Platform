@@ -2,7 +2,7 @@ import React from 'react'
 import Contentcard from "../../../components/shared/Cards/Contentcard"
 import uniqid from "uniqid"
 
-function Contentmap({contentlist,relationfunc,norecord}) {
+function Contentmap({contentlist,relationfunc,norecord,deleteThePost}) {
   
     var textfornorecord = ""
     if(norecord == "Reshow"){
@@ -14,7 +14,7 @@ function Contentmap({contentlist,relationfunc,norecord}) {
     else if(norecord == "Like"){
          textfornorecord = "Kullanıcının beğendiği gönderi yok..."
     }
-
+    console.log(contentlist)
     return (
 
         <div>
@@ -25,6 +25,8 @@ function Contentmap({contentlist,relationfunc,norecord}) {
                 
                         return ( <div style={{marginBottom:"25px"}}>
                                     <Contentcard 
+                                        deleteThePost={deleteThePost}
+                                        userid={item.personal ? item.personal.id : item.Content.personal.id}
                                         key={uniqid()}
                                         postId={item.personal? item.id : item.Content.id}
                                         like={item.personal ? item.Like : item.Content.Like}//bu bir obje array

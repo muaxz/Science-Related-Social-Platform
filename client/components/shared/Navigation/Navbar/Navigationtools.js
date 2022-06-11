@@ -24,9 +24,9 @@ background-color:${({check})=> check == false ? "#EBEBEB" : ""};
 }
 `
 
-export default function Navigationtools({optnumber,optname,Navdata,Logout}){
-    console.log(Navdata)
-    const {nightmode,setisnight} = useContext(CreateNightMode)
+export default function Navigationtools({optnumber,Navdata,Logout,UserId}){
+    
+    const {nightmode,setIsNight} = useContext(CreateNightMode)
     const [toggle,settogle]=useState(false);
 
     let Myoption = null;
@@ -126,13 +126,19 @@ export default function Navigationtools({optnumber,optname,Navdata,Logout}){
     if(optnumber == 3){
       title="Profile"
       Myoption=( <React.Fragment>
-                    <Option1div>
-                        <Icon className="fas fa-user" Iconconfig={{width:"32px",height:"32px",backcolor:"#DEDEDE",lineheight:"32px"}}></Icon>
-                        <div style={{marginLeft:"8px"}}>
-                            <p  style={{fontSize:"15px"}}>My Profile</p>
-                            <p style={{fontSize:"13px"}}></p>
-                        </div>
-                    </Option1div>
+
+                    <Link href={{
+                        pathname:`/profile/${UserId}`,
+                        query:{name:"Post"}
+                    }}>
+                        <Option1div>
+                            <Icon className="fas fa-user" Iconconfig={{width:"32px",height:"32px",backcolor:"#DEDEDE",lineheight:"32px"}}></Icon>
+                            <div style={{marginLeft:"8px"}}>
+                                <p  style={{fontSize:"15px"}}>My Profile</p>
+                                <p style={{fontSize:"13px"}}></p>
+                            </div>
+                        </Option1div>
+                    </Link>
                     <Option1div>
                         <Icon className="fas fa-moon " Iconconfig={{width:"32px",backcolor:"#DEDEDE",height:"32px",lineheight:"32px"}}></Icon>
                         <div style={{marginLeft:"8px"}}>
@@ -140,7 +146,7 @@ export default function Navigationtools({optnumber,optname,Navdata,Logout}){
                             <p style={{fontSize:"13px"}}></p>
                         </div>
                         <div style={{marginLeft:"auto"}}>
-                          <Switch  checkedIcon={false} uncheckedIcon={false} onChange={()=>setisnight(!nightmode)} checked={nightmode}></Switch>
+                          <Switch  checkedIcon={false} uncheckedIcon={false} onChange={()=>setIsNight(!nightmode)} checked={nightmode}></Switch>
                         </div>
                     </Option1div>
                     <Option1div onClick={()=>Logout()}>

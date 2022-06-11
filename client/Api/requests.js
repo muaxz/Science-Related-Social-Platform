@@ -830,3 +830,17 @@ export const GetContentsForMods = async ({order,setContent})=>{
   }
 
 }
+
+export const handleCommentLike = async({commentId,actionType})=>{
+
+  try {
+
+    const resp = await axios.post("/comment/handleLike",{commentId,actionType},{withCredentials:true})
+
+    console.log(resp.data)
+
+  } catch (error) {
+    console.log(error)
+  }
+
+}

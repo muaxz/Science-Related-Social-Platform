@@ -210,5 +210,36 @@ exports.editcomment = async(req,res,next)=>{
     }
 }
 
+exports.increaseLikeComment = async(req,res,next)=>{
+
+  const {UserId} = req.userdata;
+  const {commentId,actionType} = req.body;
+ 
+
+  try {
+
+    const targetComment = await Comment.findByPk(commentId)
+    console.log(targetComment)
+    const likeArray = targetComment.likeNumber != null ? JSON.parse(targetComment.likeNumber) : []
+    
+    if(actionType == "Destroy"){
+      const indexOfUser = likeArray.findIndex((item)=>UserId == item)
+      likeArray.splice(indexOfUser,1)
+    }else{
+      likeArray.push(UserId)
+    }
+    //we just want to learn the number of people and our case
+    await targetComment.update({likeNumber:JSON.stringify(likeArray)})
+
+    res.json({state:"success"})
+
+  } catch (error) {
+    
+    return next()
+
+  }
+
+}
+
 
 

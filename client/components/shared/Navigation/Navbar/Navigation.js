@@ -413,7 +413,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                             Iconumber !== 0 && visible == true ?
                             <Optionwindow onScroll={ScrolltoBottom} ref={Myref} fornotify={Iconobject["2"].onoff}>
                                 <Inneroption>
-                                    <Navtools Logout={Logout} Navdata={Data} optnumber={Iconumber}></Navtools>
+                                    <Navtools UserId={userdata.UserId} Logout={Logout} Navdata={Data} optnumber={Iconumber}></Navtools>
                                 </Inneroption>
                             </Optionwindow> : null
                         }  

@@ -1,14 +1,12 @@
 import React, {useEffect,useState,useContext,useMemo} from 'react'
-import Image from "next/image"
 import Contentcard from "../../components/shared/Cards/Contentcard";
-import styled from "styled-components";
+import styled,{ThemeProvider} from "styled-components";
 import {Homereq,Createrelationreq,Notificationreq} from "../../Api/requests";
 import {createusercontext} from "../../context/Usercontext";
 import {makeStyles} from "@material-ui/core/styles"
 import Showfollower from "../../components/pages/Main/Showfoller";
 import {CreateUtilContext} from "../../context/UtilContext"
 import useScroll from "../../hooks/Scroll";
-import {Spinner,SavedInfoDiv} from "../../components/styledcomponents/Globalstyles"
 import uniqid from "uniqid";
 import { ArrowBackIos, ArrowForwardIos, FormatQuote } from '@material-ui/icons';
 import SelectionPart from "../../components/pages/Main/SelectionPart"
@@ -250,53 +248,56 @@ export default function Home({mydata}){
         setwindowlist(Mutatedwindow);
 
     }
-   
+    const themeProp = {
+        mainColor:"red"
+    }
 
     return (
-        <div style={{height:`${windowlist.list.length > 0 ? "100vh" : "100%"}`,overflow:windowlist.list.length > 0 ? "hidden": "visible"}}> 
-              
-               {windowlist.list.length > 0 ?
-                <Showfollower setlist={()=>setwindowlist(prev=>{return {...prev,list:[]}})} attribute={windowlist.attribute} list={windowlist.list}></Showfollower>
-                : null}
-                <BackgroundHome>
-                    <img style={{width:"100%",height:"100%",objectFit:"cover"}} src={"/fourrealman.jpg"}></img>
-                    <Trial></Trial>
-                </BackgroundHome>
-            <Container>
-                <SelectionPart keyName={selectedKey} setSelectedKey={setSelectedKey} listContent={contentdata} setListContent={setcontentdata}></SelectionPart>
-                <Flexdiv>
-                    <ContentDiv>
-                        {
+        <ThemeProvider theme={themeProp}>
+            <div style={{height:`${windowlist.list.length > 0 ? "100vh" : "100%"}`,overflow:windowlist.list.length > 0 ? "hidden": "visible"}}> 
+                        
+                        {windowlist.list.length > 0 ?
+                        <Showfollower setlist={()=>setwindowlist(prev=>{return {...prev,list:[]}})} attribute={windowlist.attribute} list={windowlist.list}></Showfollower>
+                        : null}
+                        <BackgroundHome>
+                            <img style={{width:"100%",height:"100%",objectFit:"cover"}} src={"/fourrealman.jpg"}></img>
+                            <Trial></Trial>
+                        </BackgroundHome>
+                    <Container>
+                        <SelectionPart keyName={selectedKey} setSelectedKey={setSelectedKey} listContent={contentdata} setListContent={setcontentdata}></SelectionPart>
+                        <Flexdiv>
+                            <ContentDiv>
+                                {
 
-                            contentdata.map((item,index)=>(
-                                <div style={{padding:"20px",maxWidth:"600px"}}>
-                                    <Contentcard 
-                                        postId={item.id}
-                                        content={item.content}
-                                        createrelationforsmh={createrelation}
-                                        showwindow={(stateoflist,type)=>Showfollowers(stateoflist,type)}
-                                        like={item.Like}//bu bir obje array
-                                        retweet={item.Retweet}
-                                        comment={item.allcomments}
-                                        readlater={item.Readlater}
-                                        key={index}//key numarası
-                                        followeds={item.personal.Followed}
-                                        title={item.title}
-                                        titleimage={item.titleimage != null ? item.titleimage : "/yaprak.jpg"}
-                                        userfirstname={item.personal !== null ? item.personal.firstname : "notyet"}
-                                        usersurname={item.personal !== null ? item.personal.lastname : "notyet"}//bir obje props
-                                        userid={item.personal !== null ? item.personal.id: "notyet"}
-                                        subtitle={item.subtitle}
-                                        date={item.createdAt}
-                                    /> 
-                                </div>
-                            ))
-                        }
-                    </ContentDiv>
-                </Flexdiv>
-           </Container>
-        </div>
-       
+                                    contentdata.map((item,index)=>(
+                                        <div style={{padding:"20px",maxWidth:"600px"}}>
+                                            <Contentcard 
+                                                postId={item.id}
+                                                content={item.content}
+                                                createrelationforsmh={createrelation}
+                                                showwindow={(stateoflist,type)=>Showfollowers(stateoflist,type)}
+                                                like={item.Like}//bu bir obje array
+                                                retweet={item.Retweet}
+                                                comment={item.allcomments}
+                                                readlater={item.Readlater}
+                                                key={index}//key numarası
+                                                followeds={item.personal.Followed}
+                                                title={item.title}
+                                                titleimage={item.titleimage != null ? item.titleimage : "/yaprak.jpg"}
+                                                userfirstname={item.personal !== null ? item.personal.firstname : "notyet"}
+                                                usersurname={item.personal !== null ? item.personal.lastname : "notyet"}//bir obje props
+                                                userid={item.personal !== null ? item.personal.id: "notyet"}
+                                                subtitle={item.subtitle}
+                                                date={item.createdAt}
+                                            /> 
+                                        </div>
+                                    ))
+                                }
+                            </ContentDiv>
+                        </Flexdiv>
+                    </Container>
+                </div>
+        </ThemeProvider>
     )
 }
 

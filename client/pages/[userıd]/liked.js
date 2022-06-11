@@ -8,7 +8,7 @@ import axios from 'axios';
 
 
 export default function Liked({error,content}){
-    console.log(content)
+    
     if(error) return null
     return (
         <React.Fragment>
@@ -32,6 +32,12 @@ export async function getServerSideProps({query,req}){
             if(data.state == 401){
                 return { 
                     props:{error:401}
+                }
+            }else if(data.state == 404){
+                return {
+                    redirect:{
+                        destination:"/404"
+                    }
                 }
             }
 

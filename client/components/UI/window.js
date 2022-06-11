@@ -38,6 +38,7 @@ const Window=({children,active,type,closefunction})=>{
     else if(type == "garbage"){
       icon=<i className="fa-solid fa-trash fa-2x" style={{color:"black",marginBottom:"10px"}}></i>
     }
+
     return (
        <div>
          <Black onClick={closefunction} aktif={active}/>
@@ -53,7 +54,7 @@ const Window=({children,active,type,closefunction})=>{
                   type == "garbage" ? 
                   
                   (<React.Fragment>
-                     <Button style={{marginRight:"10px"}} onClick={()=>closefunction("DELETE")} variant="contained">Delete</Button>
+                     <Button style={{marginRight:"10px",backgroundColor:"#e63946",color:"white"}} onClick={()=>closefunction("DELETE")} variant="contained">Delete</Button>
                      <Button onClick={()=>closefunction("CANCEL")} variant="contained">Cancel</Button>
                   </React.Fragment>) 
                   

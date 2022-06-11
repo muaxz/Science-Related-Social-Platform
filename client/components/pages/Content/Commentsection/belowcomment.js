@@ -5,7 +5,7 @@ import uniqid from "uniqid"
 
 
 var lengthcounter = 0
-function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,imagetoken,imagefilename,Answerhandler,mylist,commentID,content,showwindow,like,retweet,comment,readlater,profileimage,title,titleimage,userfirstname,usersurname,subtitle,date,userid}){
+function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,imagetoken,imagefilename,Answerhandler,mylist,commentID,content,showwindow,like,retweet,comment,readlater,profileimage,title,titleimage,userfirstname,usersurname,subtitle,date,userid,commentRelationHandler}){
     
     const Contentdiv =
     (<Contentcard 
@@ -14,8 +14,9 @@ function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,im
     iscomment={true}
     postId={commentID}//no need
     content={content}
-    showwindow={(stateoflist)=>setlist(stateoflist)}
-    like={[]}//bu bir obje array
+    showwindow={()=>""}
+    createrelationforsmh={commentRelationHandler}
+    like={like}//bu bir obje array
     retweet={[]}
     comment={[]}
     readlater={[]}
@@ -52,16 +53,17 @@ function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,im
             mylist.map((item,index)=>{
                
                 return (<Belowcomment
-                    key={uniqid()}
+                    key={uniqid()} 
                     allchildlength={item.allchilds}
                     Answer_To={item.AnswerTo}
                     isMainparent={item.ContentId}
                     mainparentID={item.Mainparent}
+                    commentRelationHandler={commentRelationHandler}
                     iscomment={true}
                     commentID={item.id}//no need
                     content={item.Message}
                     showwindow={(stateoflist)=>setlist(stateoflist)}
-                    like={[]}//bu bir obje array
+                    like={item.likeNumber != null ? JSON.parse(item.likeNumber) : []}
                     retweet={[]}
                     comment={[]}
                     readlater={[]}//key numarası

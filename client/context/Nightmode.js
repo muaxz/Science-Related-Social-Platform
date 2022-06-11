@@ -4,11 +4,11 @@ export const CreateNightMode = createContext()
 
 const NightmodeContext = ({children})=>{
 
-    const [isnight,setisnight] = useState(false)
+    const [isNight,setisNight] = useState(false)
 
     const ChangeNight = (stateNight)=>{
 
-      setisnight(stateNight)
+      setisNight(stateNight)
 
       localStorage.setItem("night_mode",stateNight)
 
@@ -22,7 +22,7 @@ const NightmodeContext = ({children})=>{
 
           if(nightvalue == "true"){
             
-             setisnight(true)
+             setisNight(true)
 
           }
            
@@ -35,7 +35,7 @@ const NightmodeContext = ({children})=>{
     },[])
 
     return (
-      <CreateNightMode.Provider value={{nightmode:isnight,setisnight:ChangeNight}}>
+      <CreateNightMode.Provider value={{nightmode:isNight,setIsNight:ChangeNight}}>
           {children}
       </CreateNightMode.Provider>   
     )

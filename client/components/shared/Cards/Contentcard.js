@@ -2,6 +2,7 @@ import React,{useState,useEffect,useContext,useMemo} from 'react'
 import styled,{keyframes} from "styled-components";
 import {createusercontext} from "../../../context/Usercontext";
 import {Porfileimage,Spinner} from "../../styledcomponents/Globalstyles";
+import {DeletePost} from "../../../Api/requests"
 import Link from "next/link";
 import {useRouter} from "next/router"
 import Icon from "../../UI/Icon"
@@ -11,7 +12,7 @@ import useClickoutside from "../../../hooks/Clikcoutisde";
 import { TextField ,Button,InputAdornment,Checkbox} from '@material-ui/core';
 import {CreateNightMode} from "../../../context/Nightmode"
 
-
+//TODO creating seperate parts of the card
 const Likeanimaton=keyframes`
 0% {font-size:16px}
 50% {font-size:10px}
@@ -168,13 +169,14 @@ padding-bottom:15px;
 padding-top:15px;
 `
 const Profileimageholder=styled.div`
+background-color:${({theme})=>theme.mainColor};
 cursor:pointer; 
 position:${({iscomment})=>iscomment ? "absolute" : "relative"};
 left:${({iscomment})=>iscomment ? "-60px" : "0px"};
 `
 
 //içerik sayısı,takipçi sayısı,
-function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent,key}){
+function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent,key,deleteThePost}){
     
     const[elements,setelements]=useState({
         Like:{
@@ -196,7 +198,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
         }
     });
     const {ref,visible,setvisible} = useClickoutside();
-    const {nightmode,setisnight} = useContext(CreateNightMode)
+    const {nightmode} = useContext(CreateNightMode)
     const [loading_commentedit,setloading_commentedit] = useState(false)
     const [commentanswer,setcommentanswer]=useState(false);
     const [answervalue,setanswervalue]=useState("");
@@ -225,7 +227,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
         if(!foruser && userdata.UserId){
 
             like.forEach((user)=>{
-                if(userdata.UserId == user.id){//eğer burada herhangi bir eşitlik bulunursa kullanıcı postu beğendi demek
+                if(userdata.UserId == user.id || userdata.UserId == user){//eğer burada herhangi bir eşitlik bulunursa kullanıcı postu beğendi demek
                  
                  currentelements["Like"].ismarked=true;
                  const Indexofcurrentuser = currentelements["Like"].array.findIndex((item)=>item.id == userdata.UserId);
@@ -342,6 +344,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
 
     const Calculatetime = useMemo(()=>calculatedate(date),[])
 
+
     return (
 
        <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={Calculatetime}  iscomment={iscomment}>  
@@ -380,8 +383,18 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
                                             <p style={{fontSize:"13px"}}>Bağlantı adresini kopyala</p>
                                         </div>
                                 </Optionholder> 
+                                {
+                                    userid == userdata.UserId && 
+                                        (<Optionholder onClick={()=>deleteThePost(null,postId)}>
+                                            <Icon className="fa-solid fa-trash" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                                <div style={{marginLeft:"8px",color:"#757575"}}>
+                                                    <p style={{color:"black"}}>Delete The Post</p>
+                                                    <p style={{fontSize:"13px"}}>People will not see this post anymore</p>
+                                                </div>
+                                        </Optionholder>)
+                                }
                             </React.Fragment>
-                            
+                            {/*this is for usercontent page*/}
                             {
                                 foruser ?
                                 <Optionholder onClick={()=>createrelationforsmh(postId,foruseroption,"Destroy",indexnum,foruseroption)}>
@@ -503,7 +516,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
                            <Contentdiv iscomment={iscomment}>
                                 <h3 style={{marginBottom:"10px",color:"#A70909"}}>{title}</h3>
                                 <Link href="/content/[id]" as={`/content/${postId}`}>
-                                    <p style={{textAlign:"left",wordBreak:"break-word",cursor:"pointer"}}>While the Crypto Professors may set specific requirements for some....</p> 
+                                    <p style={{textAlign:"left",wordBreak:"break-word",cursor:"pointer",color:nightmode ? "white" : "black"}}>While the Crypto Professors may set specific requirements for some....</p> 
                                 </Link>
                             </Contentdiv>
 
@@ -522,7 +535,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
                             <Icons  howercolor="255, 0, 0,0.2" ismarked={elements.Like.ismarked} animation={elements.Like.animation} color={"#C72121"}  onClick={()=>Countplus("Like")} className="fas fa-heart fa-sm"></Icons>
                             <Spanfor  onClick={()=>showwindow(elements["Like"].array,"Like")} >{elements.Like.number}</Spanfor>
                         </İconholder>
-                        <İconholder style={{flex:1}}>
+                        <İconholder style={{flex:8}}>
                             {
                                 iscomment ? 
                                 
@@ -534,9 +547,12 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
                             }
                             <span style={{marginLeft:"5px",color:""}}>{comment.length}</span>
                         </İconholder>
-                        <İconholder style={{flex:4,display:"flex",justifyContent:"flex-end",color:"grey"}}>
-                            <Icons  ismarked={elements.Readlater.ismarked} animation={elements.Readlater.animation} color={"black"} onClick={()=>Countplus("Readlater")}  className="fas fa-bookmark"></Icons>
-                        </İconholder>  
+                        {
+                            !iscomment && 
+                            (<İconholder style={{flex:4,display:"flex",justifyContent:"flex-end",color:"grey"}}>
+                                <Icons  ismarked={elements.Readlater.ismarked} animation={elements.Readlater.animation} color={"black"} onClick={()=>Countplus("Readlater")}  className="fas fa-bookmark"></Icons>
+                            </İconholder>)
+                        }
                     </Toolbar>
                     {
                         commentanswer &&

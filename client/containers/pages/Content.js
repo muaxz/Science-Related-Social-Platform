@@ -2,7 +2,7 @@ import React, { useEffect,useState,useRef, useContext,useCallback} from 'react'
 import Icon from "../../components/UI/Icon";
 import styled from "styled-components";
 import {Porfileimage} from "../../components/styledcomponents/Globalstyles";
-import {Producecommentreq,Commentreq,Commentanswerreq,Editcomment} from "../../Api/requests";
+import {Producecommentreq,Commentreq,Commentanswerreq,Editcomment,handleCommentLike} from "../../Api/requests";
 import {createusercontext} from "../../context/Usercontext";
 import Commentpart from '../../components/pages/Content/Commentsection/Commentpart';
 import useScroll from "../../hooks/Scroll"
@@ -21,6 +21,8 @@ background-color:${({iscomment})=>iscomment ? "" : "white"};
 max-width:950px;
 margin:100px auto;
 width:100%
+height:100%;
+
 `
 
 const Commentdiv=styled.div`
@@ -37,6 +39,7 @@ height:400px;
 const ContentDiv=styled.div`
 margin-top:20px;
 padding:25px;
+
 `
 
 const ProfileDiv=styled.div`
@@ -191,6 +194,13 @@ export default function Content({Contentdata,comments,id}){
               setvisible(false)
         }
     }
+
+    const commentRelationHandler = (commentId,elementtype,actionType,userid)=>{
+            handleCommentLike({
+                commentId:commentId,
+                actionType:actionType
+            })
+    }
    
     return (
         <div style={{maxWidth:"950px",margin:"auto"}}>
@@ -233,7 +243,7 @@ export default function Content({Contentdata,comments,id}){
             <hr style={{clear:"right"}}></hr>
             <p style={{clear:"right"}}>{commentlist.length+ " comments"}</p>
             <Commentdiv>
-                <Commentpart  Editcommenthandler={EditCommentFunc} handleanswer={Answerhandler} spinner={activeproduce} list={commentlist} Producecomment={Produce}></Commentpart>
+                <Commentpart  commentRelationHandler={commentRelationHandler} Editcommenthandler={EditCommentFunc} handleanswer={Answerhandler} spinner={activeproduce} list={commentlist} Producecomment={Produce}></Commentpart>
             </Commentdiv>
         </div>
         

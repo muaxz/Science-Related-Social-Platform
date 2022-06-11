@@ -2,11 +2,12 @@ import React,{useEffect,useState,useContext,useCallback, useRef} from 'react'
 import styled from "styled-components";
 import {createusercontext} from "../../context/Usercontext"
 import {Porfileimage} from "../../components/styledcomponents/Globalstyles"
-import {Createuserrelation,Getuserprofilecontent,Createrelationreq,UpdateNotificationactive,Userprofilefollowlist} from "../../Api/requests"
+import {Createuserrelation,Getuserprofilecontent,Createrelationreq,UpdateNotificationactive,Userprofilefollowlist,DeletePost} from "../../Api/requests"
 import Contentcard from "../../components/shared/Cards/Contentcard";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
 import useScroll from "../../hooks/Scroll";
+import Window from "../../components/UI/window"
 import { EditRounded, Notifications, NotificationsActive,Settings,Person} from '@material-ui/icons';
 import Contentmap from "../../components/pages/Profile/contentmap";
 import Editwindow from "../../components/pages/Profile/Editwindow"
@@ -16,8 +17,8 @@ import Followlist from '../../components/pages/Profile/followlists';
 const Exteriordiv=styled.div`
 padding-top:60px;
 width:100%;
-height:100%;
-overflow:${({editactive})=>editactive ? "hidden" : "visible"};
+height:${({noScroll})=>noScroll ? "100vh" : "100%"};
+overflow:${({noScroll})=>noScroll ? "hidden" : "visible"};
 padding-bottom:20px;
 padding-left:60px;
 @media (max-width:940px){
@@ -109,6 +110,10 @@ align-items:center;
 position:absolute;
 bottom:10px;
 right:70px;
+@media (max-width:1050px){
+   top:-170px;
+   left:15px;
+}
 `
 
 const P = styled.p`
@@ -145,6 +150,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
     const Preventspam2 = useRef(true)
     const {bottom} = useScroll();
     const[contentdata,setcontentdata]=useState(Contentdata);
+    const[GarbageAcitve,setGarbageActive] = useState(false)
     const[order,setorder]=useState(10);
     const[profiledata,setprofiledata]=useState(Mydata)
     const[checkuserid,setcheckuserid]=useState(false);
@@ -156,6 +162,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
     const[editforsettings,seteditforsettings] = useState(false)
     const[showfollowinglist,setshowfollowinglist] = useState("")
     const[FollowList,SetFollowList] = useState([]);
+    const postWillBeDeleted = useRef(null)
 
     const[options,setoptions]=useState({
         Post:{
@@ -172,8 +179,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
         } 
     })
    
- 
-   console.log(bottom)
+
    useEffect(()=>{
       //sadece paignation zaten query değişince ilk 10 value serverside tarafından çekiliyor
       var Leakcontrolloer = true;
@@ -205,7 +211,8 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
    },[bottom])
 
     useEffect(()=>{
-        Handleoptions(query.name)
+        if(query.name == "Post" || query.name == "Liked" || query.name == "Reshow")
+        Handleoptions(query.name)   
     },[query])
 
     useEffect(()=>{
@@ -265,7 +272,6 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
         })
 
     },[userdata.UserId])
-    
     //sending following request
     const Followingrequest=()=>{
 
@@ -314,25 +320,17 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
         for (const key in optionobj) {
             optionobj[key].bottom=false;
         }
-      
+        
         optionobj[optiontype].bottom=true;
         setoptions(optionobj);
     }
 
     const Editwindowhandler=(isforedit,close)=>{
 
-        if(isforedit){
-        
-            seteditforsettings(true)
+        if(isforedit) seteditforsettings(true)
+
+        if(close) seteditforsettings(false)
             
-        }
-
-        if(close){
-
-            seteditforsettings(false)
-            
-        }
-
         setactiveedit(!activeedit)
     }
 
@@ -349,27 +347,37 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
 
     }
 
-    
+    const prepForDeletion=(prepType,PostId)=>{
+      
+        if(prepType == "DELETE"){
+            const copyContents = [...contentdata]
+            const index = copyContents.findIndex((item)=>item.id == postWillBeDeleted.current)
+            console.log(index)
+            copyContents.splice(index,1)
+            setcontentdata(copyContents)
+            DeletePost({PostId:postWillBeDeleted.current}) 
+            setGarbageActive(false)
 
-  
-    /*
-    const Profileupdate = () =>{
+        }else if(prepType == "CANCEL"){
+            setGarbageActive(false)
+        }
+        else{
 
-        UpdateProfile({
-            
-        })
+            setGarbageActive(true)  
+            postWillBeDeleted.current = PostId;  
+
+        }
     }
-    */
 
     return (
-        <Exteriordiv editactive={activeedit}>
+        <Exteriordiv noScroll={activeedit || GarbageAcitve}>
+            <Window closefunction={(value)=>prepForDeletion(value,null)} active={GarbageAcitve} type="garbage">Are your sure that you want to delete this post ?</Window>
             {
                 activeedit &&
 
                 (<Editwindow isWindowforsettings={editforsettings} closefunc={()=>Editwindowhandler(false,true)} editdata={Mydata} active={activeedit} />)
 
             }
-           
             <Innerdiv>
                 <Imagesection>
                     <BackgroundImage ImageforBack={"/way.jpg"} /> 
@@ -458,7 +466,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                            
                            <div style={{paddingRight:"10px",paddingLeft:"10px",maxWidth:"700px",margin:"auto"}}>
                                 {
-                                  showfollowinglist.length > 0 ? <Followlist type={showfollowinglist} goBackToContent={()=>setshowfollowinglist("")} list={FollowList}></Followlist> : <Contentmap  norecord={query.name} relationfunc={Relationrequest} contentlist={contentdata}/> 
+                                  showfollowinglist.length > 0 ? <Followlist type={showfollowinglist} goBackToContent={()=>setshowfollowinglist("")} list={FollowList}></Followlist> : <Contentmap  deleteThePost={prepForDeletion} norecord={query.name} relationfunc={Relationrequest} contentlist={contentdata}/> 
                                 }
                            </div>
                      </Contentsection>

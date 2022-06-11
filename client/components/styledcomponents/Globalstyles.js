@@ -23,7 +23,9 @@ export const Global=createGlobalStyle`
      margin:0px;
      font-family: 'Raleway', sans-serif;
  }
-
+ div{
+   color:black;
+ }
  body {
   height:100%;
  }
