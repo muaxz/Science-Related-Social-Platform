@@ -11,6 +11,7 @@ import {calculatedate} from "../../../utilsfunc"
 import useClickoutside from "../../../hooks/Clikcoutisde";
 import { TextField ,Button,InputAdornment,Checkbox} from '@material-ui/core';
 import {CreateNightMode} from "../../../context/Nightmode"
+import Image from "next/image"
 
 //TODO creating seperate parts of the card
 const Likeanimaton=keyframes`
@@ -87,6 +88,7 @@ const Img=styled.img`
 width:100%;
 height:150px;
 object-fit:cover;
+object-position:contain;
 @media (max-width:540px){
     height:200px;
 }
@@ -169,14 +171,26 @@ padding-bottom:15px;
 padding-top:15px;
 `
 const Profileimageholder=styled.div`
-background-color:${({theme})=>theme.mainColor};
 cursor:pointer; 
 position:${({iscomment})=>iscomment ? "absolute" : "relative"};
 left:${({iscomment})=>iscomment ? "-60px" : "0px"};
 `
 
+const CategoryDiv = styled.div`
+position:absolute;
+top:10px;
+right:50px;
+color:white;
+border-radius:25px;
+padding:3px;
+padding-right:6px;
+padding-left:6px;
+background-color:#6c757d;
+font-size:13px;
+`
+
 //içerik sayısı,takipçi sayısı,
-function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent,key,deleteThePost}){
+function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent,key,deleteThePost}){
     
     const[elements,setelements]=useState({
         Like:{
@@ -358,8 +372,8 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
             !iscomment ?  
                 
                <div ref={ref}>   
-      
                     <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
+                    <CategoryDiv>{categoryType}</CategoryDiv>
                     {
                         visible ?
                         <Optionwindow active={true}>
@@ -471,7 +485,7 @@ function Contentcard({followeds,Animateforcomment,Answer_To,mainparentID,imagefi
 
                     <Imageholder>
                         <Imagediv>
-                                <Img style={{borderRadius:"7px"}} src={titleimage}></Img>
+                                <Image style={{borderRadius:"7px"}} objectFit="cover" src={titleimage} width={400} height={300}></Image>
                         </Imagediv>
                     </Imageholder>
                }

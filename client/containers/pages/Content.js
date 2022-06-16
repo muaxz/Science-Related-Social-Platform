@@ -19,7 +19,6 @@ import ReportWindow from "../../components/pages/Content/reportWindow"
 const Exteriorcontent=styled.div`
 background-color:${({iscomment})=>iscomment ? "" : "white"};
 max-width:950px;
-margin:100px auto;
 width:100%
 height:100%;
 
@@ -203,7 +202,7 @@ export default function Content({Contentdata,comments,id}){
     }
    
     return (
-        <div style={{maxWidth:"950px",margin:"auto"}}>
+        <div style={{maxWidth:"950px",margin:"100px auto"}}>
             {
                 isReportActive && (<ReportWindow ContentId={id} reportedUserId={Contentdata.personal.id} setActiveFunc={()=>setisReportActive(false)}></ReportWindow>)
             }

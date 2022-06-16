@@ -19,4 +19,6 @@ router.post("/updateprofile/:typeofupdate",Verifytoken,UploadMiddle,Usercontroll
 router.get("/getuserprofilefollowlist/:requestType/:UserId",Usercontroller.getuserprofilefollowlist)
 
 
+
+
 module.exports=router;

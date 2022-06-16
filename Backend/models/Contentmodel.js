@@ -2,6 +2,7 @@ const Sequlize=require("sequelize");
 const sequlize=require("../database/base");
 const User=require("./Usermodel");
 const Comment=require("./Commentmodel");
+const Category = require("./CategoryModel")
 
 
 const Content=sequlize.define("Content",{
@@ -30,16 +31,6 @@ const Content=sequlize.define("Content",{
         values:["Published","Unpublished","Draft"],
         allowNull:true,
     },
-    catagories:{
-        type:Sequlize.ENUM,
-        values:["Felsefe","Uzay","Metafizik","Biyoloji"],
-        allowNull:true,
-    },
-    allowPublish:{
-        type:Sequlize.BOOLEAN,
-        defaultValue:false,
-        allownull:false,
-    },
     Draftalias:{
         type:Sequlize.STRING,
         allowNull:true,
@@ -52,13 +43,11 @@ const Content=sequlize.define("Content",{
         type:Sequlize.BOOLEAN,
         defaultValue:false
     },
-    Alias:{
-        type:Sequlize.STRING,
-        allowNull:true
-    }
 
 })
 
+
+Content.belongsTo(Category)
 Content.belongsToMany(User,{through:"UserContent",as:"Like"})
 User.belongsToMany(Content,{through:"UserContent",as:"Like"})
 Content.belongsToMany(User,{through:"UserContent",as:"Readlater"})

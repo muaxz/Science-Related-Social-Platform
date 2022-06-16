@@ -129,13 +129,13 @@ box-shadow: rgba(50, 50, 93, 1) 0px 30px 60px -12px, rgba(222, 222, 222, 0.9) 0p
 `
 
 
-export default function Home({mydata}){
+export default function Home({contents,categories}){
     
     const {bottom}=useScroll();
     const [slidevalue,setslidevalue]=useState(-30);
     const {setSavedWindow,setSavedWindowText} = useContext(CreateUtilContext)
     const {userdata} = useContext(createusercontext)
-    const [contentdata,setcontentdata]=useState(mydata);
+    const [contentdata,setcontentdata]=useState(contents,categories);
     const [order,setorder]=useState(0);
     const [errormsg,seterror]=useState(false);
     const [selectionlist,setselectionlist] = useState({
@@ -164,7 +164,7 @@ export default function Home({mydata}){
             stoprequesting:false,
         },    
     })
-    const [selectedKey,setSelectedKey]=useState("Felsefe");
+    const [selectedKey,setSelectedKey]=useState(6);
     const [windowlist,setwindowlist]=useState({
         list:[],
         attribute:"",
@@ -264,7 +264,7 @@ export default function Home({mydata}){
                             <Trial></Trial>
                         </BackgroundHome>
                     <Container>
-                        <SelectionPart keyName={selectedKey} setSelectedKey={setSelectedKey} listContent={contentdata} setListContent={setcontentdata}></SelectionPart>
+                        <SelectionPart categories={categories} keyName={selectedKey} setSelectedKey={setSelectedKey} listContent={contentdata} setListContent={setcontentdata}></SelectionPart>
                         <Flexdiv>
                             <ContentDiv>
                                 {
@@ -272,6 +272,7 @@ export default function Home({mydata}){
                                     contentdata.map((item,index)=>(
                                         <div style={{padding:"20px",maxWidth:"600px"}}>
                                             <Contentcard 
+                                                categoryType={item.Category != null && item.Category.categoryName}
                                                 postId={item.id}
                                                 content={item.content}
                                                 createrelationforsmh={createrelation}

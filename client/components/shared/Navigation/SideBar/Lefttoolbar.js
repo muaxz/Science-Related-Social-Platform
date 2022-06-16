@@ -92,24 +92,12 @@ padding:7px;
 
 
 
-
-//const Icon=styled.i`
-//color:#C70039;
-//`
-const Closeopen=styled.div`
-width:100%;
-height:30px;
-padding:10px;
-text-align:right;
-`
-
 const Lefttoolbar=({makeactive,myactive})=>{
     
-    const {userdata,logged,Userrole}=useContext(createusercontext);
+    const {userdata,logged}=useContext(createusercontext);
     const firstlist = useRef([{icon:"fas fa-bookmark",desc:"Kaydedilenler",path:`saved`},{icon:"fas fa-thumbs-up",desc:"Beğenilenler",path:`liked`}])
     const secondlist = useRef([{icon:"fas fa-edit",desc:"Gönderilerim",path:"/gönderiler"},{icon:"fas fa-pencil-ruler",desc:"Taslaklar",path:`Drafts`}])
-    const thirdlist = useRef([{icon:"fa-solid fa-flag",desc:"Raporlar",path:`reportcontrol`},{icon:"fa-solid fa-list-check",desc:"Gonderi Kontrol",path:`postcontrol`}])
-    
+    const thirdlist = useRef([{icon:"fa-solid fa-flag",desc:"Raporlar",path:`reportcontrol`},{icon:"fa-solid fa-list-check",desc:"Gonderi Kontrol",path:`postcontrol`},{icon:"fa-solid fa-lock",desc:"Admin Panel",path:`adminPanel`}])
     
 
     return (
@@ -123,74 +111,73 @@ const Lefttoolbar=({makeactive,myactive})=>{
                     {/*  <Closeopen>
                     <i style={{color:"black"}} className="far fa-times-circle fa-lg"></i>
                 </Closeopen>*/}
-                <ImageDiv>
-                <Icon activefunc={()=>{makeactive(!myactive)}} className="fas fa-angle-double-right" Iconconfig={{width:"35px",height:"35px",lineheight:"35px",color:"white",rotate:myactive ? true : undefined}}></Icon>
-                    <div style={{paddingBottom:"15px"}}>
-                        <Link href={userdata.UserId && {
-                            pathname:`/profile/${userdata.UserId}`,
-                            query:{name:"Post"}
-                            }}>
-                        <Porfileimage profile={"/car.jpg"}  width={myactive ? "80px" : "50px"} height={myactive ? "80px" : "50px"}/>
-                        </Link>
-                        <Link href={userdata.UserId && {
-                            pathname:`/profile/${userdata.UserId}`,
-                            query:{name:"Post"}
-                            }}>
-                        <div style={{marginTop:"10px",color:"#293241",textAlign:"center"}}><span style={{color:"white"}}>{myactive ? userdata.Username : "..."}</span></div>
-                        </Link>
-                    </div>     
-                </ImageDiv>
-                <NavigationDiv>
+                    <ImageDiv>
+                    <Icon activefunc={()=>{makeactive(!myactive)}} className="fas fa-angle-double-right" Iconconfig={{width:"35px",height:"35px",lineheight:"35px",color:"white",rotate:myactive ? true : undefined}}></Icon>
+                        <div style={{paddingBottom:"15px"}}>
+                            <Link href={userdata.UserId && {
+                                pathname:`/profile/${userdata.UserId}`,
+                                query:{name:"Post"}
+                                }}>
+                            <Porfileimage profile={"/car.jpg"}  width={myactive ? "80px" : "50px"} height={myactive ? "80px" : "50px"}/>
+                            </Link>
+                            <Link href={userdata.UserId && {
+                                pathname:`/profile/${userdata.UserId}`,
+                                query:{name:"Post"}
+                                }}>
+                            <div style={{marginTop:"10px",color:"#293241",textAlign:"center"}}><span style={{color:"white"}}>{myactive ? userdata.Username : "..."}</span></div>
+                            </Link>
+                        </div>     
+                    </ImageDiv>
+                    <NavigationDiv>
+                        <hr></hr>
+                            <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
+                                {firstlist.current.map((item,index)=>(
+                                    <Link key={index} href={`/[userıd]/${item.path}`} as={`/${userdata.UserId}/${item.path}`}>
+                                        <Li className="getli" leftbaractive={myactive}>
+                                            <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>   
+                                            <Spanfordesc    leftbaractive={myactive}>{item.desc}</Spanfordesc> 
+                                            <Rightsidedesc  leftbaractive={myactive}>{item.desc}</Rightsidedesc>
+                                        </Li>
+                                    </Link>            
+                                ))}
+                            
+                            </ul>
+                    </NavigationDiv>
+                    <NavigationDiv>     
+                        <hr></hr>
+                            <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
+                                {secondlist.current.map((item,index)=>(
+                                    <Link key={index} href={`/${item.path}/${userdata.UserId}`}>
+                                        <Li leftbaractive={myactive}>
+                                            <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>   
+                                            <Spanfordesc  leftbaractive={myactive}>{item.desc}</Spanfordesc> 
+                                            <Rightsidedesc leftbaractive={myactive}>{item.desc}</Rightsidedesc>
+                                        </Li>
+                                    </Link>    
+                                ))}        
+                            </ul>
+                    </NavigationDiv>
+                    <NavigationDiv>    
                     <hr></hr>
-                        <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
-                            {firstlist.current.map((item,index)=>(
-                                <Link key={index} href={`/[userıd]/${item.path}`} as={`/${userdata.UserId}/${item.path}`}>
-                                    <Li className="getli" leftbaractive={myactive}>
-                                        <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>   
-                                        <Spanfordesc    leftbaractive={myactive}>{item.desc}</Spanfordesc> 
-                                        <Rightsidedesc  leftbaractive={myactive}>{item.desc}</Rightsidedesc>
-                                    </Li>
-                                </Link>            
-                            ))}
-                        
-                        </ul>
-                </NavigationDiv>
-                <NavigationDiv>     
-                    <hr></hr>
-                        <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
-                            {secondlist.current.map((item,index)=>(
-                                <Link key={index} href={`/${item.path}/${userdata.UserId}`}>
-                                    <Li leftbaractive={myactive}>
-                                        <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>   
-                                        <Spanfordesc  leftbaractive={myactive}>{item.desc}</Spanfordesc> 
-                                        <Rightsidedesc leftbaractive={myactive}>{item.desc}</Rightsidedesc>
-                                    </Li>
-                                </Link>    
-                            ))}        
-                        </ul>
-                </NavigationDiv>
-                <NavigationDiv>    
-                  <hr></hr>
-                    {
-                        userdata.Userrole == "Mod" || userdata.Userrole == "Admin" ? 
-                        (<ul style={{width:"100%",display:"flex",padding:"0px",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
-                            {thirdlist.current.map((item,index)=>(
-                                <Link key={index} href={`/${item.path}`}> 
-                                    <Li leftbaractive={myactive}>
-                                        <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>  
-                                        {
-                                           item.desc == "Raporlar" && <span style={{position:"absolute",fontSize:"12px",top:"-5px",left:"5px",width:"20px",display:"block",height:"20px",textAlign:"center",lineHeight:"15px",backgroundColor:"#d90429",color:"white",borderRadius:"50%",border:"2px solid #11101d"}}>14</span>
-                                        }
-                                        <Spanfordesc  leftbaractive={myactive}>{item.desc}</Spanfordesc> 
-                                        <Rightsidedesc >{item.desc}</Rightsidedesc>
-                                    </Li>
-                                </Link>
-                            ))}        
-                        </ul>)
-                    : null
-                    } 
-                
-                </NavigationDiv>
+                        {
+                            userdata.Userrole == "Mod" || userdata.Userrole == "Admin" ? 
+                            (<ul style={{width:"100%",display:"flex",padding:"0px",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
+                                {thirdlist.current.map((item,index)=>(
+                                    <Link key={index} href={`/${item.path}`}> 
+                                        <Li leftbaractive={myactive}>
+                                            <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>  
+                                            {
+                                              item.desc == "Raporlar" && <span style={{position:"absolute",fontSize:"12px",top:"-5px",left:"5px",width:"20px",display:"block",height:"20px",textAlign:"center",lineHeight:"15px",backgroundColor:"#d90429",color:"white",borderRadius:"50%",border:"2px solid #11101d"}}>14</span>
+                                            }
+                                            <Spanfordesc  leftbaractive={myactive}>{item.desc}</Spanfordesc> 
+                                            <Rightsidedesc >{item.desc}</Rightsidedesc>
+                                        </Li>
+                                    </Link>
+                                ))}        
+                            </ul>)
+                        : null
+                        } 
+                    </NavigationDiv>
                 </InnerDiv>
             </ExteriorDiv>
 

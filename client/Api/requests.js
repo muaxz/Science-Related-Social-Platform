@@ -86,7 +86,7 @@ const RefreshReq = async () =>{
   return await axios.get("/refresh",{},{withCredentials:true})
 }
 
-export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,seterrmsg,setbackenderror,setactive})=>{
+export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,seterrmsg,setBackendState,setactive})=>{
     
 
     try{
@@ -96,13 +96,13 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
       
       if(data.wrong == "WP"){
 
-        setbackenderror("WP")
+        setBackendState("WP")
         setactive(true);
 
       }
       else if(data.wrong == "WE"){
 
-        setbackenderror("WE")
+        setBackendState("WE")
         setactive(true);
 
       }
@@ -126,12 +126,16 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
     
 }
 
-export const resetPassword = async({token,password})=>{
+export const resetPassword = async({token,password,setBackendState,setWindowActive})=>{
 
   try {
 
    const {data}  = await axios.post("/resetPassword",{token,password})
 
+   if(data.state == "success"){
+      setBackendState("PASSWORD_SAVED")
+      setWindowActive(true)
+   }
    console.log(data)
 
   } catch (error) {
@@ -142,12 +146,17 @@ export const resetPassword = async({token,password})=>{
 
 }
 
-export const sendResetEmail = async(user)=>{
+export const sendResetEmail = async({email,setBackendState,sendWindowActive})=>{
 
   try {
 
-   const {data}  = await axios.post("/sendResetEmail",{email:user.email})
+   const {data}  = await axios.post("/sendResetEmail",{email:email})
 
+   if(data.state == "success"){
+      
+      setBackendState("CODESENT")
+      sendWindowActive(true)
+   }
    console.log(data)
 
   } catch (error) {
@@ -178,18 +187,18 @@ export const logout = async({setlogged,setuserdata,router,setspinner})=>{
 
 }
 
-export const resigterreq=async({setbackenderror,userdata,setactive,seterrmsg})=>{
+export const resigterreq=async({setBackendState,userdata,setactive,seterrmsg})=>{
    
   try{
 
     const{data}=await axios.post("/register",{userdata:userdata})
     
     if(data.warning == "exist"){
-        setbackenderror("EXİST")
+        setBackendState("EXİST")
         setactive(true)
     }
     else{
-        console.log("Başarılı kayıt")
+        //TODO push user to home page with updating context
     }
 
   }catch(err){
@@ -873,6 +882,18 @@ export const handleCommentLike = async({commentId,actionType})=>{
     console.log(error)
   }
 
+}
+
+export const editCategory = async(data)=>{
+    try {
+        const newFormData = new FormData();
+        newFormData.append("file",data.blob)
+        newFormData.append("name",data.categoryName)
+        await axios.post("/content/editCategory",newFormData)
+
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 

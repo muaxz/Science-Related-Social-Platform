@@ -35,17 +35,15 @@ export default function Navigationtools({optnumber,Navdata,Logout,UserId}){
     if(optnumber == 1){
       title = "Create"
       Myoption = <React.Fragment>
-                    <Option1div>
-                        <Link href={"/post"}>
-                            <div>
-                                <Icon className="far fa-edit" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
-                                <div style={{marginLeft:"8px"}}>
-                                    <p>Gönderi</p>
-                                    <p style={{fontSize:"13px"}}>Sayfanda bir gönderi paylaş</p>
-                                </div>
+                   <Link href={"/post"}>
+                        <Option1div>
+                            <Icon className="far fa-edit" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                            <div style={{marginLeft:"8px"}}>
+                                <p>Gönderi</p>
+                                <p style={{fontSize:"13px"}}>Sayfanda bir gönderi paylaş</p>
                             </div>
-                        </Link>
-                    </Option1div>
+                        </Option1div>
+                    </Link>
                     <Option1div>
                         <Icon className="fas fa-users " Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
                         <div style={{marginLeft:"8px"}}>
@@ -126,7 +124,6 @@ export default function Navigationtools({optnumber,Navdata,Logout,UserId}){
     if(optnumber == 3){
       title="Profile"
       Myoption=( <React.Fragment>
-
                     <Link href={{
                         pathname:`/profile/${UserId}`,
                         query:{name:"Post"}

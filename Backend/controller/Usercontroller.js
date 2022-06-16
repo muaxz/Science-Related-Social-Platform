@@ -63,8 +63,7 @@ exports.getuserdata=async(req,res,next)=>{
 
        }
       
-     
-
+    
     } catch (error){
        next();
        return;
@@ -624,3 +623,5 @@ exports.reportUser = async(req,res,next)=>{
     }
 
 }
+
+

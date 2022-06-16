@@ -8,7 +8,7 @@ router.post("/register",controller.register);
 router.get("/logout",VerifyToken,controller.logout);
 router.post("/sendResetEmail",controller.sendResetEmail)
 router.post("/resetPasswordTokenCheck",controller.checkResetToken)
-router.post("/resetPassword",controller.checkResetToken)
+router.post("/resetPassword",controller.resetPassword)
 
 
 module.exports=router;

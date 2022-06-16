@@ -1,4 +1,4 @@
-import React,{useEffect,useState,useContext,useReducer} from 'react'
+import React,{useEffect,useState,useContext,useReducer, useRef} from 'react'
 import {createusercontext} from "../context/Usercontext";
 import styled,{createGlobalStyle} from "styled-components";
 import {useRouter} from "next/router"
@@ -10,7 +10,7 @@ import {withStyles,makeStyles} from '@material-ui/core/styles';
 import {Global} from "../components/styledcomponents/Globalstyles"
 import Guardlayout from "../containers/Layout/routerguard";
 import Validate from "validator"
-import {AccountCircle,EmailOutlined,Lock,ArrowRight, ArrowLeft,SupervisorAccount,SupervisedUserCircleSharp, SupervisorAccountRounded, SupervisorAccountSharp, AccountCircleSharp, AccountCircleRounded, Person, Home, ArrowRightAltRounded, ChevronRight, Assignment} from "@material-ui/icons"
+import {AccountCircle,EmailOutlined,Lock,SupervisorAccount,Person,ChevronRight, Assignment} from "@material-ui/icons"
 import axios from 'axios';
 
 
@@ -155,9 +155,28 @@ height:45px;
 const Login=({mode,token})=>{
     
     const stylesget=CssTextField();
+    const buttonCase = useRef({
+        PasswordReset:{
+            value:"Save",
+            icon:""
+        },
+        Register:{
+            value:"Sign Up",
+            icon:<SupervisorAccount></SupervisorAccount>
+        },
+        Login:{
+            value:"Sign In",
+            icon:<ChevronRight></ChevronRight>
+        },
+        ForgetPassword:{
+            value:"Send Code",
+            icon:""
+        }
+    })
+
     const{setlogged,setuserdata,setspinner}=useContext(createusercontext);
     const[currenturl,setcurrent]=useState("");
-    const[backenderror,setbackenderror]=useState("")
+    const[backendState,setBackendState]=useState("")
     const[errormsg,seterror]=useState(false);
     const[actionType,setActionType]=useState("Login");
     const[windowactive,setactive]=useState(false);
@@ -239,7 +258,7 @@ const Login=({mode,token})=>{
                 value:"",
                 icon:"far fa-envelope",
                 focused:false,
-                helperText:"",
+                helperText:"Make sure that your password has at least 6 length and contains one upper, one lower character and one number.",
                 validation:true,
             },
             newPasswordAgain:{
@@ -248,11 +267,12 @@ const Login=({mode,token})=>{
                 value:"",
                 icon:"fas fa-unlock-alt",
                 focused:false,
-                helperText:"",
+                helperText:"This not the same password as the first one",
                 validation:true,
             }
         },
     });
+    
     
     useEffect(()=>{
         if(mode == "RESET") setActionType("PasswordReset")
@@ -276,14 +296,13 @@ const Login=({mode,token})=>{
       
         switch (inputType) {
             case "email":
-
                 if(!Validate.isEmail(value)){
                     console.log(value)
                     return {state:"notProperEmail",validate:false};
                 }
                 break;
+            case "newPassword":
             case "password":
-    
                 if(!Validate.isStrongPassword(value,{minSymbols:0,minNumbers:1,minLowercase:1,minUppercase:1,minLength:6}))
                 return {state:"Strong",validate:false};
                 break;
@@ -298,14 +317,15 @@ const Login=({mode,token})=>{
     const Submithandler=()=>{
 
         const currentInputValues = {...inputs};
+        console.log(actionType)
         const ourdata={};
         for (const key in currentInputValues[actionType]) {
             ourdata[key]=currentInputValues[actionType][key].value.trim();
-            if(actionType == "Register" || actionType == "ForgetPassword" && (key == "email" || key == "password")){
+            if(actionType == "Register" || actionType == "ForgetPassword" || actionType == "PasswordReset" && (key == "email" || key == "password" || key == "newPassword")){
 
                 const handlerResponse = InputErrorHandler(key,currentInputValues[actionType][key].value.trim())
                 if(!handlerResponse.validate){
-                  
+                    console.log("here")
                     currentInputValues[actionType][key].validation = false;
                     return setinputs(currentInputValues)
 
@@ -315,36 +335,37 @@ const Login=({mode,token})=>{
 
     
         switch(actionType){
-            case "Login":
-                
+            case "Login":  
                 loginreq({
                      setlogged:setlogged,
                      userdata:ourdata,
                      router:router,
                      setuserdata:setuserdata,
                      seterrmsg:seterror,
-                     setbackenderror:setbackenderror,
+                     setBackendState:setBackendState,
                      setactive:setactive,
                      setspinner:setspinner,
                  })
 
                 break;
-
             case "Register":  
                 resigterreq({
-                    setbackenderror:setbackenderror,
+                    setBackendState:setBackendState,
                     userdata:ourdata,
                     seterrmsg:seterror,
                     setactive:setactive,
                 })
                 break;
             case "ForgetPassword":
-                sendResetEmail(ourdata)
+                sendResetEmail({email:ourdata.email,setBackendState:setBackendState,sendWindowActive:setactive})
                 break;
             case "PasswordReset":
+                if(ourdata.newPassword !== ourdata.newPasswordAgain) return setinputs(prev=>{return{...prev,PasswordReset:{...prev.PasswordReset,newPasswordAgain:{...prev.PasswordReset.newPasswordAgain,validation:false}}}}); 
                 resetPassword({
                     token:token,
-                    password:ourdata.newPassword
+                    password:ourdata.newPassword,
+                    setBackendState:setBackendState,
+                    setWindowActive:setactive
                 })    
                 
         } 
@@ -364,20 +385,25 @@ const Login=({mode,token})=>{
         setinputs(inputsget);
     }
 
-    var backenderrormessage="";
-    //TODO Delete this part
-    if(errormsg){
-        return <h2>Something Went Wrong...</h2>
+
+    //Chnage this setion
+    var backendMessage="";
+    var messageType = "error";
+ 
+    if(errormsg){return <h2>Something Went Wrong...</h2>}
+    if(backendState == "EXİST"){backendMessage="Girdğin email zaten kullanımda!"}
+    else if(backendState == "WP"){backendMessage="Girdiğin şifre yanlış!"} //remove this 
+    else if(backendState == "WE"){backendMessage="Girdiğin e-posta yanlış!"}
+    else if(backendState == "CODESENT"){
+        console.log("erkjabnkjasd")
+        backendMessage = "You can reset your password by clicking on the link that was sent to your email."
+        messageType = "confirm"
+    } 
+    else if(backendState == "PASSWORD_SAVED"){
+        backendMessage = "Your password has been succesfully updated."
+        messageType = "confirm"
     }
-    if(backenderror == "EXİST"){
-      backenderrormessage="Girdğin email zaten kullanımda!"
-    }
-    else if(backenderror == "WP"){
-      backenderrormessage="Girdiğin şifre yanlış!"
-    }
-    else if(backenderror == "WE"){
-      backenderrormessage="Girdiğin e-posta yanlış!"
-    }
+
     
     return (
        <ImageDiv urlget={currenturl} aktif={true}>
@@ -385,18 +411,25 @@ const Login=({mode,token})=>{
               <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossOrigin="anonymous" />    
             </Head>
             <Global></Global>
-           <Window closefunction={()=>setactive(false)} active={windowactive} type="error">{backenderrormessage}</Window>
+           <Window closefunction={()=>setactive(false)} active={windowactive} type={messageType}>{backendMessage}</Window>
            <WindowDiv>    
-               <Registerloginholder onClick={()=>setActionType(actionType == "Login" ? "Register" : "Login")}>
-                   {
-                       actionType == "Login" ?
-                       <div style={{display:"flex"}}>
-                           <Assignment style={{color:"white",borderRadius:"50%",fontSize:"30px"}}></Assignment>
-                       </div>
-                       :
-                       <Person style={{color:"white",borderRadius:"50%",fontSize:"30px"}}></Person>
-                   }       
-               </Registerloginholder> 
+                {
+                        actionType !== "PasswordReset" && 
+                        (<Registerloginholder onClick={()=>setActionType(actionType == "Login" ? "Register" : "Login")}>
+                                {  
+                                    actionType == "Login"  ?
+                                    
+                                    <div style={{display:"flex"}}>
+                                        <Assignment style={{color:"white",borderRadius:"50%",fontSize:"30px"}}></Assignment>
+                                    </div>
+
+                                    :
+
+                                    <Person style={{color:"white",borderRadius:"50%",fontSize:"30px"}}></Person>
+                                }       
+                    </Registerloginholder> )
+                }
+
                <div style={{flex:4}}>
                   <Logo></Logo>
                </div>
@@ -431,27 +464,14 @@ const Login=({mode,token})=>{
                 </div>    
                 <div style={{display:"flex",flex:"3",width:"100%"}}> 
                         <InputHolder>
-                            {
-                                actionType == "Login" ?
                                 <Button  
                                     style={{width:"50%"}}
                                     inputProps={{style:{color:"red"}}}   
                                     variant="contained"
-                                    endIcon={<ChevronRight style={{fontSize:"30px"}}></ChevronRight>}
-                                    onClick={actionType == "Login" ? Submithandler : ()=>setActionType("Login")}>
-                                    Giriş Yap 
-                                </Button>  
-                                :  
-                                <Button  
-                                    style={{width:"50%"}}
-                                    inputProps={{style:{color:"red"}}}   
-                                    variant="contained"
-                                    color="secondary"
-                                    endIcon={<SupervisorAccount style={{fontSize:"30px"}}></SupervisorAccount>}
+                                    endIcon={buttonCase.current[actionType].icon}
                                     onClick={Submithandler}>
-                                    Kayıt Ol
-                                </Button> 
-                            }
+                                    <b>{buttonCase.current[actionType].value}</b>
+                                </Button>  
                         </InputHolder>      
                 </div>
                         

@@ -9,7 +9,7 @@ position:absolute;
 left:50%;
 transform:translate(-50%,-50%);
 width:300px;
-height:220px;
+padding-bottom:20px;
 text-align:center;
 transition:${({aktif})=>aktif ? "top 0.4s" : "top 0.4s, z-index 0.6s"};
 top:${({aktif})=>aktif ? "50%" : "200px"};
@@ -58,7 +58,7 @@ const Window=({children,active,type,closefunction})=>{
                      <Button onClick={()=>closefunction("CANCEL")} variant="contained">Cancel</Button>
                   </React.Fragment>) 
                   
-                  : <Button onClick={closefunction} variant="contained">OK</Button>
+                  : <Button onClick={closefunction} color="primary" variant="contained">OK</Button>
                }
 
             </div>

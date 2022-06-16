@@ -7,15 +7,15 @@ const {Op}=require("sequelize");
 const UserUser = require("../models/UserUser");
 const Notification=require("../models/Notificationmodel");
 const firebase = require("../firebase/firebase")
+const CategoryModel = require("../models/CategoryModel")
 const {v4} = require("uuid")
-
 
 
 
 exports.produce=async (req,res,next)=>{
  
   const {title,content,subtitle,catagory,UserId,processtype,titlemainUrl}=req.body;
-  console.log(titlemainUrl)
+ 
 
   try {  
  
@@ -25,7 +25,7 @@ exports.produce=async (req,res,next)=>{
         subtitle:subtitle,
         content:content,
         phase:processtype,
-        catagories:catagory == "" ? null : catagory,
+        CategoryId:catagory,
         UserforuserId:UserId,
         UserforcontentId:UserId,
     })
@@ -163,12 +163,14 @@ exports.gethome=async(req,res,next)=>{
     const Contents = await Content.findAll({
       //dizi[1].preferences[0].usercontent.attribute
       where:{
-        catagories:category,
+        CategoryId:category
       },
       attributes:["id","titleimage","title","subtitle","content","createdAt","updatedAt"],
       limit:10,
       offset:offsetValue,
-      include:[
+      include:[{
+          model:CategoryModel,
+        },
         {
           model:User,
           as:"Like",
@@ -232,6 +234,38 @@ exports.gethome=async(req,res,next)=>{
     return;
   }
 
+}
+
+exports.getCategories = async(req,res,next)=>{
+
+   try {
+
+     const categories = await CategoryModel.findAll()
+
+     res.json({data:categories})
+
+   } catch (error){
+
+      return next()
+
+   }
+
+}
+
+exports.editCategory = async(req,res,next)=>{
+    const {name} = req.body;
+    console.log(name)
+    console.log(req.files)
+    try {
+
+       await CategoryModel.create({
+          categoryImage:req.files.file.data,
+          categoryName:name
+       })
+
+    } catch (error) {
+      return next()
+    }
 }
 
 exports.createrelation=async (req,res,next)=>{
@@ -337,9 +371,6 @@ exports.getusercontent=async(req,res,next)=>{
                     Userforuserid:id,
                   }
               })  
-       
-             
-
           }
           else{
 
@@ -356,6 +387,8 @@ exports.getusercontent=async(req,res,next)=>{
                     model:User,
                     as:"personal",
                     attributes:["id","firstname","mainUrl","lastname","Role"]
+                  },{
+                    model:CategoryModel
                   }    
                 ]
                 }
@@ -389,8 +422,10 @@ exports.getcontent=async (req,res,next)=>{
     //TODO we need the post which has "published" attribute !!
     const Mycontent=await Content.findOne({
       where:{id:id},
-      attributes:["id","titleimage","title","subtitle","content","catagories"],
-      include:[
+      attributes:["id","titleimage","title","subtitle","content"],
+      include:[{
+          model:CategoryModel
+        },
         {
           model:Comment,
           include:[

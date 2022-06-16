@@ -52,7 +52,7 @@ export default function Usercontent({params,mydata}){
     const {userdata}=useContext(createusercontext)
     const [stopscrolling,setstopscrolling]=useState(false);
     const [ordercount,setordercount]=useState(mydata.length);
-
+    console.log(mydata)
     useEffect(() =>{
       
 
@@ -158,6 +158,7 @@ export default function Usercontent({params,mydata}){
                                        params == "Draft" ? <DraftCard draftContent={item}/> : 
 
                                        (<ContentCard
+                                            categoryType={item.Content.Category.categoryName}
                                             foruser={true}
                                             postId={item.Content.id}
                                             content={item.Content}

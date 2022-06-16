@@ -35,16 +35,13 @@ display:flex;
 height:100%;
 flex-direction:column;
 flex:3;
-background-color:#f0c987;
+background-color:#ccdbfd;
 border-top-right-radius:8px;
 border-bottom-right-radius:8px;
 `
 
 const Exterior=styled.div`
-display:flex;
-height:100vh;
 max-width:1300px;
-align-items:center;
 width:100%;
 flex-direction:row;
 margin:0 auto;
@@ -55,8 +52,9 @@ width:80%;
 
 const InnerDiv = styled.div`
 display:flex;
+margin-top:100px;
+margin-bottom:30px;
 width:100%;
-height:600px;
 justify-content:center;
 @media (max-width:900px){
   display:block;
@@ -67,7 +65,7 @@ display:flex;
 flex-direction:column;
 flex:1;
 position:sticky;
-background-color:#f0c987;
+background-color:#ccdbfd;
 border-top-left-radius:8px;
 border-bottom-left-radius:8px;
 border-right:2px solid lightgrey;
@@ -106,21 +104,15 @@ const rejectStyle = {
   borderColor: '#ff1744'
 };
 
-export default function MyEditor (){
-
+export default function MyEditor({categories}){
+    console.log(categories)
     const editorRef = useRef()
     const {userdata} = useContext(createusercontext);
     const [ editorLoaded, setEditorLoaded ] = useState( false )
     const { CKE, ClassicEditor } = editorRef.current || {}
     const[errormsg,seterror] = useState(false);
     const[windowactive,setwindowactive] = useState(false);
-    const[question,setquestion] = useState({
-      title:false,
-      subtitle:false,
-    });
     const[titleImageSrc,setTitleImageSrc] = useState(null);
-    const[filename,setfilename] = useState("");
-    const[uploaded,setuploaded] = useState(false);
     const windowInformRef = useRef("");
     const windowTypeRef = useRef("");
     const [contentpart,setcontentpart] = useState({
@@ -196,19 +188,17 @@ export default function MyEditor (){
 
     },[userdata])
     
-    useEffect(()=>{
-        const {CKEditor}=require( '@ckeditor/ckeditor5-react' )
-
+    useEffect(async()=>{
+        const {CKEditor} = require('@ckeditor/ckeditor5-react')
+        console.log(CKEditor)
         editorRef.current = {
             CKE: CKEditor,
-            ClassicEditor: require( "ckeditor5-custom-build/build/ckeditor" )
+            ClassicEditor: (await import( "ckeditor5-custom-build/build/ckeditor" )).default
         }
+
         setEditorLoaded(true)
     },[])
 
-
-   
-  
     const changeHandler=(event,editör,value)=>{
       
        const mutatedValue ={...contentpart};
@@ -226,7 +216,7 @@ export default function MyEditor (){
           
       });
       
-      if(mutatedValue[value].value.includes("ERROR") || mutatedValue[value].value.includes(`<figure class="image"><img></figure>`)) return;
+      if(mutatedValue[value].value.toString().includes("ERROR") || mutatedValue[value].value.toString().includes(`<figure class="image"><img></figure>`)) return;
         
 
       setcontentpart(mutatedValue);
@@ -284,7 +274,7 @@ export default function MyEditor (){
         windowTypeRef.current = "confirm"
         
         
-        if(!InputisValidation(contentpart)) false;
+        if(!InputisValidation(contentpart)) return false;
 
         const dataWillBeSend = {}
         for (const key in contentpart) {
@@ -323,10 +313,11 @@ export default function MyEditor (){
                               <MenuItem selected disabled value="default">
                                   Choose A Topic
                               </MenuItem>
-                              <MenuItem value="Uzay">Uzay</MenuItem>
-                              <MenuItem value="Metafizik">Metafizik</MenuItem>
-                              <MenuItem value="Felsefe">Felsefe</MenuItem>
-                              <MenuItem value="Biyoloji">Biyoloji</MenuItem>          
+                              {
+                                categories.map((item)=>(
+                                  <MenuItem value={item.id}>{item.categoryName}</MenuItem>
+                                ))  
+                              }     
                           </Select>
                           <FormHelperText style={{color:"red"}}>{!contentpart["catagory"].isValid && "You appear to have forgotton to choose a topic."}</FormHelperText>
                       </FormControl>
@@ -368,7 +359,9 @@ export default function MyEditor (){
                       editorLoaded ? (
                           <CKE 
                             config={{ 
-                                  
+                                  mediaEmbed:{
+                                    previewsInData: true
+                                  },
                                   extraPlugins:[uploadPlugin],
                                   placeholder: "Start Typing Your ideas"
                                   //toolbar:['heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList']

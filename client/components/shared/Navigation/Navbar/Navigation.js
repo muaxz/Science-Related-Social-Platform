@@ -9,6 +9,7 @@ import Link from "next/link";
 import router from "next/router";
 import {Getusersforsearchbar,logout} from "../../../../Api/requests"
 import { AccountCircle, Home,Assignment} from '@material-ui/icons';
+import {capitalize} from "lodash"
 
 
 
@@ -334,7 +335,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                                 <React.Fragment>{searchtype}</React.Fragment>
 
                                 :
-            
+                                //separate this part to another component
                                 usersforsearch.map((item,index)=>{
                                    
                                     return(<Searchelements key={index} onClick={()=>setinputvalue("")}>
@@ -383,7 +384,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
 
                    :
 
-                    <InputHolder  flex2={"flex"} ref={ref} flex={"flex"}>
+                    <InputHolder flex2={"flex"} ref={ref} flex={"flex"}>
                         {
                             Object.keys(Iconobject).map((item)=>{
                                 return (
@@ -405,7 +406,10 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                                 pathname:`/profile/${userdata.UserId}`,
                                 query:{name:"Post"}
                             }}> 
-                           <Porfileimage width="35px" height="35px" profile="/car.jpg"/>
+                            <div style={{maxWidth:"300px",display:"flex",alignItems:"center"}}>
+                                <Porfileimage width="35px" height="35px" profile="/car.jpg"/>
+                                <p style={{marginLeft:"10px",padding:"7px",backgroundColor:"#52b69a",borderRadius:"25px",color:"white",fontSize:"13px"}}>{capitalize(userdata.Username)+" "+capitalize(userdata.Usersurname)}</p>
+                            </div>
                          </Link>
                          
                         {

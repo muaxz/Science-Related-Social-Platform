@@ -11,7 +11,7 @@ module.exports=(req,res,next)=>{
         jwt.verify(token,"AccessToken-SecretKey",(err,authdata)=>{
             
             if(err){
-
+                res.clearCookie("accessToken",{path:"/"})
                 return res.json({error:"Unauthroized",state:401})
                 //burada kullanıcı outlogin ediiyor
             }

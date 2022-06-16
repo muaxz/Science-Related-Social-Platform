@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import styled from "styled-components"
 import {ArrowRight,ArrowLeft} from "@material-ui/icons"
 import {Homereq} from "../../../Api/requests"
@@ -111,62 +111,37 @@ transition-duration:0.3s;
 //flex-shrink flex boxun icindeki elemanlara verilecek
 
 
-function Selection({listContent,setListContent,setSelectedKey,keyName}){
+function Selection({listContent,setListContent,setSelectedKey,keyName,categories}){
 
     const [error,seterror] = useState(null)
-    const [selectionList,setselectionList] = useState({
-        Felsefe:{
-            display:"/boxSpace.jpg",
-            selected:false,
-            stoprequesting:false,
-        },
-        Metafizik:{
-            display:"/boxChess.jpg",
-            selected:false,
-            stoprequesting:false,
-        },
-        Uzay:{
-            display:"/boxChess.jpg",
-            selected:false,
-            stoprequesting:false,
-        },
-        Biyoloji:{
-            display:"/boxBiology.jpg",
-            selected:false,
-            stoprequesting:false,
-        },   
-        Space1:{
-            display:"/boxSpace.jpg",
-            selected:false,
-            stoprequesting:false,
-        },
-        Space2:{
-            display:"/boxSpace.jpg",
-            selected:false,
-            stoprequesting:false,
-        },
-        Space3:{
-            display:"/boxSpace.jpg",
-            selected:false,
-            stoprequesting:false,
-        },
-       
-    
-    })
+    const [selectionList,setselectionList] = useState({})
+   
 
+    useEffect(()=>{
+        const willBeDeployed = {}
+        categories.forEach(element => {
+            willBeDeployed[element.categoryName] = {}
+            willBeDeployed[element.categoryName]["display"] = Buffer.from(element.categoryImage.data).toString("base64");
+            willBeDeployed[element.categoryName]["selected"] = false
+            willBeDeployed[element.categoryName]["stoprequesting"] = false
+            willBeDeployed[element.categoryName]["id"] = element.id
+        });
+        setselectionList(willBeDeployed)
+    },[])
+    
     const RequestForSelection=(keyname)=>{
 
         const selections = {...selectionList};
         selections[keyname].stoprequesting = false;
         setselectionList(selectionList);
-
+    
         Homereq({
             currentdata:listContent,
             setcontentdata:setListContent,
             setselection:setselectionList,
             selectionlist:selectionList,
             order:0,
-            category:keyname,
+            category:selections[keyname].id,
             paignation:false,
             seterrmsg:seterror,
         })
@@ -188,7 +163,7 @@ function Selection({listContent,setListContent,setSelectedKey,keyName}){
              Mutated[keyOfthisComponent].selected = true;
      
              setselectionList(Mutated);
-             setSelectedKey(keyOfthisComponent)
+             setSelectedKey(Mutated[keyOfthisComponent].id)
              RequestForSelection(keyOfthisComponent)
         }
        
@@ -197,7 +172,6 @@ function Selection({listContent,setListContent,setSelectedKey,keyName}){
 
 
     return ( <ExteriorDiv>
-                   
                <InnerDiv>
                     <Controllers PositionRight={""} PositionX={20}>
                        <ArrowLeft/>
@@ -209,7 +183,7 @@ function Selection({listContent,setListContent,setSelectedKey,keyName}){
                        Object.keys(selectionList).map((item,index)=>{
                            return (<SectionBoxes onClick={()=>Selectionhander(item)} activeSelect={selectionList[item].selected} key={index}>
                                <Cover></Cover>
-                               <ImgInBox src={selectionList[item].display}></ImgInBox>
+                               <ImgInBox src={`data:image/png;base64,${selectionList[item].display}`}></ImgInBox>
                                <BoxName activeSelect={selectionList[item].selected}>{item}</BoxName>
                            </SectionBoxes>)
                        })

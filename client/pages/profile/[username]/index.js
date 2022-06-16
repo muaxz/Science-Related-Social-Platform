@@ -24,15 +24,14 @@ export default function Stuff({profile,counts,contents,getquery}){
 export async function getServerSideProps({req,query}){ 
     
     try {
-        
-        
-        const recieve = await axios.all([
+    
+        const recieved = await axios.all([
             axios.get(`user/getuserprofile/${query.username}`,req.headers.cookie ? {headers:{Cookie:req.headers.cookie}} : {}),
             axios.get(`user/getusercount/${query.username}`,req.headers.cookie ? {headers:{Cookie:req.headers.cookie}} : {}),
             axios.get(`user/getuserprofilecontent/${query.username}/${query.name == "Post" ? "true" : "false"}/${query.name}/0`,req.headers.cookie ? {headers:{Cookie:req.headers.cookie}} : {})
         ])
         //users?age=15&gender=m&
-        if(recieve[0].data && recieve[0].data.error || recieve[1].data && recieve[1].data.error){
+        if(recieved[0].data && recieved[0].data.error || recieved[1].data && recieved[1].data.error){
 
             return {
                 redirect:{
@@ -42,7 +41,7 @@ export async function getServerSideProps({req,query}){
       
         }
         //404
-        if(recieve[0].data.userdata == null){
+        if(recieved[0].data.userdata == null){
             
             return {
                 redirect:{
@@ -53,7 +52,7 @@ export async function getServerSideProps({req,query}){
         };
          
         return {
-            props :{profile:recieve[0].data.userdata,counts:recieve[1].data.data,contents:recieve[2].data.data,getquery:query}
+            props :{profile:recieved[0].data.userdata,counts:recieved[1].data.data,contents:recieved[2].data.data,getquery:query}
         }
 
     } catch (error) {
