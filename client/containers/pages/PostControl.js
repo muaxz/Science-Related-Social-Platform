@@ -228,7 +228,7 @@ const Postcontrol=({contentData})=>{
                                        <IconHolder top="10" right="40"><VisibilityOff style={{color:"#E83A14"}}></VisibilityOff></IconHolder>
                                     }
                                     <TitleImageDiv>
-                                        <TitleImage src="/boxHistory.jpg"></TitleImage>
+                                        <TitleImage src={item.titleimage}></TitleImage>
                                     </TitleImageDiv>
                                     <ContentDiv>
                                         <p><b>{item.title}</b></p>

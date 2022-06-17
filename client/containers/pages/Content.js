@@ -2,13 +2,18 @@ import React, { useEffect,useState,useRef, useContext,useCallback} from 'react'
 import Icon from "../../components/UI/Icon";
 import styled from "styled-components";
 import {Porfileimage} from "../../components/styledcomponents/Globalstyles";
-import {Producecommentreq,Commentreq,Commentanswerreq,Editcomment,handleCommentLike} from "../../Api/requests";
+import {Producecommentreq,Commentreq,Commentanswerreq,Editcomment,handleCommentLike,Createrelationreq} from "../../Api/requests";
 import {createusercontext} from "../../context/Usercontext";
+import {CreateUtilContext} from "../../context/UtilContext";
 import Commentpart from '../../components/pages/Content/Commentsection/Commentpart';
 import useScroll from "../../hooks/Scroll"
 import useClickOutside from "../../hooks/Clikcoutisde"
 import Parser from "react-html-parser"
 import ReportWindow from "../../components/pages/Content/reportWindow"
+import {calculatedate} from "../../utilsfunc"
+import Link from 'next/link';
+import {Checkbox} from "@material-ui/core"
+import {FavoriteBorder,Favorite,BookmarkBorder,BookmarkOutlined,FlagOutlined} from "@material-ui/icons"
 
 
 
@@ -21,7 +26,9 @@ background-color:${({iscomment})=>iscomment ? "" : "white"};
 max-width:950px;
 width:100%
 height:100%;
+`
 
+const InnerDiv = styled.div`
 `
 
 const Commentdiv=styled.div`
@@ -62,35 +69,40 @@ background-color:white;
 
 
 
-const Attributeholder=styled.div`
+const ToolBarIconHolder=styled.div`
+cursor:pointer;
 display:flex;
 align-items:center;
-border-radius:7px;
-padding:5px;
-&:hover{
- background-color:#E2E3E3;
- cursor:pointer;
-}
+`
+
+const ToolBar = styled.div`
+display:flex;
+padding-left:10px;
+align-items:center;
+padding-right:10px;
+padding-bottom:10px;
+border-top-right-radius: 5px;
+border-top-left-radius: 5px;
+border-bottom:1px solid #bcb8b1;
 `
 //todo map array to create attribute list
 
 export default function Content({Contentdata,comments,id}){
-   
-    const attributeList =useRef([{icon:"fas fa-bookmark",desc:"Gönderiyi Kaydet"},{icon:"fas fa-thumbs-up",desc:"Gönderiyi Beğen"},{icon:"fas fa-retweet",desc:"Gönderiyi Profil Sayfamda Göster"},{icon:"fa-solid fa-circle-exclamation",desc:"Gonderiyi Bildir"}])
+
     const {bottom} = useScroll();
     const isInitialLoad = useRef(true)
-    const {visible,setvisible,ref} = useClickOutside();
     const [content,setcontent]=useState(Contentdata);
     const [commentlist,setcommentlist]=useState(comments);
     const [numberofcomment,setnumbercom]=useState(0);
-    const [active,setactive]=useState(false);
     const [actives,seterrmsg]=useState(false);
     const [activeproduce,setactiveproduce]=useState(false);
     const [isReportActive,setisReportActive]=useState(false);
     const {userdata}=useContext(createusercontext);
-    
-    //const {id}=router.query;
+    const {setSavedWindow}=useContext(CreateUtilContext);
+    const [isContentLiked,setIsContentLiked] = useState(false);
+    const [isContentSaved,setIsContentSaved] = useState(false);
   
+    /*
     useEffect(()=>{
    
       if(userdata.UserId && userdata.UserId == Contentdata.personal.id){
@@ -102,23 +114,33 @@ export default function Content({Contentdata,comments,id}){
       }
 
     },[userdata])
+    */
+
+    useEffect(()=>{
     
-    
+       content.Like.forEach((item)=>{
+            if(item.id == userdata.UserId){
+                setIsContentLiked(true)
+            }
+       })
+
+       content.Readlater.forEach((item)=>{
+        if(item.id == userdata.UserId){
+            setIsContentSaved(true)
+        }
+   })
+
+       
+
+    },[userdata])
+
     useEffect(()=>{
 
         if(numberofcomment > 0){
     
             //TODO Create a function for the coment req
             setactiveproduce(true);
-            Commentreq({
-                contentId:id,
-                setcomment:setcommentlist,
-                commentlist:commentlist,
-                last:"true",
-                order:commentlist.length,
-                setactiveproduce:setactiveproduce,
-                seterrmsg:seterrmsg,
-            })
+            fetchComments("true")
         }
 
     },[numberofcomment])
@@ -128,15 +150,7 @@ export default function Content({Contentdata,comments,id}){
     
        if(bottom && !isInitialLoad.current){
             
-            Commentreq({
-                contentId:id,
-                setcomment:setcommentlist,
-                commentlist:commentlist,
-                last:"false",
-                order:commentlist.length,
-                setactiveproduce:setactiveproduce,
-                seterrmsg:seterrmsg,
-            })
+            fetchComments("false")
        }
 
        isInitialLoad.current = false;
@@ -148,8 +162,22 @@ export default function Content({Contentdata,comments,id}){
        setcontent(Contentdata);
        setcommentlist(comments);
     },[id])
+
+    const fetchComments = (isLast)=>{
+
+        Commentreq({
+            contentId:id,
+            setcomment:setcommentlist,
+            commentlist:commentlist,
+            last:isLast,
+            order:commentlist.length,
+            setactiveproduce:setactiveproduce,
+            seterrmsg:seterrmsg,
+        })
+
+    }
     
-    const Produce=useCallback((message)=>{
+    const Produce = useCallback((message)=>{
         
         Producecommentreq({
             ContentId:id,
@@ -186,61 +214,90 @@ export default function Content({Contentdata,comments,id}){
         })
     }
 
-    const AttributeCaseHandler = (whichAttribute)=>{
+    const toolBarActionHandler = async (actionType,attribute)=>{
 
-        if(whichAttribute == "fa-solid fa-circle-exclamation"){
+        if(actionType == "REPORT"){
+
               setisReportActive(true)
-              setvisible(false)
+
+        }else if(actionType == "LIKE"){
+
+            await Createrelationreq({
+                UserId:userdata.UserId,
+                PostId:content.id,
+                attribute:attribute,
+                relationtype:isContentLiked ? "Destroy" : "Create",
+                UserIdofcontent:content.personal.id,
+                setSavedWindow:setSavedWindow,
+            })
+            setIsContentLiked(!isContentLiked)
+
+        }else if(actionType =="SAVE"){
+
+            await Createrelationreq({
+                UserId:userdata.UserId,
+                PostId:content.id,
+                attribute:attribute,
+                relationtype:isContentSaved ? "Destroy" : "Create",
+                UserIdofcontent:content.personal.id,
+                setSavedWindow:setSavedWindow,
+            })
+
+            setIsContentSaved(!isContentSaved)
         }
     }
 
     const commentRelationHandler = (commentId,elementtype,actionType,userid)=>{
+
             handleCommentLike({
                 commentId:commentId,
                 actionType:actionType
             })
     }
-   
+
     return (
         <div style={{maxWidth:"950px",margin:"100px auto"}}>
             {
                 isReportActive && (<ReportWindow ContentId={id} reportedUserId={Contentdata.personal.id} setActiveFunc={()=>setisReportActive(false)}></ReportWindow>)
             }
             <Exteriorcontent>
-                <div>
-                    <ImageDiv ref={ref}>
+                <InnerDiv>
+                    <ImageDiv>
                         <img src={"/car.jpg"} style={{objectFit:"cover",width:"100%",height:"100%"}} ></img>
-                        <Icon  activefunc={()=>setvisible(true)} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",top:"10px",right:"10px",color:"black",borderRadius:"50%",width:"25px",height:"25px",backcolor:"lightgrey",hovercolor:"black",backcolor:"grey",lineheight:"25px"}}></Icon>
-                        <Attribute active={visible}>
-                            {attributeList.current.map(item=>(
-                            <Attributeholder onClick={()=>AttributeCaseHandler(item.icon)} key={item.icon}>
-                                <Icon className={item.icon} Iconconfig={{width:"28px",height:"28px",lineheight:"30px"}}></Icon>
-                                <span style={{marginLeft:"5px",fontSize:"13px"}}>{item.desc}</span>
-                            </Attributeholder>  
-                            ))}
-                        </Attribute>
                     </ImageDiv>
                     <ProfileDiv>
-                        <Porfileimage profile="/black.jpg" width="40px" height="40px"></Porfileimage>
+                        <Link  href={{
+                            pathname:`/profile/${content.personal.id}`,
+                            query:{name:"Post"}
+                        }}>
+                           <Porfileimage profile="/yaprak.jpg" width="40px" height="40px"></Porfileimage>
+                        </Link>
                         <div style={{marginLeft:"10px"}}>
-                            <span>Duhan Öztürk</span>
-                            <p style={{color:"#5c6b73",fontSize:"15px"}}>12/08/2020</p>
+                            <span>{content.personal.firstname+" "+content.personal.lastname}</span>
+                            <p style={{color:"#5c6b73",fontSize:"15px"}}>{calculatedate(content.createdAt).time+" "+calculatedate(content.createdAt).express+" ago"}</p>
                         </div>
-                        
                     </ProfileDiv>
                     <ContentDiv>
-                        <h2 style={{marginBottom:"10px",color:"#e63946"}}> The state plans to pay around 20 percent</h2>
-                        <h3 style={{marginBottom:"10px"}}>The structre of the culture in ottoman empire</h3>
-                        <div style={{wordBreak:"break-word"}} id="editor" className="ck-content">
-                            
+                        <h2 style={{marginBottom:"10px",color:"#e63946"}}>{content.title}</h2>
+                        <h3 style={{marginBottom:"10px"}}>{content.subtitle}</h3>
+                        <div style={{wordBreak:"break-word"}} id="editor" className="ck-content ck-content-height">
                             {Parser(Contentdata.content)}
-                            
                         </div>
                     </ContentDiv>
-                </div>
+                    <ToolBar>
+                        <ToolBarIconHolder onClick={()=>toolBarActionHandler("LIKE","Like")} >
+                           <Checkbox  checked={isContentLiked} icon={<FavoriteBorder />} checkedIcon={<Favorite />} />
+                        </ToolBarIconHolder>
+                        <ToolBarIconHolder onClick={()=>toolBarActionHandler("SAVE","Readlater")}>
+                           <Checkbox  checked={isContentSaved} icon={<BookmarkBorder />} checkedIcon={<BookmarkOutlined />} />
+                        </ToolBarIconHolder>
+                        <ToolBarIconHolder onClick={()=>toolBarActionHandler("REPORT")} style={{marginLeft:"auto",backgroundColor:"#ef233c",color:"white",height:"30px",borderRadius:"7px",padding:"10px"}}>
+                           <FlagOutlined></FlagOutlined>
+                           <span style={{marginLeft:"5px"}}>Report</span>
+                        </ToolBarIconHolder>
+                    </ToolBar>
+                </InnerDiv>
             </Exteriorcontent>
-            <hr style={{clear:"right"}}></hr>
-            <p style={{clear:"right"}}>{commentlist.length+ " comments"}</p>
             <Commentdiv>
                 <Commentpart  commentRelationHandler={commentRelationHandler} Editcommenthandler={EditCommentFunc} handleanswer={Answerhandler} spinner={activeproduce} list={commentlist} Producecomment={Produce}></Commentpart>
             </Commentdiv>

@@ -13,13 +13,6 @@ import SelectionPart from "../../components/pages/Main/SelectionPart"
 
 
 
-const CssTextField = makeStyles({
-    root: {
-      '& .MuiSelect-root': {
-        color: "black"
-      }
-    }
-});
 
 const Flexdiv=styled.div`
 max-width:1250px;
@@ -117,7 +110,7 @@ padding:30px;
 const BackgroundHome = styled.div`
 position:relative;
 width:100%;
-height:400px;
+height:420px;
 `
 
 const Trial = styled.div`
@@ -256,11 +249,9 @@ export default function Home({contents,categories}){
         <ThemeProvider theme={themeProp}>
             <div style={{height:`${windowlist.list.length > 0 ? "100vh" : "100%"}`,overflow:windowlist.list.length > 0 ? "hidden": "visible"}}> 
                         
-                        {windowlist.list.length > 0 ?
-                        <Showfollower setlist={()=>setwindowlist(prev=>{return {...prev,list:[]}})} attribute={windowlist.attribute} list={windowlist.list}></Showfollower>
-                        : null}
+                        {windowlist.list.length > 0 && (<Showfollower setlist={()=>setwindowlist(prev=>{return {...prev,list:[]}})} attribute={windowlist.attribute} list={windowlist.list}></Showfollower>)}
                         <BackgroundHome>
-                            <img style={{width:"100%",height:"100%",objectFit:"cover"}} src={"/fourrealman.jpg"}></img>
+                            <img style={{width:"100%",height:"100%",objectFit:"cover"}} src={"/yaprak.jpg"}></img>
                             <Trial></Trial>
                         </BackgroundHome>
                     <Container>
@@ -268,9 +259,8 @@ export default function Home({contents,categories}){
                         <Flexdiv>
                             <ContentDiv>
                                 {
-
                                     contentdata.map((item,index)=>(
-                                        <div style={{padding:"20px",maxWidth:"600px"}}>
+                                        <div key={uniqid()} style={{padding:"20px",maxWidth:"600px",width:"100%"}}>
                                             <Contentcard 
                                                 categoryType={item.Category != null && item.Category.categoryName}
                                                 postId={item.id}

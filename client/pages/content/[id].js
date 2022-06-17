@@ -28,10 +28,8 @@ Content.layout=(children)=>{
 
 export async function getServerSideProps({query}){
     
-  
   try {
 
-        
         const recieve = await axious.all([
         axious.get(`content/Post/${query.id}`),
         axious.get(`comment/${query.id}/false/0/false`)

@@ -23,11 +23,12 @@ function Contentmap({contentlist,relationfunc,norecord,deleteThePost}) {
 
                 contentlist.map((item,index)=>{
                 
-                        return ( <div style={{marginBottom:"25px"}}>
+                        return ( <div  key={uniqid()} style={{marginBottom:"25px"}}>
                                     <Contentcard 
+                                        content={item.personal ? item.content : item.Content.content}
+                                        categoryType={item.personal ? item.Category.categoryName : item.Content.Category.categoryName}
                                         deleteThePost={deleteThePost}
                                         userid={item.personal ? item.personal.id : item.Content.personal.id}
-                                        key={uniqid()}
                                         postId={item.personal? item.id : item.Content.id}
                                         like={item.personal ? item.Like : item.Content.Like}//bu bir obje array
                                         retweet={item.personal ? item.Retweet : item.Content.Retweet}

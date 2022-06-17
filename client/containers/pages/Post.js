@@ -105,7 +105,7 @@ const rejectStyle = {
 };
 
 export default function MyEditor({categories}){
-    console.log(categories)
+
     const editorRef = useRef()
     const {userdata} = useContext(createusercontext);
     const [ editorLoaded, setEditorLoaded ] = useState( false )
@@ -188,12 +188,13 @@ export default function MyEditor({categories}){
 
     },[userdata])
     
-    useEffect(async()=>{
-        const {CKEditor} = require('@ckeditor/ckeditor5-react')
+    useEffect(()=>{
+
+        const {CKEditor} = require("@ckeditor/ckeditor5-react")
         console.log(CKEditor)
         editorRef.current = {
             CKE: CKEditor,
-            ClassicEditor: (await import( "ckeditor5-custom-build/build/ckeditor" )).default
+            ClassicEditor: require( "ckeditor5-custom-build/build/ckeditor" )
         }
 
         setEditorLoaded(true)

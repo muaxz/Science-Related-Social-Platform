@@ -40,7 +40,9 @@ export default function Mainlayout({children}) {
     const [lastrecord,setlastrecord]=useState(0);
     const [lastrecordactive,setlastrecordactive]=useState(false);
     const userouter=useRouter();
-    
+    useEffect(()=>{
+        console.log("RENDERED MAIN LOOOOOOOO")
+    },[])
     useEffect(()=>{
 
         if(userdata.UserId){

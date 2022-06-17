@@ -27,7 +27,6 @@ background-color:${({check})=> check == false ? "#EBEBEB" : ""};
 export default function Navigationtools({optnumber,Navdata,Logout,UserId}){
     
     const {nightmode,setIsNight} = useContext(CreateNightMode)
-    const [toggle,settogle]=useState(false);
 
     let Myoption = null;
     let title = "";
@@ -35,7 +34,7 @@ export default function Navigationtools({optnumber,Navdata,Logout,UserId}){
     if(optnumber == 1){
       title = "Create"
       Myoption = <React.Fragment>
-                   <Link href={"/post"}>
+                   <Link href="/post">
                         <Option1div>
                             <Icon className="far fa-edit" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
                             <div style={{marginLeft:"8px"}}>
@@ -104,7 +103,7 @@ export default function Navigationtools({optnumber,Navdata,Logout,UserId}){
                               <Link href={{pathname:`${myitemobj.href}/${item[myitemobj.idname]}`,query:{name:"Post"}}}>
                                 <div style={{display:"flex",alignItems:"center"}}>
                                      <div>
-                                      <Porfileimage profile={!item.User ?  "warning.png" : "/car.jpg"} width="50px" height="50px"/>
+                                      <Porfileimage profile={"/yaprak.jpg"} width="50px" height="50px"/>
                                      </div>
                                      <Icon className={myitemobj.Icon} Iconconfig={{position:"absolute",top:"40px",right:"10px",color:"white",backcolor:myitemobj.color,width:"30px",height:"30px",lineheight:myitemobj.lh}}></Icon>
                                      {/*<Icon className={"fas fa-star fa-sm"} Iconconfig={{position:"absolute",top:"-8px",right:"-2px",color:"#72ddf7",width:"17px",height:"17px",lineheight:"17px"}}></Icon>*/}

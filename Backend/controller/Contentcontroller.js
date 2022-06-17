@@ -159,17 +159,18 @@ exports.gethome=async(req,res,next)=>{
 
   try {
     //beğenenler,yorumlar
-
     const Contents = await Content.findAll({
       //dizi[1].preferences[0].usercontent.attribute
       where:{
-        CategoryId:category
+        CategoryId:category,
+        phase:"Published"
       },
       attributes:["id","titleimage","title","subtitle","content","createdAt","updatedAt"],
       limit:10,
       offset:offsetValue,
       include:[{
           model:CategoryModel,
+          attributes:["categoryName","id"]
         },
         {
           model:User,
@@ -254,14 +255,21 @@ exports.getCategories = async(req,res,next)=>{
 
 exports.editCategory = async(req,res,next)=>{
     const {name} = req.body;
-    console.log(name)
-    console.log(req.files)
+    const {UserRole} = req.body;
+  
     try {
 
-       await CategoryModel.create({
-          categoryImage:req.files.file.data,
-          categoryName:name
-       })
+        if(UserRole == "Admin"){
+
+            await CategoryModel.create({
+              categoryImage:req.files.file.data,
+              categoryName:name
+          })
+
+          res.json({state:"success"})
+        }
+
+        return res.json({state:"error"})
 
     } catch (error) {
       return next()
@@ -273,19 +281,19 @@ exports.createrelation=async (req,res,next)=>{
   try {
     
     const io = req.app.get("socketio");
-    const {UserId,PostId,attribute,relationtype,UserIdofcontent}=req.body; 
-   
+    const {PostId,attribute,relationtype,UserIdofcontent}=req.body; 
+    const {UserId} = req.userdata 
+    console.log("insideeeee")
    
     if(relationtype == "Destroy"){
 
       await Usercontent.destroy({
-        where:
-        {UserId:UserId,
+        where:{UserId:UserId,
         ContentId:PostId,
         attribute:attribute,
         Contentuserid:PostId,
         Useruserid:UserId,
-      }
+        }
       })
     
     }
@@ -388,7 +396,8 @@ exports.getusercontent=async(req,res,next)=>{
                     as:"personal",
                     attributes:["id","firstname","mainUrl","lastname","Role"]
                   },{
-                    model:CategoryModel
+                    model:CategoryModel,
+                    attributes:["categoryName","id"]
                   }    
                 ]
                 }
@@ -420,29 +429,34 @@ exports.getcontent=async (req,res,next)=>{
   
   try {
     //TODO we need the post which has "published" attribute !!
-    const Mycontent=await Content.findOne({
+    const Mycontent = await Content.findOne({
       where:{id:id},
-      attributes:["id","titleimage","title","subtitle","content"],
+      attributes:["id","titleimage","title","subtitle","content","createdAt"],
       include:[{
-          model:CategoryModel
-        },
-        {
-          model:Comment,
-          include:[
-
-            {
-              model:User,
-              attributes:["id","firstname","lastname","mainUrl","Role"]
-            }
-
-          ],
-          as:"allcomments"
-        },
-        
+          model:CategoryModel,
+          attributes:["categoryName","id"]
+        }, 
         {
           model:User,
           as:"personal",
           attributes:["id","firstname","lastname","mainUrl","Role"],
+        },{
+          model:User,
+          as:"Like",
+          attributes:["id"],
+          through:{
+            where:{attribute:"Like"},
+            attributes:["attribute"]
+          }
+        },
+        {
+          model:User,
+          as:"Readlater",
+          attributes:["id"],
+          through:{
+            where:{attribute:"Readlater"},
+            attributes:["attribute"]
+          }
         }
       ]
     })

@@ -1,5 +1,7 @@
 module.exports = {
-    images:{
-        domains:["firebasestorage.googleapis.com"]
-    }
+    compiler: {
+      // ssr and displayName are configured by default
+      styledComponents: true,
+    },
+    
 }

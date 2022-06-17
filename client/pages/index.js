@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Head from "next/head";
 import Main from "../containers/pages/Home";
 import Mainlayout from "../containers/Layout/mainlayout";
@@ -6,7 +6,7 @@ import axios from 'axios';
 
 
 const Home = ({content,categories})=>{
-    console.log(content)
+  
     return (
        <React.Fragment>
            <Head>

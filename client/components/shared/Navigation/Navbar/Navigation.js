@@ -343,7 +343,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                                                 pathname:`/profile/${item.id}`,
                                                 query:{name:"Post"}
                                                 }}>
-
+        
                                                 <div style={{display:"flex"}}>
                                                     <div>
                                                         <Porfileimage profile="/led.jpg" width="45px" height="45px"/>
@@ -386,9 +386,9 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
 
                     <InputHolder flex2={"flex"} ref={ref} flex={"flex"}>
                         {
-                            Object.keys(Iconobject).map((item)=>{
+                            Object.keys(Iconobject).map((item,index)=>{
                                 return (
-                                    <Iconholder clicked={Iconobject[item].onoff} onClick={()=>Iconclick(item,Iconobject[item].short)}>
+                                    <Iconholder key={index} clicked={Iconobject[item].onoff} onClick={()=>Iconclick(item,Iconobject[item].short)}>
                                         <span style={{display:"block",backgroundColor:"#F0F0F0",borderRadius:"50%",width:"35px",height:"35px",textAlign:"center",lineHeight:Iconobject[item].lineheight}}>
                                             <i className={Iconobject[item].className} style={{color:Count > 0 && Iconobject[item].short == "bell" ? "#d90429" : ""}}></i>
                                             {

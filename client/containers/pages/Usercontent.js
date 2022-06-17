@@ -6,6 +6,7 @@ import {Getusercontent,Createrelationreq,DeletePost} from "../../Api/requests"
 import {createusercontext} from "../../context/Usercontext"
 import useScroll from "../../hooks/Scroll";
 import { Bookmark, BookmarkBorderOutlined, BookmarkBorderRounded, ThumbUpAlt } from '@material-ui/icons';
+import uniqid from "uniqid"
 
 const Exteriordiv=styled.div`
 width:100%;
@@ -30,6 +31,7 @@ flex-wrap:wrap;
 
 const Contentholder=styled.div`
 max-width:340px;
+width:100%;
 height:350px;
 padding-right:25px;
 padding-top:25px;
@@ -51,8 +53,7 @@ export default function Usercontent({params,mydata}){
     const [data,setdata]=useState(mydata);
     const {userdata}=useContext(createusercontext)
     const [stopscrolling,setstopscrolling]=useState(false);
-    const [ordercount,setordercount]=useState(mydata.length);
-    console.log(mydata)
+
     useEffect(() =>{
       
 
@@ -101,7 +102,7 @@ export default function Usercontent({params,mydata}){
             Createrelationreq({
                 UserId:userdata.UserId,
                 PostId:postId,
-                attribute:attribute,
+                attribute:params,
                 relationtype:typeofrelation
             })
         }
@@ -153,7 +154,7 @@ export default function Usercontent({params,mydata}){
                         {
                             data.map((item,index)=>{
                                 return (
-                                <Contentholder key={index}>
+                                <Contentholder key={uniqid()}>
                                     {
                                        params == "Draft" ? <DraftCard draftContent={item}/> : 
 
@@ -161,14 +162,13 @@ export default function Usercontent({params,mydata}){
                                             categoryType={item.Content.Category.categoryName}
                                             foruser={true}
                                             postId={item.Content.id}
-                                            content={item.Content}
-                                            createrelationforsmh={()=>""}
+                                            content={item.Content.content}
+                                            createrelationforsmh={Handlerelation}
                                             showwindow={()=>""}
                                             like={[]}//bu bir obje array
                                             retweet={[]}
                                             comment={[]}
-                                            readlater={[]}
-                                            key={index}//key numarası
+                                            readlater={[]}//key numarası
                                             followeds={[]}
                                             title={item.Content.title}
                                             titleimage={item.Content.titleimage || "/yaprak.jpg"}

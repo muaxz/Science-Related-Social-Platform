@@ -1,7 +1,6 @@
 import React from 'react'
 import Head from "next/head";
 import Mainlayout from "../../containers/Layout/mainlayout";
-import Guardlayout from "../../containers/Layout/routerguard";
 import Usercontent from "../../containers/pages/Usercontent";
 import {Global} from "../../components/styledcomponents/Globalstyles"
 import axios from 'axios';

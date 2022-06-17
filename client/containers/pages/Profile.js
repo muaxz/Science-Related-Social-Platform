@@ -448,8 +448,9 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
 
                                 <Optionbar>
                                     {
-                                        Object.keys(options).map((item)=>(
+                                        Object.keys(options).map((item,index)=>(
                                             <Link  
+                                                key={index}
                                                 href={{
                                                     pathname:`/profile/${query.username}`,
                                                     query:{name:item}

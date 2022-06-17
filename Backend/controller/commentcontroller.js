@@ -119,15 +119,24 @@ exports.getcomments=async (req,res,next)=>{
             for (let i = 0; i < comments.length; i++) {
              
               getSubCategoriesRecursive(comments[i]).then((value)=>{
-              
-                  arr.push(value)
                 
-                if(arr.length == comments.length){
+                  arr[i] = value
+                  var allowGoIn = true;  
+                  for (let j = 0; j < arr.length; j++) {
 
-                    trial=false
-                    Willbesend.data = arr 
-                    return res.json(Willbesend)
-                }
+                      if(arr[j] == undefined){
+
+                          allowGoIn = false
+                      }
+                    
+                  }
+
+                  if(arr.length == comments.length && allowGoIn){
+
+                      trial=false
+                      Willbesend.data = arr 
+                      return res.json(Willbesend)
+                  }
   
             })
           }

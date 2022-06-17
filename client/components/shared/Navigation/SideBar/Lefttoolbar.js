@@ -96,7 +96,7 @@ const Lefttoolbar=({makeactive,myactive})=>{
     
     const {userdata,logged}=useContext(createusercontext);
     const firstlist = useRef([{icon:"fas fa-bookmark",desc:"Kaydedilenler",path:`saved`},{icon:"fas fa-thumbs-up",desc:"Beğenilenler",path:`liked`}])
-    const secondlist = useRef([{icon:"fas fa-edit",desc:"Gönderilerim",path:"/gönderiler"},{icon:"fas fa-pencil-ruler",desc:"Taslaklar",path:`Drafts`}])
+    const secondlist = useRef([{icon:"fas fa-edit",desc:"Gönderilerim",path:"gönderiler"},{icon:"fas fa-pencil-ruler",desc:"Taslaklar",path:`Drafts`}])
     const thirdlist = useRef([{icon:"fa-solid fa-flag",desc:"Raporlar",path:`reportcontrol`},{icon:"fa-solid fa-list-check",desc:"Gonderi Kontrol",path:`postcontrol`},{icon:"fa-solid fa-lock",desc:"Admin Panel",path:`adminPanel`}])
     
 
@@ -132,7 +132,7 @@ const Lefttoolbar=({makeactive,myactive})=>{
                         <hr></hr>
                             <ul style={{width:"100%",padding:"0px",display:"flex",flexDirection:"column",alignItems:myactive ? "flex-start" : "center"}}>
                                 {firstlist.current.map((item,index)=>(
-                                    <Link key={index} href={`/[userıd]/${item.path}`} as={`/${userdata.UserId}/${item.path}`}>
+                                    <Link key={index} href={`/${userdata.UserId}/${item.path}`}>
                                         <Li className="getli" leftbaractive={myactive}>
                                             <Icon className={item.icon} Iconconfig={{width:myactive ? "31px" : "35px",height:myactive ? "31px" : "35px",lineheight:myactive ? "31px" : "35px",backcolor:"#F7FAFF",color:"black"}}></Icon>   
                                             <Spanfordesc    leftbaractive={myactive}>{item.desc}</Spanfordesc> 

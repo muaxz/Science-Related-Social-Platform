@@ -6,7 +6,7 @@ import MainLayout from "../containers/Layout/mainlayout"
 const AdminPanel=()=>{
     
     return (
-
+        
         <AdminComponent/>
     )
 }

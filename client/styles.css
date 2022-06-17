@@ -21,10 +21,16 @@
 
 /* ckeditor5-image/theme/imagestyle.css */
 
+
 .ck-content{
 width:100%;
 min-height: 500px;
 }
+
+.ck-content-height{
+    min-height: 100px
+}
+
 
 .ck-content .imageDisplayNone{
     display: none;

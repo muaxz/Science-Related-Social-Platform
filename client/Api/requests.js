@@ -364,17 +364,18 @@ export const Commentreq=async({contentId,setactiveproduce,setcomment,seterrmsg,s
 
     const{data}=await axios.get(`comment/${contentId}/${last}/${order}/false`);
     //burada tekrardan bütün yorumlar çekiliyor eklenen en son yorum çekilmeli
+    console.log(data)
+ 
     if(Errorhandler({data,seterrmsg,setwindow})){
       
       var Current=[...commentlist];
       var Mydata=[...data.data];
-      console.log(Mydata)
+     
 
       if(last == "true"){
-        var concated = Mydata.concat(Current) 
-        console.log(concated)
-        setcomment([])
-        setcomment(concated);
+        const dataSend = Mydata.concat(Current)
+        console.log(dataSend)
+        setcomment(dataSend);
         
         //push metodu bir diziyi bir dizinin içine pushluyor fakat concat elemanları
 

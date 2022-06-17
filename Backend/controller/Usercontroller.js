@@ -8,8 +8,8 @@ const Comment = require("../models/Commentmodel");
 const reportModel = require("../models/ReportModel")
 const User = require("../models/Usermodel");
 const bcrypt=require("bcrypt");
-const nodemailer = require("nodemailer");
-const Sendemail = require("../MiddleFunctions/SendEmail")
+const Sendemail = require("../MiddleFunctions/SendEmail");
+const CategoryModel = require("../models/CategoryModel")
 
 
 //Searching User
@@ -150,6 +150,10 @@ exports.getuserprofilecontent = async(req,res,next)=>{
         }
       },
       {
+          model:CategoryModel,
+          attributes:["categoryName","id"]
+      },
+      {
         model:Usermodel,
         as:"Readlater",
         attributes:["id"],
@@ -204,15 +208,19 @@ exports.getuserprofilecontent = async(req,res,next)=>{
                 model:Usermodel,
                 as:"Like",
                 attributes:["id","firstname","lastname","mainUrl","Role"],
-                include:{
+                include:[{
                   model:Usermodel,
                   as:"Followed",
                   attributes:["id"]
-                },
+                }],
                 through:{
                   where:{attribute:"Like"},
                   attributes:["attribute"]
                 }
+              },
+              {
+                model:CategoryModel,
+                attributes:["categoryName","id"]
               },
               {
                 model:Usermodel,

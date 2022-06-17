@@ -32,6 +32,10 @@ const User = sequlize.define("User",{
     email:{
         type:Sequlize.STRING,
         allownull:false,
+        unique:true,
+        validate:{
+            isEmail:true,
+        }
     },
     password:{
         type:Sequlize.STRING,

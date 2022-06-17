@@ -2,7 +2,6 @@ import React,{useState,useEffect,useContext,useMemo} from 'react'
 import styled,{keyframes} from "styled-components";
 import {createusercontext} from "../../../context/Usercontext";
 import {Porfileimage,Spinner} from "../../styledcomponents/Globalstyles";
-import {DeletePost} from "../../../Api/requests"
 import Link from "next/link";
 import {useRouter} from "next/router"
 import Icon from "../../UI/Icon"
@@ -11,7 +10,7 @@ import {calculatedate} from "../../../utilsfunc"
 import useClickoutside from "../../../hooks/Clikcoutisde";
 import { TextField ,Button,InputAdornment,Checkbox} from '@material-ui/core';
 import {CreateNightMode} from "../../../context/Nightmode"
-import Image from "next/image"
+import ReactParser from "react-html-parser"
 
 //TODO creating seperate parts of the card
 const Likeanimaton=keyframes`
@@ -32,6 +31,7 @@ const Newcommentanimation=keyframes`
 
 const Outsidediv=styled.div`
 position:relative;
+cursor:pointer;
 height:100%;
 width:100%;
 background-color:${({nightmode})=> !nightmode ? "#faf9f9": "#1F1B24"};
@@ -47,6 +47,11 @@ animation-name:${({animation,timing})=>{
     return ""
 }};
 animation-iteration-count:3;
+&:hover{
+    box-shadow:-5px 5px #5e548e;
+    transform:translate(5px,-5px);
+    transition:0.2s;
+}
 `
 
 const Imagediv=styled.div`
@@ -190,7 +195,7 @@ font-size:13px;
 `
 
 //içerik sayısı,takipçi sayısı,
-function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent,key,deleteThePost}){
+function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent,deleteThePost}){
     
     const[elements,setelements]=useState({
         Like:{
@@ -221,6 +226,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
     const {userdata} = useContext(createusercontext);
     const [isfollowing,setisfollowing] = useState(false);
     const router = useRouter()
+ 
 
 
     var textforopiton="";
@@ -282,11 +288,11 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
        
        setelements(currentelements);
 
-    },[userdata,key])
+    },[userdata])
     
     //like , sign and save operations
     const Countplus=(elementtype)=>{
-
+        
         const currentelements={...elements};
   
        
@@ -356,235 +362,246 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
         setcommentanswer(false)
     }
 
+    const subString=(content)=>{
+
+        const extracted = content.slice(content.indexOf("<p")+1,content.lastIndexOf("</p>"))
+        const cleanText = extracted.replace("p>","")
+        var additional = ""
+        if(cleanText.length > 200){
+            additional = " . . ."
+        }
+
+        return cleanText.substring(0,200)+additional
+    }
+    
     const Calculatetime = useMemo(()=>calculatedate(date),[])
 
 
     return (
-
-       <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={Calculatetime}  iscomment={iscomment}>  
-           {
-              //Comment Left Icon
-              iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-6px",top:"8px",color:"#faf9f9"}}></Icon> : null
-           }
-
-           {
-            //Options on top right
-            !iscomment ?  
-                
-               <div ref={ref}>   
-                    <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
-                    <CategoryDiv>{categoryType}</CategoryDiv>
-                    {
-                        visible ?
-                        <Optionwindow active={true}>
-                           <React.Fragment>
-                                {
-                                       userid !== userdata.UserId &&
-                                            <Optionholder style={{display:userdata.UserId ? "flex" : "none"}}>
-                                                <Icon className="fas fa-user-minus" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
-                                                <div style={{marginLeft:"8px",color:"#757575"}}>
-                                                    <span style={{color:"black",textTransform:"capitalize"}}>{userfirstname}</span>
-                                                    <span style={{color:"black",textTransform:"capitalize",marginLeft:"5px"}}>{usersurname+`'i`}</span>
-                                                    <span style={{marginLeft:"10px"}}>{isfollowing ? "Takipten Cik" : "Takip Et"}</span>
-                                                    <p style={{fontSize:"13px",textTransform:"capitalize"}}>Bu kullanıcıdan gelen bildirimleri görme</p>
-                                                </div>
-                                            </Optionholder>   
-                                }
-                                <Optionholder>
-                                    <Icon className="fas fa-link" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
-                                        <div style={{marginLeft:"8px",color:"#757575"}}>
-                                            <p style={{color:"black"}}>Paylaş</p>
-                                            <p style={{fontSize:"13px"}}>Bağlantı adresini kopyala</p>
-                                        </div>
-                                </Optionholder> 
-                                {
-                                    userid == userdata.UserId && 
-                                        (<Optionholder onClick={()=>deleteThePost(null,postId)}>
-                                            <Icon className="fa-solid fa-trash" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
-                                                <div style={{marginLeft:"8px",color:"#757575"}}>
-                                                    <p style={{color:"black"}}>Delete The Post</p>
-                                                    <p style={{fontSize:"13px"}}>People will not see this post anymore</p>
-                                                </div>
-                                        </Optionholder>)
-                                }
-                            </React.Fragment>
-                            {/*this is for usercontent page*/}
-                            {
-                                foruser ?
-                                <Optionholder onClick={()=>createrelationforsmh(postId,foruseroption,"Destroy",indexnum,foruseroption)}>
-                                    <Icon className="fas fa-trash-alt fa-sm" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
-                                    <div style={{marginLeft:"8px",color:"#757575"}}>
-                                        <p style={{color:"black"}}>Kaldır</p>
-                                        <p style={{fontSize:"13px"}}>{textforopiton}</p>
-                                    </div>
-                                </Optionholder>  
-                                : null
-                            }   
-                        </Optionwindow> 
-                        : null
-                    }
-              </div>
-
-              : 
-              //Comment Report 
-              <div ref={ref}>
-                <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-v" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
+        <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={Calculatetime}  iscomment={iscomment}>  
                 {
-                    visible && 
-                    
-                    (<Optionwindow active={true}>
-                        {
-                            userid == userdata.UserId ? 
-                            <>
-                                <Optionholder onClick={Editcommentactiveness}>
-                                    <Edit></Edit>
-                                    <div style={{marginLeft:"8px"}}>
-                                        <p>Duzenle</p>
-                                    </div>
-                                </Optionholder>
-                                <Optionholder>
-                                    <Delete></Delete>
-                                    <div style={{marginLeft:"8px"}}>
-                                        <p>Yorumu Sil</p>
-                                    </div>
-                                </Optionholder>
-                            </>
-                            :
-                            <Optionholder>
-                                <Feedback></Feedback>
-                                <div style={{marginLeft:"8px"}}>
-                                    <p>Bildir</p>
-                                </div>
-                            </Optionholder>
-
-                        }
-                       
-                   </Optionwindow>)
+                    //Comment Left Icon
+                    iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-6px",top:"8px",color:"#faf9f9"}}></Icon> : null
                 }
-              </div>
-           }
-            <Profilediv>
-                    <div style={{display:'flex',alignItems:"center",height:"100%",marginLeft:"5px"}}>
-                        <Profileimageholder isMainparent={isMainparent} length={Childlength} iscomment={iscomment}>
-                            <Link href={{
-                                pathname:`/profile/${userid}`,
-                                query:{name:"Post"}
-                            }}>
-                              <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={imagefilename ?  `https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${imagefilename}?alt=media&token=${imagetoken}` : "/realuserphoto.png"}></Porfileimage>
-                            </Link>
-                        </Profileimageholder>
-                        <div style={{marginLeft:"10px",fontSize:"15px",textTransform:"capitalize"}}><p style={{color:"black"}}>
-                            <strong>{userfirstname+" "+usersurname}</strong></p>
-                            <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{Calculatetime.time + " " + calculatedate(date).express + " Önce"}</span></div>
-                        </div>           
+
+                {
+                    //Options on top right
+                    !iscomment ?  
+                        
+                    <div ref={ref}>   
+                            <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
+                            <CategoryDiv>{categoryType}</CategoryDiv>
+                            {
+                                visible ?
+                                <Optionwindow active={true}>
+                                <React.Fragment>
+                                        {
+                                            userid !== userdata.UserId &&
+                                                    <Optionholder style={{display:userdata.UserId ? "flex" : "none"}}>
+                                                        <Icon className="fas fa-user-minus" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                                        <div style={{marginLeft:"8px",color:"#757575"}}>
+                                                            <span style={{color:"black",textTransform:"capitalize"}}>{userfirstname}</span>
+                                                            <span style={{color:"black",textTransform:"capitalize",marginLeft:"5px"}}>{usersurname+`'i`}</span>
+                                                            <span style={{marginLeft:"10px"}}>{isfollowing ? "Takipten Cik" : "Takip Et"}</span>
+                                                            <p style={{fontSize:"13px",textTransform:"capitalize"}}>Bu kullanıcıdan gelen bildirimleri görme</p>
+                                                        </div>
+                                                    </Optionholder>   
+                                        }
+                                        <Optionholder>
+                                            <Icon className="fas fa-link" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                                <div style={{marginLeft:"8px",color:"#757575"}}>
+                                                    <p style={{color:"black"}}>Paylaş</p>
+                                                    <p style={{fontSize:"13px"}}>Bağlantı adresini kopyala</p>
+                                                </div>
+                                        </Optionholder> 
+                                        {
+                                            userid == userdata.UserId && 
+                                                (<Optionholder onClick={()=>deleteThePost(null,postId)}>
+                                                    <Icon className="fa-solid fa-trash" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                                        <div style={{marginLeft:"8px",color:"#757575"}}>
+                                                            <p style={{color:"black"}}>Delete The Post</p>
+                                                            <p style={{fontSize:"13px"}}>People will not see this post anymore</p>
+                                                        </div>
+                                                </Optionholder>)
+                                        }
+                                    </React.Fragment>
+                                    {/*this is for usercontent page*/}
+                                    {
+                                        foruser ?
+                                        <Optionholder onClick={()=>createrelationforsmh(postId,foruseroption,"Destroy",indexnum,foruseroption)}>
+                                            <Icon className="fas fa-trash-alt fa-sm" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                            <div style={{marginLeft:"8px",color:"#757575"}}>
+                                                <p style={{color:"black"}}>Kaldır</p>
+                                                <p style={{fontSize:"13px"}}>{textforopiton}</p>
+                                            </div>
+                                        </Optionholder>  
+                                        : null
+                                    }   
+                                </Optionwindow> 
+                                : null
+                            }
                     </div>
-            </Profilediv>
-           <SecondPart foruser={foruser}>
-               {
-                   iscomment ? null : 
 
-                    <Imageholder>
-                        <Imagediv>
-                                <Image style={{borderRadius:"7px"}} objectFit="cover" src={titleimage} width={400} height={300}></Image>
-                        </Imagediv>
-                    </Imageholder>
-               }
-                <Contentholder iscomment={iscomment}>
-                    {
-                        iscomment ? 
-                        
-                            <Contentdiv iscomment={iscomment}>     
-                                {
-                                    editcomment ?
-
-                                    <TextField 
-                                    InputProps={{endAdornment:
-                                        <InputAdornment style={{paddingLeft:"10px"}}>
-                                            <Button disabled={loading_commentedit} startIcon={loading_commentedit ? <Spinner></Spinner> : null} onClick={()=>Editcommentactiveness("save")} style={{backgroundColor:loading_commentedit ? "lightgrey":"#e63946",color:"white",textTransform:"capitalize",position:"relative",bottom:"10px",marginRight:"5px"}} variant="contained" size="small">
-                                                Kaydet
-                                            </Button>
-                                            <Button onClick={()=>Editcommentactiveness("cancel")} color="primary" style={{textTransform:"capitalize",position:"relative",bottom:"10px"}} variant="contained" size="small">
-                                                iptal
-                                            </Button>
-                                        </InputAdornment>}} 
-                                        multiline
-                                        style={{width:"100%"}} 
-                                        onChange={(e)=>setcommenteditvalue(e.target.value)} 
-                                        value={commenteditvalue}>
-                                    </TextField> 
-
-                                    : 
-                                     <div>
-                                         {
-                                             isMainparent ? null : <span style={{backgroundColor:"#43aa8b",borderRadius:"7px",color:"white",padding:"10px",fontSize:"15px"}}><b>Answer To : {Answer_To}</b></span>
-                                         }
-                                        <p style={{textAlign:"left",wordBreak:"break-word",marginTop:isMainparent ? "0px" : "20px"}}>{commenteditvalue}</p> 
-                                     </div>
-                                     
-                                }
-        
-                            </Contentdiv>   
-
-                            : 
-
-                           <Contentdiv iscomment={iscomment}>
-                                <h3 style={{marginBottom:"10px",color:"#A70909"}}>{title}</h3>
-                                <Link href="/content/[id]" as={`/content/${postId}`}>
-                                    <p style={{textAlign:"left",wordBreak:"break-word",cursor:"pointer",color:nightmode ? "white" : "black"}}>While the Crypto Professors may set specific requirements for some....</p> 
-                                </Link>
-                            </Contentdiv>
-
-                        
-                    }
-                      
-                    <Toolbar foruser={foruser}>
+                    : 
+                    //Comment Report 
+                    <div ref={ref}>
+                        <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-v" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
                         {
-                           !iscomment && 
-                           (<İconholder howercolor="green" style={{flex:1}}>
-                                <Icons  howercolor="0, 255, 0, 0.2" ismarked={elements.reshow.ismarked} animation={elements.reshow.animation} color={"green"}  onClick={()=>Countplus("reshow")}  className="fas fa-retweet fa-sm"></Icons>
-                                <Spanfor onClick={()=>showwindow(elements["reshow"].array,"Reshow")}>{elements.reshow.number}</Spanfor>
-                           </İconholder>)
+                            visible && 
+                            
+                            (<Optionwindow active={true}>
+                                {
+                                    userid == userdata.UserId ? 
+                                    <>
+                                        <Optionholder onClick={Editcommentactiveness}>
+                                            <Edit></Edit>
+                                            <div style={{marginLeft:"8px"}}>
+                                                <p>Duzenle</p>
+                                            </div>
+                                        </Optionholder>
+                                        <Optionholder>
+                                            <Delete></Delete>
+                                            <div style={{marginLeft:"8px"}}>
+                                                <p>Yorumu Sil</p>
+                                            </div>
+                                        </Optionholder>
+                                    </>
+                                    :
+                                    <Optionholder>
+                                        <Feedback></Feedback>
+                                        <div style={{marginLeft:"8px"}}>
+                                            <p>Bildir</p>
+                                        </div>
+                                    </Optionholder>
+
+                                }
+                            
+                        </Optionwindow>)
                         }
-                        <İconholder howercolor="red" style={{flex:1}}>
-                            <Icons  howercolor="255, 0, 0,0.2" ismarked={elements.Like.ismarked} animation={elements.Like.animation} color={"#C72121"}  onClick={()=>Countplus("Like")} className="fas fa-heart fa-sm"></Icons>
-                            <Spanfor  onClick={()=>showwindow(elements["Like"].array,"Like")} >{elements.Like.number}</Spanfor>
-                        </İconholder>
-                        <İconholder style={{flex:8}}>
+                    </div>
+                }
+                    <Profilediv>
+                            <div style={{display:'flex',alignItems:"center",height:"100%",marginLeft:"5px"}}>
+                                <Profileimageholder isMainparent={isMainparent} length={Childlength} iscomment={iscomment}>
+                                    <Link href={{
+                                        pathname:`/profile/${userid}`,
+                                        query:{name:"Post"}
+                                    }}>
+                                    <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={imagefilename ?  `https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${imagefilename}?alt=media&token=${imagetoken}` : "/realuserphoto.png"}></Porfileimage>
+                                    </Link>
+                                </Profileimageholder>
+                                <div style={{marginLeft:"10px",fontSize:"15px",textTransform:"capitalize"}}><p style={{color:"black"}}>
+                                    <strong>{userfirstname+" "+usersurname}</strong></p>
+                                    <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{Calculatetime.time + " " + calculatedate(date).express + " ago"}</span></div>
+                                </div>           
+                            </div>
+                    </Profilediv>
+                <SecondPart foruser={foruser}>
+                    {
+                        iscomment ? null : 
+
+                            <Imageholder>
+                                <Imagediv>
+                                        <Img style={{borderRadius:"7px"}} src={titleimage} ></Img>
+                                </Imagediv>
+                            </Imageholder>
+                    }
+                        <Contentholder iscomment={iscomment}>
                             {
                                 iscomment ? 
                                 
-                                <AddComment onClick={()=>setcommentanswer(!commentanswer)}  style={{color:"grey",cursor:"pointer"}}/>
+                                    <Contentdiv iscomment={iscomment}>     
+                                        {
+                                            editcomment ?
 
-                                :
+                                            <TextField 
+                                            InputProps={{endAdornment:
+                                                <InputAdornment style={{paddingLeft:"10px"}}>
+                                                    <Button disabled={loading_commentedit} startIcon={loading_commentedit ? <Spinner></Spinner> : null} onClick={()=>Editcommentactiveness("save")} style={{backgroundColor:loading_commentedit ? "lightgrey":"#e63946",color:"white",textTransform:"capitalize",position:"relative",bottom:"10px",marginRight:"5px"}} variant="contained" size="small">
+                                                        Kaydet
+                                                    </Button>
+                                                    <Button onClick={()=>Editcommentactiveness("cancel")} color="primary" style={{textTransform:"capitalize",position:"relative",bottom:"10px"}} variant="contained" size="small">
+                                                        iptal
+                                                    </Button>
+                                                </InputAdornment>}} 
+                                                multiline
+                                                style={{width:"100%"}} 
+                                                onChange={(e)=>setcommenteditvalue(e.target.value)} 
+                                                value={commenteditvalue}>
+                                            </TextField> 
 
-                                <Icons className="fas fa-comment-alt fa-sm"></Icons>
+                                            : 
+                                            <div>
+                                                {
+                                                    isMainparent ? null : <span style={{backgroundColor:"#43aa8b",borderRadius:"7px",color:"white",padding:"10px",fontSize:"15px"}}><b>Answer To : {Answer_To}</b></span>
+                                                }
+                                                <p style={{textAlign:"left",wordBreak:"break-word",marginTop:isMainparent ? "0px" : "20px"}}>{commenteditvalue}</p> 
+                                            </div>
+                                            
+                                        }
+                
+                                    </Contentdiv>   
+
+                                    : 
+
+                            <Link href="/content/[id]" as={`/content/${postId}`}>    
+                                <Contentdiv iscomment={iscomment}>
+                                        <h3 style={{marginBottom:"10px",color:"#A70909"}}>{title}</h3>
+                                        <p style={{textAlign:"left",wordBreak:"break-word",cursor:"pointer",color:nightmode ? "white" : "black"}}>{ReactParser(subString(content))}</p>   
+                                </Contentdiv>
+                             </Link>      
+
+                                
                             }
-                            <span style={{marginLeft:"5px",color:""}}>{comment.length}</span>
-                        </İconholder>
-                        {
-                            !iscomment && 
-                            (<İconholder style={{flex:4,display:"flex",justifyContent:"flex-end",color:"grey"}}>
-                                <Icons  ismarked={elements.Readlater.ismarked} animation={elements.Readlater.animation} color={"black"} onClick={()=>Countplus("Readlater")}  className="fas fa-bookmark"></Icons>
-                            </İconholder>)
-                        }
-                    </Toolbar>
-                    {
-                        commentanswer &&
-                        (<Inputholder>
-                            <TextField 
-                                value={answervalue}
-                                onChange={(e)=>setanswervalue(e.target.value)}
-                                InputProps={{
-                                    style:{cursor:"pointer"},
-                                    endAdornment: <InputAdornment onClick={Makeacomment} style={{color:answervalue.length > 0 ?  "#e63946": "grey"}} position="end"><Send></Send></InputAdornment>,
-                                }}
-                                label="Yoruma Cevap Ver..." size="small" variant="outlined">
-                            </TextField>
-                        </Inputholder>)
-                    }
-                </Contentholder>
-           </SecondPart>
-       </Outsidediv>
+                            
+                            <Toolbar foruser={foruser}>
+                                {
+                                !iscomment && 
+                                (<İconholder howercolor="green" style={{flex:1}}>
+                                        <Icons  howercolor="0, 255, 0, 0.2" ismarked={elements.reshow.ismarked} animation={elements.reshow.animation} color={"green"}  onClick={()=>Countplus("reshow")}  className="fas fa-retweet fa-sm"></Icons>
+                                        <Spanfor onClick={()=>showwindow(elements["reshow"].array,"Reshow")}>{elements.reshow.number}</Spanfor>
+                                </İconholder>)
+                                }
+                                <İconholder howercolor="red" style={{flex:1}}>
+                                    <Icons  howercolor="255, 0, 0,0.2" ismarked={elements.Like.ismarked} animation={elements.Like.animation} color={"#C72121"}  onClick={()=>Countplus("Like")} className="fas fa-heart fa-sm"></Icons>
+                                    <Spanfor  onClick={()=>showwindow(elements["Like"].array,"Like")} >{elements.Like.number}</Spanfor>
+                                </İconholder>
+                                <İconholder style={{flex:8}}>
+                                    {
+                                        iscomment ? 
+                                        
+                                        <AddComment onClick={()=>setcommentanswer(!commentanswer)}  style={{color:"grey",cursor:"pointer"}}/>
+
+                                        :
+
+                                        <Icons className="fas fa-comment-alt fa-sm"></Icons>
+                                    }
+                                    <span style={{marginLeft:"5px",color:""}}>{comment.length}</span>
+                                </İconholder>
+                                {
+                                    !iscomment && 
+                                    (<İconholder style={{flex:4,display:"flex",justifyContent:"flex-end",color:"grey"}}>
+                                        <Icons  ismarked={elements.Readlater.ismarked} animation={elements.Readlater.animation} color={"black"} onClick={()=>Countplus("Readlater")}  className="fas fa-bookmark"></Icons>
+                                    </İconholder>)
+                                }
+                            </Toolbar>
+                            {
+                                commentanswer &&
+                                (<Inputholder>
+                                    <TextField 
+                                        value={answervalue}
+                                        onChange={(e)=>setanswervalue(e.target.value)}
+                                        InputProps={{
+                                            style:{cursor:"pointer"},
+                                            endAdornment: <InputAdornment onClick={Makeacomment} style={{color:answervalue.length > 0 ?  "#e63946": "grey"}} position="end"><Send></Send></InputAdornment>,
+                                        }}
+                                        label="Yoruma Cevap Ver..." size="small" variant="outlined">
+                                    </TextField>
+                                </Inputholder>)
+                            }
+                        </Contentholder>
+                </SecondPart>
+            </Outsidediv>
     )
 }
 

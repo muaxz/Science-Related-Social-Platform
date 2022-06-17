@@ -1,15 +1,13 @@
 import React from 'react'
 import Head from "next/head";
-import router from "next/router"
 import Mainlayout from "../../containers/Layout/mainlayout";
-import Guardlayout from "../../containers/Layout/routerguard";
 import Usercontent from "../../containers/pages/Usercontent";
 import axios from 'axios';
 
 
 export default function Liked({error,content}){
     
-    if(error) return null
+   
     return (
         <React.Fragment>
             <Head>
