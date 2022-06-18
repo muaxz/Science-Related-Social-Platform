@@ -22,24 +22,13 @@ export default function PostPage({categories}){
 
 export async function getStaticProps(context) {
   
-  try {
-
+  
     const {data} = await axios.get(`http://localhost:3001/content/getCategories`)
 
     return {
-      
       props: {categories:data.data},// every hour
-      fallback:false
+      revalidate:60,
     }
-
-  } catch (error) {
-
-    return {
-        props: {error:true},// every hour
-        fallback:false
-    }
-
- }
 
 }
 
