@@ -34,7 +34,10 @@ export async function getStaticProps(context) {
 
   } catch (error) {
 
-    return {redirect:{destination:"/500"}};
+    return {
+        props: {error:true},// every hour
+        fallback:false
+    }
 
  }
 
