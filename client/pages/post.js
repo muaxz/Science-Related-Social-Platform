@@ -29,7 +29,7 @@ export async function getStaticProps(context) {
     return {
       
       props: {categories:data.data},// every hour
-      
+      fallback:false
     }
 
   } catch (error) {
