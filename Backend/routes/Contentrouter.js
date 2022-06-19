@@ -18,6 +18,7 @@ router.post("/deleteReport",verifyUser,controller.reportDeletion)// EDITOR STUFF
 router.get("/getModContents/:searchValue/:category/:order",verifyUser,controller.getAllContentsForModStuff)
 router.get("/Post/:id",controller.getcontent);
 router.post("/uploadContentImage",controller.uploadContentImage)
+router.get("/getContentForPost/:contentId",verifyUser,controller.getContentForPostDraft)
 //router.delete("/delete/:id",controller.delete)
 //router.post("/update/:id",controller.delete)
 

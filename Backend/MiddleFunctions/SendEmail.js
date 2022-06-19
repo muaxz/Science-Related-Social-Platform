@@ -11,14 +11,13 @@ module.exports = async (targetEmail,payload)=>{
         port:587,
         auth: {
           user:"bexsd@hotmail.com", // generated ethereal user
-          pass:"22312231a", // generated ethereal password
+          pass:"koy123456aA", // generated ethereal password
         },
       });
       const readHtml = fs.readFileSync(__dirname+"/email.handlebars","utf8")
       
       const template = handlebar.compile(readHtml)
 
-     
 
       const htmlContent = template({firstname:payload.firstname,surname:payload.surname,generatedLink:payload.generatedLink})
     

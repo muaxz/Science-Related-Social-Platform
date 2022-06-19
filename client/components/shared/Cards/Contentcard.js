@@ -48,7 +48,7 @@ animation-name:${({animation,timing})=>{
 }};
 animation-iteration-count:3;
 &:hover{
-    box-shadow:-5px 5px #5e548e;
+    box-shadow:-5px 5px #00afb9;
     transform:translate(5px,-5px);
     transition:0.2s;
 }

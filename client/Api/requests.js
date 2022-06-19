@@ -207,11 +207,11 @@ export const resigterreq=async({setBackendState,userdata,setactive,seterrmsg})=>
   }
 }
 //Content produce
-export const producereq=async({contentdata,seterrmsg,setwindow,router,typeofsubmit})=>{
+export const producereq=async({contentdata,seterrmsg,setwindow,router,typeofsubmit,draftContentId})=>{
 
   try{
     
-    const{data}=await axios.post("/content/produce",{...contentdata,processtype:typeofsubmit})
+    const{data}=await axios.post("/content/produce",{...contentdata,processtype:typeofsubmit,draftContentId:draftContentId})
     
     if(Errorhandler({data,setwindow,seterrmsg})){
         setwindow(true);
@@ -663,9 +663,7 @@ export const Commentanswerreq = async({UppercommentId,Answer,UserId,seterrmsg,se
     
     if(Errorhandler({data,seterrmsg,setwindow})){   
        const onlyOnecomment = await axios.get(`comment/${MainparentID}/false/10/true`)
-       console.log(onlyOnecomment)
        const copyofcommentlist = [...commentlist]
-       console.log(copyofcommentlist)
        const Indexofelement = copyofcommentlist.findIndex((item)=>item.id == MainparentID)
        copyofcommentlist.splice(Indexofelement,1,onlyOnecomment.data.data[0])
        setcommentlist(copyofcommentlist)

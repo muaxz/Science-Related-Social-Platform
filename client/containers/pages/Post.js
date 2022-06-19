@@ -104,7 +104,7 @@ const rejectStyle = {
   borderColor: '#ff1744'
 };
 
-export default function MyEditor({categories}){
+export default function MyEditor({categories,content}){
 
     const editorRef = useRef()
     const {userdata} = useContext(createusercontext);
@@ -112,28 +112,28 @@ export default function MyEditor({categories}){
     const { CKE, ClassicEditor } = editorRef.current || {}
     const[errormsg,seterror] = useState(false);
     const[windowactive,setwindowactive] = useState(false);
-    const[titleImageSrc,setTitleImageSrc] = useState(null);
+    const[titleImageSrc,setTitleImageSrc] = useState(content.titleimage || null);
     const windowInformRef = useRef("");
     const windowTypeRef = useRef("");
     const [contentpart,setcontentpart] = useState({
       content:{
-        value:"",
+        value:content.content || "",
         isValid:true
       },
       title:{
-        value:"",
+        value:content.title || "",
         isValid:true
       },
       subtitle:{
-        value:"",
+        value:content.subtitle || "",
         isValid:true
       },
       titlemainUrl:{
-        value:"",
+        value:content.titleimage || "",
         isValid:true
       },
       catagory:{
-        value:"",
+        value:content.CategoryId || "",
         isValid:true
       },
       UserId:{
@@ -191,7 +191,7 @@ export default function MyEditor({categories}){
     useEffect(()=>{
 
         const {CKEditor} = require("@ckeditor/ckeditor5-react")
-        console.log(CKEditor)
+        
         editorRef.current = {
             CKE: CKEditor,
             ClassicEditor: require( "ckeditor5-custom-build/build/ckeditor" )
@@ -287,6 +287,7 @@ export default function MyEditor({categories}){
           seterrmsg:seterror, 
           typeofsubmit:typeofsubmit,
           setwindow:setwindowactive, 
+          draftContentId:content.id
         })
     
     }
@@ -309,7 +310,7 @@ export default function MyEditor({categories}){
                               labelId="demo-simple-select-label"
                               id="demo-simple-select"
                               inputProps={{ 'aria-label': 'Without label' }}
-                              defaultValue="default"
+                              defaultValue={contentpart["catagory"].value || "default"}
                           >
                               <MenuItem selected disabled value="default">
                                   Choose A Topic
@@ -337,10 +338,10 @@ export default function MyEditor({categories}){
             <RightPart>
                 <div>
                     <InputHolder>
-                        <TextField error={!contentpart["title"].isValid} onChange={(e)=>changeHandler(e,"","title")} InputProps={{style:{color:"black"},endAdornment: <InputAdornment position="end"><Create style={{color:"black"}}></Create></InputAdornment>,}} helperText="This field is mandatory for people to have a better general idea about your post." label="Title" size="small" variant="outlined" fullWidth></TextField>
+                        <TextField value={contentpart["title"].value} error={!contentpart["title"].isValid} onChange={(e)=>changeHandler(e,"","title")} InputProps={{style:{color:"black"},endAdornment: <InputAdornment position="end"><Create style={{color:"black"}}></Create></InputAdornment>,}} helperText="This field is mandatory for people to have a better general idea about your post." label="Title" size="small" variant="outlined" fullWidth></TextField>
                     </InputHolder>
                     <InputHolder>
-                        <TextField onChange={(e)=>changeHandler(e,"","subtitle")} InputProps={{style:{color:"black"},endAdornment: <InputAdornment position="end"><Create style={{color:"black"}}></Create></InputAdornment>,}} helperText="Optional field" label="Sub Title" size="small" variant="outlined" fullWidth></TextField>
+                        <TextField value={contentpart["subtitle"].value} onChange={(e)=>changeHandler(e,"","subtitle")} InputProps={{style:{color:"black"},endAdornment: <InputAdornment position="end"><Create style={{color:"black"}}></Create></InputAdornment>,}} helperText="Optional field" label="Sub Title" size="small" variant="outlined" fullWidth></TextField>
                     </InputHolder>
                     <InputHolder>
                           <Dropzone  onDrop={UploadTitleImage}>
@@ -368,7 +369,7 @@ export default function MyEditor({categories}){
                                   //toolbar:['heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList']
                               }} 
                             onChange={(event,editör)=>changeHandler(event,editör,"content")}
-                            value={contentpart.content}
+                            value={contentpart.content.value}
                             data={contentpart["content"].value}
                             editor={ClassicEditor}
                           />

@@ -14,50 +14,64 @@ const {v4} = require("uuid")
 
 exports.produce=async (req,res,next)=>{
  
-  const {title,content,subtitle,catagory,UserId,processtype,titlemainUrl}=req.body;
- 
+  const {title,content,subtitle,catagory,processtype,titlemainUrl,draftContentId}=req.body;
+  const {UserId} = req.userdata;
+  
+  var mainContent = {
+      title:title,
+      titleimage:titlemainUrl,
+      subtitle:subtitle,
+      content:content,
+      phase:processtype,
+      CategoryId:catagory,
+      UserforuserId:UserId,
+      UserforcontentId:UserId,
+  }
 
   try {  
- 
-    const Obj = await Content.create({
-        title:title,
-        titleimage:titlemainUrl,
-        subtitle:subtitle,
-        content:content,
-        phase:processtype,
-        CategoryId:catagory,
-        UserforuserId:UserId,
-        UserforcontentId:UserId,
-    })
+    
+      if(draftContentId){
+
+          await Content.update(mainContent,{where:{id:draftContentId}})
+
+          return res.json({state:"success"});
+      }
+
+
+      const createdPost = await Content.create(mainContent)
 
     //....................
     //produce için değil editör postu public yaptıgında gelen bildirim bu olucak
-   
-    const Followerofcontentuser = await UserUser.findAll({
-      where:{
-      FollowedId:UserId,
-      Active:true
-    }})
-    
-    if(Followerofcontentuser.length > 0){
+    if(draftContentId){
 
-        const Editdarray = [];
-
-        for (let i = 0; i < Followerofcontentuser.length; i++){
+        const Followerofcontentuser = await UserUser.findAll({
+          where:{
+          FollowedId:UserId,
+          Active:true
+        }})
+        
+        if(Followerofcontentuser.length > 0){
     
-            Editdarray[i] = Followerofcontentuser[i].FollowerId; //burada gelen her bir objenin followed ıd sini yeni bir arraya koyuyoruz
+            const Editdarray = [];
     
+            for (let i = 0; i < Followerofcontentuser.length; i++){
+        
+                Editdarray[i] = Followerofcontentuser[i].FollowerId; //burada gelen her bir createdPostenin followed ıd sini yeni bir arraya koyuyoruz
+        
+            }
+            //taker ıd burada "current" kişiyi takip edenlerin bildirimi "post notification" açık olan kişiler.
+            await Notification.create({
+                    attribute:"Post",
+                    TakerId:Editdarray,
+                    ContentId:createdPost.dataValues.id,
+                    UserId:UserId,
+                })
+                
+      
         }
-        //taker ıd burada "current" kişiyi takip edenlerin bildirimi "post notification" açık olan kişiler.
-        await Notification.create({
-                attribute:"Post",
-                TakerId:Editdarray,
-                ContentId:Obj.dataValues.id,
-                UserId:UserId,
-            })
-            
-  
+
     }
+    
   
     
     return res.json({state:"success"});
@@ -65,6 +79,10 @@ exports.produce=async (req,res,next)=>{
   }catch(err){
      return next();
   }
+}
+
+exports.updateDraft = async(req,res,next)=>{
+
 }
 
 exports.destroyContent = async(req,res,next)=>{
@@ -238,7 +256,7 @@ exports.gethome=async(req,res,next)=>{
 }
 
 exports.getCategories = async(req,res,next)=>{
-
+   
    try {
 
      const categories = await CategoryModel.findAll()
@@ -377,7 +395,10 @@ exports.getusercontent=async(req,res,next)=>{
                   where:{
                     phase:"Draft",
                     Userforuserid:id,
-                  }
+                  },
+                  attributes:["title","id"],
+                  limit:10,
+                  offset:parseInt(order),
               })  
           }
           else{
@@ -425,12 +446,13 @@ exports.getusercontent=async(req,res,next)=>{
 //namechange
 exports.getcontent=async (req,res,next)=>{
 
-  const {id} = req.params;
+  const {id,phaseCase} = req.params;
+  
   
   try {
     //TODO we need the post which has "published" attribute !!
     const Mycontent = await Content.findOne({
-      where:{id:id},
+      where:{id:id,phase:"Published"},
       attributes:["id","titleimage","title","subtitle","content","createdAt"],
       include:[{
           model:CategoryModel,
@@ -611,6 +633,34 @@ exports.uploadContentImage = async (req,res,next)=>{
   }
 
 }
+
+exports.getContentForPostDraft = async(req,res,next)=>{
+  const {contentId} = req.params  
+  const {UserId} = req.userdata
+  console.log("log belowasdddddddddddddd")
+
+  try {
+    //the owner of this post should be user himself
+    const draftContent = await Content.findOne({
+      where:{
+        id:contentId,
+        UserforcontentId:UserId,
+        phase:"Draft"
+      }  
+    })
+
+    console.log(draftContent)
+
+  
+    return res.json({content:draftContent})
+
+  } catch (error) {
+      return next()
+  }
+
+}
+
+
 
 
 

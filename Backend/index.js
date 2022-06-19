@@ -52,7 +52,7 @@ app.use(fileupload())
 app.set("socketio",io)
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
-app.use(cors({origin:"http://localhost:3000",credentials:true,exposedHeaders:"csrf-token"}));
+app.use(cors({origin:["http://localhost:3000","https://mynextrepo.vercel.app"],credentials:true,exposedHeaders:"csrf-token"}));
 
 
 //routes.............................................
@@ -84,7 +84,7 @@ app.use("/notification",Notifyrouter);
 app.use("/",Refreshrouter)
 
 app.use("*",(req,res)=>{
-  
+    
     if(req.errorType == "404"){
 
         return res.json({error:"Page Not Found!",state:404})
