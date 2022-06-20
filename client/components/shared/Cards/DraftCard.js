@@ -37,7 +37,7 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-width:100%;
+width:80%;
 height:100%;
 top:50%;
 left:50%;

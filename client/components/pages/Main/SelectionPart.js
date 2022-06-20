@@ -19,6 +19,7 @@ overflow-x:hidden;
 const Controllers = styled.div`
 position:absolute;
 top:50%;
+cursor:pointer;
 transform:translateY(-50%);
 left:${({PositionX})=>PositionX}px;
 right:${({PositionRight})=>PositionRight}px;
@@ -30,29 +31,28 @@ z-index:150;
 display:flex;
 justify-content:center;
 align-items:center;
-opacity:0;
+opacity:1;
 `
 
 const InnerDiv = styled.div`
 position:relative;
+transition:0.7s;
+transition-timing-function:ease-in-out;
 border-radius:10px;
+left:${({slideValue})=>slideValue+"%"};
 height:100%;
 width:100%;
 display:flex;
 padding:10px;
 align-items:center;
-&:hover ${Controllers}{
-opacity:1;
-}
 `
-
 
 const BoxName = styled.span`
 position:absolute;
 top:calc(50% + 25px);
 color:white;
 font-weight:bold;
-opacity:${({activeSelect})=>!activeSelect ? "0" : "1"};
+opacity:1;
 left:10px;
 transition-duration:0.4s;
 `
@@ -115,6 +115,7 @@ function Selection({listContent,setListContent,setSelectedKey,keyName,categories
 
     const [error,seterror] = useState(null)
     const [selectionList,setselectionList] = useState({})
+    const [slideValue,setSlideValue] = useState(0)
    
 
     useEffect(()=>{
@@ -148,7 +149,6 @@ function Selection({listContent,setListContent,setSelectedKey,keyName,categories
         
     }
 
-
     const Selectionhander = (keyOfthisComponent) =>{
         
        
@@ -168,24 +168,33 @@ function Selection({listContent,setListContent,setSelectedKey,keyName,categories
         }
        
        
-     }
+    }
+    
+    const slideHandler = (where)=>{
+
+        if(where == "pullRight" && slideValue < 0) 
+        setSlideValue(prev=>prev+99.2)
+        else if(where == "pullLeft" && slideValue > -99.2)
+        setSlideValue(prev=>prev-99.2)
+    }
 
 
     return ( <ExteriorDiv>
-               <InnerDiv>
-                    <Controllers PositionRight={""} PositionX={20}>
+                   <Controllers  onClick={()=>slideHandler("pullRight")} PositionRight={""} PositionX={20}>
                        <ArrowLeft/>
                     </Controllers>
-                    <Controllers PositionRight={20} PositionX={""}>
+                    <Controllers onClick={()=>slideHandler("pullLeft")} PositionRight={20} PositionX={""}>
                        <ArrowRight/>
                     </Controllers>
+               <InnerDiv slideValue={slideValue}>
+                   
                    {
                        Object.keys(selectionList).map((item,index)=>{
-                           return (<SectionBoxes onClick={()=>Selectionhander(item)} activeSelect={selectionList[item].selected} key={index}>
-                               <Cover></Cover>
-                               <ImgInBox src={`data:image/png;base64,${selectionList[item].display}`}></ImgInBox>
-                               <BoxName activeSelect={selectionList[item].selected}>{item}</BoxName>
-                           </SectionBoxes>)
+                        return (<SectionBoxes onClick={()=>Selectionhander(item)} activeSelect={selectionList[item].selected} key={index}>
+                                    <Cover></Cover>
+                                    <ImgInBox src={`data:image/png;base64,${selectionList[item].display}`}></ImgInBox>
+                                    <BoxName activeSelect={selectionList[item].selected}>{item}</BoxName>
+                               </SectionBoxes>)
                        })
                    }
                </InnerDiv>

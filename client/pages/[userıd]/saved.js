@@ -27,7 +27,7 @@ export async function getServerSideProps({query,req}){
 
         if(req.headers.cookie){
 
-            var {data} = await axios.get(`http://localhost:3001/content/usercontent/Readlater/${query.userıd}/10`,{headers:{Cookie:req.headers.cookie}})
+            var {data} = await axios.get(`http://localhost:3001/content/usercontent/Readlater/${query.userıd}/0`,{headers:{Cookie:req.headers.cookie}})
 
             if(data && data.error){
 

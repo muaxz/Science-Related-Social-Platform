@@ -271,15 +271,15 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             value:{
                 Whenfollow:{
                     value:editdata.Notification.Whenfollow,
-                    msg:"Biri takip ettiginde"
+                    msg:"When someone follows you"
                 },
                 Whenlike:{
                     value:editdata.Notification.Whenlike,
-                    msg:"Biri icerik begendiginde"
+                    msg:"When someone likes your content"
                 },
                 Whencomment:{
                     value:editdata.Notification.Whencomment,
-                    msg:"Biri yorum yaptiginda"
+                    msg:"When someone make a comment for your"
                 }
             },
             label:"",
@@ -670,7 +670,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                                                 var subelements = Object.keys(userinfo[item].value).map((subitem,subindex)=>(//sub values of noitification phase
                                                     <Inputholder displayed={userinfo[item].activate}>  
                                                         <div style={{display:"flex",justifyContent:"space-between"}}>
-                                                            <p style={{textTransform:"capitalize"}}>{userinfo[item]["value"][subitem]["msg"]}</p>
+                                                            <p>{userinfo[item]["value"][subitem]["msg"]}</p>
                                                             <Switch onColor='#ff002b' andleDiameter={20} onChange={()=>Inputhandler(item,"",subitem)} checkedIcon={true} uncheckedIcon={true} checked={userinfo[item]["value"][subitem]["value"]}></Switch>
                                                         </div>
                                                     </Inputholder>))

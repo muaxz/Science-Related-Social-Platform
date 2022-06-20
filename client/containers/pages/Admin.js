@@ -67,6 +67,7 @@ const AdminPage=()=>{
         if(index === 0) return <EditCategory/>
         if(index === 1) return <EditModerator/>
     }
+    
 
     return (
         <OuterDiv>

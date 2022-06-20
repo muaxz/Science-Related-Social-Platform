@@ -37,7 +37,7 @@ export async function getServerSideProps(context){
           } 
       }
   
-      const {data} = await axios.get(`http://localhost:3001/content/getCategories`)
+      const {data} = await axios.get(`http://localhost:3001/content/getCategories/false`)
       dataProps.categories = data.data
   
       return {

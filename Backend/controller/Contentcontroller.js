@@ -256,10 +256,18 @@ exports.gethome=async(req,res,next)=>{
 }
 
 exports.getCategories = async(req,res,next)=>{
-   
+   const {needImage} = req.params
+   var excludedProporties = []
+   excludedProporties[0] = "categoryImage" 
+
    try {
 
-     const categories = await CategoryModel.findAll()
+     if(needImage == "true") excludedProporties[0] = ""
+
+
+     const categories = await CategoryModel.findAll({
+      attributes:{exclude:excludedProporties}
+     })
 
      res.json({data:categories})
 
@@ -273,18 +281,19 @@ exports.getCategories = async(req,res,next)=>{
 
 exports.editCategory = async(req,res,next)=>{
     const {name} = req.body;
-    const {UserRole} = req.body;
-  
+    const {UserRole} = req.userdata;
+ 
+    
     try {
 
         if(UserRole == "Admin"){
 
-            await CategoryModel.create({
+          await CategoryModel.create({
               categoryImage:req.files.file.data,
               categoryName:name
           })
 
-          res.json({state:"success"})
+           return res.json({state:"success"})
         }
 
         return res.json({state:"error"})
@@ -301,7 +310,7 @@ exports.createrelation=async (req,res,next)=>{
     const io = req.app.get("socketio");
     const {PostId,attribute,relationtype,UserIdofcontent}=req.body; 
     const {UserId} = req.userdata 
-    console.log("insideeeee")
+   
    
     if(relationtype == "Destroy"){
 
