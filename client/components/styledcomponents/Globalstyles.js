@@ -23,9 +23,6 @@ export const Global=createGlobalStyle`
      margin:0px;
      font-family: 'Raleway', sans-serif;
  }
- div{
-   color:black;
- }
  body {
   height:100%;
  }
@@ -41,7 +38,7 @@ height:${height};
 border-radius:50%;
 cursor:pointer;
 background-image:url(${profile});
-background-size: cover;
+background-size:cover;
 background-repeat: no-repeat;
 background-position: center; 
 `)

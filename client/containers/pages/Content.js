@@ -159,7 +159,6 @@ export default function Content({Contentdata,comments,id}){
 
     useEffect(()=>{
        //changeable
-       setcontent(Contentdata);
        setcommentlist(comments);
     },[id])
 
@@ -263,7 +262,7 @@ export default function Content({Contentdata,comments,id}){
             <Exteriorcontent>
                 <InnerDiv>
                     <ImageDiv>
-                        <img src={"/car.jpg"} style={{objectFit:"cover",width:"100%",height:"100%"}} ></img>
+                        <img src={Contentdata.titleimage} style={{objectFit:"cover",width:"100%",height:"100%"}} ></img>
                     </ImageDiv>
                     <ProfileDiv>
                         <Link  href={{

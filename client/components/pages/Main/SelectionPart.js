@@ -60,7 +60,6 @@ transition-duration:0.4s;
 const ImgInBox = styled.img`
 width:100%;
 height:100%;
-border-radius:3px;
 object-fit:cover;
 transition-duration:0.4s;
 `
@@ -77,9 +76,10 @@ background-color:rgba(0, 0, 0, 0.35)
 
 const SectionBoxes = styled.div`
 position:relative;
-width:200px;
+flex-basis:200px;
+width:100%;
+height:100%;
 border:4px solid ${({activeSelect})=>!activeSelect ? "white" : "#5463FF"};
-height:120px;
 margin-right:10px;
 box-shadow: -5px 0px 50px 5px white;
 border-radius:5px;
@@ -116,9 +116,19 @@ function Selection({listContent,setListContent,setSelectedKey,keyName,categories
     const [error,seterror] = useState(null)
     const [selectionList,setselectionList] = useState({})
     const [slideValue,setSlideValue] = useState(0)
+    const [slideBorder,setSlideBorder] = useState(-99.2);
    
 
     useEffect(()=>{
+
+        window.addEventListener("resize",(e)=>{
+           if(e.target.visualViewport.width < 500){
+                setSlideBorder((-99.2)*3)
+            }else if(e.target.visualViewport.width < 1200){
+                setSlideBorder((-99.2)*2)
+            }
+        })
+
         const willBeDeployed = {}
         categories.forEach(element => {
             willBeDeployed[element.categoryName] = {}
@@ -128,6 +138,8 @@ function Selection({listContent,setListContent,setSelectedKey,keyName,categories
             willBeDeployed[element.categoryName]["id"] = element.id
         });
         setselectionList(willBeDeployed)
+
+        return ()=>{window.removeEventListener("resize",()=>"")}
     },[])
     
     const RequestForSelection=(keyname)=>{
@@ -169,16 +181,19 @@ function Selection({listContent,setListContent,setSelectedKey,keyName,categories
        
        
     }
-    
-    const slideHandler = (where)=>{
 
+    const slideHandler = (where)=>{
+        
         if(where == "pullRight" && slideValue < 0) 
-        setSlideValue(prev=>prev+99.2)
-        else if(where == "pullLeft" && slideValue > -99.2)
-        setSlideValue(prev=>prev-99.2)
+        setSlideValue(prev=>prev+(99.2))
+        else if(where == "pullLeft" && slideValue > slideBorder)
+        setSlideValue(prev=>prev-(99.2))
+
+
+        
     }
 
-
+    console.log(slideValue)
     return ( <ExteriorDiv>
                    <Controllers  onClick={()=>slideHandler("pullRight")} PositionRight={""} PositionX={20}>
                        <ArrowLeft/>

@@ -547,7 +547,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                             <Link href="/content/[id]" as={`/content/${postId}`}>    
                                 <Contentdiv iscomment={iscomment}>
                                         <h3 style={{marginBottom:"10px",color:"#A70909"}}>{title}</h3>
-                                        <p style={{textAlign:"left",wordBreak:"break-word",cursor:"pointer",color:nightmode ? "white" : "black"}}>{ReactParser(subString(content))}</p>   
+                                        <div style={{textAlign:"left",wordBreak:"break-word",cursor:"pointer",color:nightmode ? "white" : "black"}}>{ReactParser(subString(content))}</div>   
                                 </Contentdiv>
                              </Link>      
 
@@ -576,7 +576,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
 
                                         <Icons className="fas fa-comment-alt fa-sm"></Icons>
                                     }
-                                    <span style={{marginLeft:"5px",color:""}}>{comment.length}</span>
+                                    <span style={{marginLeft:"5px"}}>{comment.length}</span>
                                 </İconholder>
                                 {
                                     !iscomment && 

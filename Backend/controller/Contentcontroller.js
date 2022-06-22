@@ -598,8 +598,9 @@ exports.reportDeletion = async (req,res,next)=>{
 
 }
 
+//TODO
 exports.uploadContentImage = async (req,res,next)=>{
-  console.log(req.files.files)
+  
   try {
         if(req.files.files.size/1024 < 3000){
         const generatedTokenForName = v4()

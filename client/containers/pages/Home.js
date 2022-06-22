@@ -3,12 +3,10 @@ import Contentcard from "../../components/shared/Cards/Contentcard";
 import styled,{ThemeProvider} from "styled-components";
 import {Homereq,Createrelationreq,Notificationreq} from "../../Api/requests";
 import {createusercontext} from "../../context/Usercontext";
-import {makeStyles} from "@material-ui/core/styles"
 import Showfollower from "../../components/pages/Main/Showfoller";
 import {CreateUtilContext} from "../../context/UtilContext"
 import useScroll from "../../hooks/Scroll";
 import uniqid from "uniqid";
-import { ArrowBackIos, ArrowForwardIos, FormatQuote } from '@material-ui/icons';
 import SelectionPart from "../../components/pages/Main/SelectionPart"
 
 
@@ -167,8 +165,8 @@ export default function Home({contents,categories}){
   
 
     
-
     useEffect(()=>{
+
 
           if(bottom){
 

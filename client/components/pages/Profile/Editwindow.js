@@ -5,7 +5,6 @@ import {ArrowDropUp,Email,Lock,Notifications} from "@material-ui/icons"
 import {Black,Porfileimage,Spinner} from "../../styledcomponents/Globalstyles"
 import {TextField,Button} from "@material-ui/core"
 import Cropper from  "react-image-crop"
-import axios from 'axios'
 import {UpdateProfile} from "../../../Api/requests"
 import Switch from "react-switch"
 import "react-image-crop/dist/ReactCrop.css"
@@ -19,7 +18,7 @@ left:50%;
 top:50%;
 max-width:600px;
 width:90%;
-height:${({getcropper})=>getcropper ? "350px" : "580px"};
+height:${({getcropper})=>getcropper ? "330px" : "580px"};
 background-color:white;
 border-radius:10px;
 z-index:1000;
@@ -27,9 +26,8 @@ z-index:1000;
 `
 const Inner = styled.div`
 position:relative;
-padding:10px;
 overflow:auto;
-height:580px;
+height:100%;
 `
 const Background = styled.div`
 display:flex;
@@ -53,7 +51,7 @@ transition:0.4s;
 const ProfileImageholder=styled.div`
 position:absolute;
 top:160px;
-opacity:0.8;
+opacity:1;
 left:30px;
 z-index:1;
 transition:0.4s;
@@ -90,6 +88,7 @@ opacity:0;
 const Selectionbar = styled.div`
 display:flex;
 justify-content:space-around;
+padding-top:10px;
 height:30px;
 margin-bottom:40px;
 `
@@ -146,43 +145,24 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
     
     const [file,setfile] = useState({
         Backimage:"",
-        Profileimage:""
+        mainImage:""
     })
-    const [crop,setcrop] = useState({aspect:16/16,height:200,width:100,x:50,y:50})
-    const [src,setsrc] = useState({
-        Profileimage:{
-            token:editdata.imagetoken,
-            name:editdata.imageurl
+    const [profileImages,setProfileImages] = useState({
+        mainImage:{
+            url:editdata.mainUrl,
+            crop:{aspect:16/16,height:250,width:350,unit:"px",x:50,y:50},
+            naturalHeight:""
         },
         Backimage:{
-            token:editdata.backgroundtoken,
-            name:editdata.backgroundurl
+            url:editdata.backgroundUrl,
+            crop:{aspect:16/16,height:200,width:500,unit:"px",x:50,y:50},
+            naturalHeight:""
         }
     })
+    const [image,setimage] = useState(null)
     const [uploading,setuploading] = useState(false)
     const [succesfulupload,setsuccesfulupload] = useState("")
-    const [imagetype,setimagetype] = useState("")
-    const [image,setimage] = useState(null)
-    const [result,setresult] = useState({
-        Backimage:{
-            src:"",
-            cropvalues:{
-                width:"",
-                height:"",
-                x:"",
-                y:""
-            }
-        },
-        Profileimage:{
-            src:"",
-            cropvalues:{
-                width:"",
-                height:"",
-                x:"",
-                y:""
-            }
-        }
-    })
+    const [imagetype,setimagetype] = useState("mainImage")
     const [iscropperactive,setcropperactive] = useState(false)
     const [userinfo,setuserinfo] = useState({
         musername:{
@@ -214,7 +194,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         },
         personaltext:{
             activate:false,
-            value:editdata.personaltext,
+            value:editdata.Personaltext,
             label:"Personal Information",
             warning:false,
             multiline:true,
@@ -279,7 +259,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                 },
                 Whencomment:{
                     value:editdata.Notification.Whencomment,
-                    msg:"When someone make a comment for your"
+                    msg:"When someone makes a comment for your"
                 }
             },
             label:"",
@@ -295,7 +275,8 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         Notification:false
     })
     const [selected,setselected] = useState(1)
-
+    
+   
     useEffect(()=>{
 
      
@@ -345,6 +326,8 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
     useEffect(()=>{
         setcropperactive(false)
     },[active])
+
+    
     /*
     useEffect(()=>{
 
@@ -382,36 +365,36 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                 break;
         }
     }
+   
+    const onCropperImageLoaded=(img)=>{
+      
+        setimage(img)
+    }
 
     const ToCanvas = async ()=>{
-       
+
         const canvas = document.createElement("canvas");
         const scaleX = image.naturalWidth / image.width;
         const scaleY = image.naturalHeight / image.height;
-        canvas.width = crop.width
-        canvas.height = crop.height
+        canvas.width = profileImages[imagetype].crop.width
+        canvas.height = profileImages[imagetype].crop.height
         const ctx = canvas.getContext("2d");
 
-        
     
         ctx.drawImage(
         image,
-        crop.x * scaleX,
-        crop.y * scaleY,
-        crop.width * scaleX,
-        crop.height * scaleY,
+        profileImages[imagetype].crop.x * scaleX,
+        profileImages[imagetype].crop.y * scaleY,
+        profileImages[imagetype].crop.width * scaleX,
+        profileImages[imagetype].crop.height * scaleY,
         0,
         0,
-        crop.width,
-        crop.height
+        profileImages[imagetype].crop.width,
+        profileImages[imagetype].crop.height
         );
         
         const base64Image = canvas.toDataURL("imge/png")
-
-        setresult((prev)=>{
-            return {...prev,[imagetype]:{src:base64Image,cropvalues:{x:crop.x,y:crop.y,width:crop.width,height:crop.height}}}
-        })
-
+        setProfileImages(prev=>({...prev,[imagetype]:{...prev[imagetype],url:base64Image,naturalHeight:image.height}}))
         setcropperactive(false)
         
     }
@@ -429,59 +412,29 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         setuserinfo(mutated)
     }
 
-    const Updatefile = (event,type)=>{
-        if(type == "Backimage"){
-            setcrop({
-                aspect:16/9,
-                height:200,
-                width:300,
-                unit:"px",
-                x:0,
-                y:50
-            })
-        }
-        else{
-            setcrop({
-                aspect:16/16,
-                height:200,
-                width:200,
-                unit:"px",
-                x:50,
-                y:50
-            })
-        }
-        
+    const fileChangeHandler = (event,type)=>{
         setimagetype(type)
         setcropperactive(true)
-        setsrc((prev)=>{
-            return {...prev,[type]:URL.createObjectURL(event.target.files[0])}
-        })
+        setProfileImages(prev=>({...prev,[type]:{...profileImages[type],url:URL.createObjectURL(event.target.files[0])}}))
         setfile((prev)=>{
             return {...prev,[type]:event.target.files[0]}
         })
-
       
     }
 
     const updatecrop = (newcrop)=>{
         //buraya bak
-        if(crop.aspect > 1){
-            setcrop((res)=>{
-                return {...res,y:newcrop.y}
-            })
-        }
-        else{
-            setcrop((res)=>{
-                return {...res,y:newcrop.y,x:newcrop.x}
-            })
-        }
-        console.log(crop)
+        setProfileImages((prev)=>{
+            return {...prev,[imagetype]:{...prev[imagetype],crop:{...prev[imagetype].crop,y:newcrop.y,x:newcrop.x}}}
+        })
 
         //value of cropper width height x and y
     }
 
-    const Sendupdates = async (typeofupdate)=>{
+    const submitChanges = async (typeofupdate)=>{
         //TODO look for parts for seperation
+
+     
         const values = {}
         const copy = {...userinfo}
         var updateFor = ""
@@ -489,8 +442,6 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         if(!isWindowforsettings){
             
             updateFor = "Profile"
-            values.backcrop = result.Backimage.cropvalues
-            values.profile  = result.Profileimage.cropvalues
             
             for (const key in userinfo){
                 if(key == "email")
@@ -545,15 +496,18 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
 
         const formData=new FormData();
 
-        if(file.Backimage !== "" && file.Profileimage !== ""){
-
-            formData.append("upload",file.Backimage);
-            formData.append("upload2",file.Profileimage)
+        if(file.Backimage !== "" && file.mainImage !== ""){
+            
+            formData.append("Backimage",file.Backimage);
+            formData.append("mainImage",file.mainImage)
+            values.Backimage = {...profileImages.Backimage.crop,naturalHeight:profileImages.Backimage.naturalHeight}
+            values.mainImage = {...profileImages.mainImage.crop,naturalHeight:profileImages.mainImage.naturalHeight}
             
         }
         else{
             
-            formData.append("upload",file[imagetype])
+            formData.append(`${imagetype}`,file[imagetype])
+            values[imagetype] = {...profileImages[imagetype].crop,naturalHeight:profileImages[imagetype].naturalHeight}
         }
 
         formData.append("Profilevalues",JSON.stringify(values))
@@ -595,25 +549,27 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
     return (
         <div>
             <Black onClick={closefunc} aktif={active}/>
-            <img style={{visibility:"hidden",position:"absolute"}} id="Backimg" src={src["Backimage"]}></img>
-            <img style={{visibility:"hidden",position:"absolute"}} id="Profileimg" src={src["Profileimage"]}></img>
             <Exterior getcropper={iscropperactive} active={active}>
                 <Inner>
                     <ProfileuploadedDiv successful={succesfulupload == "SUCCESSFUL" ? true : false}>Profile updated successfully</ProfileuploadedDiv>
                     <div style={{position:"absolute",top:isWindowforsettings ? "500px":"250px",right:"40px",zIndex:"300"}}>
-                        <Button onClick={()=>Sendupdates(selected)} style={{textTransform:"capitalize",borderRadius:"25px"}} color="secondary" variant="contained">
-                            {
-                                uploading ? (<Spinner style={{marginRight:"5px"}}></Spinner>) : null
-                            }
-                            Save
-                        </Button>
+                        {
+                            !iscropperactive ? 
+                                ( <Button onClick={()=>submitChanges(selected)} style={{textTransform:"capitalize",borderRadius:"25px"}} color="secondary" variant="contained">
+                                    {
+                                        uploading ? (<Spinner style={{marginRight:"5px"}}></Spinner>) : null
+                                    }
+                                    Save
+                               </Button>) : null
+                        }
+                       
                     </div>
                     {
                         isWindowforsettings &&
                         (<Selectionbar>
                             {
                                 Object.keys(selectionchilds).map((item,index)=>{
-                                    return (<Childsofselection innercolor={selectionchilds[item]} style={{color:selectionchilds[item] ? "white" : "white"}} onClick={()=>Selectionhandler(item,index)}>{Iconcreater(item)}</Childsofselection>)
+                                    return (<Childsofselection key={index} innercolor={selectionchilds[item]} style={{color:selectionchilds[item] ? "white" : "white"}} onClick={()=>Selectionhandler(item,index)}>{Iconcreater(item)}</Childsofselection>)
                                 })
                             }
                         </Selectionbar>)
@@ -623,9 +579,9 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                         
                         ? 
                             <div style={{textAlign:"center"}}>
-                                <Cropper  onImageLoaded={(img)=>setimage(img)} style={{backgroundColor:"red",height:"350px",width:"300px"}}  imageStyle={{height:"350px",width:"300px",objectFit:"cover"}}  src={src[imagetype]} crop={crop} onChange={(newcrop)=>updatecrop(newcrop)}/> 
-                                <div style={{textAlign:"center"}}>
-                                 <Button onClick={()=>ToCanvas()} color="secondary" variant="contained" >Upload the file to server</Button>
+                                <Cropper onImageLoaded={onCropperImageLoaded} style={{backgroundColor:"red",height:"100%",width:"100%",border:"2px solid red"}}    imageStyle={{width:"100%",height:"100%",objectFit:"contain"}} src={profileImages[imagetype].url} crop={profileImages[imagetype].crop} onChange={(newcrop)=>updatecrop(newcrop)}/> 
+                                <div style={{position:"fixed",top:"20px",right:"20px"}}>
+                                 <Button onClick={()=>ToCanvas()} color="secondary" variant="contained" >Apply</Button>
                                 </div>
                             </div>
                         
@@ -635,16 +591,16 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                                     { !isWindowforsettings &&  
 
                                         (<>
-                                            <Background ImageforBack={src.Backimage.token ? `https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${src.Backimage.name}?alt=media&token=${src.Backimage.token}` : "/yaprak.jpg"}>
+                                            <Background ImageforBack={profileImages.Backimage.url ||  "/yaprak.jpg"}>
                                                 <Labelimage  htmlFor="file"></Labelimage>
                                                 <CameraAlt style={{color:"white"}}></CameraAlt>
-                                                <input  onChange={(e)=>Updatefile(e,"Backimage")}  accept="image/png, image/gif, image/jpeg" id="file" type="file" style={{display:"none"}}></input>
+                                                <input  onChange={(e)=>fileChangeHandler(e,"Backimage")}  accept="image/png, image/gif, image/jpeg" id="file" type="file" style={{display:"none"}}></input>
                                             </Background>
-                                            <ProfileImageholder isHavingprofile={src.Profileimage.token}>
-                                                <Porfileimage profile={src.Profileimage.token ? `https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${src.Profileimage.name}?alt=media&token=${src.Profileimage.token}` : "/yaprak.jpg"} style={{display:"flex",justifyContent:"center",alignItems:"center"}} width="80px" height="80px" >
+                                            <ProfileImageholder isHavingprofile={profileImages.mainImage.url || "/yaprak.jpg"}>
+                                                <Porfileimage profile={profileImages.mainImage.url ? profileImages.mainImage.url : "/yaprak.jpg"} style={{display:"flex",justifyContent:"center",alignItems:"center"}} width="80px" height="80px" >
                                                     <Labelimage htmlFor="file2"></Labelimage>
                                                     <CameraAlt style={{color:"white"}}></CameraAlt>
-                                                    <input onChange={(e)=>Updatefile(e,"Profileimage")} accept="image/png, image/gif, image/jpeg" id="file2" type="file" style={{display:"none"}}></input>
+                                                    <input onChange={(e)=>fileChangeHandler(e,"mainImage")} accept="image/png, image/gif, image/jpeg" id="file2" type="file" style={{display:"none"}}></input>
                                                 </Porfileimage>
                                             </ProfileImageholder>
                                             

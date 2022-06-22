@@ -10,6 +10,7 @@ const User = require("../models/Usermodel");
 const bcrypt=require("bcrypt");
 const Sendemail = require("../MiddleFunctions/SendEmail");
 const CategoryModel = require("../models/CategoryModel")
+const uploadFunction = require("../MiddleFunctions/imageUpload")
 
 
 //Searching User
@@ -126,7 +127,7 @@ exports.getuserprofilecontent = async(req,res,next)=>{
 
   const {UserId,ownerpost,category,order}=req.params;
   
-
+  //TODO change this design later
   if(ownerpost == "true"){
 
     const Contentdata=await Contentmodel.findAll({
@@ -482,11 +483,17 @@ exports.updateprofile = async (req,res,next)=>{
   const {UserId} = req.userdata
   
   if(typeofupdate == "Profile"){
-
+       //upload 2 means there 2 images changed
+       var imageUrlStore = []
+        console.log(req.files)
+       for (const key in req.files) {
+          imageUrlStore.push(uploadFunction(req.files[key],userprofiledata[key],key))
+       }
+      
       try {
       
         const UN = await User.findOne({where:{username:userprofiledata.musername}})
-        console.log(UN)
+
         //farkli bir userin kullanici adi
         if(UN && UN.id !== UserId){
 
@@ -500,11 +507,11 @@ exports.updateprofile = async (req,res,next)=>{
 
         }
 
-        console.log(controllerforusername)
-        if(controllerforusername){
+        if(true){
 
             const myuser = await User.findByPk(UserId)
-            console.log("herereerr")
+            const imageStoreResponse = await Promise.all(imageUrlStore)
+            console.log(res)
             //Attributes gonna be updated
             var willbeupdated = {
                 firstname:userprofiledata.firstname,
@@ -512,35 +519,16 @@ exports.updateprofile = async (req,res,next)=>{
                 username:userprofiledata.musername,
                 Personaltext:userprofiledata.personaltext,
               }
-
-            if(Urldata["0"].type == "Profile"){
-
-              delete willbeupdated.backgroundtoken
-              delete willbeupdated.backgroundurl
-              willbeupdated["imagetoken"] = Urldata["0"].token
-              willbeupdated["mainUrl"] = Urldata["0"].filename
-
-            }else if(Urldata["0"].type == "Background"){
-
-              delete willbeupdated.imagetoken
-              delete willbeupdated.mainUrl
-              willbeupdated["backgroundtoken"] = Urldata["0"].token
-              willbeupdated["backgroundurl"] = Urldata["0"].filename
-
-            }
-            else if(Urldata["0"].type == "Back&Profile"){
               
-              willbeupdated["backgroundtoken"] = Urldata["0"].token
-              willbeupdated["backgroundurl"] = Urldata["0"].filename
-              willbeupdated["imagetoken"] = Urldata["1"].token
-              willbeupdated["mainUrl"] = Urldata["1"].filename
-
-            }
-
-        
-
+            imageStoreResponse.forEach(element => {
+                if(element.key == "Backimage"){
+                    willbeupdated["backgroundUrl"] = element.url
+                }else if(element.key == "mainImage"){
+                    willbeupdated["mainUrl"] = element.url
+                }
+            });
             await myuser.update(willbeupdated)
-
+              
             return res.json({state:"success"})
 
         }
@@ -552,6 +540,7 @@ exports.updateprofile = async (req,res,next)=>{
       } catch (error) {
         return next();
       }
+      
              
   }else if(typeofupdate == "Email"){
         

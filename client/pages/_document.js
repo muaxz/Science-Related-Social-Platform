@@ -32,6 +32,7 @@ export default class Document extends NextDocument {
       }
     } finally {
       styledComponentSheet.seal()
+  
     }
   }
 }

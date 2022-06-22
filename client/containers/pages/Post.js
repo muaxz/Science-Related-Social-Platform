@@ -295,7 +295,6 @@ export default function MyEditor({categories,content}){
     
     //ana başlık kısa tutulacak.
     //alt başlık daha uzun tutlabilir.
-    
     return (
       <Exterior>
         <InnerDiv>
@@ -316,8 +315,8 @@ export default function MyEditor({categories,content}){
                                   Choose A Topic
                               </MenuItem>
                               {
-                                categories.map((item)=>(
-                                  <MenuItem value={item.id}>{item.categoryName}</MenuItem>
+                                categories.map((item,index)=>(
+                                  <MenuItem key={index} value={item.id}>{item.categoryName}</MenuItem>
                                 ))  
                               }     
                           </Select>

@@ -21,7 +21,7 @@ const getupload=multer({
 //this middle-ware is for user editing
 
 module.exports=(req,res,next)=>{
-                next();
+                return next();
    
                 /*
                 const userprofile = JSON.parse(req.body.Profilevalues)

@@ -14,7 +14,7 @@ function Contentmap({contentlist,relationfunc,norecord,deleteThePost}) {
     else if(norecord == "Like"){
          textfornorecord = "Kullanıcının beğendiği gönderi yok..."
     }
-    console.log(contentlist)
+ 
     return (
 
         <div>

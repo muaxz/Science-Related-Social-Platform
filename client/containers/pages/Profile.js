@@ -3,7 +3,6 @@ import styled from "styled-components";
 import {createusercontext} from "../../context/Usercontext"
 import {Porfileimage} from "../../components/styledcomponents/Globalstyles"
 import {Createuserrelation,Getuserprofilecontent,Createrelationreq,UpdateNotificationactive,Userprofilefollowlist,DeletePost} from "../../Api/requests"
-import Contentcard from "../../components/shared/Cards/Contentcard";
 import {Button} from "@material-ui/core"
 import Link from "next/link";
 import useScroll from "../../hooks/Scroll";
@@ -56,10 +55,11 @@ left:140px;
 const BackgroundImage=styled.div`
 width:100%;
 height:100%;
-background-image:url(/yaprak.jpg);
-background-size: cover;
+background-image:${({photo})=>`url(${photo})`};
+background-size: contain;
 background-repeat: no-repeat;
-background-position: center; 
+background-position: center;
+background-color:lightgrey; 
 `
 
 const Contentpart=styled.div`
@@ -380,7 +380,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
             }
             <Innerdiv>
                 <Imagesection>
-                    <BackgroundImage ImageforBack={"/way.jpg"} /> 
+                    <BackgroundImage photo={profiledata.backgroundUrl} /> 
                     {       //burada context userId yok ise buna izin vermiyorum ancak setstate oldugunda gösterim var
                             //TODO this should be fixed during navigaiton
                             //userdata.userıd yoksa kullanıcı giriş yapmamıştır
@@ -418,7 +418,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                 <Contentpart>
                      <Usersection>
                          <ProfileImageholder>
-                             <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile="/car.jpg"></Porfileimage>
+                             <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile={profiledata.mainUrl}></Porfileimage>
                          </ProfileImageholder>
                          <h4>{profiledata.firstname + " " + profiledata.lastname}</h4>
                          <span style={{color:"#6c757d"}}>UI designer</span>
@@ -438,7 +438,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                          </div>
                          <Description style={{width:"80%",margin:"auto"}}>
                              <hr></hr>
-                             <p style={{padding:"15px"}}>I am a designer. I love reading about the ideas of other people.</p>
+                             <p style={{padding:"15px"}}>{profiledata.Personaltext}</p>
                              <hr></hr>
                          </Description>
                      </Usersection>
@@ -462,9 +462,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                                         ))
                                     }
                                 </Optionbar>
-                            }
-                            
-                           
+                            }   
                            <div style={{paddingRight:"10px",paddingLeft:"10px",maxWidth:"700px",margin:"auto"}}>
                                 {
                                   showfollowinglist.length > 0 ? <Followlist type={showfollowinglist} goBackToContent={()=>setshowfollowinglist("")} list={FollowList}></Followlist> : <Contentmap  deleteThePost={prepForDeletion} norecord={query.name} relationfunc={Relationrequest} contentlist={contentdata}/> 

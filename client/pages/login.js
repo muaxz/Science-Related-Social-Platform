@@ -1,14 +1,13 @@
-import React,{useEffect,useState,useContext,useReducer, useRef} from 'react'
+import React,{useEffect,useState,useContext,useRef} from 'react'
 import {createusercontext} from "../context/Usercontext";
-import styled,{createGlobalStyle} from "styled-components";
+import styled from "styled-components";
 import {useRouter} from "next/router"
 import Head from "next/head";
 import {loginreq,resigterreq,sendResetEmail,resetPassword} from "../Api/requests";
 import Window from "../components/UI/window";
 import {TextField,Button,InputAdornment} from '@material-ui/core';
-import {withStyles,makeStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import {Global} from "../components/styledcomponents/Globalstyles"
-import Guardlayout from "../containers/Layout/routerguard";
 import Validate from "validator"
 import {AccountCircle,EmailOutlined,Lock,SupervisorAccount,Person,ChevronRight, Assignment} from "@material-ui/icons"
 import axios from 'axios';
@@ -173,7 +172,6 @@ const Login=({mode,token})=>{
             icon:""
         }
     })
-
     const{setlogged,setuserdata,setspinner}=useContext(createusercontext);
     const[currenturl,setcurrent]=useState("");
     const[backendState,setBackendState]=useState("")
