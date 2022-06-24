@@ -184,6 +184,7 @@ exports.gethome=async(req,res,next)=>{
         phase:"Published"
       },
       attributes:["id","titleimage","title","subtitle","content","createdAt","updatedAt"],
+      order:[["createdAt","DESC"]],
       limit:10,
       offset:offsetValue,
       include:[{

@@ -532,7 +532,7 @@ export const Createuserrelation=async({UserId,Prevent,FollowedId,checkiffollow})
 
   try {
 
-    const{data}=await axios.post(`user/createuserrelation`,{
+    const {data} = await axios.post(`user/createuserrelation`,{
       FollowerId:UserId,
       FollowedId:FollowedId,
       checkiffollow:checkiffollow,

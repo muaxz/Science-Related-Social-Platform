@@ -33,7 +33,7 @@ width:100%;
 const Imagesection=styled.div`
 position:relative;
 height:250px;
-background-color:lightblue;
+background-color:#723d46;
 position:relative;
 `
 

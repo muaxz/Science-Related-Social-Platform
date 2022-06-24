@@ -1,6 +1,7 @@
-import React,{useState,useEffect,useContext,useMemo} from 'react'
+import React,{useState,useEffect,useContext,useMemo, createElement} from 'react'
 import styled,{keyframes} from "styled-components";
 import {createusercontext} from "../../../context/Usercontext";
+import {CreateUtilContext} from "../../../context/UtilContext";
 import {Porfileimage,Spinner} from "../../styledcomponents/Globalstyles";
 import Link from "next/link";
 import {useRouter} from "next/router"
@@ -11,6 +12,7 @@ import useClickoutside from "../../../hooks/Clikcoutisde";
 import { TextField ,Button,InputAdornment,Checkbox} from '@material-ui/core';
 import {CreateNightMode} from "../../../context/Nightmode"
 import ReactParser from "react-html-parser"
+import {Createuserrelation,DeletePost} from "../../../Api/requests"
 
 //TODO creating seperate parts of the card
 const Likeanimaton=keyframes`
@@ -216,6 +218,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
             number:0,
         }
     });
+    const {setSavedWindow,setSavedWindowText} = useContext(CreateUtilContext)
     const {ref,visible,setvisible} = useClickoutside();
     const {nightmode} = useContext(CreateNightMode)
     const [loading_commentedit,setloading_commentedit] = useState(false)
@@ -231,7 +234,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
 
 
     var textforopiton="";
-    switch (foruseroption) {
+    switch (foruseroption){
         case "Readlater":
             textforopiton="Kaydedilen gönderilerden kaldır";
             break;
@@ -292,7 +295,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
     },[userdata])
     
     //like , sign and save operations
-    const Countplus=(elementtype)=>{
+    const relationHandler=(elementtype)=>{
         
         const currentelements={...elements};
   
@@ -379,6 +382,23 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
         setContentTime(calculatedate(date))
     },[])
 
+    const userRelationHandler = ()=>{
+         Createuserrelation({
+            UserId:userdata.UserId, // current user
+            FollowedId:userid, // this is the target user
+            checkiffollow:isfollowing,
+            Prevent:{}
+        })
+        setisfollowing(!isfollowing)
+    }   
+
+    const copyLink=()=>{
+      
+        navigator.clipboard.writeText(`http://localhost:3000/content/${postId}`)
+        setSavedWindow(true)
+        setSavedWindowText("Link Copied")
+    }
+
 
     return (
         <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={contentTime}  iscomment={iscomment}>  
@@ -392,7 +412,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                     !iscomment ?  
                         
                     <div ref={ref}>   
-                            <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
+                            <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A",hoverback:"#ea526f",width:"30px",height:"30px",lineheight:"30px",hovercolor:"white"}}></Icon>
                             <CategoryDiv>{categoryType}</CategoryDiv>
                             {
                                 visible ?
@@ -400,21 +420,21 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                                 <React.Fragment>
                                         {
                                             userid !== userdata.UserId &&
-                                                    <Optionholder style={{display:userdata.UserId ? "flex" : "none"}}>
-                                                        <Icon className="fas fa-user-minus" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
+                                                    <Optionholder onClick={userRelationHandler} style={{display:userdata.UserId ? "flex" : "none"}}>
+                                                        <Icon className={isfollowing ?  "fas fa-user-minus" : "fa-solid fa-user-plus"} Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
                                                         <div style={{marginLeft:"8px",color:"#757575"}}>
-                                                            <span style={{color:"black",textTransform:"capitalize"}}>{userfirstname}</span>
-                                                            <span style={{color:"black",textTransform:"capitalize",marginLeft:"5px"}}>{usersurname+`'i`}</span>
-                                                            <span style={{marginLeft:"10px"}}>{isfollowing ? "Takipten Cik" : "Takip Et"}</span>
-                                                            <p style={{fontSize:"13px",textTransform:"capitalize"}}>Bu kullanıcıdan gelen bildirimleri görme</p>
+                                                            <span>{isfollowing ? "unfollow" : "follow"}</span>
+                                                            <span style={{textTransform:"capitalize",marginLeft:"5px"}}>{userfirstname}</span>
+                                                            <span style={{textTransform:"capitalize",marginLeft:"5px"}}>{usersurname}</span>
+                                                            <p style={{fontSize:"13px",textTransform:"capitalize"}}>{!isfollowing && "Get noitfied when the user post a content" }</p>
                                                         </div>
                                                     </Optionholder>   
                                         }
-                                        <Optionholder>
+                                        <Optionholder onClick={copyLink}>
                                             <Icon className="fas fa-link" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
                                                 <div style={{marginLeft:"8px",color:"#757575"}}>
-                                                    <p style={{color:"black"}}>Paylaş</p>
-                                                    <p style={{fontSize:"13px"}}>Bağlantı adresini kopyala</p>
+                                                    <p style={{color:"black"}}>Share</p>
+                                                    <p id="link" style={{fontSize:"13px"}}>Copy the link</p>
                                                 </div>
                                         </Optionholder> 
                                         {
@@ -561,12 +581,12 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                                 {
                                 !iscomment && 
                                 (<İconholder howercolor="green" style={{flex:1}}>
-                                        <Icons  howercolor="0, 255, 0, 0.2" ismarked={elements.reshow.ismarked} animation={elements.reshow.animation} color={"green"}  onClick={()=>Countplus("reshow")}  className="fas fa-retweet fa-sm"></Icons>
+                                        <Icons  howercolor="0, 255, 0, 0.2" ismarked={elements.reshow.ismarked} animation={elements.reshow.animation} color={"green"}  onClick={()=>relationHandler("reshow")}  className="fas fa-retweet fa-sm"></Icons>
                                         <Spanfor onClick={()=>showwindow(elements["reshow"].array,"Reshow")}>{elements.reshow.number}</Spanfor>
                                 </İconholder>)
                                 }
                                 <İconholder howercolor="red" style={{flex:1}}>
-                                    <Icons  howercolor="255, 0, 0,0.2" ismarked={elements.Like.ismarked} animation={elements.Like.animation} color={"#C72121"}  onClick={()=>Countplus("Like")} className="fas fa-heart fa-sm"></Icons>
+                                    <Icons  howercolor="255, 0, 0,0.2" ismarked={elements.Like.ismarked} animation={elements.Like.animation} color={"#C72121"}  onClick={()=>relationHandler("Like")} className="fas fa-heart fa-sm"></Icons>
                                     <Spanfor  onClick={()=>showwindow(elements["Like"].array,"Like")} >{elements.Like.number}</Spanfor>
                                 </İconholder>
                                 <İconholder style={{flex:8}}>
@@ -584,7 +604,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                                 {
                                     !iscomment && 
                                     (<İconholder style={{flex:4,display:"flex",justifyContent:"flex-end",color:"grey"}}>
-                                        <Icons  ismarked={elements.Readlater.ismarked} animation={elements.Readlater.animation} color={"black"} onClick={()=>Countplus("Readlater")}  className="fas fa-bookmark"></Icons>
+                                        <Icons  ismarked={elements.Readlater.ismarked} animation={elements.Readlater.animation} color={"black"} onClick={()=>relationHandler("Readlater")}  className="fas fa-bookmark"></Icons>
                                     </İconholder>)
                                 }
                             </Toolbar>
