@@ -3,6 +3,7 @@ import Head from "next/head";
 import Main from "../containers/pages/Home";
 import Mainlayout from "../containers/Layout/mainlayout";
 import axios from 'axios';
+import {calculatedate} from "../utilsfunc"
 
 
 const Home = ({content,categories})=>{
@@ -43,6 +44,9 @@ export async function getServerSideProps(context){
       
         }
         */
+        recieved[0].data.data.forEach(element => {
+            element.difference = calculatedate(element.createdAt)
+        });
 
         return { 
             props:{content:recieved[0].data.data,categories:recieved[1].data.data}

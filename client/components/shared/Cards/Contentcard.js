@@ -197,7 +197,7 @@ font-size:13px;
 `
 
 //içerik sayısı,takipçi sayısı,
-function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,imagetoken,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent,deleteThePost}){
+function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent,deleteThePost}){
     
     const[elements,setelements]=useState({
         Like:{
@@ -229,7 +229,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
     const {userdata} = useContext(createusercontext);
     const [isfollowing,setisfollowing] = useState(false);
     const router = useRouter()
-    const [contentTime,setContentTime] = useState(calculatedate(date))
+
  
 
 
@@ -378,9 +378,6 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
         return cleanText.substring(0,200)+additional
     }
     
-    useEffect(()=>{
-        setContentTime(calculatedate(date))
-    },[])
 
     const userRelationHandler = ()=>{
          Createuserrelation({
@@ -401,7 +398,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
 
 
     return (
-        <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={contentTime}  iscomment={iscomment}>  
+        <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={date}  iscomment={iscomment}>  
                 {
                     //Comment Left Icon
                     iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-6px",top:"8px",color:"#faf9f9"}}></Icon> : null
@@ -510,12 +507,12 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                                         pathname:`/profile/${userid}`,
                                         query:{name:"Post"}
                                     }}>
-                                    <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={imagefilename ?  `https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${imagefilename}?alt=media&token=${imagetoken}` : "/realuserphoto.png"}></Porfileimage>
+                                    <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={profileimage ?? "/userphoto2.png"}></Porfileimage>
                                     </Link>
                                 </Profileimageholder>
                                 <div style={{marginLeft:"10px",fontSize:"15px",textTransform:"capitalize"}}><p style={{color:"black"}}>
                                     <strong>{userfirstname+" "+usersurname}</strong></p>
-                                    <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{contentTime.time + " " + contentTime.express + " ago"}</span></div>
+                                    <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{date.time+ " " + date.express + " ago"}</span></div>
                                 </div>           
                             </div>
                     </Profilediv>

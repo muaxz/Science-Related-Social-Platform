@@ -3,7 +3,7 @@ import Head from "next/head";
 import Mainlayout from "../../containers/Layout/mainlayout";
 import Usercontent from "../../containers/pages/Usercontent";
 import axios from 'axios';
-
+import {calculatedate} from "../../utilsfunc"
 
 export default function Liked({error,content}){
     
@@ -26,7 +26,8 @@ export async function getServerSideProps({query,req}){
         if(req.headers.cookie){
 
             var {data} = await axios.get(`http://localhost:3001/content/usercontent/Like/${query.userıd}/0`,{headers:{Cookie:req.headers.cookie}})
-            
+
+
             if(data.state == 401){
                 return { 
                     props:{error:401}
@@ -60,6 +61,10 @@ export async function getServerSideProps({query,req}){
             };
       
         }
+
+        data.data.forEach(element => {
+            element.difference = calculatedate(element.createdAt)
+        });
 
         return { 
             props:{content:data.data}

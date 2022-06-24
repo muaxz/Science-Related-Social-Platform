@@ -4,6 +4,7 @@ import Mainlayout from "../../containers/Layout/mainlayout";
 import Usercontent from "../../containers/pages/Usercontent";
 import {Global} from "../../components/styledcomponents/Globalstyles"
 import axios from 'axios';
+import {calculatedate} from "../../utilsfunc"
 
 
 export default function Saved({content}) {
@@ -29,6 +30,7 @@ export async function getServerSideProps({query,req}){
 
             var {data} = await axios.get(`http://localhost:3001/content/usercontent/Readlater/${query.userıd}/0`,{headers:{Cookie:req.headers.cookie}})
 
+
             if(data && data.error){
 
                 return {
@@ -38,6 +40,10 @@ export async function getServerSideProps({query,req}){
                 };
           
             }
+
+            data.data.forEach(element => {
+                element.difference = calculatedate(element.createdAt)
+            });
 
             return { 
                 props:{content:data.data}

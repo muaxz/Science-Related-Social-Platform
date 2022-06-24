@@ -8,6 +8,7 @@ import {CreateUtilContext} from "../../context/UtilContext"
 import useScroll from "../../hooks/Scroll";
 import uniqid from "uniqid";
 import SelectionPart from "../../components/pages/Main/SelectionPart"
+import { calculatedate } from '../../utilsfunc';
 
 
 
@@ -270,6 +271,7 @@ export default function Home({contents,categories}){
                                                 comment={item.allcomments}
                                                 readlater={item.Readlater}
                                                 key={index}//key numarası
+                                                profileimage={item.personal.mainUrl}
                                                 followeds={item.personal.Followed}
                                                 title={item.title}
                                                 titleimage={item.titleimage != null ? item.titleimage : "/yaprak.jpg"}
@@ -277,7 +279,7 @@ export default function Home({contents,categories}){
                                                 usersurname={item.personal !== null ? item.personal.lastname : "notyet"}//bir obje props
                                                 userid={item.personal !== null ? item.personal.id: "notyet"}
                                                 subtitle={item.subtitle}
-                                                date={item.createdAt}
+                                                date={item.difference || calculatedate(item.createdAt)}
                                             /> 
                                         </div>
                                     ))

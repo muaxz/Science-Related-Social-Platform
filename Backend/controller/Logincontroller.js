@@ -27,7 +27,7 @@ exports.login = async (req,res,next)=>{
             Username:user.firstname,
             Usersurname:user.lastname,
             Userrole:user.Role,
-            Userimage:user.imageurl,
+            Userimage:user.mainUrl,
          }
          
          bcrypt.compare(password,user.password,(err,result)=>{

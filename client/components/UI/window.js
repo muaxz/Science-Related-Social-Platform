@@ -41,7 +41,7 @@ const Window=({children,active,type,closefunction})=>{
 
     return (
        <div>
-         <Black onClick={closefunction} aktif={active}/>
+         <Black onClick={()=>closefunction("CLOSE")} aktif={active}/>
          <External aktif={active}>
             <Textbox>
                   {icon}

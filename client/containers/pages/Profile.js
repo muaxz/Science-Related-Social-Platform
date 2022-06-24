@@ -19,7 +19,6 @@ width:100%;
 height:${({noScroll})=>noScroll ? "100vh" : "100%"};
 overflow:${({noScroll})=>noScroll ? "hidden" : "visible"};
 padding-bottom:20px;
-padding-left:60px;
 @media (max-width:940px){
     padding-left:0;
 }
@@ -145,7 +144,9 @@ cursor:pointer;
     transition:0.2s;
 }
 `
-
+const CountDisplay = styled.div`
+padding-left:20px;
+`
 
 export default function Profile({Mydata,Counts,Contentdata,query}){
 
@@ -358,14 +359,17 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
             setGarbageActive(false)
 
         }else if(prepType == "CANCEL"){
-            setGarbageActive(false)
-        }
-        else{
 
+            setGarbageActive(false)
+
+        }
+        else if(prepType == null){
+            
             setGarbageActive(true)  
             postWillBeDeleted.current = PostId;  
 
         }
+
     }
 
     return (
@@ -421,19 +425,19 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                          </ProfileImageholder>
                          <h4>{Mydata.firstname + " " + Mydata.lastname}</h4>
                          <span style={{color:"#6c757d"}}>UI designer</span>
-                         <div style={{display:"flex",marginTop:"10px",marginBottom:"40px",justifyContent:"space-around"}}>
-                            <div>
+                         <div style={{display:"flex",marginTop:"10px",marginBottom:"40px"}}>
+                            <CountDisplay>
                                 <P>{Counts.Followedcount}</P>
                                 <LabelsUnderCounts  onClick={()=>ShowFollowList("FOLLOWER")}>Followers</LabelsUnderCounts>
-                            </div>
-                            <div>
+                            </CountDisplay>
+                            <CountDisplay>
                                 <P>{Counts.Followercount}</P>
                                 <LabelsUnderCounts  onClick={()=>ShowFollowList("FOLLOWING")}>Following</LabelsUnderCounts>
-                            </div>
-                            <div>
+                            </CountDisplay>
+                            <CountDisplay>
                                 <P>{Counts.Contentcount}</P>
                                 <LabelsUnderCounts  >Gönderi</LabelsUnderCounts>
-                            </div>
+                            </CountDisplay>
                          </div>
                          <Description style={{width:"80%",margin:"auto"}}>
                              <hr></hr>

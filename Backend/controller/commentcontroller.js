@@ -130,7 +130,6 @@ exports.getcomments=async (req,res,next)=>{
                       }
                     
                   }
-
                   if(arr.length == comments.length && allowGoIn){
 
                       trial=false
@@ -147,6 +146,7 @@ exports.getcomments=async (req,res,next)=>{
           return res.json(Willbesend)
   
         }
+        
 
   } catch (error) {
    
@@ -219,7 +219,7 @@ exports.editcomment = async(req,res,next)=>{
     }
 }
 
-exports.increaseLikeComment = async(req,res,next)=>{
+exports.createLikeRelation = async(req,res,next)=>{
 
   const {UserId} = req.userdata;
   const {commentId,actionType} = req.body;

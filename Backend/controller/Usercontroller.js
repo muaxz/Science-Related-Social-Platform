@@ -137,6 +137,7 @@ exports.getuserprofilecontent = async(req,res,next)=>{
       },
       limit:10,
       offset:parseInt(order),
+      order:[["createdAt","DESC"]],
       include:[{
         model:Usermodel,
         as:"Like",

@@ -7,6 +7,7 @@ import {createusercontext} from "../../context/Usercontext"
 import useScroll from "../../hooks/Scroll";
 import { Bookmark, BookmarkBorderOutlined, BookmarkBorderRounded, ThumbUpAlt } from '@material-ui/icons';
 import uniqid from "uniqid"
+import { calculatedate } from '../../utilsfunc';
 
 const Exteriordiv=styled.div`
 width:100%;
@@ -176,7 +177,7 @@ export default function Usercontent({params,mydata}){
                                             usersurname={item.Content.personal.lastname || "notyet"}//bir obje props
                                             userid={item.Content.personal.id || "notyet"}
                                             subtitle={item.Content.subtitle}
-                                            date={item.Content.createdAt}
+                                            date={item.difference || calculatedate(item.createdAt)}
                                        >
 
                                        </ContentCard>)

@@ -38,16 +38,17 @@ export default function Navigationtools({optnumber,Navdata,Logout,UserId}){
                         <Option1div>
                             <Icon className="far fa-edit" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
                             <div style={{marginLeft:"8px"}}>
-                                <p>Gönderi</p>
-                                <p style={{fontSize:"13px"}}>Sayfanda bir gönderi paylaş</p>
+                                <p>Post</p>
+                                <p style={{fontSize:"13px"}}>Create content</p>
                             </div>
                         </Option1div>
                     </Link>
                     <Option1div>
                         <Icon className="fas fa-users " Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
                         <div style={{marginLeft:"8px"}}>
-                            <p>Oda</p>
-                            <p style={{fontSize:"13px"}}>Bir tartışma odası oluştur</p>
+                            <p>Room</p>
+                            <p style={{fontSize:"13px"}}>Create a room for discussion</p>
+                            <p style={{fontSize:"13px"}}>( This feature will be available soon )</p>
                         </div>
                     </Option1div>
                  </React.Fragment>
@@ -67,7 +68,7 @@ export default function Navigationtools({optnumber,Navdata,Logout,UserId}){
 
         if(Navdata.length == 0)
         {
-            Myoption = <h4>Henüz bir bildiriminiz yok.</h4>
+            Myoption = <h3 style={{textAlign:"center",lineHeight:"300px"}}>You dont get a noitification yet</h3>
         }
         
         if(Navdata.length > 0)

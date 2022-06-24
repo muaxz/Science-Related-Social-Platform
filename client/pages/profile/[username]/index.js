@@ -4,6 +4,7 @@ import Mainlayout from "../../../containers/Layout/mainlayout";
 import Profile from "../../../containers/pages/Profile";
 import {Global} from "../../../components/styledcomponents/Globalstyles"
 import axios from "axios";
+import {calculatedate} from "../../../utilsfunc"
 
 
 export default function Stuff({profile,counts,contents,getquery}){
@@ -31,6 +32,11 @@ export async function getServerSideProps({req,query}){
             axios.get(`user/getuserprofilecontent/${query.username}/${query.name == "Post" ? "true" : "false"}/${query.name}/0`,req.headers.cookie ? {headers:{Cookie:req.headers.cookie}} : {})
         ])
         //users?age=15&gender=m&
+
+        recieved[2].data.data.forEach(element => {
+            element.difference = calculatedate(element.createdAt)
+        });
+        
         if(recieved[0].data && recieved[0].data.error || recieved[1].data && recieved[1].data.error){
 
             return {
