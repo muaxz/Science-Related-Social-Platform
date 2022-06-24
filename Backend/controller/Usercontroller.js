@@ -474,13 +474,11 @@ exports.updatenotification = async (req,res,next)=>{
 exports.updateprofile = async (req,res,next)=>{
   //bunlardan once upload middleware
   const {typeofupdate} = req.params
-  const Urldata = req.urlconfig
+  const {UserId} = req.userdata
   var controllerforusername = false
   const userprofiledata = JSON.parse(req.body.Profilevalues)
   
 
-
-  const {UserId} = req.userdata
   
   if(typeofupdate == "Profile"){
        //upload 2 means there 2 images changed
@@ -511,7 +509,7 @@ exports.updateprofile = async (req,res,next)=>{
 
             const myuser = await User.findByPk(UserId)
             const imageStoreResponse = await Promise.all(imageUrlStore)
-            console.log(res)
+         
             //Attributes gonna be updated
             var willbeupdated = {
                 firstname:userprofiledata.firstname,
@@ -521,12 +519,19 @@ exports.updateprofile = async (req,res,next)=>{
               }
               
             imageStoreResponse.forEach(element => {
+
+                if(element.state == "Big"){
+                  return res.json({state:false,SIZE:"Big"})
+                }
+
                 if(element.key == "Backimage"){
                     willbeupdated["backgroundUrl"] = element.url
                 }else if(element.key == "mainImage"){
                     willbeupdated["mainUrl"] = element.url
                 }
+
             });
+
             await myuser.update(willbeupdated)
               
             return res.json({state:"success"})
@@ -579,6 +584,7 @@ exports.updateprofile = async (req,res,next)=>{
   }else{
 
     try {
+
         var newobj = {}
       
         for (const key in userprofiledata.Notifications) {
@@ -590,7 +596,6 @@ exports.updateprofile = async (req,res,next)=>{
 
     } catch (error) {
       
-    
       return next()
     }
   

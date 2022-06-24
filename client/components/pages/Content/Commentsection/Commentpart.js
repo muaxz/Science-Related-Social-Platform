@@ -4,7 +4,7 @@ import Belowcomment from "./belowcomment";
 
 function Commentpart({Editcommenthandler,Producecomment,list,spinner,handleanswer,commentRelationHandler}){
     
-    const [mylist,setMylist] = useState([])
+    const [mylist,setMylist] = useState(list)
     
     
     useEffect(()=>{

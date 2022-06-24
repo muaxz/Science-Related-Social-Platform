@@ -263,12 +263,12 @@ export default function MyEditor({categories,content}){
 
         if(typeofsubmit == "Published"){
 
-          windowInformRef.current="Postun Yayinlandi !"
+          windowInformRef.current="Your post published !!"
 
         }
         else{
 
-          windowInformRef.current="Taslak Olarak kaydedildi"
+          windowInformRef.current="Your post saved as draft"
           
         }
 
@@ -287,7 +287,8 @@ export default function MyEditor({categories,content}){
           seterrmsg:seterror, 
           typeofsubmit:typeofsubmit,
           setwindow:setwindowactive, 
-          draftContentId:content.id
+          draftContentId:content.id,
+          currentUserId:userdata.UserId
         })
     
     }

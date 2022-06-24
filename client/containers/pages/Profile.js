@@ -33,6 +33,7 @@ width:100%;
 const Imagesection=styled.div`
 position:relative;
 height:250px;
+background-color:lightblue;
 position:relative;
 `
 
@@ -41,25 +42,25 @@ position:absolute;
 width:120px;
 height:120px;
 top:-120px;
-left:140px;
-@media (max-width:1050px){
+left:120px;
+@media (max-width:1400px){
     position:absolute;
     width:90px;
     height:90px;
     top:-100px;
-    left:160px;
+    left:130px;
     color:White;
 }
 `
 
 const BackgroundImage=styled.div`
-width:100%;
+max-width:750px;
+margin:auto;
 height:100%;
 background-image:${({photo})=>`url(${photo})`};
-background-size: contain;
+background-size: cover;
 background-repeat: no-repeat;
 background-position: center;
-background-color:lightgrey; 
 `
 
 const Contentpart=styled.div`
@@ -68,24 +69,27 @@ padding-bottom:20px;
 `
 
 const Usersection=styled.div`
-position:sticky;
-top:250px;
-margin-top:80px;
-align-self:flex-start;
-max-width:400px;
+position:absolute;
+top:360px;
+left:15%;
+max-width:350px;
+transform:translateX(-50%);
 text-align:center;
 width:100%;
-@media (max-width:1050px){
+@media (max-width:1400px){
     position:absolute;
     left:50%;
     transform:translateX(-50%);
-    top:100px;
+    top:180px;
     color:White;
 }
 `
 
 const Contentsection=styled.div`
-max-width:1000px;
+max-width:751px;
+border-right:1px solid lightgrey;
+border-left:1px solid lightgrey;
+margin:auto;
 width:100%;
 `
 const Optionbar=styled.div`
@@ -123,7 +127,7 @@ font-weight:600;
 const Description=styled.div`
 width:80%;
 margin:auto;
-@media (max-width:1050px){
+@media (max-width:1400px){
   display:none;
 }
 `
@@ -135,9 +139,10 @@ margin-top:5px;
 padding:7px;
 cursor:pointer;
 &:hover{
-    background-color:white;
-    color:#bfd200;
-    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+   
+    box-shadow:-5px 5px #ef233c;
+    transform:translate(5px,-5px);
+    transition:0.2s;
 }
 `
 
@@ -151,13 +156,10 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
     const {bottom} = useScroll();
     const[contentdata,setcontentdata]=useState(Contentdata);
     const[GarbageAcitve,setGarbageActive] = useState(false)
-    const[order,setorder]=useState(10);
-    const[profiledata,setprofiledata]=useState(Mydata)
     const[checkuserid,setcheckuserid]=useState(false);
     const[beingfollowed,setbeingfollowed]=useState(false);
     const[Timetorender,settimetorender]=useState(false);
     const[notificationactive,setnotificationactive]=useState(false);
-    const[spinner,setspinner]=useState(false);
     const[activeedit,setactiveedit] = useState(false);
     const[editforsettings,seteditforsettings] = useState(false)
     const[showfollowinglist,setshowfollowinglist] = useState("")
@@ -179,7 +181,6 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
         } 
     })
    
-
    useEffect(()=>{
       //sadece paignation zaten query değişince ilk 10 value serverside tarafından çekiliyor
       var Leakcontrolloer = true;
@@ -188,12 +189,11 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
       //sadece scroll down oldugunda
       //console.log("sa")
       if(bottom){
-            setspinner(true);
+
             Getuserprofilecontent({
                 UserId:query.username,
                 category:query.name,
                 setdata:setcontentdata,
-                setspinner:setspinner,
                 contentdata:contentdata,
                 paignation:true,
                 ownerpost:query.name == "Post" ? "true" : "false",
@@ -205,7 +205,6 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
 
       return ()=>{
          Leakcontrolloer=false;
-       
       }
 
    },[bottom])
@@ -254,7 +253,6 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
 
     useEffect(()=>{
 
-      setprofiledata({...Mydata})
       setcontentdata([...Contentdata])
       setshowfollowinglist("")
       setactiveedit(false)
@@ -350,6 +348,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
     const prepForDeletion=(prepType,PostId)=>{
       
         if(prepType == "DELETE"){
+
             const copyContents = [...contentdata]
             const index = copyContents.findIndex((item)=>item.id == postWillBeDeleted.current)
             console.log(index)
@@ -380,7 +379,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
             }
             <Innerdiv>
                 <Imagesection>
-                    <BackgroundImage photo={profiledata.backgroundUrl} /> 
+                    <BackgroundImage photo={Mydata.backgroundUrl} /> 
                     {       //burada context userId yok ise buna izin vermiyorum ancak setstate oldugunda gösterim var
                             //TODO this should be fixed during navigaiton
                             //userdata.userıd yoksa kullanıcı giriş yapmamıştır
@@ -418,9 +417,9 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                 <Contentpart>
                      <Usersection>
                          <ProfileImageholder>
-                             <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile={profiledata.mainUrl}></Porfileimage>
+                             <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile={Mydata.mainUrl}></Porfileimage>
                          </ProfileImageholder>
-                         <h4>{profiledata.firstname + " " + profiledata.lastname}</h4>
+                         <h4>{Mydata.firstname + " " + Mydata.lastname}</h4>
                          <span style={{color:"#6c757d"}}>UI designer</span>
                          <div style={{display:"flex",marginTop:"10px",marginBottom:"40px",justifyContent:"space-around"}}>
                             <div>
@@ -438,7 +437,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                          </div>
                          <Description style={{width:"80%",margin:"auto"}}>
                              <hr></hr>
-                             <p style={{padding:"15px"}}>{profiledata.Personaltext}</p>
+                             <p style={{padding:"15px"}}>{Mydata.Personaltext}</p>
                              <hr></hr>
                          </Description>
                      </Usersection>

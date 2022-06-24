@@ -226,6 +226,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
     const {userdata} = useContext(createusercontext);
     const [isfollowing,setisfollowing] = useState(false);
     const router = useRouter()
+    const [contentTime,setContentTime] = useState(calculatedate(date))
  
 
 
@@ -374,11 +375,13 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
         return cleanText.substring(0,200)+additional
     }
     
-    const Calculatetime = useMemo(()=>calculatedate(date),[])
+    useEffect(()=>{
+        setContentTime(calculatedate(date))
+    },[])
 
 
     return (
-        <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={Calculatetime}  iscomment={iscomment}>  
+        <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={contentTime}  iscomment={iscomment}>  
                 {
                     //Comment Left Icon
                     iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-6px",top:"8px",color:"#faf9f9"}}></Icon> : null
@@ -492,7 +495,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                                 </Profileimageholder>
                                 <div style={{marginLeft:"10px",fontSize:"15px",textTransform:"capitalize"}}><p style={{color:"black"}}>
                                     <strong>{userfirstname+" "+usersurname}</strong></p>
-                                    <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{Calculatetime.time + " " + calculatedate(date).express + " ago"}</span></div>
+                                    <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{contentTime.time + " " + contentTime.express + " ago"}</span></div>
                                 </div>           
                             </div>
                     </Profilediv>

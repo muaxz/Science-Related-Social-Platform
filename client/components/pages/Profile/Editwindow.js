@@ -301,7 +301,9 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                     copy["ValidationNewpassword"].activate = true 
 
                 }else{//selected 3
+
                     copy["Notifications"].activate = true
+                    
                 }
 
             }else{

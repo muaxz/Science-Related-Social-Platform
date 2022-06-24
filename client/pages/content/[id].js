@@ -5,7 +5,7 @@ import Head from "next/head"
 import axious from "axios";
 
 
-export default function Content({mydata,comments,getquery,comments2}) {
+export default function Content({mydata,comments,getquery}) {
 
     return (
        <> 

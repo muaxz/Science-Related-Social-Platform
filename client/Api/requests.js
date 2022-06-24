@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "next/router"
 
 
 axios.defaults.baseURL="http://localhost:3001";
@@ -54,7 +55,7 @@ axios.interceptors.request.use(function (config) {
 
 
 
-export const Errorhandler=({data,seterrmsg,setwindow,setuserdata,setlogged,setspinner,router})=>{
+export const Errorhandler=({data,seterrmsg,setwindow,setuserdata,setlogged,setspinner})=>{
 
    if(data && data.error){
 
@@ -67,7 +68,7 @@ export const Errorhandler=({data,seterrmsg,setwindow,setuserdata,setlogged,setsp
           router.push("/500")
 
       }else if(data.state == 401){
-
+    
         setuserdata({});
         setlogged(false);
         setspinner(true);
@@ -121,7 +122,7 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
       }
 
     }catch(err){
-        seterrmsg(true)
+      router.push("/500")
     }
     
 }
@@ -136,11 +137,11 @@ export const resetPassword = async({token,password,setBackendState,setWindowActi
       setBackendState("PASSWORD_SAVED")
       setWindowActive(true)
    }
-   console.log(data)
+
 
   } catch (error) {
 
-      console.log(error)
+    router.push("/500")
 
   }
 
@@ -161,7 +162,7 @@ export const sendResetEmail = async({email,setBackendState,sendWindowActive})=>{
 
   } catch (error) {
 
-      console.log(error)
+    router.push("/500")
 
   }
 
@@ -180,7 +181,7 @@ export const logout = async({setlogged,setuserdata,router,setspinner})=>{
       
   } catch (error) {
 
-     router.push(error)
+    router.push("/500")
 
   }
 
@@ -203,11 +204,11 @@ export const resigterreq=async({setBackendState,userdata,setactive,seterrmsg})=>
 
   }catch(err){
       seterrmsg(true)
-      console.log("sorun var");
+      router.push("/500")
   }
 }
 //Content produce
-export const producereq=async({contentdata,seterrmsg,setwindow,router,typeofsubmit,draftContentId})=>{
+export const producereq=async({contentdata,seterrmsg,setwindow,typeofsubmit,draftContentId,currentUserId})=>{
 
   try{
     
@@ -215,8 +216,9 @@ export const producereq=async({contentdata,seterrmsg,setwindow,router,typeofsubm
     
     if(Errorhandler({data,setwindow,seterrmsg})){
         setwindow(true);
-        router.push("/profile/content")
-        //we route işlemi
+        setTimeout(() => {
+          router.push(`/profile/${currentUserId}?name=Post`)
+        },2000);
     }
     else{ 
        return;
@@ -224,7 +226,7 @@ export const producereq=async({contentdata,seterrmsg,setwindow,router,typeofsubm
 
   }catch(err){
       seterrmsg(true)
-      console.log("burada")
+      router.push("/500")
   }
 
 }
@@ -252,52 +254,45 @@ export const Producecommentreq=async ({Message,TakerId,setnumbercom,setwindow,Us
 
   }catch(err){
       seterrmsg(true)
-      console.log("burada")
+      router.push("/500")
   }
 
 }
 
 export const Homereq=async({currentdata,seterrmsg,setwindow,setcontentdata,order,setstopreq,category,paignation,selectionlist,setselection})=>{
  
-  try {
+  try { 
     
     const {data} = await axios.get(`content/gethome/${order}/${category}`)
     
-    if(Errorhandler({data,seterrmsg,setwindow})){
+    if(true){
    
-
+    
       if(!data.data.length){
 
-        console.log("stopped request")
         const selections = {...selectionlist};
         selections[category].stoprequesting = true;
         setselection(selectionlist);
+        return;
 
       }
-
-      var Current=[...currentdata];
-      var Mydata=[...data.data];
 
       if(paignation){
 
-        setcontentdata(Current.concat(Mydata));
-        
-        //push metodu bir diziyi bir dizinin içine pushluyor fakat concat elemanları
+        setcontentdata(prev=>([...prev,...data.data]));
+
+      }else{
+
+        setcontentdata([])
+        setcontentdata(data.data)
 
       }
-      else{
-          setcontentdata([]) // for preventing rerendering on contentcard, instead create from strach
-          setcontentdata(Mydata)
- 
-      }
 
+      return
     }    
-    else{
-      return;
-    }
   
   } catch (error) {
-       seterrmsg(true);
+    console.log("hererere")
   }
 }
 
@@ -323,7 +318,7 @@ export const Createrelationreq=async({UserId,PostId,attribute,seterrmsg,setwindo
     
   
   } catch (error) {
-       console.log("relation error")
+       router.push("/500")
        //seterrmsg(true);
   }
 
@@ -339,20 +334,16 @@ export const Contentreq=async({contentId,setcontent,seterrmsg,setwindow})=>{
     if(Errorhandler({data,seterrmsg,setwindow})){ 
        console.log(data.data);
        setcontent(data.data);
-
-       
-
     }    
+
     else if(data == "Unauthroized"){
        //
     }
-    else{
-      return;
-    }
+    else return
   
   } catch (error){
 
-       seterrmsg(true);
+       router.push("/500")
        
   }
 
@@ -397,7 +388,7 @@ export const Commentreq=async({contentId,setactiveproduce,setcomment,seterrmsg,s
   
   } catch (error){
 
-       seterrmsg(true);
+       router.push("/500");
        
   }
 
@@ -411,7 +402,7 @@ export const Contextdata=async ({setspinner,setuserdata,seterrmsg,setwindow,setl
 
     
   
-    if(Errorhandler({data,seterrmsg,setwindow,setuserdata,setlogged,setspinner,router})){ 
+    if(Errorhandler({data,seterrmsg,setwindow,setuserdata,setlogged,setspinner})){ 
 
       const mydata={ 
         UserId:data.userdata.id,
@@ -433,6 +424,8 @@ export const Contextdata=async ({setspinner,setuserdata,seterrmsg,setwindow,setl
 
   } catch (err) {
     setspinner(true);
+    router.push("/500")
+    
   }
 }
 
@@ -460,7 +453,7 @@ export const Getusercontent=async({UserId,params,setdata,setwindow,seterrmsg,ord
   
   } catch (error){
 
-       console.log(error);
+    router.push("/500")
        
   }
 
@@ -473,12 +466,12 @@ export const UpdateNotificationcount=async({UserId})=>{
       await axios.get(`/notification/update/${UserId}`);
 
    } catch (error) {
-      //
+      router.push("/500")
    }
 
 }
 
-export const Getuserprofilecontent=async({setspinner,contentdata,setdata,category,UserId,ownerpost,order,paignation})=>{
+export const Getuserprofilecontent=async({contentdata,setdata,category,UserId,ownerpost,order,paignation})=>{
 
   try {
 
@@ -489,8 +482,6 @@ export const Getuserprofilecontent=async({setspinner,contentdata,setdata,categor
        if(paignation){
           setdata([...contentdata,...data.data])
        }
-
-       setspinner(false)
       
     }    
     else if(data == "Unauthroized"){
@@ -502,7 +493,7 @@ export const Getuserprofilecontent=async({setspinner,contentdata,setdata,categor
   
   } catch (error){
 
-       console.log(error);
+    router.push("/500")
        
   }
 }
@@ -531,7 +522,7 @@ export const Getuserprofile=async({UserId,setuserdata})=>{
   
   } catch (error){
 
-       console.log(error);
+    router.push("/500")
        
   }
   
@@ -553,7 +544,7 @@ export const Createuserrelation=async({UserId,Prevent,FollowedId,checkiffollow})
     
 
   } catch (error) {
-       console.log("relation error")
+    router.push("/500")
        //seterrmsg(true);
   }
 
@@ -581,7 +572,7 @@ export const Notificationreq=async({UserId,setnavdata,order,navdata,lastrow})=>{
     
   
   } catch (error) {
-       console.log("relation error")
+    router.push("/500")
        //seterrmsg(true);
   }
 
@@ -600,7 +591,7 @@ export const NotificationCountreq=async({UserId,setcountdata})=>{
     
 
   } catch (error) {
-       console.log("relation error")
+    router.push("/500")
        //seterrmsg(true);
   }
 
@@ -625,7 +616,7 @@ export const Getusersforsearchbar=async({inputvalue,setusers,setactive,setnothin
  
   
   } catch (error) {
-       console.log("relation error")
+     router.push("/500")
        //seterrmsg(true);
   }
 
@@ -644,7 +635,7 @@ export const DeletePost = async({PostId,seterrmsg,setwindow})=>{
   
   } catch (error){
      
-    console.log("error")
+    router.push("/500")
        
   }
 
@@ -675,7 +666,7 @@ export const Commentanswerreq = async({UppercommentId,Answer,UserId,seterrmsg,se
   
   } catch (error){
      
-    console.log(error)
+    router.push("/500")
        
   }
 
@@ -698,7 +689,7 @@ export const UpdateNotificationactive = async ({FollowedId,Prevent,FollowerId,cu
   
   } catch (error){
      
-    console.log("error")
+    router.push("/500")
        
   }
 
@@ -724,7 +715,9 @@ export const UpdateProfile = async ({userdata,typeofupdate,setuploading,setsucce
               copy["CurrentPasswordForEmail"].warning = true
 
              }
-             else 
+             else if(data.SIZE){
+                console.log("big image size")
+             }else 
              copy["Currentpassword"].warning = true
 
              setuserinfo(copy)
@@ -742,7 +735,7 @@ export const UpdateProfile = async ({userdata,typeofupdate,setuploading,setsucce
 
   }catch (error) {
 
-    setsuccesfulupload("ERROR")
+    router.push("/500")
   }
 }
 
@@ -760,7 +753,7 @@ export const Editcomment = async({commentID,message,setloading,seteditcomment})=
         }
 
       } catch (error) {
-          console.log(error)
+        router.push("/500")
       } 
 }
 
@@ -778,7 +771,7 @@ export const Userprofilefollowlist = async({requestType,UserId,SetFollowList,Fol
 
     } catch (error){
 
-      console.log(error)
+      router.push("/500")
 
     }
 
@@ -792,7 +785,7 @@ export const ReportUserReq = async({checkBoxValue,message,ContentId,reportedUser
 
 
     } catch (error) {
-      console.log(error)
+      router.push("/500")
     }
 
 }
@@ -809,7 +802,7 @@ export const checkTheContent= async ({contentID,publicValue,actionType})=>{
       console.log(data)
 
     } catch (error) {
-    
+      router.push("/500")
     } 
 
 } 
@@ -823,7 +816,7 @@ export const deleteTheReport= async ({reportID})=>{
     console.log(data)
 
   } catch (error) {
-    
+    router.push("/500")
   }
 
 } 
@@ -837,7 +830,7 @@ export const sendReportMessage = async ({TakerId,ContentId,reportMessage})=>{
     console.log(data)
 
   } catch (error) {
-
+    router.push("/500")
   }
 }  
 
@@ -850,7 +843,7 @@ export const SearchContentsForMods = async(searchValue,setContent)=>{
       setContent(data.data)
 
     } catch (error) {
-      //push 500 
+      router.push("/500")
     }
 
 }
@@ -864,7 +857,7 @@ export const GetContentsForMods = async ({order,setContent})=>{
     setContent(prev=>{return [...prev,...data.data]})
 
   } catch (error) {
-    //push 500
+    router.push("/500")
   }
 
 }
@@ -878,12 +871,13 @@ export const handleCommentLike = async({commentId,actionType})=>{
     console.log(resp.data)
 
   } catch (error) {
-    console.log(error)
+    router.push("/500")
   }
 
 }
 
 export const editCategory = async(data)=>{
+
     try {
         const newFormData = new FormData();
         newFormData.append("file",data.blob)
@@ -891,8 +885,9 @@ export const editCategory = async(data)=>{
         await axios.post("/content/editCategory",newFormData)
 
     } catch (error) {
-        console.log(error)
+        router.push("/500")
     }
+
 }
 
 
