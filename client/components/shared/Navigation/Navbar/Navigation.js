@@ -303,9 +303,8 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                <InputHolder flex={"block"}>
                     <Link href="/">
                         <div style={{display:"flex",alignItems:"center",cursor:"pointer"}}>
-                            <Porfileimage profile="https://evrimagaci.org/public/images/logo/v3.svg?v=1" width="40px" height="40px"/>
-                            <div style={{marginLeft:"10px",paddingRight:"10px",borderRight:"1px solid black"}}><span>Evrim Ağacı</span></div>
-                            <div style={{marginLeft:"10px",display:"flex",alignItems:"center"}}><Home style={{fontSize:"30px",color:"#c9184a"}}></Home></div>
+                            <Porfileimage profile="/spinoza.png" width="150px" height="50px"/>
+                            <div style={{display:"flex",alignItems:"center"}}><Home style={{fontSize:"30px",color:"#c9184a"}}></Home></div>
                         </div>
                     </Link>
                 </InputHolder>
@@ -346,7 +345,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
         
                                                 <div style={{display:"flex"}}>
                                                     <div>
-                                                        <Porfileimage profile="/led.jpg" width="45px" height="45px"/>
+                                                        <Porfileimage profile={item.mainUrl} width="45px" height="45px"/>
                                                     </div>
                                                     <div style={{paddingLeft:"10px"}}>
                                                         <p style={{fontWeight:"600"}}>{item.firstname+" "+item.lastname}</p>
@@ -407,7 +406,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                                 query:{name:"Post"}
                             }}> 
                             <div style={{maxWidth:"300px",display:"flex",alignItems:"center"}}>
-                                <Porfileimage width="35px" height="35px" profile="/car.jpg"/>
+                                <Porfileimage width="35px" height="35px" profile={userdata.Userimage}/>
                                 <p style={{marginLeft:"10px",padding:"7px",backgroundColor:"#52b69a",borderRadius:"25px",color:"white",fontSize:"13px"}}>{capitalize(userdata.Username)+" "+capitalize(userdata.Usersurname)}</p>
                             </div>
                          </Link>

@@ -124,8 +124,8 @@ const Logo=styled.div`
 width:100px;
 height:100px;
 border-radius:50%;
-background-image:url("/way.jpg");
-background-size: cover;
+background-image:url("/spinoza-logos.jpeg");
+background-size: contain;
 background-repeat: no-repeat;
 background-position: center; 
 `

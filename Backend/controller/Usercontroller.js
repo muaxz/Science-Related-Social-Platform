@@ -14,7 +14,7 @@ const uploadFunction = require("../MiddleFunctions/imageUpload")
 
 
 //Searching User
-exports.getusername = async(req,res,next)=>{
+exports.searchGetUser = async(req,res,next)=>{
    
   const {input} = req.params;
 
@@ -25,6 +25,7 @@ exports.getusername = async(req,res,next)=>{
         where:{
           firstname:{[Op.startsWith]:`${input}`}
         },
+        attributes:["id","mainUrl","firstname","lastname"],
         limit:10,
         offset:0,
     })
@@ -48,7 +49,7 @@ exports.getuserdata=async(req,res,next)=>{
 
     try {
 
-       const Myuserdata=await Usermodel.findOne({
+       const Myuserdata = await Usermodel.findOne({
            where:{id:currentuserid.UserId},
            attributes:{exclude:["password","ReportSum","email"]}
        })

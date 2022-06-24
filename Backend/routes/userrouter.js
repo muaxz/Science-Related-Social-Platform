@@ -12,7 +12,7 @@ router.get("/getusercount/:UserId",Usercontroller.getuserprofilecount);//Profile
 router.post("/reportUser",Verifytoken,Usercontroller.reportUser)
 router.post("/createuserrelation",Verifytoken,Usercontroller.createuserrelation);
 router.get("/getuserprofilecontent/:UserId/:ownerpost/:category/:order",Usercontroller.getuserprofilecontent);//profile page
-router.get("/getusername/:input",Usercontroller.getusername)//Search Bar
+router.get("/getusername/:input",Usercontroller.searchGetUser)//Search Bar
 router.post("/deletepost",Usercontroller.deletepost)// draft page
 router.get("/updateusernot/:FollowerId/:FollowedId/:currentactive",Usercontroller.updatenotification)//change it to POST REQUEST TODO
 router.post("/updateprofile/:typeofupdate",Verifytoken,UploadMiddle,Usercontroller.updateprofile)

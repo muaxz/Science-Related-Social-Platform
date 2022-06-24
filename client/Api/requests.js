@@ -409,7 +409,7 @@ export const Contextdata=async ({setspinner,setuserdata,seterrmsg,setwindow,setl
         Username:data.userdata.firstname,
         Usersurname:data.userdata.lastname,
         Userrole:data.userdata.Role,
-        Userimage:data.userdata.imageurl,
+        Userimage:data.userdata.mainUrl,
      }
      
       setuserdata(mydata);
