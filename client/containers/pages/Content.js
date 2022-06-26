@@ -1,5 +1,4 @@
 import React, { useEffect,useState,useRef, useContext,useCallback} from 'react'
-import Icon from "../../components/UI/Icon";
 import styled from "styled-components";
 import {Porfileimage} from "../../components/styledcomponents/Globalstyles";
 import {Producecommentreq,Commentreq,Commentanswerreq,Editcomment,handleCommentLike,Createrelationreq} from "../../Api/requests";
@@ -7,10 +6,8 @@ import {createusercontext} from "../../context/Usercontext";
 import {CreateUtilContext} from "../../context/UtilContext";
 import Commentpart from '../../components/pages/Content/Commentsection/Commentpart';
 import useScroll from "../../hooks/Scroll"
-import useClickOutside from "../../hooks/Clikcoutisde"
 import Parser from "react-html-parser"
 import ReportWindow from "../../components/pages/Content/reportWindow"
-import {calculatedate} from "../../utilsfunc"
 import Link from 'next/link';
 import {Checkbox} from "@material-ui/core"
 import {FavoriteBorder,Favorite,BookmarkBorder,BookmarkOutlined,FlagOutlined} from "@material-ui/icons"
@@ -273,7 +270,7 @@ export default function Content({Contentdata,comments,id}){
                         </Link>
                         <div style={{marginLeft:"10px"}}>
                             <span>{content.personal.firstname+" "+content.personal.lastname}</span>
-                            <p style={{color:"#5c6b73",fontSize:"15px"}}>{calculatedate(content.createdAt).time+" "+calculatedate(content.createdAt).express+" ago"}</p>
+                            <p style={{color:"#5c6b73",fontSize:"15px"}}>{content.difference.time+" "+content.difference.express} ago</p>
                         </div>
                     </ProfileDiv>
                     <ContentDiv>

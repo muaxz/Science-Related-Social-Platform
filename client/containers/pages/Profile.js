@@ -1,7 +1,7 @@
 import React,{useEffect,useState,useContext,useCallback, useRef} from 'react'
 import styled from "styled-components";
 import {createusercontext} from "../../context/Usercontext"
-import {Porfileimage} from "../../components/styledcomponents/Globalstyles"
+import {NightLightP, Porfileimage} from "../../components/styledcomponents/Globalstyles"
 import {Createuserrelation,Getuserprofilecontent,Createrelationreq,UpdateNotificationactive,Userprofilefollowlist,DeletePost} from "../../Api/requests"
 import {Button} from "@material-ui/core"
 import Link from "next/link";
@@ -71,6 +71,7 @@ const Usersection=styled.div`
 position:absolute;
 top:360px;
 left:15%;
+padding-top:15px;
 max-width:350px;
 transform:translateX(-50%);
 text-align:center;
@@ -86,8 +87,8 @@ width:100%;
 
 const Contentsection=styled.div`
 max-width:751px;
-border-right:1px solid lightgrey;
-border-left:1px solid lightgrey;
+border-right:1px solid ${({theme})=>theme.contentSectionBorderColor};
+border-left:1px solid ${({theme})=>theme.contentSectionBorderColor};
 margin:auto;
 width:100%;
 `
@@ -104,7 +105,7 @@ const Options=styled.div`
 cursor:pointer;
 transition:all 0.1s;
 font-weight:600;
-color:${({applyborder})=>applyborder ? "#d62828" : "black"};
+color:${({applyborder,theme})=>applyborder ? "#d62828" : theme.p_Color};
 `
 
 const ButtonHolder=styled.div`
@@ -423,25 +424,25 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                          <ProfileImageholder>
                              <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile={Mydata.mainUrl}></Porfileimage>
                          </ProfileImageholder>
-                         <h4>{Mydata.firstname + " " + Mydata.lastname}</h4>
+                         <NightLightP>{Mydata.firstname + " " + Mydata.lastname}</NightLightP>
                          <span style={{color:"#6c757d"}}>UI designer</span>
                          <div style={{display:"flex",marginTop:"10px",marginBottom:"40px"}}>
                             <CountDisplay>
-                                <P>{Counts.Followedcount}</P>
+                                <NightLightP>{Counts.Followedcount}</NightLightP>
                                 <LabelsUnderCounts  onClick={()=>ShowFollowList("FOLLOWER")}>Followers</LabelsUnderCounts>
                             </CountDisplay>
                             <CountDisplay>
-                                <P>{Counts.Followercount}</P>
+                                <NightLightP>{Counts.Followercount}</NightLightP>
                                 <LabelsUnderCounts  onClick={()=>ShowFollowList("FOLLOWING")}>Following</LabelsUnderCounts>
                             </CountDisplay>
                             <CountDisplay>
-                                <P>{Counts.Contentcount}</P>
+                                <NightLightP>{Counts.Contentcount}</NightLightP>
                                 <LabelsUnderCounts  >Gönderi</LabelsUnderCounts>
                             </CountDisplay>
                          </div>
                          <Description style={{width:"80%",margin:"auto"}}>
                              <hr></hr>
-                             <p style={{padding:"15px"}}>{Mydata.Personaltext}</p>
+                             <NightLightP style={{padding:"15px"}}>{Mydata.Personaltext}</NightLightP>
                              <hr></hr>
                          </Description>
                      </Usersection>

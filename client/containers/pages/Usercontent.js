@@ -8,6 +8,7 @@ import useScroll from "../../hooks/Scroll";
 import { Bookmark, BookmarkBorderOutlined, BookmarkBorderRounded, ThumbUpAlt } from '@material-ui/icons';
 import uniqid from "uniqid"
 import { calculatedate } from '../../utilsfunc';
+import { NightLightP } from '../../components/styledcomponents/Globalstyles';
 
 const Exteriordiv=styled.div`
 width:100%;
@@ -125,14 +126,16 @@ export default function Usercontent({params,mydata}){
                         params !== "Draft" ? 
 
                         <div style={{display:"flex",alignItems:"center",justifyContent:"center"}}>
-                        <h3 style={{paddingRight:"5px"}}>{params == "Like" ? "Liked Contents" : "Saved Contents"} </h3>
-                        {
-                                params == "Readlater" ?
+                        <NightLightP style={{paddingRight:"5px"}}>{params == "Like" ? "Liked Contents" : "Saved Contents"} </NightLightP>
+                        <NightLightP>
+                            {
+                                    params == "Readlater" ?
 
-                                <Bookmark ></Bookmark>
-                                :
-                                <ThumbUpAlt></ThumbUpAlt>
-                        }
+                                    <Bookmark></Bookmark>
+                                    :
+                                    <ThumbUpAlt></ThumbUpAlt>
+                            }
+                        </NightLightP>
                         <span style={{paddingLeft:"5px",color:"#6c757d",fontSize:"20px",fontWeight:"bold"}}>
                             {data.length}
                         </span>
@@ -146,7 +149,7 @@ export default function Usercontent({params,mydata}){
                       {
                           !data.length ? 
 
-                          <p style={{textAlign:"center",textTransform:"capitalize",fontSize:"25px",paddingTop:"30px"}}>{fornorecord}</p>
+                          <NightLightP style={{textAlign:"center",textTransform:"capitalize",fontSize:"25px",paddingTop:"30px"}}>{fornorecord}</NightLightP>
 
                           : null 
                       }

@@ -1,5 +1,5 @@
 import React,{useState,useEffect,useContext} from 'react'
-import styled from "styled-components";
+import styled,{ThemeProvider} from "styled-components";
 import Lefttoolbar from "../../components/shared/Navigation/SideBar/Lefttoolbar";
 import Navigation from "../../components/shared/Navigation/Navbar/Navigation";
 import {Global,Black,SavedInfoDiv} from "../../components/styledcomponents/Globalstyles";
@@ -12,9 +12,7 @@ import Icon from "../../components/UI/Icon";
 import {NotificationCountreq,Notificationreq,UpdateNotificationcount} from "../../Api/requests"
 
 
-const Bigdiv=styled.div`
-background-Color:${({isNight})=> isNight ? "#041C32" : ""};
-`
+const Bigdiv=styled.div``
 
 const Goupicon=styled.div`
 position:fixed;
@@ -26,6 +24,23 @@ z-index:100;
 opacity:${({up})=>up ? "1" : "0"};
 `
 //TODO socket io handle functions on serverside
+
+const themeNight = {
+background:"rgb(21, 32, 43)",
+cardBackground:"rgb(21, 32, 43)",
+cardShadowColor:"",
+p_Color:"white",
+contentSectionBorderColor:"#383838"
+}
+
+const themeLight = {
+cardShadowColor:"#00afb9",
+background:"lightgrey",
+cardBackground:"white",
+p_Color:"black",
+contentSectionBorderColor:"white"
+}
+
 const socket = io("http://localhost:3001");
 
 export default function Mainlayout({children}) {
@@ -40,9 +55,8 @@ export default function Mainlayout({children}) {
     const [lastrecord,setlastrecord]=useState(0);
     const [lastrecordactive,setlastrecordactive]=useState(false);
     const userouter=useRouter();
-    useEffect(()=>{
-        console.log("RENDERED MAIN LOOOOOOOO")
-    },[])
+    
+
     useEffect(()=>{
 
         if(userdata.UserId){
@@ -52,7 +66,6 @@ export default function Mainlayout({children}) {
     },[userdata])
 
     useEffect(() => {
-    
         setactive(false);  
     }, [userouter.query])
     
@@ -143,18 +156,20 @@ export default function Mainlayout({children}) {
 
     //
     return (
-        <Bigdiv isNight={nightmode}>
-            <input id='csrf-token' type='hidden' value=""></input>
-            <Black onClick={()=>setactive(false)} aktif={active}></Black>
-            <SavedInfoDiv active={savedWindow}>{savedWindowText}</SavedInfoDiv>
-            <Navigation Update={Updatecount} Reloadfunc={Reloadnav} Count={countofdata} Data={navdata}></Navigation>
-            <Lefttoolbar myactive={active} makeactive={setactive}></Lefttoolbar>
-            {/*this part will be changed*/}
-            <Global></Global>
-            <Goupicon onClick={()=>{window.scrollTo({top:0})}} up={goup}>
-                <Icon className="fas fa-chevron-up fa-lg" Iconconfig={{backcolor:"#ef233c",color:"white",width:"40px",height:"40px",lineheight:"40px"}}></Icon>
-            </Goupicon>
-            {children}
-        </Bigdiv>
+        <ThemeProvider theme={nightmode ? themeNight : themeLight}>
+            <Bigdiv>
+                <input id='csrf-token' type='hidden' value=""></input>
+                <Black onClick={()=>setactive(false)} aktif={active}></Black>
+                <SavedInfoDiv active={savedWindow}>{savedWindowText}</SavedInfoDiv>
+                <Navigation Update={Updatecount} Reloadfunc={Reloadnav} Count={countofdata} Data={navdata}></Navigation>
+                <Lefttoolbar myactive={active} makeactive={setactive}></Lefttoolbar>
+                {/*this part will be changed*/}
+                <Global></Global>
+                <Goupicon onClick={()=>{window.scrollTo({top:0})}} up={goup}>
+                    <Icon className="fas fa-chevron-up fa-lg" Iconconfig={{backcolor:"#ef233c",color:"white",width:"40px",height:"40px",lineheight:"40px"}}></Icon>
+                </Goupicon>
+                {children}
+            </Bigdiv>
+        </ThemeProvider>
     )
 }

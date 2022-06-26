@@ -108,13 +108,7 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
 
       }
       else{
-        /*
-        setInterval(async() => {
-          const response = await RefreshReq();
-          console.log(response)
-        }, 1000*30);
-        */
-
+  
         setlogged(true);
         setuserdata(data.Userdata);
         setspinner(true);
@@ -188,7 +182,7 @@ export const logout = async({setlogged,setuserdata,router,setspinner})=>{
 
 }
 
-export const resigterreq=async({setBackendState,userdata,setactive,seterrmsg})=>{
+export const resigterreq=async({setBackendState,userdata,setactive,seterrmsg,setActionType})=>{
    
   try{
 
@@ -199,7 +193,9 @@ export const resigterreq=async({setBackendState,userdata,setactive,seterrmsg})=>
         setactive(true)
     }
     else{
-        //TODO push user to home page with updating context
+       setActionType("Login")
+       setBackendState("REGISTERED")
+       setactive(true)
     }
 
   }catch(err){
@@ -398,7 +394,7 @@ export const Contextdata=async ({setspinner,setuserdata,seterrmsg,setwindow,setl
  
   try {
 
-    const {data}=await axios.get(`/user/getuserdata`,{withCredentials:true});
+    const {data} = await axios.get(`/user/getuserdata`,{withCredentials:true});
 
     
   
@@ -626,7 +622,7 @@ export const DeletePost = async({PostId,seterrmsg,setwindow})=>{
 
   try {
 
-    const {data} = await axios.delete(`content/deleteContent/${PostId}`);
+    const {data} = await axios.delete(`content/deleteContent/${PostId}`,{withCredentials:true});
     
     if(Errorhandler({data,seterrmsg,setwindow})){ 
        console.log(data.success);   

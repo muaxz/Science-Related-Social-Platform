@@ -2,7 +2,7 @@ import React,{useState,useEffect,useContext,useMemo, createElement} from 'react'
 import styled,{keyframes} from "styled-components";
 import {createusercontext} from "../../../context/Usercontext";
 import {CreateUtilContext} from "../../../context/UtilContext";
-import {Porfileimage,Spinner} from "../../styledcomponents/Globalstyles";
+import {Porfileimage,Spinner,NightLightP} from "../../styledcomponents/Globalstyles";
 import Link from "next/link";
 import {useRouter} from "next/router"
 import Icon from "../../UI/Icon"
@@ -36,7 +36,8 @@ position:relative;
 cursor:pointer;
 height:100%;
 width:100%;
-background-color:${({nightmode})=> !nightmode ? "#faf9f9": "#1F1B24"};
+background-color:${({theme})=>theme.cardBackground};
+border:1px solid white;
 border-radius:7px;
 box-shadow: rgba(100, 100, 111, 0.5) 0px 7px 29px 0px;
 animation-duration:2s;
@@ -50,7 +51,7 @@ animation-name:${({animation,timing})=>{
 }};
 animation-iteration-count:3;
 &:hover{
-    box-shadow:-5px 5px #00afb9;
+    box-shadow:-5px 5px ${({theme})=>theme.cardShadowColor};
     transform:translate(5px,-5px);
     transition:0.2s;
 }
@@ -409,7 +410,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                     !iscomment ?  
                         
                     <div ref={ref}>   
-                            <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A",hoverback:"#ea526f",width:"30px",height:"30px",lineheight:"30px",hovercolor:"white"}}></Icon>
+                           <NightLightP><Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",hoverback:"#ea526f",width:"30px",height:"30px",lineheight:"30px",hovercolor:"white"}}></Icon></NightLightP>
                             <CategoryDiv>{categoryType}</CategoryDiv>
                             {
                                 visible ?
@@ -510,8 +511,8 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                                     <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={profileimage ?? "/userphoto2.png"}></Porfileimage>
                                     </Link>
                                 </Profileimageholder>
-                                <div style={{marginLeft:"10px",fontSize:"15px",textTransform:"capitalize"}}><p style={{color:"black"}}>
-                                    <strong>{userfirstname+" "+usersurname}</strong></p>
+                                <div style={{marginLeft:"10px",fontSize:"15px",textTransform:"capitalize"}}>
+                                    <NightLightP><strong>{userfirstname+" "+usersurname}</strong></NightLightP>
                                     <div style={{marginLeft:"auto",fontSize:"13px",marginRight:"10px",color:"#7D7D7D"}}><span>{date.time+ " " + date.express + " ago"}</span></div>
                                 </div>           
                             </div>
@@ -579,12 +580,12 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                                 !iscomment && 
                                 (<İconholder howercolor="green" style={{flex:1}}>
                                         <Icons  howercolor="0, 255, 0, 0.2" ismarked={elements.reshow.ismarked} animation={elements.reshow.animation} color={"green"}  onClick={()=>relationHandler("reshow")}  className="fas fa-retweet fa-sm"></Icons>
-                                        <Spanfor onClick={()=>showwindow(elements["reshow"].array,"Reshow")}>{elements.reshow.number}</Spanfor>
+                                        <NightLightP onClick={()=>showwindow(elements["reshow"].array,"Reshow")}>{elements.reshow.number}</NightLightP>
                                 </İconholder>)
                                 }
                                 <İconholder howercolor="red" style={{flex:1}}>
                                     <Icons  howercolor="255, 0, 0,0.2" ismarked={elements.Like.ismarked} animation={elements.Like.animation} color={"#C72121"}  onClick={()=>relationHandler("Like")} className="fas fa-heart fa-sm"></Icons>
-                                    <Spanfor  onClick={()=>showwindow(elements["Like"].array,"Like")} >{elements.Like.number}</Spanfor>
+                                    <NightLightP  onClick={()=>showwindow(elements["Like"].array,"Like")} >{elements.Like.number}</NightLightP>
                                 </İconholder>
                                 <İconholder style={{flex:8}}>
                                     {
@@ -596,7 +597,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
 
                                         <Icons className="fas fa-comment-alt fa-sm"></Icons>
                                     }
-                                    <span style={{marginLeft:"5px"}}>{comment.length}</span>
+                                    <NightLightP style={{marginLeft:"5px"}}>{comment.length}</NightLightP>
                                 </İconholder>
                                 {
                                     !iscomment && 

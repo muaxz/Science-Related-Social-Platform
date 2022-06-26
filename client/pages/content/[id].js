@@ -3,6 +3,7 @@ import Mainlayout from "../../containers/Layout/mainlayout";
 import Mycontent from "../../containers/pages/Content";
 import Head from "next/head"
 import axious from "axios";
+import {calculatedate} from "../../utilsfunc"
 
 
 export default function Content({mydata,comments,getquery}) {
@@ -35,7 +36,7 @@ export async function getServerSideProps({query}){
         axious.get(`comment/${query.id}/false/0/false`)
         ])
 
-        console.log(recieve[1].data)
+    
         //ilk 10 comment için istek atılıcak
         //eğer burası null ise 404 olarak hata döndür redirect to 404.js
         if(recieve[0].data && recieve[0].data.error || recieve[1].data && recieve[1].data.error){
@@ -52,12 +53,14 @@ export async function getServerSideProps({query}){
             
             return {
                 redirect:{
-                    destination:"/404.js"
+                    destination:"/404"
                 }
             };
     
         };
- 
+        
+        recieve[0].data.data.difference = calculatedate(recieve[0].data.data.createdAt)
+
         return {
             props :{mydata:recieve[0].data.data,comments:recieve[1].data.data,getquery:query.id}
         }

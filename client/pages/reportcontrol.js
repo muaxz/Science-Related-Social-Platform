@@ -56,6 +56,11 @@ export async function getServerSideProps({req,res}){
 
         }
 
+        if(response.headers['set-cookie']){
+          
+            res.setHeader("Set-Cookie",[response.headers['set-cookie'][0]])
+        }
+
         return {
             props:{content:response.data.data}
         }

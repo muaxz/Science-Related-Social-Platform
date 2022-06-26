@@ -18,15 +18,6 @@ max-width:1250px;
 width:100%;
 margin:auto;
 `
-const TitleDiv=styled.div`
-width:100%;
-padding:10px;
-height:300px;
-background-image:url(/way.jpg);
-background-size: cover;
-background-repeat: no-repeat;
-background-position: center; 
-`
 
 const ContentDiv=styled.div`
 display:flex;
@@ -41,19 +32,6 @@ width:100%;
 }
 `
 
-const ShortDiv=styled.div`
-position:sticky;
-top:60px;
-height:50px;
-max-width:650px;
-width:100%;
-margin:auto;
-margin-bottom:10px;
-overflow-x:hidden;
-background-color:white;
-z-index:120;
-`
-
 const InnershortDiv=styled.div`
 height:100%;
 width:100%;
@@ -65,39 +43,6 @@ position:relative;
 right:${({slidevalue})=>slidevalue};
 `
 
-const Selectionboxes=styled.div`
-width:100px;
-font-weight:600;
-padding:5px;
-margin-left:5px;
-text-align:center;
-font-size:14px;
-border-radius:50px;
-cursor:pointer;
-background-color:${({selected})=>selected ? "#ef233c" :"#ced4da"};
-color:${({selected})=>selected ? "white" :"black"};
-flex-shrink:0;
-`
-const Iconholder=styled.div`
-display:flex;
-justify-content:center;
-color:red;
-align-items:center;
-position:absolute;
-padding:6px;
-height:100%;
-cursor:pointer;
-background-color:white;
-opacity:1;
-z-index:150;
-left:${({leftvalue})=>leftvalue};
-top:50%;
-font-size:20px;
-transition-duration:0.1s;
-transform:translateY(-50%);
-right:${({rightvalue})=>rightvalue};
-box-shadow:10px 10px 60px 30px white;
-`
 const Container=styled.div`
 padding:30px;
 @media (max-width:940px){

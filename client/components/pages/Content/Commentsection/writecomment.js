@@ -17,6 +17,7 @@ justify-content:center;
 const Options=styled.div`
 width:${({flex})=>flex};
 padding-right:10px;
+color:red;
 `
 const rotate360 = keyframes`
   from {
@@ -71,12 +72,12 @@ export default function Commentsection({Producecomment,spinner}){
                 </Options>
                 <Options flex={"70%"}>
                     <TextField
-                    value={commentvalue}
-                    onChange={Changevalue}
-                    color="secondary"
-                    style={{width:"100%"}}
-                    label="Write a comment..."           
-                    variant="outlined"
+                      inputProps={{style:{color:"#bf4342",fontWeight:"bold",borderColor:"red"}}}
+                      value={commentvalue}
+                      onChange={Changevalue}
+                      style={{width:"100%"}}
+                      placeholder="Write a comment..."           
+                      variant="outlined"
                     >
                     </TextField> 
                 </Options>

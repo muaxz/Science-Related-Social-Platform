@@ -190,7 +190,7 @@ export default function MyEditor({categories,content}){
     
     useEffect(()=>{
 
-        const {CKEditor} = require("@ckeditor/ckeditor5-react")
+        const {CKEditor} = require("@ckeditor/ckeditor5-react/dist/ckeditor")
         
         editorRef.current = {
             CKE: CKEditor,

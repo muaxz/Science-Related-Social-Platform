@@ -34,12 +34,12 @@ exports.login = async (req,res,next)=>{
             
             if(result == true){
                 
-               jwt.sign({UserId:user.id,UserRole:user.Role},"AccessToken-SecretKey",{expiresIn:"5h"},(err,accessToken)=>{
+               jwt.sign({UserId:user.id,UserRole:user.Role,exp: Math.floor(Date.now() / 1000) + 15},"AccessToken-SecretKey",(err,accessToken)=>{
                
-                   jwt.sign({UserId:user.id,UserRole:user.Role},"refresh-accessToken-key",async (err,refreshToken)=>{
+                   jwt.sign({UserId:user.id,UserRole:user.Role},"refreshSecretKey",async (err,refreshToken)=>{
 
-                     res.cookie("accessToken",accessToken,{httpOnly:true,path:"/",secure:true})
-                     res.cookie("refreshToken",refreshToken,{httpOnly:true,path:"/",secure:true})
+                     res.cookie("accessToken",accessToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"strict"})
+                     res.cookie("refreshToken",refreshToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true})
                      const RefreshTokens = await client.get("refreshTokens")
                      console.log("redis stuff down  : ")
                      console.log(RefreshTokens)

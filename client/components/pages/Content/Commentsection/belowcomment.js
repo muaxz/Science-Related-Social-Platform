@@ -1,6 +1,7 @@
 import React,{useRef} from 'react'
 import Contentcard from "../../../shared/Cards/Contentcard";
 import uniqid from "uniqid"
+import {calculatedate} from "../../../../utilsfunc"
 //deneme
 
 
@@ -20,15 +21,13 @@ function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,im
     retweet={[]}
     comment={[]}
     readlater={[]}
-    profileimage={"/black.jpg"}
+    profileimage={profileimage}
     title={title}//no need
     titleimage={"yaprak.jpg"}
     userfirstname={userfirstname}
     usersurname={usersurname}
     subtitle={subtitle}//no need
     date={date}
-    imagefilename={imagefilename}
-    imagetoken={imagetoken}
     userid={userid}
     Answerhandler={Answerhandler}
     Childlength={mylist.length}
@@ -67,16 +66,14 @@ function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,im
                     retweet={[]}
                     comment={[]}
                     readlater={[]}//key numarası
-                    profileimage={"/black.jpg"}
                     title={item.title}//no need
-                    titleimage={"yaprak.jpg"}
+                    titleimage={"/yaprak.jpg"}
                     userfirstname={item.User.firstname}
                     usersurname={item.User.lastname}
                     userid={item.User.id}
-                    imagefilename={item.User.imageurl}
-                    imagetoken={item.User.imagetoken}
+                    profileimage={item.User.mainUrl}
                     subtitle={item.subtitle}//no need
-                    date={item.createdAt}
+                    date={"item.difference || calculatedate(item.createdAt)"}
                     mylist={item.takeit}
                     Answerhandler={Answerhandler}
                     Editcommenthandler={Editcommenthandler}

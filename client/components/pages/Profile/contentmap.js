@@ -1,6 +1,8 @@
 import React from 'react'
 import Contentcard from "../../../components/shared/Cards/Contentcard"
 import uniqid from "uniqid"
+import {calculatedate} from "../../../utilsfunc"
+import { NightLightP } from '../../styledcomponents/Globalstyles'
 
 function Contentmap({contentlist,relationfunc,norecord,deleteThePost}) {
   
@@ -40,14 +42,14 @@ function Contentmap({contentlist,relationfunc,norecord,deleteThePost}) {
                                         userfirstname={item.personal ? item.personal.firstname : item.Content.personal.firstname}
                                         usersurname={item.personal ? item.personal.lastname : item.Content.personal.lastname}//bir obje props
                                         createrelationforsmh={relationfunc}
-                                        date={item.difference}
+                                        date={item.difference || calculatedate(item.createdAt)}
                                     />
                              </div>)
                     }) 
                     
                 :
                 
-                <p style={{textTransform:"capitalize",textAlign:"center",marginTop:"20px"}}>{textfornorecord}</p>
+                <NightLightP style={{textTransform:"capitalize",textAlign:"center",marginTop:"20px"}}>{textfornorecord}</NightLightP>
             }
         </div>
     )

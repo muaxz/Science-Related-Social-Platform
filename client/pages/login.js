@@ -1,17 +1,15 @@
 import React,{useEffect,useState,useContext,useRef} from 'react'
 import {createusercontext} from "../context/Usercontext";
-import styled from "styled-components";
+import styled,{createGlobalStyle} from "styled-components";
 import {useRouter} from "next/router"
 import Head from "next/head";
 import {loginreq,resigterreq,sendResetEmail,resetPassword} from "../Api/requests";
 import Window from "../components/UI/window";
 import {TextField,Button,InputAdornment} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
-import {Global} from "../components/styledcomponents/Globalstyles"
 import Validate from "validator"
 import {AccountCircle,EmailOutlined,Lock,SupervisorAccount,Person,ChevronRight, Assignment} from "@material-ui/icons"
 import axios from 'axios';
-
 
 
 const CssTextField = makeStyles({
@@ -49,19 +47,6 @@ justify-content:center;
 align-items:center;
 `
 
-const Input=styled.input`
-color:white;
-width:88%;
-padding:10px;
-padding-left:35px;
-border:none;
-outline:none;
-transition:0.5s;
-background:transparent;
-::placeholder {
-    color:white
-}
-`
 
 const WindowDiv=styled.div`
 position:relative;
@@ -86,28 +71,7 @@ width:${({checkregister})=>checkregister ? "50%" : "100%"};
 padding:5px;
 margin-bottom:20px;
 `
-const Buttons=styled.button`
 
-margin-top:10px;
-margin-left:10px;
-width:150px;
-padding:10px;
-outline:none;
-border:none;
-border-radius:8px;
-color:white;
-background:transparent;
-transition:0.3s;
-border:1px solid white;
-&:hover {
-    background-color: rgba(0, 0, 0, 1);
-    cursor:pointer;
-}
-`
-const Icon=styled.i`
-margin-left:10px;
-font-size:10px;
-`
 
 const Iconsecure=styled.i`
 position:absolute;
@@ -150,6 +114,21 @@ height:45px;
 `
 
 
+export const Global=createGlobalStyle`
+ *{
+     box-sizing:border-box;
+     margin:0px;
+     font-family: 'Raleway', sans-serif;
+ }
+
+ body{
+  height:100%;
+ }
+
+ html{
+   scroll-behavior:smooth;
+ }
+`
 
 const Login=({mode,token})=>{
     
@@ -182,7 +161,7 @@ const Login=({mode,token})=>{
     const[inputs,setinputs]=useState({
         Login:{
             email:{
-                placeholder:"E-posta",
+                placeholder:"E-Mail",
                 func:"Login",
                 value:"",
                 icon:"far fa-envelope",
@@ -191,7 +170,7 @@ const Login=({mode,token})=>{
                 validation:true,
             },
             password:{
-                placeholder:"Şifre",
+                placeholder:"Password",
                 func:"Login",
                 value:"",
                 icon:"fas fa-unlock-alt",
@@ -202,7 +181,7 @@ const Login=({mode,token})=>{
         },
         Register:{
             name:{
-               placeholder:"İsim",
+               placeholder:"Firstname",
                func:"Register",
                value:"",
                icon:"fas fa-user",
@@ -211,7 +190,7 @@ const Login=({mode,token})=>{
                validation:true,
             },
             surname:{
-                placeholder:"Soy İsim",
+                placeholder:"Lastname",
                 func:"Register",
                 value:"",
                 icon:"fas fa-user",
@@ -220,7 +199,7 @@ const Login=({mode,token})=>{
                 validation:true,
             },
             email:{
-                placeholder:"E-posta",
+                placeholder:"E-Mail",
                 func:"Register",
                 value:"",
                 icon:"far fa-envelope",
@@ -229,7 +208,7 @@ const Login=({mode,token})=>{
                 validation:true,
             },
             password:{
-                placeholder:"Şifre",
+                placeholder:"Password",
                 func:"Register",
                 value:"",
                 icon:"fas fa-unlock-alt",
@@ -352,6 +331,7 @@ const Login=({mode,token})=>{
                     userdata:ourdata,
                     seterrmsg:seterror,
                     setactive:setactive,
+                    setActionType:setActionType
                 })
                 break;
             case "ForgetPassword":
@@ -393,13 +373,17 @@ const Login=({mode,token})=>{
     else if(backendState == "WP"){backendMessage="Girdiğin şifre yanlış!"} //remove this 
     else if(backendState == "WE"){backendMessage="Girdiğin e-posta yanlış!"}
     else if(backendState == "CODESENT"){
-        console.log("erkjabnkjasd")
+        
         backendMessage = "You can reset your password by clicking on the link that was sent to your email."
         messageType = "confirm"
     } 
     else if(backendState == "PASSWORD_SAVED"){
         backendMessage = "Your password has been succesfully updated."
         messageType = "confirm"
+    }
+    else if(backendState == "REGISTERED"){
+        messageType = "confirm"
+        backendMessage = "You successfully signed up. Sign in and start discovering"
     }
 
     

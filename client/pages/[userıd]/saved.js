@@ -22,16 +22,16 @@ export default function Saved({content}) {
 
 
 
-export async function getServerSideProps({query,req}){
+export async function getServerSideProps({query,req,res}){
 
     try {
-
+      
         if(req.headers.cookie){
 
-            var {data} = await axios.get(`http://localhost:3001/content/usercontent/Readlater/${query.userıd}/0`,{headers:{Cookie:req.headers.cookie}})
+            var Response = await axios.get(`http://localhost:3001/content/usercontent/Readlater/${query.userıd}/0`,{headers:{Cookie:req.headers.cookie}})
 
 
-            if(data && data.error){
+            if(Response.data && Response.data.error){
 
                 return {
                     redirect:{
@@ -41,12 +41,17 @@ export async function getServerSideProps({query,req}){
           
             }
 
-            data.data.forEach(element => {
+            Response.data.data.forEach(element => {
                 element.difference = calculatedate(element.createdAt)
             });
 
+            if(Response.headers['set-cookie']){
+                console.log(Response.headers['set-cookie'][0])
+                res.setHeader("Set-Cookie",[Response.headers['set-cookie'][0]])
+            }
+
             return { 
-                props:{content:data.data}
+                props:{content:Response.data.data}
             }
 
         }else{

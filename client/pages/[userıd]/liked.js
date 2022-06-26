@@ -19,20 +19,20 @@ export default function Liked({error,content}){
     )
 }
 
-export async function getServerSideProps({query,req}){
+export async function getServerSideProps({query,req,res}){
 
     try {
-     
+        
         if(req.headers.cookie){
 
-            var {data} = await axios.get(`http://localhost:3001/content/usercontent/Like/${query.userıd}/0`,{headers:{Cookie:req.headers.cookie}})
+            var Response = await axios.get(`http://localhost:3001/content/usercontent/Like/${query.userıd}/0`,{headers:{Cookie:req.headers.cookie}})
+          
 
-
-            if(data.state == 401){
+            if(Response.data.state == 401){
                 return { 
                     props:{error:401}
                 }
-            }else if(data.state == 404){
+            }else if(Response.data.state == 404){
                 return {
                     redirect:{
                         destination:"/404"
@@ -52,7 +52,7 @@ export async function getServerSideProps({query,req}){
         }
     
 
-        if(data && data.error){
+        if(Response.data && Response.data.error){
 
             return {
                 redirect:{
@@ -62,12 +62,17 @@ export async function getServerSideProps({query,req}){
       
         }
 
-        data.data.forEach(element => {
+        Response.data.data.forEach(element => {
             element.difference = calculatedate(element.createdAt)
         });
 
+        if(Response.headers['set-cookie']){
+          
+           res.setHeader("Set-Cookie",[Response.headers['set-cookie'][0]])
+        }
+        
         return { 
-            props:{content:data.data}
+            props:{content:Response.data.data}
         }
 
     } catch (error){

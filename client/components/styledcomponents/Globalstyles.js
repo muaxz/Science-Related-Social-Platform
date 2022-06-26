@@ -23,8 +23,10 @@ export const Global=createGlobalStyle`
      margin:0px;
      font-family: 'Raleway', sans-serif;
  }
- body {
+
+ body{
   height:100%;
+  background-color:${({theme})=>theme.background}
  }
 
  html{
@@ -43,7 +45,9 @@ background-repeat: no-repeat;
 background-position: center; 
 `)
 
-
+export const NightLightP = styled.div`
+color:${({theme})=>theme.p_Color}
+`
 
 export const Black=styled.div`
 position:fixed;
