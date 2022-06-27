@@ -552,11 +552,12 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                                             </TextField> 
 
                                             : 
+
                                             <div>
                                                 {
                                                     isMainparent ? null : <span style={{backgroundColor:"#43aa8b",borderRadius:"7px",color:"white",padding:"10px",fontSize:"15px"}}><b>Answer To : {Answer_To}</b></span>
                                                 }
-                                                <p style={{textAlign:"left",wordBreak:"break-word",marginTop:isMainparent ? "0px" : "20px"}}>{commenteditvalue}</p> 
+                                                <NightLightP style={{textAlign:"left",wordBreak:"break-word",marginTop:isMainparent ? "0px" : "20px"}}>{commenteditvalue}</NightLightP> 
                                             </div>
                                             
                                         }
@@ -565,12 +566,12 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
 
                                     : 
 
-                            <Link href="/content/[id]" as={`/content/${postId}`}>    
-                                <Contentdiv iscomment={iscomment}>
-                                        <h3 style={{marginBottom:"10px",color:"#A70909"}}>{title}</h3>
-                                        <div style={{textAlign:"left",wordBreak:"break-word",cursor:"pointer",color:nightmode ? "white" : "black"}}>{ReactParser(subString(content))}</div>   
-                                </Contentdiv>
-                             </Link>      
+                                <Link href="/content/[id]" as={`/content/${postId}`}>    
+                                    <Contentdiv iscomment={iscomment}>
+                                            <h3 style={{marginBottom:"10px",color:"#c9184a"}}>{title}</h3>
+                                            <div style={{textAlign:"left",wordBreak:"break-word",cursor:"pointer",color:nightmode ? "white" : "black"}}>{ReactParser(subString(content))}</div>   
+                                    </Contentdiv>
+                                </Link>      
 
                                 
                             }
@@ -602,7 +603,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                                 {
                                     !iscomment && 
                                     (<İconholder style={{flex:4,display:"flex",justifyContent:"flex-end",color:"grey"}}>
-                                        <Icons  ismarked={elements.Readlater.ismarked} animation={elements.Readlater.animation} color={"black"} onClick={()=>relationHandler("Readlater")}  className="fas fa-bookmark"></Icons>
+                                        <Icons  ismarked={elements.Readlater.ismarked} animation={elements.Readlater.animation} color={nightmode ? "white" : "black"} onClick={()=>relationHandler("Readlater")}  className="fas fa-bookmark"></Icons>
                                     </İconholder>)
                                 }
                             </Toolbar>

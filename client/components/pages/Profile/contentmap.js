@@ -36,6 +36,7 @@ function Contentmap({contentlist,relationfunc,norecord,deleteThePost}) {
                                         retweet={item.personal ? item.Retweet : item.Content.Retweet}
                                         readlater={item.personal ? item.Readlater : item.Content.Readlater}
                                         comment={item.personal ? item.allcomments : item.Content.allcomments}
+                                        followeds={item.personal ? [] : item.Content.personal.Followed}
                                         profileimage={item.personal ? item.personal.mainUrl : item.Content.personal.mainUrl}
                                         title={item.personal ? item.title : item.Content.title}
                                         titleimage={item.personal != null ? item.titleimage : item.Content.titleimage}

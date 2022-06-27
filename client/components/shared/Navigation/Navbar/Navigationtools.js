@@ -5,8 +5,6 @@ import {Porfileimage} from "../../../styledcomponents/Globalstyles";
 import Switch from "react-switch";
 import Link from "next/link";
 import {calculatedate} from "../../../../utilsfunc"
-import {logout} from "../../../../Api/requests"
-import {createusercontext} from "../../../../context/Usercontext"
 import {CreateNightMode} from "../../../../context/Nightmode"
 
 const Option1div=styled.div`

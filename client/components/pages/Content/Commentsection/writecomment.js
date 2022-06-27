@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {Porfileimage} from "../../../styledcomponents/Globalstyles"
 import styled,{keyframes} from "styled-components";
 import {TextField,Button} from "@material-ui/core"
+import {createusercontext} from "../../../../context/Usercontext"
 import {AddComment} from "@material-ui/icons"
+import router from "next/router"
 
 const Writecomment=styled.div`
 width:100%;
@@ -44,6 +46,8 @@ const Spinner = styled.div`
 export default function Commentsection({Producecomment,spinner}){
 
     const [commentvalue,setcommentvalue]=useState("");
+    const {userdata} = useContext(createusercontext)
+    
 
     const Changevalue=(e)=>{
 
@@ -54,7 +58,7 @@ export default function Commentsection({Producecomment,spinner}){
     }
 
     const Submitcomment=()=>{
-
+      if(!userdata.UserId) return router.push("/login")
       if(commentvalue.length > 0){
 
         Producecomment(commentvalue);

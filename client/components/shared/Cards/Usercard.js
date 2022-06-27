@@ -72,7 +72,7 @@ export default function Usercard({firstname,surname,imageurl,optionforbutton,chi
                <Name><span style={{color:"black"}}>{firstname+" "+surname}</span></Name>
                <Following>{children}</Following>
                {
-                   userdata.UserId !== userid &&
+                   userdata.UserId !== userid || !userdata.UserId &&
                    <Button  startIcon={<PersonAdd></PersonAdd>} style={{width:"170px",textTransform:"capitalize",fontWeight:"600"}} color="secondary" variant="outlined" onClick={Followingreq}>{checkfollow ? "Takipten Çık" : "Takip Et"}</Button>
                }
             </Inner>

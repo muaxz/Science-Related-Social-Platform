@@ -26,26 +26,44 @@ export async function getServerSideProps(context){
 
       var dataProps = {}
       dataProps.content = {}
+      console.log(context.req.headers.cookie)
+      if(context.req.headers.cookie.includes("accessToken")){
 
-     
-      if(context.query.write){
-          var draftResponse = await axios.get(`http://localhost:3001/content/getContentForPost/${context.query.write}`,{headers:{Cookie:context.req.headers.cookie}})
-  
-          if(draftResponse.data.content != null){
-           
-             dataProps.content = draftResponse.data.content
-          } 
+            if(context.query.write){
+
+              var draftResponse = await axios.get(`http://localhost:3001/content/getContentForPost/${context.query.write}`,{headers:{Cookie:context.req.headers.cookie}})
+      
+              if(draftResponse.data.content != null){
+              
+                dataProps.content = draftResponse.data.content
+              } 
+
+          }
+      
+          const {data} = await axios.get(`http://localhost:3001/content/getCategories/false`)
+          dataProps.categories = data.data
+      
+          return {
+            props: {...dataProps},// every hour
+          }
+
+      }else{
+
+          return {
+              redirect:{
+                destination:"/404"
+              }
+          };
       }
   
-      const {data} = await axios.get(`http://localhost:3001/content/getCategories/false`)
-      dataProps.categories = data.data
-  
-      return {
-        props: {...dataProps},// every hour
-      }
 
     }catch (error) {
-      
+
+      return {
+        redirect:{
+          destination:"/500"
+        }
+      };
 
     }
    

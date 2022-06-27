@@ -168,7 +168,7 @@ export default function Home({contents,categories}){
             UserIdofcontent:userid,
             setSavedWindow:setSavedWindow,
         })
-
+        
         if(attribute == "Readlater" && typeofrelation == "Create"){
             setSavedWindow(true)
             setSavedWindowText("Added To Saved Posts")

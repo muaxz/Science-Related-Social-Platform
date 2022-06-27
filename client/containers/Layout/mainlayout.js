@@ -14,7 +14,7 @@ import {NotificationCountreq,Notificationreq,UpdateNotificationcount} from "../.
 
 const Bigdiv=styled.div``
 
-const Goupicon=styled.div`
+const GoUpIcon=styled.div`
 position:fixed;
 bottom:40px;
 right:40px;
@@ -35,7 +35,7 @@ contentSectionBorderColor:"#383838"
 
 const themeLight = {
 cardShadowColor:"#00afb9",
-background:"lightgrey",
+background:"#dad9d3",
 cardBackground:"white",
 p_Color:"black",
 contentSectionBorderColor:"white"
@@ -165,9 +165,9 @@ export default function Mainlayout({children}) {
                 <Lefttoolbar myactive={active} makeactive={setactive}></Lefttoolbar>
                 {/*this part will be changed*/}
                 <Global></Global>
-                <Goupicon onClick={()=>{window.scrollTo({top:0})}} up={goup}>
+                <GoUpIcon onClick={()=>{window.scrollTo({top:0})}} up={goup}>
                     <Icon className="fas fa-chevron-up fa-lg" Iconconfig={{backcolor:"#ef233c",color:"white",width:"40px",height:"40px",lineheight:"40px"}}></Icon>
-                </Goupicon>
+                </GoUpIcon>
                 {children}
             </Bigdiv>
         </ThemeProvider>

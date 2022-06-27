@@ -251,7 +251,12 @@ exports.getuserprofilecontent = async(req,res,next)=>{
               {
                 model:Usermodel,
                 as:"personal",
-                attributes:["id","firstname","mainUrl","lastname","Role"]
+                attributes:["id","firstname","mainUrl","lastname","Role"],
+                include:{
+                  model:User,
+                  as:"Followed",
+                  attributes:["id"]
+                }
                 //burada user -> user many-to-many girilebilir takipçiler için
               },
               {

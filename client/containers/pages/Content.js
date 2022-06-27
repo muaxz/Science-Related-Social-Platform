@@ -6,6 +6,7 @@ import {createusercontext} from "../../context/Usercontext";
 import {CreateUtilContext} from "../../context/UtilContext";
 import Commentpart from '../../components/pages/Content/Commentsection/Commentpart';
 import useScroll from "../../hooks/Scroll"
+import router from "next/router"
 import Parser from "react-html-parser"
 import ReportWindow from "../../components/pages/Content/reportWindow"
 import Link from 'next/link';
@@ -21,11 +22,13 @@ import {FavoriteBorder,Favorite,BookmarkBorder,BookmarkOutlined,FlagOutlined} fr
 const Exteriorcontent=styled.div`
 background-color:${({iscomment})=>iscomment ? "" : "white"};
 max-width:950px;
-width:100%
+width:100%;
+border-radius:7px;
 height:100%;
 `
 
 const InnerDiv = styled.div`
+
 `
 
 const Commentdiv=styled.div`
@@ -212,6 +215,9 @@ export default function Content({Contentdata,comments,id}){
 
     const toolBarActionHandler = async (actionType,attribute)=>{
 
+        if(!userdata.UserId) return router.push("/login")
+
+
         if(actionType == "REPORT"){
 
               setisReportActive(true)
@@ -259,7 +265,7 @@ export default function Content({Contentdata,comments,id}){
             <Exteriorcontent>
                 <InnerDiv>
                     <ImageDiv>
-                        <img src={Contentdata.titleimage} style={{objectFit:"cover",width:"100%",height:"100%"}} ></img>
+                        <img src={Contentdata.titleimage} style={{objectFit:"cover",width:"100%",height:"100%",borderTopLeftRadius:"7px",borderTopRightRadius:"7px"}} ></img>
                     </ImageDiv>
                     <ProfileDiv>
                         <Link  href={{

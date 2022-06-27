@@ -11,10 +11,6 @@ padding-top:80px;
 
 `
 
-const titleFollow = styled.h4`
-
-`
-
 
 
 const Followlist = ({list,goBackToContent,type})=>{

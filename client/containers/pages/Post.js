@@ -5,11 +5,9 @@ import {producereq} from "../../Api/requests";
 import {Button as Corebutton,TextField,InputAdornment,FormControl,Select,MenuItem,FormHelperText} from "@material-ui/core";
 import {Create} from "@material-ui/icons"
 import {createusercontext} from "../../context/Usercontext"
-import {Button,Global} from "../../components/styledcomponents/Globalstyles";
 import Window from "../../components/UI/window";
 import Dropzone from "react-dropzone"
-
-
+import {CreateNightMode} from "../../context/Nightmode"
 
 
 
@@ -30,15 +28,7 @@ width:90%;
 margin:20px auto;
 `
 
-const RightPart=styled.div`
-display:flex;
-height:100%;
-flex-direction:column;
-flex:3;
-background-color:#ccdbfd;
-border-top-right-radius:8px;
-border-bottom-right-radius:8px;
-`
+
 
 const Exterior=styled.div`
 max-width:1300px;
@@ -53,6 +43,7 @@ width:80%;
 const InnerDiv = styled.div`
 display:flex;
 margin-top:100px;
+border:2px solid white;
 margin-bottom:30px;
 width:100%;
 justify-content:center;
@@ -65,15 +56,23 @@ display:flex;
 flex-direction:column;
 flex:1;
 position:sticky;
-background-color:#ccdbfd;
 border-top-left-radius:8px;
 border-bottom-left-radius:8px;
-border-right:2px solid lightgrey;
+border-right:2px solid white;
 padding:10px;
 top:65px;
 @media (max-width:900px){
 }
 `
+const RightPart=styled.div`
+display:flex;
+height:100%;
+flex-direction:column;
+flex:3;
+border-top-right-radius:8px;
+border-bottom-right-radius:8px;
+`
+
 const baseStyle = {
   flex: 1,
   display: 'flex',
@@ -105,7 +104,7 @@ const rejectStyle = {
 };
 
 export default function MyEditor({categories,content}){
-
+    const {nightmode} = useContext(CreateNightMode)
     const editorRef = useRef()
     const {userdata} = useContext(createusercontext);
     const [ editorLoaded, setEditorLoaded ] = useState( false )
@@ -190,12 +189,12 @@ export default function MyEditor({categories,content}){
     
     useEffect(()=>{
 
-        const {CKEditor} = require("@ckeditor/ckeditor5-react/dist/ckeditor")
-        
         editorRef.current = {
-            CKE: CKEditor,
-            ClassicEditor: require( "ckeditor5-custom-build/build/ckeditor" )
+          ClassicEditor: require( "ckeditor5-custom-build/build/ckeditor" )
         }
+
+        const {CKEditor} = require("@ckeditor/ckeditor5-react")
+        editorRef.current.CKE = CKEditor
 
         setEditorLoaded(true)
     },[])
@@ -338,10 +337,10 @@ export default function MyEditor({categories,content}){
             <RightPart>
                 <div>
                     <InputHolder>
-                        <TextField value={contentpart["title"].value} error={!contentpart["title"].isValid} onChange={(e)=>changeHandler(e,"","title")} InputProps={{style:{color:"black"},endAdornment: <InputAdornment position="end"><Create style={{color:"black"}}></Create></InputAdornment>,}} helperText="This field is mandatory for people to have a better general idea about your post." label="Title" size="small" variant="outlined" fullWidth></TextField>
+                        <TextField  FormHelperTextProps={{style:{color:nightmode ? "white" : "black"}}} value={contentpart["title"].value} error={!contentpart["title"].isValid} onChange={(e)=>changeHandler(e,"","title")} InputProps={{style:{color:nightmode ? "white" : "black"},endAdornment: <InputAdornment position="end"><Create style={{color:nightmode ? "white" : "black"}}></Create></InputAdornment>,}} helperText="This field is mandatory for people to have a better general idea about your post." placeholder="Title" size="small" variant="outlined" fullWidth></TextField>
                     </InputHolder>
                     <InputHolder>
-                        <TextField value={contentpart["subtitle"].value} onChange={(e)=>changeHandler(e,"","subtitle")} InputProps={{style:{color:"black"},endAdornment: <InputAdornment position="end"><Create style={{color:"black"}}></Create></InputAdornment>,}} helperText="Optional field" label="Sub Title" size="small" variant="outlined" fullWidth></TextField>
+                        <TextField FormHelperTextProps={{style:{color:nightmode ? "white" : "black"}}} value={contentpart["subtitle"].value} onChange={(e)=>changeHandler(e,"","subtitle")} InputProps={{style:{color:nightmode ? "white":  "black"},endAdornment: <InputAdornment position="end"><Create style={{color:nightmode ? "white" : "black"}}></Create></InputAdornment>,}} helperText="Optional field" placeholder="Sub Title" size="small" variant="outlined" fullWidth></TextField>
                     </InputHolder>
                     <InputHolder>
                           <Dropzone  onDrop={UploadTitleImage}>

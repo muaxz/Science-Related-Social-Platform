@@ -38,7 +38,7 @@ export async function getServerSideProps({req,res}){
         var needRedirect = false;
        
 
-        if(req.headers.cookie){
+        if(req.headers.cookie.includes("accessToken")){
 
             var response = await axios.get("http://localhost:3001/content/getModContents/Default/null/0",{headers:{Cookie:req.headers.cookie}})
 
