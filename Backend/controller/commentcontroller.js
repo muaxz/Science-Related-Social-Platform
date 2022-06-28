@@ -54,7 +54,7 @@ exports.getcomments=async (req,res,next)=>{
       var limitBorder = 10;
       var whereProperty ={};
 
-      if(Last == "true" || isforanswer == "true"){
+      if(Last == "true" || isforanswer == "true" ){
         offsetValue = 0;
         limitBorder = 1;
       }else{
@@ -75,7 +75,7 @@ exports.getcomments=async (req,res,next)=>{
         order:[['createdAt',"DESC"]]
       })
 
-      console.log(comments)
+   
 
    
   
@@ -246,6 +246,29 @@ exports.createLikeRelation = async(req,res,next)=>{
     
     return next()
 
+  }
+
+}
+
+exports.deleteComment = async(req,res,next)=>{
+  const {commentId} = req.body
+  const {UserId} = req.userdata
+
+  try {
+    
+    await Comment.destroy({
+      where:{id:commentId,UserId:UserId}
+    })
+
+    await Comment.destroy({
+      where:{CommentId:commentId}
+    })
+
+    res.json({state:"success"})
+
+  } catch (error) {
+
+    return next()
   }
 
 }

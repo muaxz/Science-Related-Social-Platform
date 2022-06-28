@@ -362,7 +362,7 @@ function Contentcard({isHomeCard,categoryType,followeds,Animateforcomment,Answer
 
     const Makeacomment=()=>{
   
-        Answerhandler(answervalue,postId,mainparentID)
+        Answerhandler(answervalue,postId,mainparentID,"create")
         setanswervalue("")
         setcommentanswer(false)
     }
@@ -402,7 +402,7 @@ function Contentcard({isHomeCard,categoryType,followeds,Animateforcomment,Answer
         <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={date}  iscomment={iscomment}>  
                 {
                     //Comment Left Icon
-                    iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-6px",top:"8px",color:"#faf9f9"}}></Icon> : null
+                    iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-9px",top:"8px",color:"#faf9f9"}}></Icon> : null
                 }
 
                 {
@@ -477,13 +477,13 @@ function Contentcard({isHomeCard,categoryType,followeds,Animateforcomment,Answer
                                         <Optionholder onClick={Editcommentactiveness}>
                                             <Edit></Edit>
                                             <div style={{marginLeft:"8px"}}>
-                                                <p>Duzenle</p>
+                                                <p>Edit</p>
                                             </div>
                                         </Optionholder>
-                                        <Optionholder>
+                                        <Optionholder onClick={()=>Answerhandler("",postId,mainparentID,"destroy")}>
                                             <Delete></Delete>
                                             <div style={{marginLeft:"8px"}}>
-                                                <p>Yorumu Sil</p>
+                                                <p>Delete</p>
                                             </div>
                                         </Optionholder>
                                     </>
@@ -491,7 +491,7 @@ function Contentcard({isHomeCard,categoryType,followeds,Animateforcomment,Answer
                                     <Optionholder>
                                         <Feedback></Feedback>
                                         <div style={{marginLeft:"8px"}}>
-                                            <p>Bildir</p>
+                                            <p>Report</p>
                                         </div>
                                     </Optionholder>
 
@@ -536,13 +536,13 @@ function Contentcard({isHomeCard,categoryType,followeds,Animateforcomment,Answer
                                             editcomment ?
 
                                             <TextField 
-                                            InputProps={{endAdornment:
+                                            InputProps={{style:{color:"white"},endAdornment:
                                                 <InputAdornment style={{paddingLeft:"10px"}}>
                                                     <Button disabled={loading_commentedit} startIcon={loading_commentedit ? <Spinner></Spinner> : null} onClick={()=>Editcommentactiveness("save")} style={{backgroundColor:loading_commentedit ? "lightgrey":"#e63946",color:"white",textTransform:"capitalize",position:"relative",bottom:"10px",marginRight:"5px"}} variant="contained" size="small">
-                                                        Kaydet
+                                                        Save
                                                     </Button>
                                                     <Button onClick={()=>Editcommentactiveness("cancel")} color="primary" style={{textTransform:"capitalize",position:"relative",bottom:"10px"}} variant="contained" size="small">
-                                                        iptal
+                                                        Cancel
                                                     </Button>
                                                 </InputAdornment>}} 
                                                 multiline
@@ -614,10 +614,10 @@ function Contentcard({isHomeCard,categoryType,followeds,Animateforcomment,Answer
                                         value={answervalue}
                                         onChange={(e)=>setanswervalue(e.target.value)}
                                         InputProps={{
-                                            style:{cursor:"pointer"},
+                                            style:{cursor:"pointer",color:"white"},
                                             endAdornment: <InputAdornment onClick={Makeacomment} style={{color:answervalue.length > 0 ?  "#e63946": "grey"}} position="end"><Send></Send></InputAdornment>,
                                         }}
-                                        label="Yoruma Cevap Ver..." size="small" variant="outlined">
+                                        placeholder="Answer to the comment..." size="small" variant="outlined">
                                     </TextField>
                                 </Inputholder>)
                             }

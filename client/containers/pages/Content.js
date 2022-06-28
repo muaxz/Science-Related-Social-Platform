@@ -189,17 +189,21 @@ export default function Content({Contentdata,comments,id}){
 
     },[userdata.UserId])
 
-    const Answerhandler=(Answer,UpperId,MainparentID)=>{
-        
+    const Answerhandler=(Answer,commentId,MainparentID,actionType)=>{
+           console.log(commentId)
+           console.log(MainparentID)
+          
           Commentanswerreq({
-              UppercommentId:UpperId,
+              UppercommentId:commentId,
               UserId:userdata.UserId,
               Answer:Answer,
               ContentId:id,//post
               MainparentID:MainparentID,
               setcommentlist:setcommentlist,
-              commentlist:commentlist
+              commentlist:commentlist,
+              actionType:actionType
           })
+          
 
     }
 

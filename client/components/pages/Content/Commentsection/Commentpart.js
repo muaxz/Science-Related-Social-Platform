@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from 'react'
 import Writecomment from "./writecomment";
 import Belowcomment from "./belowcomment";
+import { calculatedate } from '../../../../utilsfunc';
 
 function Commentpart({Editcommenthandler,Producecomment,list,spinner,handleanswer,commentRelationHandler}){
     
@@ -8,6 +9,7 @@ function Commentpart({Editcommenthandler,Producecomment,list,spinner,handleanswe
     
     
     useEffect(()=>{
+
         console.log(list)
         const numobj = {}
         const mutated = [...list]
@@ -27,8 +29,8 @@ function Commentpart({Editcommenthandler,Producecomment,list,spinner,handleanswe
                 }
                 comment.Mainparent = MainparentID
                 comment.AnswerTo = answerTo
+                comment.difference = calculatedate(comment.createdAt)
                 
-    
                 if(comment.takeit.length > 0){
                     numobj[index] += comment.takeit.length
                     comment.takeit.forEach(element => {
@@ -50,11 +52,12 @@ function Commentpart({Editcommenthandler,Producecomment,list,spinner,handleanswe
         setMylist(mutated)
 
     },[list])
+   
 
     return (
         <div>
             <Writecomment spinner={spinner} Producecomment={Producecomment}></Writecomment>
-            <Belowcomment commentRelationHandler={commentRelationHandler} Editcommenthandler={Editcommenthandler} Answerhandler={handleanswer} mylist={mylist}></Belowcomment>
+            <Belowcomment  commentRelationHandler={commentRelationHandler} Editcommenthandler={Editcommenthandler} Answerhandler={handleanswer} mylist={mylist}></Belowcomment>
         </div>
     )
 }

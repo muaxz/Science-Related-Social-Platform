@@ -27,6 +27,7 @@ padding-bottom:20px;
 const Innerdiv=styled.div`
 height:100%;
 width:100%;
+
 `
 
 const Imagesection=styled.div`
@@ -86,9 +87,10 @@ width:100%;
 `
 
 const Contentsection=styled.div`
-max-width:751px;
 border-right:1px solid ${({theme})=>theme.contentSectionBorderColor};
 border-left:1px solid ${({theme})=>theme.contentSectionBorderColor};
+max-width:751px;
+height:100vh;
 margin:auto;
 width:100%;
 `
@@ -408,7 +410,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
 
                                     </React.Fragment>)
                                 }
-                            <Button onClick={()=>Followingrequest(beingfollowed)} style={{color:"white",backgroundColor:"#0ead69",textTransform:"none"}} variant="contained">{beingfollowed ? "Takipten Çık" : "Takip Et"}</Button>
+                            <Button onClick={()=>Followingrequest(beingfollowed)} style={{color:"white",backgroundColor:"#0ead69",textTransform:"none"}} variant="contained">{beingfollowed ? "Unfollow" : "Follow"}</Button>
                         </ButtonHolder>)
 
                         : 

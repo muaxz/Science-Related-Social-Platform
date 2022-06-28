@@ -637,16 +637,36 @@ export const DeletePost = async({PostId,seterrmsg,setwindow})=>{
 
 }
 
-export const Commentanswerreq = async({UppercommentId,Answer,UserId,seterrmsg,setwindow,ContentId,MainparentID,setcommentlist,commentlist})=>{
-  console.log(MainparentID)
+export const Commentanswerreq = async({UppercommentId,Answer,UserId,seterrmsg,setwindow,ContentId,MainparentID,setcommentlist,commentlist,actionType})=>{
+  
   try {
 
-    const data = await axios.post("comment/produceanswer",{
-      CommentId:UppercommentId,
-      ContentId:ContentId,
-      Message:Answer,
-      UserId:UserId,
-    });
+    if(actionType == "create"){
+
+        var data = await axios.post("comment/produceanswer",{
+          CommentId:UppercommentId,
+          ContentId:ContentId,
+          Message:Answer,
+          UserId:UserId,
+        });
+
+    }else{
+
+        var data = await axios.post("comment/deleteComment",{
+          commentId:UppercommentId
+        })
+
+        if(UppercommentId == MainparentID){
+          const copyList = [...commentlist]
+          const Indexofelement = copyList.findIndex((item)=>item.id == UppercommentId)
+          copyList.splice(Indexofelement,1)
+          setcommentlist(copyList)
+          return;
+        }
+      
+        
+    }
+    
     
     if(Errorhandler({data,seterrmsg,setwindow})){   
        const onlyOnecomment = await axios.get(`comment/${MainparentID}/false/10/true`)

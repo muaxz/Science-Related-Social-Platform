@@ -6,10 +6,11 @@ import {calculatedate} from "../../../../utilsfunc"
 
 
 var lengthcounter = 0
-function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,imagetoken,imagefilename,Answerhandler,mylist,commentID,content,showwindow,like,retweet,comment,readlater,profileimage,title,titleimage,userfirstname,usersurname,subtitle,date,userid,commentRelationHandler}){
+function Belowcomment({childsLength,Answer_To,isMainparent,mainparentID,Editcommenthandler,imagetoken,imagefilename,Answerhandler,mylist,commentID,content,showwindow,like,retweet,comment,readlater,profileimage,title,titleimage,userfirstname,usersurname,subtitle,date,userid,commentRelationHandler,deleteComment}){
     
     const Contentdiv =
     (<Contentcard 
+    deleteThePost={deleteComment}
     Animateforcomment={true}
     mainparentID={mainparentID}
     iscomment={true}
@@ -38,7 +39,7 @@ function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,im
     </Contentcard>)
     
    
-    
+    console.log(childsLength)
     return (
         <React.Fragment>
         { 
@@ -53,7 +54,7 @@ function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,im
                
                 return (<Belowcomment
                     key={uniqid()} 
-                    allchildlength={item.allchilds}
+                    childsLenght={item.allchilds}
                     Answer_To={item.AnswerTo}
                     isMainparent={item.ContentId}
                     mainparentID={item.Mainparent}
@@ -73,7 +74,7 @@ function Belowcomment({Answer_To,isMainparent,mainparentID,Editcommenthandler,im
                     userid={item.User.id}
                     profileimage={item.User.mainUrl}
                     subtitle={item.subtitle}//no need
-                    date={"item.difference || calculatedate(item.createdAt)"}
+                    date={item.difference || {time:"12",express:"Minute"}}
                     mylist={item.takeit}
                     Answerhandler={Answerhandler}
                     Editcommenthandler={Editcommenthandler}

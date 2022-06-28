@@ -9,6 +9,7 @@ router.get("/:id/:Last/:order/:isforanswer",controller.getcomments);
 router.get("/getLastComment",controller.getLastComment)
 router.post("/produceanswer",verifyUser,controller.porduceanswer);
 router.post("/EditComment",verifyUser,controller.editcomment)
+router.post("/deleteComment",verifyUser,controller.deleteComment)
 router.post("/handleLike",verifyUser,controller.createLikeRelation)
 
 module.exports=router;
