@@ -5,10 +5,10 @@ import {useRouter} from "next/router"
 import Head from "next/head";
 import {loginreq,resigterreq,sendResetEmail,resetPassword} from "../Api/requests";
 import Window from "../components/UI/window";
-import {TextField,Button,InputAdornment} from '@material-ui/core';
+import {TextField,Button,InputAdornment,IconButton} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import Validate from "validator"
-import {AccountCircle,EmailOutlined,Lock,SupervisorAccount,Person,ChevronRight, Assignment} from "@material-ui/icons"
+import {AccountCircle,EmailOutlined,Lock,SupervisorAccount,Person,ChevronRight, Assignment,VisibilityOff,Visibility} from "@material-ui/icons"
 import axios from 'axios';
 
 
@@ -67,7 +67,7 @@ transform:rotate(0deg);
 `
 const InputHolder=styled.div`
 position:relative;
-width:${({checkregister})=>checkregister ? "50%" : "100%"};
+width:${({checkregister})=>checkregister ? "50%" : "70%"};
 padding:5px;
 margin-bottom:20px;
 `
@@ -172,6 +172,7 @@ const Login=({mode,token})=>{
             password:{
                 placeholder:"Password",
                 func:"Login",
+                Visibility:false,
                 value:"",
                 icon:"fas fa-unlock-alt",
                 focused:false,
@@ -209,6 +210,7 @@ const Login=({mode,token})=>{
             },
             password:{
                 placeholder:"Password",
+                Visibility:false,
                 func:"Register",
                 value:"",
                 icon:"fas fa-unlock-alt",
@@ -416,35 +418,39 @@ const Login=({mode,token})=>{
                   <Logo></Logo>
                </div>
                <p  style={{color:"white",flex:4,wordWrap:"break-word"}}>Hakikatin temsilcisinin en az olduğu zaman, onu dile getirmenin tehlikeli olduğu zaman değil, can sıkıcı olduğu zamandır.</p>
-               <div style={{width:actionType == "Register" ? "100%" : "70%",boxSizing:"border-box",flex:7,display:actionType == "Register" ? "flex" : "block",flexWrap:"wrap"}}>
-                   {
-                        Object.keys(inputs[actionType]).map(item=>
-                        (<InputHolder  checkregister={actionType == "Register" ? true:false} key={item}>
-                           <TextField 
-                            InputProps={{
-                                style:{color:"white"},
-                                endAdornment: <InputAdornment position="end">{Rendericon(item)}</InputAdornment>,
-                            }}
-                            className={stylesget.root} 
-                            type={item == "password" ? "password" : ""}
-                            onChange={(e)=>InputChangeHandler(e,actionType,item)} 
-                            onFocus={()=>chekciffocus("focus",item)}     
-                            onBlur={()=>chekciffocus("remove",item)} 
-                            value={inputs[actionType][item].value}
-                            focused={inputs[actionType][item].value !== "" || inputs[actionType][item].focused == true ? true : false} 
-                            size="small"
-                            error={!inputs[actionType][item].validation}   
-                            helperText={!inputs[actionType][item].validation ? inputs[actionType][item].helperText : ""}
-                            label={inputs[actionType][item].placeholder} 
-                            variant='outlined'></TextField>
-                        </InputHolder>
-                        ))
-                    }   
+               <div style={{width:actionType == "Register" ? "100%" : "70%",boxSizing:"border-box",flex:7,display:actionType == "Register" ? "flex" : "flex",flexWrap:"wrap",justifyContent:"center"}}>
+                    {
+                            Object.keys(inputs[actionType]).map(item=>
+                            (<InputHolder  checkregister={actionType == "Register" ? true:false} key={item}>
+                                <TextField 
+                                    style={{maxWidth:"300px"}}
+                                    InputProps={{
+                                        style:{color:"white"},
+                                        endAdornment: <InputAdornment position="end">{Rendericon(item)}</InputAdornment>,
+                                        startAdornment: item == "password" ? <InputAdornment onClick={()=>setinputs(prev=>({...prev,[actionType]:{...prev[actionType],password:{...prev[actionType]["password"],Visibility:!prev[actionType]["password"].Visibility}}}))} style={{display:item == "password" ? "" : "none",margin:"0px",paddingRight:"10px",cursfdsfsdor:"pointer",borderRight:"1px solid #d3d0cb",height:"100%"}} position="end">{!inputs[actionType]["password"].Visibility ? <VisibilityOff /> : <Visibility />}</InputAdornment> : <></>,
+                                    }}
+                                    className={stylesget.root} 
+                                    type={item == "password" ? (!inputs[actionType]["password"].Visibility ?  "password" : "") : ""}
+                                    onChange={(e)=>InputChangeHandler(e,actionType,item)} 
+                                    onFocus={()=>chekciffocus("focus",item)}     
+                                    onBlur={()=>chekciffocus("remove",item)} 
+                                    value={inputs[actionType][item].value}
+                                    focused={inputs[actionType][item].value !== "" || inputs[actionType][item].focused == true ? true : false} 
+                                    size="small"
+                                    error={!inputs[actionType][item].validation}   
+                                    helperText={!inputs[actionType][item].validation ? inputs[actionType][item].helperText : ""}
+                                    label={inputs[actionType][item].placeholder} 
+                                    variant='outlined'
+                                    />
+                            </InputHolder>
+                            ))
+                        }   
+
                     {
                         actionType == "Login" ? <p onClick={()=>setActionType("ForgetPassword")} style={{color:"#EB3232",cursor:"pointer"}}>Forget Password ?</p> : ""
                     }
                 </div>    
-                <div style={{display:"flex",flex:"3",width:"100%"}}> 
+                <div style={{display:"flex",flex:"3",width:"100%",justifyContent:"center"}}> 
                         <InputHolder>
                                 <Button  
                                     style={{width:"50%"}}

@@ -3,6 +3,7 @@ import {Porfileimage} from "../../../styledcomponents/Globalstyles"
 import styled,{keyframes} from "styled-components";
 import {TextField,Button} from "@material-ui/core"
 import {createusercontext} from "../../../../context/Usercontext"
+import {CreateNightMode} from "../../../../context/Nightmode"
 import {AddComment} from "@material-ui/icons"
 import router from "next/router"
 
@@ -47,6 +48,7 @@ export default function Commentsection({Producecomment,spinner}){
 
     const [commentvalue,setcommentvalue]=useState("");
     const {userdata} = useContext(createusercontext)
+    const {nightmode} = useContext(CreateNightMode)
     
 
     const Changevalue=(e)=>{
@@ -76,7 +78,7 @@ export default function Commentsection({Producecomment,spinner}){
                 </Options>
                 <Options flex={"70%"}>
                     <TextField
-                      inputProps={{style:{color:"#bf4342",fontWeight:"bold",borderColor:"red"}}}
+                      inputProps={{style:{color:nightmode ? "white" : "black",fontWeight:"bold",borderColor:"red"}}}
                       value={commentvalue}
                       onChange={Changevalue}
                       style={{width:"100%"}}

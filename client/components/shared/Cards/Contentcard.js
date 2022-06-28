@@ -198,7 +198,7 @@ font-size:13px;
 `
 
 //içerik sayısı,takipçi sayısı,
-function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent,deleteThePost}){
+function Contentcard({isHomeCard,categoryType,followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent,deleteThePost}){
     
     const[elements,setelements]=useState({
         Like:{
@@ -436,7 +436,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                                                 </div>
                                         </Optionholder> 
                                         {
-                                            userid == userdata.UserId && 
+                                            userid == userdata.UserId && !isHomeCard && 
                                                 (<Optionholder onClick={()=>deleteThePost(null,postId)}>
                                                     <Icon className="fa-solid fa-trash" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
                                                         <div style={{marginLeft:"8px",color:"#757575"}}>
@@ -466,7 +466,7 @@ function Contentcard({categoryType,followeds,Animateforcomment,Answer_To,mainpar
                     : 
                     //Comment Report 
                     <div ref={ref}>
-                        <Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-v" Iconconfig={{position:"absolute",right:"10px",top:"10px",color:"#2A2A2A"}}></Icon>
+                         <NightLightP><Icon activefunc={()=>{setvisible(!visible)}} className="fas fa-ellipsis-h" Iconconfig={{position:"absolute",right:"10px",top:"10px",hoverback:"#ea526f",width:"30px",height:"30px",lineheight:"30px",hovercolor:"white"}}></Icon></NightLightP>
                         {
                             visible && 
                             

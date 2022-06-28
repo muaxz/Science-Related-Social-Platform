@@ -1,6 +1,11 @@
 const jwt=require("jsonwebtoken");
+const redis = require("redis")
 
-module.exports=(req,res,next)=>{
+const client = redis.createClient();
+
+client.connect().then(()=>console.log("connecnted to redis server"))
+
+module.exports=async(req,res,next)=>{
 
     const token = req.cookies["accessToken"];
     
@@ -8,15 +13,17 @@ module.exports=(req,res,next)=>{
 
      //burada request objesine yeni bir eleman tanımlayailiyoruz
 
-        jwt.verify(token,"AccessToken-SecretKey",(err,authdata)=>{
+        jwt.verify(token,"AccessToken-SecretKey",async(err,authdata)=>{
             
             if(err){
                 console.log(err.name)
                 if(err.name == "TokenExpiredError"){
 
                     const refreshToken = req.cookies["refreshToken"];
-                    console.log("refresh token down")
-                    console.log(refreshToken)
+
+                    const parsedRefreshArray = JSON.parse(await client.get("refreshTokens"))
+                    if(!parsedRefreshArray.includes(refreshToken)) return res.json({error:"Unauthroized",state:401})
+
                     jwt.verify(refreshToken,"refreshSecretKey",(err,userData)=>{
                        
                         if(err){
@@ -38,7 +45,7 @@ module.exports=(req,res,next)=>{
                     })
 
                 }else if(err.name == "JsonWebTokenError"){
-                    console.log("inside invalid phase")
+
                     res.clearCookie("accessToken",{path:"/"})
                     return res.json({error:"Unauthroized",state:401})  
                 }

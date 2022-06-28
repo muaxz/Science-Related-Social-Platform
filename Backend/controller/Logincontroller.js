@@ -39,12 +39,12 @@ exports.login = async (req,res,next)=>{
                    jwt.sign({UserId:user.id,UserRole:user.Role},"refreshSecretKey",async (err,refreshToken)=>{
 
                      res.cookie("accessToken",accessToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"strict"})
-                     res.cookie("refreshToken",refreshToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true})
+                     res.cookie("refreshToken",refreshToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"strict"})
                      const RefreshTokens = await client.get("refreshTokens")
                      console.log("redis stuff down  : ")
                      console.log(RefreshTokens)
                      if(RefreshTokens != null){
-
+                        //putting refreshtoken in redis
                         const parsedArray = JSON.parse(RefreshTokens);
                         parsedArray.push(refreshToken)
                         client.set("refreshTokens",JSON.stringify(parsedArray))
@@ -127,13 +127,13 @@ exports.register = async (req,res,next)=>{
 }
 
 exports.logout = async(req,res,next)=>{
-    /*
+    
     const refreshToken = req.refreshToken;
     const RefreshTokens = JSON.parse(await client.get("refreshTokens"))
     const IndexOfRefreshToken = RefreshTokens.findIndex((item)=>item == refreshToken)//this refresh token gonna be deleted
     RefreshTokens.splice(IndexOfRefreshToken,1);
     client.set("refreshTokens",JSON.stringify(RefreshTokens));
-    */
+    
     res.clearCookie("connect.sid")
     res.clearCookie("accessToken",{path:"/"})
     res.json({state:"success"})
@@ -147,7 +147,7 @@ exports.sendResetEmail = async(req,res,next)=>{
 
       const requestedUser = await User.findOne({where:{email:email}})
 
-      if(requestedUser = !null){
+      if(requestedUser != null){
 
             const passwordToken = jwt.sign({},"resetSecret",{expiresIn:"1h"});
             await requestedUser.update({resetPasswordToken:passwordToken})

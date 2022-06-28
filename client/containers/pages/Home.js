@@ -168,11 +168,12 @@ export default function Home({contents,categories}){
             UserIdofcontent:userid,
             setSavedWindow:setSavedWindow,
         })
-        
+        /*
         if(attribute == "Readlater" && typeofrelation == "Create"){
             setSavedWindow(true)
             setSavedWindowText("Added To Saved Posts")
         }
+        */
 
     }
     
@@ -206,6 +207,7 @@ export default function Home({contents,categories}){
                                     contentdata.map((item,index)=>(
                                         <div key={uniqid()} style={{padding:"20px",maxWidth:"600px",width:"100%"}}>
                                             <Contentcard 
+                                                isHomeCard={true}
                                                 categoryType={item.Category != null && item.Category.categoryName}
                                                 postId={item.id}
                                                 content={item.content}
