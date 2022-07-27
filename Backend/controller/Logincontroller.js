@@ -4,10 +4,11 @@ const bcrypt=require("bcrypt");
 const {v4}=require("uuid");
 const redis = require("redis")
 const Sendemail = require("../MiddleFunctions/SendEmail")
+const REDIS_PORT = process.env.PORT || 6379
 
 
 
-const client = redis.createClient();
+const client = redis.createClient(REDIS_PORT);
 
 client.connect().then(()=>console.log("connecnted to redis server"))
 
