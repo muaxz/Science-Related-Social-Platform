@@ -4,7 +4,9 @@
   "description": "",
   "main": "dist/index.js",
   "engines": {
-    "node":"16.15.1"
+    "node":"16.15.1",
+    "npm":"8.5.5"
+
   },
   "typings": "dist/index",
   "scripts": {
