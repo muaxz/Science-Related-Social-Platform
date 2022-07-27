@@ -11,8 +11,8 @@ const REDIS_PORT = process.env.PORT || 6379
 
 const client = redis.createClient({
    socket:{
-      host:"redis-19518.c250.eu-central-1-1.ec2.cloud.redislabs.com:19518",
-      port:19518
+      host:"ec2-44-199-54-215.compute-1.amazonaws.com",
+      port:7970
    }
 });
 
