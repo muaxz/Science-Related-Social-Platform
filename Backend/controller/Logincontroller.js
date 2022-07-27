@@ -3,6 +3,7 @@ const User=require("../models/Usermodel");
 const bcrypt=require("bcrypt");
 const {v4}=require("uuid");
 const redis = require("redis")
+require("dotenv").config();
 const Sendemail = require("../MiddleFunctions/SendEmail")
 const REDIS_PORT = process.env.PORT || 6379
 
