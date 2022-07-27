@@ -1,7 +1,7 @@
 const Content=require("../models/Contentmodel");
 const Comment=require("../models/Commentmodel");
 const User = require("../models/Usermodel");
-const Notificationmodel=require("../models/Notificationmodel");
+const Notificationmodel=require("../models/NotificationModel");
 
 
 
