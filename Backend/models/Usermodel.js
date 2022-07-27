@@ -12,6 +12,7 @@ const User = sequlize.define("User",{
     username:{
         type:Sequlize.STRING,
         allownull:false,
+        unique:true,
     },
     firstname:{
         type:Sequlize.STRING,

@@ -1,7 +1,7 @@
 import React,{useEffect,useState,useContext} from 'react'
 import styled from "styled-components";
 import {createusercontext} from "../../../context/Usercontext"
-import {Porfileimage} from "../../styledcomponents/Globalstyles"
+import {NightLightP, Porfileimage} from "../../styledcomponents/Globalstyles"
 import {Button} from "@material-ui/core"
 import {PersonAdd} from "@material-ui/icons"
 import Link from "next/link";
@@ -28,7 +28,7 @@ margin-right:10px;
 export default function Usercard({firstname,surname,imageurl,optionforbutton,children,usernumber,userid,followerlist,Relationfunc}) {
 
     const [checkfollow,setcheckfollow] = useState(false);
-    const {userdata} = useContext(createusercontext);
+    const {userdata,logged} = useContext(createusercontext);
 
     useEffect(()=>{
        
@@ -69,10 +69,10 @@ export default function Usercard({firstname,surname,imageurl,optionforbutton,chi
                  }}>
                  <Porfileimage profile={"/led.jpg"} width="40px" height="40px"></Porfileimage>
                </Link>
-               <Name><span style={{color:"black"}}>{firstname+" "+surname}</span></Name>
+               <Name><NightLightP>{firstname+" "+surname}</NightLightP></Name>
                <Following>{children}</Following>
                {
-                   userdata.UserId !== userid || !userdata.UserId &&
+                   userdata.UserId !== userid && logged &&
                    <Button  startIcon={<PersonAdd></PersonAdd>} style={{width:"170px",textTransform:"capitalize",fontWeight:"600"}} color="secondary" variant="outlined" onClick={Followingreq}>{checkfollow ? "Takipten Çık" : "Takip Et"}</Button>
                }
             </Inner>

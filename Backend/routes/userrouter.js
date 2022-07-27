@@ -3,7 +3,6 @@ const router=express.Router();
 const Verifytoken=require("../controller/verifytoken");
 const Usercontroller=require("../controller/Usercontroller");
 const UploadMiddle = require("../controller/uploadMidleWare")
-const csrfVerify = require("../controller/CsrfController")
 
 
 router.get("/getuserdata",Verifytoken,Usercontroller.getuserdata);//For context

@@ -39,7 +39,7 @@ function Belowcomment({childsLength,Answer_To,isMainparent,mainparentID,Editcomm
     </Contentcard>)
     
    
-    console.log(childsLength)
+        
     return (
         <React.Fragment>
         { 

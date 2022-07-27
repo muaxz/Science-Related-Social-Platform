@@ -614,7 +614,7 @@ function Contentcard({isHomeCard,categoryType,followeds,Animateforcomment,Answer
                                         value={answervalue}
                                         onChange={(e)=>setanswervalue(e.target.value)}
                                         InputProps={{
-                                            style:{cursor:"pointer",color:"white"},
+                                            style:{cursor:"pointer",color:nightmode ? "white" : "black"},
                                             endAdornment: <InputAdornment onClick={Makeacomment} style={{color:answervalue.length > 0 ?  "#e63946": "grey"}} position="end"><Send></Send></InputAdornment>,
                                         }}
                                         placeholder="Answer to the comment..." size="small" variant="outlined">

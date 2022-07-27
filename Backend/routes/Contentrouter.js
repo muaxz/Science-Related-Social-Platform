@@ -2,7 +2,6 @@ const express=require("express");
 const router=express.Router();
 const controller=require("../controller/Contentcontroller");
 const verifyUser = require("../controller/verifytoken")
-const csrfverifyUser = require("../controller/CsrfController")
 
 
 router.post("/produce",verifyUser,controller.produce);

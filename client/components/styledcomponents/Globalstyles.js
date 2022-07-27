@@ -16,7 +16,6 @@ transition:0.3s;
 }
 `)
 
-
 export const Global=createGlobalStyle`
  *{
      box-sizing:border-box;

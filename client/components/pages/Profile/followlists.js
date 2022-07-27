@@ -4,6 +4,7 @@ import Usercard from '../../shared/Cards/Usercard'
 import {Createuserrelation} from "../../../Api/requests"
 import Icon from '../../UI/Icon'
 import UniqId from "uniqid"
+import { NightLightP } from '../../styledcomponents/Globalstyles'
 
 const ExteriorDiv = styled.div`
 position:relative;
@@ -17,9 +18,9 @@ const Followlist = ({list,goBackToContent,type})=>{
 
     var titleFollow = ""
     if(type == "FOLLOWING"){
-        titleFollow = "Takip Edilen"
+        titleFollow = "Following"
     }else{
-        titleFollow = "Takipciler"
+        titleFollow = "Followers"
     }
 
     const Followingrelation = (checkfollow,UserId,followedid) =>{
@@ -33,7 +34,7 @@ const Followlist = ({list,goBackToContent,type})=>{
 
     return (
         <ExteriorDiv>
-          <h3 style={{textAlign:"center",paddingBottom:"10px"}}>{titleFollow}</h3>
+          <NightLightP style={{textAlign:"center",paddingBottom:"10px"}}>{titleFollow}</NightLightP>
           <Icon  activefunc={goBackToContent} className="fa-solid fa-chevron-left" Iconconfig={{hoverback:"#c9184a",hovercolor:"white",hoverposleft:"-10px",backcolor:"#e5e5e5",color:"black",width:"40px",height:"40px",lineheight:"42px",position:"absolute",top:"20px",left:"0"}}></Icon>
           {
               list.length > 0 ?
