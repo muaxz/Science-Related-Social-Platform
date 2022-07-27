@@ -17,6 +17,10 @@ const client = redis.createClient({
    password:"p02f1a4d23900a9697de8339827683c998e2bb370467e9070a9353cf970871c36"
 });
 
+client.on("error",(err)=>{
+   console.log(err)
+})
+
 client.connect().then(()=>console.log("connecnted to redis server"))
 
 exports.login = async (req,res,next)=>{
