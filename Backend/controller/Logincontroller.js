@@ -18,7 +18,7 @@ const client = redis.createClient({
 });
 
 client.on("error",(err)=>{
-   console.log(err)
+   console.log("hata var lol", err)
 })
 
 client.connect().then(()=>console.log("connecnted to redis server"))
