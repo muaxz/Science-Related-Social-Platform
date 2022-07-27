@@ -12,8 +12,9 @@ const REDIS_PORT = process.env.PORT || 6379
 const client = redis.createClient({
    socket:{
       host:"ec2-44-199-54-215.compute-1.amazonaws.com",
-      port:7970
-   }
+      port:7970,
+   },
+   password:"p02f1a4d23900a9697de8339827683c998e2bb370467e9070a9353cf970871c36"
 });
 
 client.connect().then(()=>console.log("connecnted to redis server"))
