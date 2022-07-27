@@ -10,7 +10,7 @@ const REDIS_PORT = process.env.PORT || 6379
 
 const client = redis.createClient({
    socket:{
-      host:"https://ideasharee.herokuapp.com/",
+      host:"ideasharee.herokuapp.com",
       port:REDIS_PORT
    }
 });
