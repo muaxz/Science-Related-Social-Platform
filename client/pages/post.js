@@ -40,7 +40,7 @@ export async function getServerSideProps(context){
 
           }
       
-          const {data} = await axios.get(`http://localhost:3001/content/getCategories/false`)
+          const {data} = await axios.get(`https://ideasharee.herokuapp.com/content/getCategories/false`)
           dataProps.categories = data.data
       
           return {
