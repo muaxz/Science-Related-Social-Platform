@@ -13,7 +13,7 @@ const Upload=require("./routes/upload");
 const Notification=require("./models/NotificationModel");
 const UserUser=require("./models/UserUser");
 const Myserver=require("http").createServer(app);
-const io = require("socket.io")(Myserver,{cors:{origin:"http://localhost:3000"}})
+const io = require("socket.io")(Myserver,{cors:["http://localhost:3000","https://mynextrepo.vercel.app"]})
 const Userrouter=require("./routes/userrouter");
 const Notifyrouter=require("./routes/Notificationroute");
 const cookieparser = require("cookie-parser")
@@ -22,7 +22,6 @@ const fileupload = require("express-fileupload");
 const Refreshrouter = require("./routes/RefreshToken")
 require("dotenv").config();
 //const csurf = require("csurf");
-const Token = require("csrf")
 //var csrfProtection = csrf({cookie:true})
 
 const port =  process.env.PORT || 3001 
@@ -38,21 +37,13 @@ io.on("connection",(socket)=>{
 DB.sync()
 .then(()=>{})
 
-/*
-app.use(Session({
-   secret:"secret csrf-token",
-   resave:false,
-   saveUninitialized:true,
-   cookie:{}
-}))
-*/
-
+app.use(cors({origin:["http://localhost:3000","https://mynextrepo.vercel.app"],credentials:true,exposedHeaders:"csrf-token"}));
 app.use(cookieparser())
 app.use(fileupload())
 app.set("socketio",io)
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
-app.use(cors({origin:["http://localhost:3000","https://mynextrepo.vercel.app"],credentials:true,exposedHeaders:"csrf-token"}));
+
 
 
 //routes.............................................
