@@ -27,17 +27,22 @@ export async function getServerSideProps({query,req,res}){
 
             var Response = await axios.get(`/content/usercontent/Like/${query.userıd}/0`,{headers:{Cookie:req.headers.cookie}})
           
+            res.setHeader("Access-Control-Allow-Credentials",true)
 
             if(Response.data.state == 401){
+
                 return { 
                     props:{error:401}
                 }
+
             }else if(Response.data.state == 404){
+
                 return {
                     redirect:{
                         destination:"/404"
                     }
                 }
+                
             }
 
         }   

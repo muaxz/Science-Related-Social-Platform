@@ -40,7 +40,7 @@ module.exports=async(req,res,next)=>{
                             jwt.sign({...userData,exp: Math.floor(Date.now() / 1000) + 20},"AccessToken-SecretKey",(err,accessToken)=>{
                         
                                 req.userdata = userData;
-                                res.cookie("accessToken",accessToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"strict"})
+                                res.cookie("accessToken",accessToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"none"})
                                 next();
                 
                             })
