@@ -41,7 +41,7 @@ p_Color:"black",
 contentSectionBorderColor:"white"
 }
 
-const socket = io("http://localhost:3001");
+const socket = io("https://ideasharee.herokuapp.com");
 
 export default function Mainlayout({children}) {
 
