@@ -2,7 +2,7 @@ module.exports = {
     async headers(){
       return [
         {
-          soruce:"/:path",
+          source:"/",
           headers:[
             {key:"Access-Control-Allow-Credentials",value:"true"}
           ]
