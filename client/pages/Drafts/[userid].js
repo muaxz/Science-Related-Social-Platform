@@ -22,7 +22,7 @@ export async function getServerSideProps({query,req,res}){
 
     try {
 
-        const Response  = await axios.get(`https://ideasharee.herokuapp.com/content/usercontent/Draft/${query.userid}/0`,{headers:{Cookie:req.headers.cookie}})
+        const Response  = await axios.get(`/content/usercontent/Draft/${query.userid}/0`,{headers:{Cookie:req.headers.cookie}})
 
         if(Response.data && Response.data.error){
 

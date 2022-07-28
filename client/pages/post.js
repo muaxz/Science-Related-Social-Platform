@@ -31,7 +31,7 @@ export async function getServerSideProps(context){
 
             if(context.query.write){
 
-              var draftResponse = await axios.get(`https://ideasharee.herokuapp.com/content/getContentForPost/${context.query.write}`,{headers:{Cookie:context.req.headers.cookie}})
+              var draftResponse = await axios.get(`/content/getContentForPost/${context.query.write}`,{headers:{Cookie:context.req.headers.cookie}})
       
               if(draftResponse.data.content != null){
               
@@ -40,7 +40,7 @@ export async function getServerSideProps(context){
 
           }
       
-          const {data} = await axios.get(`https://ideasharee.herokuapp.com/content/getCategories/false`)
+          const {data} = await axios.get(`/content/getCategories/false`)
           dataProps.categories = data.data
       
           return {

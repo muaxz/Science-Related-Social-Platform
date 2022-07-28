@@ -28,7 +28,7 @@ export async function getServerSideProps({query,req,res}){
       
         if(req.headers.cookie){
 
-            var Response = await axios.get(`https://ideasharee.herokuapp.com/content/usercontent/Readlater/${query.userıd}/0`,{headers:{Cookie:req.headers.cookie}})
+            var Response = await axios.get(`/content/usercontent/Readlater/${query.userıd}/0`,{headers:{Cookie:req.headers.cookie}})
 
 
             if(Response.data && Response.data.error){
