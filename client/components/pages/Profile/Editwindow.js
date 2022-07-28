@@ -142,7 +142,7 @@ box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2
 
 export default function Editwindow({isWindowforsettings,updatefunc,active,editdata,closefunc}){
 
-    
+    console.log(editdata)
     const [file,setfile] = useState({
         Backimage:"",
         mainImage:""
