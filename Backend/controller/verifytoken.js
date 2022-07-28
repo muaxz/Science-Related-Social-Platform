@@ -8,9 +8,7 @@ const client = new Redis({
     tls:{
        rejectUnauthorized: false
     }
- })
-
-client.connect().then(()=>console.log("connecnted to redis server"))
+})
 
 module.exports=async(req,res,next)=>{
 
