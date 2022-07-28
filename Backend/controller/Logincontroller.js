@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const User=require("../models/Usermodel");
 const fs = require("fs")
 const bcrypt=require("bcrypt");
-const Redis = require("ioredis")
 const {v4}=require("uuid");
 const Sendemail = require("../MiddleFunctions/SendEmail")
 const Redis = require("ioredis")
