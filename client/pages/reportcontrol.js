@@ -35,7 +35,7 @@ export async function getServerSideProps({req,res}){
         var needRedirect = false;
         if(req.headers.cookie){
 
-            var response = await axios.get("http://localhost:3001/content/getReports",{headers:{Cookie:req.headers.cookie}})
+            var response = await axios.get("https://ideasharee.herokuapp.com/content/getReports",{headers:{Cookie:req.headers.cookie}})
             if(response.data.state == 404){
                 needRedirect = true;
             }else if(response.data.state == 401){

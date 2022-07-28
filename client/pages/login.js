@@ -485,7 +485,7 @@ export async function getServerSideProps(context){
       
       if(context.query.token){
 
-            const {data} = await axios.post("/resetPasswordTokenCheck",{token:context.query.token})
+            const {data} = await axios.post("https://ideasharee.herokuapp.com/resetPasswordTokenCheck",{token:context.query.token})
             
             if(data.state == "NotExist"){
     

@@ -31,7 +31,7 @@ export async function getServerSideProps(context){
 
             if(context.query.write){
 
-              var draftResponse = await axios.get(`http://localhost:3001/content/getContentForPost/${context.query.write}`,{headers:{Cookie:context.req.headers.cookie}})
+              var draftResponse = await axios.get(`https://ideasharee.herokuapp.com/content/getContentForPost/${context.query.write}`,{headers:{Cookie:context.req.headers.cookie}})
       
               if(draftResponse.data.content != null){
               

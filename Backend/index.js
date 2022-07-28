@@ -81,7 +81,6 @@ app.use("/upload",Upload);
 app.use("/user",Userrouter);
 app.use("/comment",Commentrouter);
 app.use("/notification",Notifyrouter);
-app.use("/",Refreshrouter)
 
 app.use("*",(req,res)=>{
     

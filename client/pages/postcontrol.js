@@ -40,7 +40,7 @@ export async function getServerSideProps({req,res}){
 
         if(req.headers.cookie.includes("accessToken")){
 
-            var response = await axios.get("http://localhost:3001/content/getModContents/Default/null/0",{headers:{Cookie:req.headers.cookie}})
+            var response = await axios.get("https://ideasharee.herokuapp.com/content/getModContents/Default/null/0",{headers:{Cookie:req.headers.cookie}})
 
             if(response.data.state == 404){
 

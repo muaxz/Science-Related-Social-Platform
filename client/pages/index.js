@@ -31,7 +31,7 @@ export async function getServerSideProps(context){
 
     try {
         
-        var recieved = await Promise.all([axios.get(`http://localhost:3001/content/gethome/0/6`),axios.get(`http://localhost:3001/content/getCategories/true`)])
+        var recieved = await Promise.all([axios.get(`https://ideasharee.herokuapp.com/content/gethome/0/6`),axios.get(`http://localhost:3001/content/getCategories/true`)])
         //var categoryResponse = await axios.get("http://localhost:3001/content/getCategories")
         /*
         if(data && data.error){
