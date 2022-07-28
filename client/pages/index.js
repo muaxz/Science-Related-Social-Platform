@@ -31,7 +31,7 @@ export async function getServerSideProps(context){
 
     try {
         
-        var recieved = await Promise.all([axios.get(`https://ideasharee.herokuapp.com/content/gethome/0/6`),axios.get(`https://ideasharee.herokuapp.com/getCategories/true`)])
+        var recieved = await Promise.all([axios.get(`https://ideasharee.herokuapp.com/content/gethome/0/6`),axios.get(`https://ideasharee.herokuapp.com/content/getCategories/true`)])
         //var categoryResponse = await axios.get("http://localhost:3001/content/getCategories")
         /*
         if(data && data.error){
@@ -44,6 +44,7 @@ export async function getServerSideProps(context){
       
         }
         */
+        console.log(recieved[1].data.data)
         recieved[0].data.data.forEach(element => {
             element.difference = calculatedate(element.createdAt)
         });

@@ -260,7 +260,7 @@ exports.getCategories = async(req,res,next)=>{
    const {needImage} = req.params
    var excludedProporties = []
    excludedProporties[0] = "categoryImage" 
-
+   
    try {
 
      if(needImage == "true") excludedProporties[0] = ""
@@ -269,7 +269,7 @@ exports.getCategories = async(req,res,next)=>{
      const categories = await CategoryModel.findAll({
       attributes:{exclude:excludedProporties}
      })
-
+     console.log(categories)
      res.json({data:categories})
 
    } catch (error){
