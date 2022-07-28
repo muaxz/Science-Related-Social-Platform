@@ -2,15 +2,13 @@ const jwt = require("jsonwebtoken");
 const User=require("../models/Usermodel");
 const fs = require("fs")
 const bcrypt=require("bcrypt");
-const IoRedis = require("ioredis")
+const Redis = require("ioredis")
 const {v4}=require("uuid");
-const redis = require("redis")
-require("dotenv").config();
 const Sendemail = require("../MiddleFunctions/SendEmail")
 const REDIS_PORT = process.env.PORT || 6379
 
 
-const client = new IoRedis({
+const client = new Redis({
    host:"ec2-44-199-54-215.compute-1.amazonaws.com",
    port:7970,
    password:"p02f1a4d23900a9697de8339827683c998e2bb370467e9070a9353cf970871c36",
@@ -18,9 +16,6 @@ const client = new IoRedis({
       rejectUnauthorized: false
    }
 })
-
-
-
 
 exports.login = async (req,res,next)=>{
    
