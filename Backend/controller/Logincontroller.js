@@ -44,7 +44,7 @@ exports.login = async (req,res,next)=>{
                
                    jwt.sign({UserId:user.id,UserRole:user.Role},"refreshSecretKey",async (err,refreshToken)=>{
 
-                     res.cookie("accessToken",accessToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"none"})
+                     res.cookie("accessToken",accessToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"none",domain:".mynextrepo.vercel.app"})
                      res.cookie("refreshToken",refreshToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"none"})
                      const RefreshTokens = await client.get("refreshTokens")
                      console.log("redis stuff down  : ")
