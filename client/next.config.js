@@ -4,7 +4,9 @@ module.exports = {
         {
           source:"/:path*",
           headers:[
-            {key:"Access-Control-Allow-Credentials",value:"true"}
+            {key:"Access-Control-Allow-Credentials",value:"true"},
+            {key:"Access-Control-Allow-Origin",value:"https://mynextrepo.vercel.app"},
+            {key:"Access-Control-Allow-Methods",value:"GET, POST, PUT, DELETE"},
           ]
         }
       ]
