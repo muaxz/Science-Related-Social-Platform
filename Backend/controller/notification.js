@@ -70,6 +70,7 @@ exports.getcount = async(req,res,next)=>{
 exports.Updatecount = async(req,res,next)=>{
     
     const {UserId} = req.params;
+    
     try {
     
         const record = await NotificationModel.findAll({where:{
@@ -84,8 +85,7 @@ exports.Updatecount = async(req,res,next)=>{
 
         }
         
-
-        return;
+        return res.json({state:"success"});
 
     } catch (error) {
          next();
