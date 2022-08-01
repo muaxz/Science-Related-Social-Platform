@@ -140,9 +140,9 @@ exports.logout = async(req,res,next)=>{
     const IndexOfRefreshToken = RefreshTokens.findIndex((item)=>item == refreshToken)//this refresh token gonna be deleted
     RefreshTokens.splice(IndexOfRefreshToken,1);
     client.set("refreshTokens",JSON.stringify(RefreshTokens));
-    
-    res.clearCookie("accessToken",{path:"/",domain:"ideasharee.herokuapp.com"})
-    res.clearCookie("refreshToken",{path:"/",domain:"ideasharee.herokuapp.com"})
+    res.set("Set-Cookie",[`accessToken=0;Max-Age=0;Path=/;HttpOnly;Secure;SameSite=None`,`refreshToken=0;Max-Age=0;Path=/;HttpOnly;Secure;SameSite=None`])
+    //res.clearCookie("accessToken",{path:"/",domain:"ideasharee.herokuapp.com"})
+    //res.clearCookie("refreshToken",{path:"/",domain:"ideasharee.herokuapp.com"})
     res.json({state:"success"})
 }
 
