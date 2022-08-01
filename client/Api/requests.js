@@ -167,7 +167,6 @@ export const logout = async({setlogged,setuserdata,router,setspinner})=>{
   try {
 
       const response = await axios.get("/logout")
-      localStorage.removeItem("csrf-token")
       setlogged(false)
       setuserdata({})
       router.push("/?state=logout")
