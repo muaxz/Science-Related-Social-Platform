@@ -291,7 +291,7 @@ exports.editCategory = async(req,res,next)=>{
 
     try {
 
-        if(req.files.files.size/1024 < 3000){
+        if(req.files.files.size/1024 < 3000 && UserRole === "Admin"){
           const generatedTokenForName = v4()
           const blob = firebase.bucket.file(generatedTokenForName)
     
@@ -314,15 +314,13 @@ exports.editCategory = async(req,res,next)=>{
                       
                   blobwriter.on("finish",async (data)=>{
                       
-                      if(UserRole == "Admin"){
-
                         await CategoryModel.create({
                             categoryImage:`https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${generatedTokenForName}?alt=media&token=${generatedToken}`,
                             categoryName:name
                         })
               
                          return res.json({state:"success"})
-                      }
+                      
               
                   })
     

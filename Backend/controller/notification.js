@@ -89,7 +89,7 @@ exports.Updatecount = async(req,res,next)=>{
         return res.json({state:"success"});
 
     } catch (error) {
-         next();
+         return next();
         
     }
 }

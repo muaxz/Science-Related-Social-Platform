@@ -1,6 +1,5 @@
-import React,{useState,useEffect,useContext} from 'react'
+import React,{useState,useEffect,useContext,Suspense} from 'react'
 import styled,{ThemeProvider} from "styled-components";
-import Lefttoolbar from "../../components/shared/Navigation/SideBar/Lefttoolbar";
 import Navigation from "../../components/shared/Navigation/Navbar/Navigation";
 import {Global,Black,SavedInfoDiv} from "../../components/styledcomponents/Globalstyles";
 import {createusercontext} from "../../context/Usercontext";
@@ -9,8 +8,12 @@ import {CreateNightMode} from "../../context/Nightmode";
 import {useRouter} from "next/router"
 import io from "socket.io-client";
 import Icon from "../../components/UI/Icon";
+import dynamic from "next/dynamic"
 import {NotificationCountreq,Notificationreq,UpdateNotificationcount} from "../../Api/requests"
 
+const Lefttoolbar = dynamic(() => import("../../components/shared/Navigation/SideBar/Lefttoolbar"), {
+    suspense: true,
+})
 
 const Bigdiv=styled.div``
 
@@ -162,7 +165,9 @@ export default function Mainlayout({children}) {
                 <Black onClick={()=>setactive(false)} aktif={active}></Black>
                 <SavedInfoDiv active={savedWindow}>{savedWindowText}</SavedInfoDiv>
                 <Navigation Update={Updatecount} Reloadfunc={Reloadnav} Count={countofdata} Data={navdata}></Navigation>
-                <Lefttoolbar myactive={active} makeactive={setactive}></Lefttoolbar>
+                <Suspense fallback={"asdasdasdasd"}>
+                   <Lefttoolbar myactive={active} makeactive={setactive}></Lefttoolbar>
+                </Suspense>
                 {/*this part will be changed*/}
                 <Global></Global>
                 <GoUpIcon onClick={()=>{window.scrollTo({top:0})}} up={goup}>

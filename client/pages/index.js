@@ -52,7 +52,6 @@ export async function getServerSideProps(context){
       
         }
         */
-        console.log(recieved[1].data.data)
         recieved[0].data.data.forEach(element => {
             element.difference = calculatedate(element.createdAt)
         });

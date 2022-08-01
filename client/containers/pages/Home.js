@@ -1,16 +1,19 @@
-import React, {useEffect,useState,useContext,useMemo} from 'react'
+import React, {useEffect,useState,useContext,useMemo,Suspense} from 'react'
 import Contentcard from "../../components/shared/Cards/Contentcard";
 import styled,{ThemeProvider} from "styled-components";
-import {Homereq,Createrelationreq,Notificationreq} from "../../Api/requests";
+import {Homereq,Createrelationreq} from "../../Api/requests";
 import {createusercontext} from "../../context/Usercontext";
-import Showfollower from "../../components/pages/Main/Showfoller";
+//import Showfollower from "../../components/pages/Main/Showfoller";
 import {CreateUtilContext} from "../../context/UtilContext"
 import useScroll from "../../hooks/Scroll";
+import dynamic from "next/dynamic"
 import uniqid from "uniqid";
 import SelectionPart from "../../components/pages/Main/SelectionPart"
 import { calculatedate } from '../../utilsfunc';
 
-
+const Showfollower = dynamic(() => import("../../components/pages/Main/Showfoller"), {
+    suspense: true,
+})
 
 
 const Flexdiv=styled.div`
@@ -194,7 +197,7 @@ export default function Home({contents,categories}){
         <ThemeProvider theme={themeProp}>
             <div style={{height:`${windowlist.list.length > 0 ? "100vh" : "100%"}`,overflow:windowlist.list.length > 0 ? "hidden": "visible"}}> 
                         
-                        {windowlist.list.length > 0 && (<Showfollower setlist={()=>setwindowlist(prev=>{return {...prev,list:[]}})} attribute={windowlist.attribute} list={windowlist.list}></Showfollower>)}
+                        {windowlist.list.length > 0 && (<Suspense fallback={""}><Showfollower setlist={()=>setwindowlist(prev=>{return {...prev,list:[]}})} attribute={windowlist.attribute} list={windowlist.list}></Showfollower></Suspense>)}
                         <BackgroundHome>
                             <img style={{width:"100%",height:"100%",objectFit:"cover"}} src={"/yaprak.jpg"}></img>
                             <Trial></Trial>
