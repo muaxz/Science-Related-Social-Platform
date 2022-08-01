@@ -424,7 +424,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                 <Contentpart>
                      <Usersection>
                          <ProfileImageholder>
-                             <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile={Mydata.mainUrl}></Porfileimage>
+                             <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile={Mydata.mainUrl ?? "/realuserphoto.png"}></Porfileimage>
                          </ProfileImageholder>
                          <NightLightP>{Mydata.firstname + " " + Mydata.lastname}</NightLightP>
                          <span style={{color:"#6c757d"}}>UI designer</span>
