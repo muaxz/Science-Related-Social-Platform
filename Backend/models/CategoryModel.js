@@ -11,7 +11,7 @@ const Category = sequlizeBase.define("Category",{
       allowNull:false
     },
     categoryImage:{
-      type:Sequelize.BLOB("long"),
+      type:Sequelize.TEXT,
       allowNull:false
     }
 })

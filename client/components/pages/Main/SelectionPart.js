@@ -132,7 +132,7 @@ function Selection({listContent,setListContent,setSelectedKey,keyName,categories
         const willBeDeployed = {}
         categories.forEach(element => {
             willBeDeployed[element.categoryName] = {}
-            willBeDeployed[element.categoryName]["display"] = Buffer.from(element.categoryImage.data).toString("base64");
+            willBeDeployed[element.categoryName]["display"] = element.categoryImage
             willBeDeployed[element.categoryName]["selected"] = false
             willBeDeployed[element.categoryName]["stoprequesting"] = false
             willBeDeployed[element.categoryName]["id"] = element.id
@@ -207,7 +207,7 @@ function Selection({listContent,setListContent,setSelectedKey,keyName,categories
                        Object.keys(selectionList).map((item,index)=>{
                         return (<SectionBoxes onClick={()=>Selectionhander(item)} activeSelect={selectionList[item].selected} key={index}>
                                     <Cover></Cover>
-                                    <ImgInBox src={`data:image/png;base64,${selectionList[item].display}`}></ImgInBox>
+                                    <ImgInBox src={selectionList[item].display}></ImgInBox>
                                     <BoxName activeSelect={selectionList[item].selected}>{item}</BoxName>
                                </SectionBoxes>)
                        })
