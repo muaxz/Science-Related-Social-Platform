@@ -93,13 +93,6 @@ Myserver.listen(port,()=>{})
 
 
 
-
-
-
-
-
-
-
 /*DB.sync()
 .then(()=>{
    

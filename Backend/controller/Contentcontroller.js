@@ -9,6 +9,7 @@ const Notification=require("../models/NotificationModel");
 const firebase = require("../firebase/firebase")
 const CategoryModel = require("../models/CategoryModel")
 const {v4} = require("uuid")
+const uploadFunction = require("../MiddleFunctions/imageUpload")
 
 
 
@@ -260,16 +261,19 @@ exports.getCategories = async(req,res,next)=>{
    const {needImage} = req.params
    var excludedProporties = []
    excludedProporties[0] = "categoryImage" 
-   
+  
    try {
 
      if(needImage == "true") excludedProporties[0] = ""
 
 
+     
      const categories = await CategoryModel.findAll({
       attributes:{exclude:excludedProporties}
      })
+
      console.log(categories)
+    
      res.json({data:categories})
 
    } catch (error){
@@ -281,21 +285,54 @@ exports.getCategories = async(req,res,next)=>{
 }
 
 exports.editCategory = async(req,res,next)=>{
+
     const {name} = req.body;
     const {UserRole} = req.userdata;
- 
-    
+
     try {
 
-        if(UserRole == "Admin"){
+        if(req.files.files.size/1024 < 3000){
+          const generatedTokenForName = v4()
+          const blob = firebase.bucket.file(generatedTokenForName)
+    
+                  const generatedToken = v4()
+                
+                  const blobwriter = blob.createWriteStream({
+                          metadata:{
+                                  contentType:"image/png",
+                                  metadata:{
+                                        firebaseStorageDownloadTokens: generatedToken //generating uniqe token
+                                      
+                                  },
+                                          
+                          }
+                  })
+                      
+                  blobwriter.on("error",(err)=>{
+                        
+                  })
+                      
+                  blobwriter.on("finish",async (data)=>{
+                      
+                      if(UserRole == "Admin"){
 
-          await CategoryModel.create({
-              categoryImage:req.files.file.data,
-              categoryName:name
-          })
+                        await CategoryModel.create({
+                            categoryImage:`https://firebasestorage.googleapis.com/v0/b/mynext-a074a.appspot.com/o/${generatedTokenForName}?alt=media&token=${generatedToken}`,
+                            categoryName:name
+                        })
+              
+                         return res.json({state:"success"})
+                      }
+              
+                  })
+    
+                  blobwriter.end(req.files.files.data)
+          }else{
+              
+              res.json({uploaded:false,url:"ERROR",state:"Big Size File!"})
+    
+          }
 
-           return res.json({state:"success"})
-        }
 
         return res.json({state:"error"})
 

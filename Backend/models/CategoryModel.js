@@ -14,7 +14,7 @@ const Category = sequlizeBase.define("Category",{
       type:Sequelize.TEXT,
       allowNull:false
     }
-})
+},{timestamps:false})
 
 
 module.exports = Category;
