@@ -32,8 +32,7 @@ export async function getServerSideProps(context){
     try {
 
         if(context.query.accessValue){
-           console.log(context.query.accessValue)
-            context.res.setHeader("Set-Cookie",[`accessToken=${context.query.accessValue}`,`refreshToken=${context.query.refreshValue}`])
+            context.res.setHeader("Set-Cookie",[`accessToken=${context.query.accessValue};Path=/;HttpOnly;Secure;SameSite=None`,`refreshToken=${context.query.refreshValue};Path=/;HttpOnly;Secure;SameSite=None`])
         }
 
         var recieved = await Promise.all([axios.get(`/content/gethome/0/1`),axios.get(`/content/getCategories/true`)])
