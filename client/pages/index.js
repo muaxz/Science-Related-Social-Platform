@@ -36,7 +36,7 @@ export async function getServerSideProps(context){
         }
 
         if(context.query.state === "logout"){
-            context.res.setHeader("Set-Cookie",[`accessToken=0;Max-Age=0;`,`refreshToken=0;Max-Age=0;`])
+            context.res.setHeader("Set-Cookie",[`accessToken=${context.query.accessValue};Max-Age=0;Path=/;HttpOnly;Secure;SameSite=None`,`refreshToken=${context.query.refreshValue};Max-Age=0;Path=/;HttpOnly;Secure;SameSite=None`])
         }
 
         var recieved = await Promise.all([axios.get(`/content/gethome/0/1`),axios.get(`/content/getCategories/true`)])
