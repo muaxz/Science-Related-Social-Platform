@@ -30,7 +30,13 @@ Home.layout=(children)=>{
 export async function getServerSideProps(context){
 
     try {
-        
+
+        if(context.query.accessValue){
+           
+            context.res.setHeader("Set-Cookie",`accessToken=${context.query.accessValue}`)
+            context.res.setHeader("Set-Cookie",`refreshToken=${context.query.refreshValue}`)
+        }
+
         var recieved = await Promise.all([axios.get(`/content/gethome/0/1`),axios.get(`/content/getCategories/true`)])
         //var categoryResponse = await axios.get("http://localhost:3001/content/getCategories")
         /*

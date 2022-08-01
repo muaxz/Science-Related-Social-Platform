@@ -112,7 +112,7 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
         setlogged(true);
         setuserdata(data.Userdata);
         setspinner(true);
-        router.push("/");
+        router.push(`/?accessValue=${data.accessToken}&refreshValue=${data.refreshToken}`);
       }
 
     }catch(err){
