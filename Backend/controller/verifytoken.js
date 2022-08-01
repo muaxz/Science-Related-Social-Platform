@@ -18,7 +18,7 @@ module.exports=async(req,res,next)=>{
 
      //burada request objesine yeni bir eleman tanımlayailiyoruz
 
-        jwt.verify(token,"AccessToken-SecretKey",async(err,authdata)=>{
+        jwt.verify(token,"jQfVCdPToRzV7kJa6F60qJFXxYoB480CIHJwW/PXjMkGoveXU3tQ8k4k1SLNiKk",async(err,authdata)=>{
             
             if(err){
                 console.log(err.name)
@@ -37,7 +37,7 @@ module.exports=async(req,res,next)=>{
                         }
                         else{
                 
-                            jwt.sign({...userData,exp: Math.floor(Date.now() / 1000) + 20},"AccessToken-SecretKey",(err,accessToken)=>{
+                            jwt.sign({...userData,exp: Math.floor(Date.now() / 1000) + 20},"jQfVCdPToRzV7kJa6F60qJFXxYoB480CIHJwW/PXjMkGoveXU3tQ8k4k1SLNiKk",(err,accessToken)=>{
                         
                                 req.userdata = userData;
                                 res.cookie("accessToken",accessToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"none"})
