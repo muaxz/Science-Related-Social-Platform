@@ -165,15 +165,6 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
     const [imagetype,setimagetype] = useState("mainImage")
     const [iscropperactive,setcropperactive] = useState(false)
     const [userinfo,setuserinfo] = useState({
-        musername:{
-            activate:false,
-            value:editdata.username,
-            label:"Username",
-            warning:false,
-            multiline:false,
-            msg:"",
-            errormsg:""
-        },
         firstname:{
             activate:false,
             value:editdata.firstname,

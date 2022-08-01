@@ -25,7 +25,7 @@ require("dotenv").config();
 //var csrfProtection = csrf({cookie:true})
 
 const port =  process.env.PORT || 3001 
-console.log(process.env.PRIVATE)
+
 io.on("connection",(socket)=>{ 
   
     socket.on("create",(UserId)=>{

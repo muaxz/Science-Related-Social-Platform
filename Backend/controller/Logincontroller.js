@@ -6,6 +6,7 @@ const {v4}=require("uuid");
 const Sendemail = require("../MiddleFunctions/SendEmail")
 const Redis = require("ioredis")
 const REDIS_PORT = process.env.PORT || 6379
+require("dotenv").config()
 
 
 const client = new Redis({
@@ -37,18 +38,18 @@ exports.login = async (req,res,next)=>{
          }
          
          bcrypt.compare(password,user.password,(err,result)=>{
-            
+            console.log(process.env.ACCESS_SECRET_KEY)
             if(result == true){
                 
-               jwt.sign({UserId:user.id,UserRole:user.Role,exp: Math.floor(Date.now() / 1000) + 15},"jQfVCdPToRzV7kJa6F60qJFXxYoB480CIHJwW/PXjMkGoveXU3tQ8k4k1SLNiKk",(err,accessToken)=>{
+               jwt.sign({UserId:user.id,UserRole:user.Role,exp: Math.floor(Date.now() / 1000) + 15},process.env.ACCESS_SECRET_KEY,(err,accessToken)=>{
                
-                   jwt.sign({UserId:user.id,UserRole:user.Role},"refreshSecretKey",async (err,refreshToken)=>{
+                   jwt.sign({UserId:user.id,UserRole:user.Role},process.env.REFRESH_SECRET_KEY,async (err,refreshToken)=>{
 
                      res.cookie("accessToken",accessToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"none"})
                      res.cookie("refreshToken",refreshToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"none"})
                      const RefreshTokens = await client.get("refreshTokens")
                      console.log("redis stuff down  : ")
-                     console.log(RefreshTokens)
+                     //console.log(RefreshTokens)
                      if(RefreshTokens != null){
                         //putting refreshtoken in redis
                         const parsedArray = JSON.parse(RefreshTokens);

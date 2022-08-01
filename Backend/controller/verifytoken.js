@@ -1,5 +1,6 @@
 const jwt=require("jsonwebtoken");
 const Redis = require("ioredis")
+require("dotenv")
 
 const client = new Redis({
     host:"ec2-44-199-54-215.compute-1.amazonaws.com",
@@ -18,7 +19,7 @@ module.exports=async(req,res,next)=>{
 
      //burada request objesine yeni bir eleman tanımlayailiyoruz
 
-        jwt.verify(token,"jQfVCdPToRzV7kJa6F60qJFXxYoB480CIHJwW/PXjMkGoveXU3tQ8k4k1SLNiKk",async(err,authdata)=>{
+        jwt.verify(token,process.env.ACCESS_SECRET_KEY,async(err,authdata)=>{
             
             if(err){
                 console.log(err.name)
@@ -29,7 +30,7 @@ module.exports=async(req,res,next)=>{
                     const parsedRefreshArray = JSON.parse(await client.get("refreshTokens"))
                     if(!parsedRefreshArray.includes(refreshToken)) return res.json({error:"Unauthroized",state:401})
 
-                    jwt.verify(refreshToken,"refreshSecretKey",(err,userData)=>{
+                    jwt.verify(refreshToken,process.env.REFRESH_SECRET_KEY,(err,userData)=>{
                        
                         if(err){
                       
@@ -37,7 +38,7 @@ module.exports=async(req,res,next)=>{
                         }
                         else{
                 
-                            jwt.sign({...userData,exp: Math.floor(Date.now() / 1000) + 20},"jQfVCdPToRzV7kJa6F60qJFXxYoB480CIHJwW/PXjMkGoveXU3tQ8k4k1SLNiKk",(err,accessToken)=>{
+                            jwt.sign({...userData,exp: Math.floor(Date.now() / 1000) + 20},process.env.ACCESS_SECRET_KEY,(err,accessToken)=>{
                         
                                 req.userdata = userData;
                                 res.cookie("accessToken",accessToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"none"})

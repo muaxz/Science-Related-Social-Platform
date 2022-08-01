@@ -497,21 +497,6 @@ exports.updateprofile = async (req,res,next)=>{
        }
       
       try {
-      
-        const UN = await User.findOne({where:{username:userprofiledata.musername}})
-
-        //farkli bir userin kullanici adi
-        if(UN && UN.id !== UserId){
-
-            controllerforusername = false
-            //burada bir hata donucek
-
-        }
-        else{
-
-            controllerforusername = true
-
-        }
 
         if(true){
 
