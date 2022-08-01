@@ -33,7 +33,7 @@ export async function getServerSideProps(context){
 
         if(context.query.accessValue){
            
-            context.res.setHeader("Set-Cookie",`accessToken=${context.query.accessValue}`)
+            context.res.setHeader("Set-Cookie",`accessToken=${context.query.accessValue};Path=/;HttpOnly;Secure;SameSite=None`)
             context.res.setHeader("Set-Cookie",`refreshToken=${context.query.refreshValue}`)
         }
 
