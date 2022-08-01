@@ -227,7 +227,7 @@ export default function MyEditor({categories,content}){
     function UploadTitleImage(titleFile){
       const fileForm = new FormData();
       fileForm.append("files",titleFile[0])
-      axios.post(`http://localhost:3001/content/uploadContentImage`,fileForm).then((res)=>{
+      axios.post(`http://ideasharee.herokuapp.com/content/uploadContentImage`,fileForm).then((res)=>{
         console.log(res.data)
         if(!res.data.uploaded){
           windowInformRef.current = "The size of an image should be the most 4 MB"
