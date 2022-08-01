@@ -22,9 +22,9 @@ module.exports=async(req,res,next)=>{
         jwt.verify(token,process.env.ACCESS_SECRET_KEY,async(err,authdata)=>{
             
             if(err){
-                console.log(err.name)
+               
                 if(err.name == "TokenExpiredError"){
-
+                    console.log("insideee expiration error")
                     const refreshToken = req.cookies["refreshToken"];
 
                     const parsedRefreshArray = JSON.parse(await client.get("refreshTokens"))

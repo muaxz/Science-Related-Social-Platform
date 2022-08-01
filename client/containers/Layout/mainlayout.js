@@ -5,15 +5,11 @@ import {Global,Black,SavedInfoDiv} from "../../components/styledcomponents/Globa
 import {createusercontext} from "../../context/Usercontext";
 import {CreateUtilContext} from "../../context/UtilContext";
 import {CreateNightMode} from "../../context/Nightmode";
+import Lefttoolbar from '../../components/shared/Navigation/SideBar/Lefttoolbar';
 import {useRouter} from "next/router"
 import io from "socket.io-client";
 import Icon from "../../components/UI/Icon";
-import dynamic from "next/dynamic"
 import {NotificationCountreq,Notificationreq,UpdateNotificationcount} from "../../Api/requests"
-
-const Lefttoolbar = dynamic(() => import("../../components/shared/Navigation/SideBar/Lefttoolbar"), {
-    suspense: true,
-})
 
 const Bigdiv=styled.div``
 
@@ -165,9 +161,7 @@ export default function Mainlayout({children}) {
                 <Black onClick={()=>setactive(false)} aktif={active}></Black>
                 <SavedInfoDiv active={savedWindow}>{savedWindowText}</SavedInfoDiv>
                 <Navigation Update={Updatecount} Reloadfunc={Reloadnav} Count={countofdata} Data={navdata}></Navigation>
-                <Suspense fallback={"asdasdasdasd"}>
-                   <Lefttoolbar myactive={active} makeactive={setactive}></Lefttoolbar>
-                </Suspense>
+                <Lefttoolbar myactive={active} makeactive={setactive}></Lefttoolbar>
                 {/*this part will be changed*/}
                 <Global></Global>
                 <GoUpIcon onClick={()=>{window.scrollTo({top:0})}} up={goup}>

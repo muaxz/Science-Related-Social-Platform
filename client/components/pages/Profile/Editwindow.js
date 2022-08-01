@@ -27,6 +27,7 @@ z-index:1000;
 const Inner = styled.div`
 position:relative;
 overflow:auto;
+padding:10px;
 height:100%;
 `
 const Background = styled.div`
@@ -90,7 +91,7 @@ display:flex;
 justify-content:space-around;
 padding-top:10px;
 height:30px;
-margin-bottom:40px;
+margin-bottom:50px;
 `
 
 const Childsofselection = styled.div`
@@ -98,6 +99,7 @@ position:relative;
 top:${({innercolor})=>innercolor ? "10px" : "0"};
 background-color:${({innercolor})=>innercolor ? "#7de2d1" : "#ff0a54"};
 display:flex;
+flex-shrink:0;
 align-items:center;
 justify-content:center;
 border-radius:50%;
@@ -114,11 +116,11 @@ transition-duration:0.3s;
 top:-45px;
 left:${({slipvalue})=>{
     if(slipvalue == 1){
-        return "55px"
+        return "9%"
     }else if(slipvalue == 2){
-        return "250px"
+        return "43%"
     }else{
-        return "440px"
+        return "76%"
     }
 }};
 `
@@ -142,7 +144,7 @@ box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2
 
 export default function Editwindow({isWindowforsettings,updatefunc,active,editdata,closefunc}){
 
-    console.log(editdata)
+
     const [file,setfile] = useState({
         Backimage:"",
         mainImage:""

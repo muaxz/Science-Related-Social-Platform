@@ -272,7 +272,7 @@ exports.getCategories = async(req,res,next)=>{
       attributes:{exclude:excludedProporties}
      })
 
-     console.log(categories)
+  
     
      res.json({data:categories})
 
