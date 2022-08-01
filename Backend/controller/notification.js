@@ -78,13 +78,13 @@ exports.Updatecount = async(req,res,next)=>{
                 TakerId:{[Op.substring]:`${UserId}`}
             }
         })
-        /*
+        
         for (let i = 0; i < record.length; i++) {
             //çözüm bulunacak
             await record[i].update({Facecheck:true})
 
         }
-        */
+        
         
         return res.json({state:"success"});
 

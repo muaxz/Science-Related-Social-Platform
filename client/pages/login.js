@@ -481,8 +481,18 @@ Login.layout=(children)=>{
 */
 export async function getServerSideProps(context){
 
-    try {   
-      
+    try {
+
+      if(context.req.headers.cookie){
+
+         return {
+            redirect :{
+                destination:"/"
+            }
+         }
+
+      }
+
       if(context.query.token){
 
             const {data} = await axios.post("/resetPasswordTokenCheck",{token:context.query.token})

@@ -35,6 +35,10 @@ export async function getServerSideProps(context){
             context.res.setHeader("Set-Cookie",[`accessToken=${context.query.accessValue};Path=/;HttpOnly;Secure;SameSite=None`,`refreshToken=${context.query.refreshValue};Path=/;HttpOnly;Secure;SameSite=None`])
         }
 
+        if(context.query.state === "logout"){
+            context.res.setHeader("Set-Cookie",[`accessToken=0;Max-Age=0;`,`refreshToken=0;Max-Age=0;`])
+        }
+
         var recieved = await Promise.all([axios.get(`/content/gethome/0/1`),axios.get(`/content/getCategories/true`)])
         //var categoryResponse = await axios.get("http://localhost:3001/content/getCategories")
         /*

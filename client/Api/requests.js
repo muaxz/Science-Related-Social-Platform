@@ -170,7 +170,7 @@ export const logout = async({setlogged,setuserdata,router,setspinner})=>{
       localStorage.removeItem("csrf-token")
       setlogged(false)
       setuserdata({})
-      router.push("/")
+      router.push("/?state=logout")
 
       
   } catch (error) {
