@@ -141,8 +141,8 @@ exports.logout = async(req,res,next)=>{
     RefreshTokens.splice(IndexOfRefreshToken,1);
     client.set("refreshTokens",JSON.stringify(RefreshTokens));
     
-    res.clearCookie("connect.sid")
     res.clearCookie("accessToken",{path:"/"})
+    res.clearCookie("refreshToken",{path:"/"})
     res.json({state:"success"})
 }
 
