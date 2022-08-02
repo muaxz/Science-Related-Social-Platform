@@ -1,4 +1,4 @@
-import React, {useEffect,useState,useContext,useMemo,Suspense} from 'react'
+import React, {useEffect,useState,useContext,useMemo,Suspense, useRef} from 'react'
 import Contentcard from "../../components/shared/Cards/Contentcard";
 import styled,{ThemeProvider} from "styled-components";
 import {Homereq,Createrelationreq} from "../../Api/requests";
@@ -72,7 +72,7 @@ box-shadow: rgba(50, 50, 93, 1) 0px 30px 60px -12px, rgba(222, 222, 222, 0.9) 0p
 export default function Home({contents,categories}){
     
     const {bottom}=useScroll();
-    const [slidevalue,setslidevalue]=useState(-30);
+    const firstLoad = useRef(true)
     const {setSavedWindow,setSavedWindowText} = useContext(CreateUtilContext)
     const {userdata} = useContext(createusercontext)
     const [contentdata,setcontentdata]=useState(contents,categories);
@@ -104,7 +104,7 @@ export default function Home({contents,categories}){
             stoprequesting:false,
         },    
     })
-    const [selectedKey,setSelectedKey]=useState(6);
+    const [selectedKey,setSelectedKey]=useState(1);
     const [windowlist,setwindowlist]=useState({
         list:[],
         attribute:"",
@@ -117,8 +117,8 @@ export default function Home({contents,categories}){
     useEffect(()=>{
 
 
-          if(bottom){
-
+          if(bottom || firstLoad){
+                firstLoad.current = false
                 Homereq({
                     currentdata:contentdata,
                     setcontentdata:setcontentdata,
