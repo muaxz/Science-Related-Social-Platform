@@ -14,7 +14,7 @@ const Home = ({content,categories})=>{
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossOrigin="anonymous" />
             <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Slabo+27px&display=swap&family=Domine&display=swap&family=Rajdhani:wght@500&display=swap&family=Tinos:ital@1&display=swap&family=IBM+Plex+Serif:wght@500&display=swap" rel="stylesheet"></link>
            </Head>
-          <Main contents={content} categories={categories}></Main>
+          <Main contents={[]} categories={content}></Main>
        </React.Fragment>
     )
 }
@@ -39,7 +39,7 @@ export async function getServerSideProps(context){
             context.res.setHeader("Set-Cookie",[`accessToken=${context.query.accessValue};Max-Age=0;Path=/;HttpOnly;Secure;SameSite=None`,`refreshToken=${context.query.refreshValue};Max-Age=0;Path=/;HttpOnly;Secure;SameSite=None`])
         }
 
-        var recieved = await Promise.all([axios.get(`/content/gethome/0/1`),axios.get(`/content/getCategories/true`)])
+        var recieved = await Promise.all([axios.get(`/content/getCategories/true`)])
         //var categoryResponse = await axios.get("http://localhost:3001/content/getCategories")
         /*
         if(data && data.error){
@@ -52,12 +52,14 @@ export async function getServerSideProps(context){
       
         }
         */
+        /*
         recieved[0].data.data.forEach(element => {
             element.difference = calculatedate(element.createdAt)
         });
+        */
 
         return { 
-            props:{content:recieved[0].data.data,categories:recieved[1].data.data}
+            props:{content:recieved[0].data.data}
         }
 
     } catch (error){

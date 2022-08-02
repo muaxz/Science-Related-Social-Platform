@@ -2,7 +2,7 @@ import axios from "axios";
 import router from "next/router"
 
 
-axios.defaults.baseURL="https://ideasharee.herokuapp.com";
+axios.defaults.baseURL="http://localhost:3001";
 
 axios.defaults.withCredentials = true;
 
@@ -49,8 +49,6 @@ axios.interceptors.request.use(function (config) {
   // Do something with request error
   return Promise.reject(error);
 });
-
-
 
 
 

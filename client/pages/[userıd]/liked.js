@@ -22,7 +22,7 @@ export default function Liked({error,content}){
 export async function getServerSideProps({query,req,res}){
 
     try {
-        res.setHeader("Access-Control-Allow-Credentials",true)
+        
         if(req.headers.cookie){
 
             var Response = await axios.get(`/content/usercontent/Like/${query.userıd}/0`,{headers:{Cookie:req.headers.cookie}})
