@@ -2,7 +2,7 @@ import axios from "axios";
 import router from "next/router"
 
 
-axios.defaults.baseURL="https://ideasharee.herokuapp.com";
+axios.defaults.baseURL="http://localhost:3001";
 
 axios.defaults.withCredentials = true;
 
@@ -901,6 +901,19 @@ export const editCategory = async(data)=>{
         router.push("/500")
     }
 
+}
+
+export const getCategories = async({setCategories})=>{
+
+    try {
+
+       const {data} = await axios.get(`/content/getCategories/true`)
+       
+       setCategories(data.data)
+
+    } catch (error){
+       router.push("/500")
+    }
 }
 
 

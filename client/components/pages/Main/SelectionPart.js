@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react';
 import styled from "styled-components"
 import {ArrowRight,ArrowLeft} from "@material-ui/icons"
-import {Homereq} from "../../../Api/requests"
+import {Homereq,getCategories} from "../../../Api/requests"
 
 const ExteriorDiv = styled.div`
 position:absolute;
@@ -111,13 +111,21 @@ transition-duration:0.3s;
 //flex-shrink flex boxun icindeki elemanlara verilecek
 
 
-function Selection({listContent,setListContent,setSelectedKey,keyName,categories}){
+function Selection({listContent,setListContent,setSelectedKey,keyName}){
 
     const [error,seterror] = useState(null)
+    const [categories,setCategories] = useState([])
     const [selectionList,setselectionList] = useState({})
     const [slideValue,setSlideValue] = useState(0)
     const [slideBorder,setSlideBorder] = useState(-99.2);
    
+    useEffect(()=>{
+
+         getCategories({
+            setCategories:setCategories
+         })
+         
+    },[])
 
     useEffect(()=>{
 
@@ -129,18 +137,22 @@ function Selection({listContent,setListContent,setSelectedKey,keyName,categories
             }
         })
 
-        const willBeDeployed = {}
-        categories.forEach(element => {
-            willBeDeployed[element.categoryName] = {}
-            willBeDeployed[element.categoryName]["display"] = element.categoryImage
-            willBeDeployed[element.categoryName]["selected"] = false
-            willBeDeployed[element.categoryName]["stoprequesting"] = false
-            willBeDeployed[element.categoryName]["id"] = element.id
-        });
-        setselectionList(willBeDeployed)
+        if(categories.length > 0){
+
+            const willBeDeployed = {}
+            categories.forEach(element => {
+                willBeDeployed[element.categoryName] = {}
+                willBeDeployed[element.categoryName]["display"] = element.categoryImage
+                willBeDeployed[element.categoryName]["selected"] = false
+                willBeDeployed[element.categoryName]["stoprequesting"] = false
+                willBeDeployed[element.categoryName]["id"] = element.id
+            });
+            setselectionList(willBeDeployed)
+        }
 
         return ()=>{window.removeEventListener("resize",()=>"")}
-    },[])
+
+    },[categories])
     
     const RequestForSelection=(keyname)=>{
 

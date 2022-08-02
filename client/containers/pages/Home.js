@@ -58,13 +58,13 @@ box-shadow: rgba(50, 50, 93, 1) 0px 30px 60px -12px, rgba(222, 222, 222, 0.9) 0p
 `
 
 
-export default function Home({contents,categories}){
+export default function Home(){
     
     const {bottom}=useScroll();
     const firstLoad = useRef(true)
     const {setSavedWindow,setSavedWindowText} = useContext(CreateUtilContext)
     const {userdata} = useContext(createusercontext)
-    const [contentdata,setcontentdata]=useState(contents,categories);
+    const [contentdata,setcontentdata]=useState([]);
     const [order,setorder]=useState(0);
     const [errormsg,seterror]=useState(false);
     const [selectionlist,setselectionlist] = useState({
@@ -107,7 +107,9 @@ export default function Home({contents,categories}){
 
 
           if(bottom || firstLoad){
+
                 firstLoad.current = false
+
                 Homereq({
                     currentdata:contentdata,
                     setcontentdata:setcontentdata,
@@ -178,12 +180,8 @@ export default function Home({contents,categories}){
         setwindowlist(Mutatedwindow);
 
     }
-    const themeProp = {
-        mainColor:"red"
-    }
 
     return (
-        <ThemeProvider theme={themeProp}>
             <div style={{height:`${windowlist.list.length > 0 ? "100vh" : "100%"}`,overflow:windowlist.list.length > 0 ? "hidden": "visible"}}> 
                         
                         {windowlist.list.length > 0 && (<Suspense fallback={""}><Showfollower setlist={()=>setwindowlist(prev=>{return {...prev,list:[]}})} attribute={windowlist.attribute} list={windowlist.list}></Showfollower></Suspense>)}
@@ -192,7 +190,7 @@ export default function Home({contents,categories}){
                             <Trial></Trial>
                         </BackgroundHome>
                     <Container>
-                        <SelectionPart categories={categories} keyName={selectedKey} setSelectedKey={setSelectedKey} listContent={contentdata} setListContent={setcontentdata}></SelectionPart>
+                        <SelectionPart  keyName={selectedKey} setSelectedKey={setSelectedKey} listContent={contentdata} setListContent={setcontentdata}></SelectionPart>
                         <Flexdiv>
                             <ContentDiv>
                                 {
@@ -227,7 +225,6 @@ export default function Home({contents,categories}){
                         </Flexdiv>
                     </Container>
                 </div>
-        </ThemeProvider>
     )
 }
 
