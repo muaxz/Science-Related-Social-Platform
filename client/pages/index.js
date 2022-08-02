@@ -3,7 +3,6 @@ import Head from "next/head";
 import Main from "../containers/pages/Home";
 import Mainlayout from "../containers/Layout/mainlayout";
 import axios from 'axios';
-import {calculatedate} from "../utilsfunc"
 
 
 const Home = ({content,categories})=>{

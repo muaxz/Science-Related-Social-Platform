@@ -1,9 +1,8 @@
-import React, {useEffect,useState,useContext,useMemo,Suspense, useRef} from 'react'
+import React, {useEffect,useState,useContext,Suspense, useRef} from 'react'
 import Contentcard from "../../components/shared/Cards/Contentcard";
 import styled,{ThemeProvider} from "styled-components";
 import {Homereq,Createrelationreq} from "../../Api/requests";
 import {createusercontext} from "../../context/Usercontext";
-//import Showfollower from "../../components/pages/Main/Showfoller";
 import {CreateUtilContext} from "../../context/UtilContext"
 import useScroll from "../../hooks/Scroll";
 import dynamic from "next/dynamic"
@@ -35,16 +34,6 @@ width:100%;
 }
 `
 
-const InnershortDiv=styled.div`
-height:100%;
-width:100%;
-display:flex;
-align-items:center;
-justify-content:space-around;
-transition-duration:0.5s;
-position:relative;
-right:${({slidevalue})=>slidevalue};
-`
 
 const Container=styled.div`
 padding:30px;
