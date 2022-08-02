@@ -32,7 +32,7 @@ export async function getServerSideProps(context){
     try {
 
         if(context.query.accessValue){
-            context.res.setHeader("Set-Cookie",[`accessToken=${context.query.accessValue};Path=/;HttpOnly;Secure;SameSite=None`,`refreshToken=${context.query.refreshValue};Path=/;HttpOnly;Secure;SameSite=None`])
+            context.res.setHeader("Set-Cookie",[`accessToken=${context.query.accessValue};Path=/;Expires=${new Date(Date.now() + (1000*60*60*24*30)).toUTCString()};HttpOnly;Secure;SameSite=None`,`refreshToken=${context.query.refreshValue};Path=/;Expires=${new Date(Date.now() + (1000*60*60*24*30)).toUTCString()};HttpOnly;Secure;SameSite=None`])
         }
 
         if(context.query.state === "logout"){
