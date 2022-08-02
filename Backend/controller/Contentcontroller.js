@@ -15,7 +15,7 @@ const uploadFunction = require("../MiddleFunctions/imageUpload")
 
 exports.produce=async (req,res,next)=>{
  
-  const {title,content,subtitle,catagory,processtype,titlemainUrl,draftContentId}=req.body;
+  const {title,content,subtitle,catagory,processtype,titlemainUrl,draftContentId,description}=req.body;
   const {UserId} = req.userdata;
   
   var mainContent = {
@@ -27,6 +27,7 @@ exports.produce=async (req,res,next)=>{
       CategoryId:catagory,
       UserforuserId:UserId,
       UserforcontentId:UserId,
+      description:description
   }
 
   try {  
@@ -184,7 +185,7 @@ exports.gethome=async(req,res,next)=>{
         CategoryId:category,
         phase:"Published"
       },
-      attributes:["id","titleimage","title","subtitle","content","createdAt","updatedAt"],
+      attributes:["id","titleimage","title","subtitle","content","createdAt","updatedAt","description"],
       order:[["createdAt","DESC"]],
       limit:10,
       offset:offsetValue,

@@ -208,6 +208,7 @@ export default function Home(){
                                                 comment={item.allcomments}
                                                 readlater={item.Readlater}
                                                 key={index}//key numarası
+                                                description={item.description}
                                                 profileimage={item.personal.mainUrl}
                                                 followeds={item.personal.Followed}
                                                 title={item.title}

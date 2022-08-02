@@ -198,7 +198,7 @@ font-size:13px;
 `
 
 //içerik sayısı,takipçi sayısı,
-function Contentcard({isHomeCard,categoryType,followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent,deleteThePost}){
+function Contentcard({isHomeCard,categoryType,description,followeds,Animateforcomment,Answer_To,mainparentID,imagefilename,Editcommenthandler,Childlength,Answerhandler,readlater,draft,profileimage,content,titleimage,title,iscomment,userfirstname,usersurname,date,comment,retweet,like,showwindow,createrelationforsmh,postId,foruser,foruseroption,indexnum,userid,isMainparent,deleteThePost}){
     
     const[elements,setelements]=useState({
         Like:{
@@ -402,7 +402,7 @@ function Contentcard({isHomeCard,categoryType,followeds,Animateforcomment,Answer
         <Outsidediv  nightmode={nightmode} animation={Animateforcomment} timing={date}  iscomment={iscomment}>  
                 {
                     //Comment Left Icon
-                    iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-9px",top:"8px",color:"#faf9f9"}}></Icon> : null
+                    iscomment ?  <Icon className="fas fa-caret-left fa-lg" Iconconfig={{position:"absolute",left:"-7px",top:"8px",color:"#faf9f9"}}></Icon> : null
                 }
 
                 {
@@ -569,7 +569,7 @@ function Contentcard({isHomeCard,categoryType,followeds,Animateforcomment,Answer
                                 <Link href="/content/[id]" as={`/content/${postId}`}>    
                                     <Contentdiv iscomment={iscomment}>
                                             <h3 style={{marginBottom:"10px",color:"#c9184a"}}>{title}</h3>
-                                            <div style={{textAlign:"left",wordBreak:"break-word",cursor:"pointer",color:nightmode ? "white" : "black"}}>{ReactParser(subString(content))}</div>   
+                                            <div style={{textAlign:"left",wordBreak:"break-word",cursor:"pointer",color:nightmode ? "white" : "black"}}>{description}</div>   
                                     </Contentdiv>
                                 </Link>      
 

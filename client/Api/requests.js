@@ -149,6 +149,10 @@ export const sendResetEmail = async({email,setBackendState,sendWindowActive})=>{
       
       setBackendState("CODESENT")
       sendWindowActive(true)
+
+   }else if(data.state == "Not Exist"){
+      setBackendState("Not Exist")
+      sendWindowActive(true)
    }
    console.log(data)
 

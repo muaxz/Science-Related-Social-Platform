@@ -4,7 +4,7 @@ import Parser from "react-html-parser"
 import {IconButton,Button,TextField,FormControl,MenuItem,Select,InputLabel,Box} from "@material-ui/core"
 import {checkTheContent,deleteTheReport,sendReportMessage} from "../../Api/requests"
 import {Delete,Email,VisibilityOff,Send} from "@material-ui/icons"
-import {Porfileimage} from "../../components/styledcomponents/Globalstyles"
+import {NightLightP, Porfileimage} from "../../components/styledcomponents/Globalstyles"
 
 const ExteriorDiv = styled.div`
 max-width:1300px;
@@ -317,7 +317,7 @@ function ReportControl({reportList,controlType}){
                             )
                         })
 
-                        : "Henuz bi rapor bildirimi yok..."
+                        : <NightLightP>No any reports yet...</NightLightP>
                         
                         
                     }

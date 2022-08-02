@@ -43,6 +43,10 @@ const Content=sequlize.define("Content",{
         type:Sequlize.BOOLEAN,
         defaultValue:false
     },
+    description:{
+        type:Sequlize.STRING,
+        allowNull:false
+    }
 
 })
 

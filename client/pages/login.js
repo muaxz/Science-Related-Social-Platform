@@ -383,6 +383,9 @@ const Login=({mode,token})=>{
         backendMessage = "Your password has been succesfully updated."
         messageType = "confirm"
     }
+    else if(backendState == "Not Exist"){
+        backendMessage = "There is not a user who has this  email."
+    }
     else if(backendState == "REGISTERED"){
         messageType = "confirm"
         backendMessage = "You successfully signed up. Sign in and start discovering"

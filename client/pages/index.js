@@ -5,7 +5,7 @@ import Mainlayout from "../containers/Layout/mainlayout";
 import axios from 'axios';
 
 
-const Home = ({content,categories})=>{
+const Home = ()=>{
   
     return (
        <React.Fragment>

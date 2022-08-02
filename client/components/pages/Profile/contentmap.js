@@ -28,6 +28,7 @@ function Contentmap({contentlist,relationfunc,norecord,deleteThePost}) {
                         return ( <div  key={uniqid()} style={{marginBottom:"25px"}}>
                                     <Contentcard
                                         isHomeCard={false} 
+                                        description={item.personal ? item.description : item.Content.description}
                                         content={item.personal ? item.content : item.Content.content}
                                         categoryType={item.personal ? item.Category.categoryName : item.Content.Category.categoryName}
                                         deleteThePost={deleteThePost}

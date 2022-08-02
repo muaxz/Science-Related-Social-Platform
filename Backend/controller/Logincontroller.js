@@ -160,7 +160,7 @@ exports.sendResetEmail = async(req,res,next)=>{
             await requestedUser.update({resetPasswordToken:passwordToken})
             await Sendemail(email,{firstname:requestedUser.firstname,surname:requestedUser.lastname,generatedLink:`http://localhost:3000/login?token=${passwordToken}`})
 
-      }else return res.json({state:"Email does not exist"})//show it to user on interface
+      }else return res.json({state:"Not Exist"})//show it to user on interface
 
    
       return res.json({state:"success"})
