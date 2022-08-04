@@ -1,4 +1,4 @@
-import React, { useEffect,useState,useRef, useContext,useCallback} from 'react'
+import React, { useEffect,useState,useRef, useContext,useCallback, Suspense} from 'react'
 import styled from "styled-components";
 import {Porfileimage} from "../../components/styledcomponents/Globalstyles";
 import {Producecommentreq,Commentreq,Commentanswerreq,Editcomment,handleCommentLike,Createrelationreq} from "../../Api/requests";
@@ -6,14 +6,16 @@ import {createusercontext} from "../../context/Usercontext";
 import {CreateUtilContext} from "../../context/UtilContext";
 import Commentpart from '../../components/pages/Content/Commentsection/Commentpart';
 import useScroll from "../../hooks/Scroll"
+import dynamic from "next/dynamic"
 import router from "next/router"
 import Parser from "react-html-parser"
-import ReportWindow from "../../components/pages/Content/reportWindow"
 import Link from 'next/link';
 import {Checkbox} from "@material-ui/core"
 import {FavoriteBorder,Favorite,BookmarkBorder,BookmarkOutlined,FlagOutlined} from "@material-ui/icons"
 
-
+const ReportWindow = dynamic(()=>import("../../components/pages/Content/reportWindow"),{
+    suspense:true
+})
 
 
 
@@ -24,7 +26,6 @@ background-color:${({iscomment})=>iscomment ? "" : "white"};
 max-width:950px;
 width:100%;
 border-radius:7px;
-height:100%;
 `
 
 const InnerDiv = styled.div`
@@ -264,7 +265,7 @@ export default function Content({Contentdata,comments,id}){
     return (
         <div style={{maxWidth:"950px",margin:"100px auto"}}>
             {
-                isReportActive && (<ReportWindow ContentId={id} reportedUserId={Contentdata.personal.id} setActiveFunc={()=>setisReportActive(false)}></ReportWindow>)
+                isReportActive && (<Suspense fallback={""}><ReportWindow ContentId={id} reportedUserId={Contentdata.personal.id} setActiveFunc={()=>setisReportActive(false)}></ReportWindow></Suspense>)
             }
             <Exteriorcontent>
                 <InnerDiv>

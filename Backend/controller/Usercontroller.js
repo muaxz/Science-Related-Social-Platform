@@ -84,7 +84,7 @@ exports.getuserprofile = async (req,res,next)=>{
     var {UserId:CurrentUserId} = req.userdata; 
 
     if(CurrentUserId == UserId){
-        excludedAttributes = ["password","ReportSum","Role"]
+        excludedAttributes = ["password","ReportSum","Role",]
     }
   
   }
@@ -509,6 +509,7 @@ exports.updateprofile = async (req,res,next)=>{
                 lastname:userprofiledata.surname,
                 username:userprofiledata.musername,
                 Personaltext:userprofiledata.personaltext,
+                occupation:userprofiledata.occupation
               }
               
             imageStoreResponse.forEach(element => {

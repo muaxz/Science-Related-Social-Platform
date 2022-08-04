@@ -185,6 +185,15 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             msg:"",
             errormsg:""
         },
+        occupation:{
+            activate:false,
+            value:editdata.occupation,
+            label:"Occupation",
+            warning:false,
+            multiline:false,
+            msg:"",
+            errormsg:""
+        },
         personaltext:{
             activate:false,
             value:editdata.Personaltext,
@@ -303,7 +312,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
 
                 if(active){
                     for (const key in copy) {
-                        if(key == "musername" || key == "personaltext" || key == "firstname" || key == "surname"){
+                        if(key == "personaltext" || key == "firstname" || key == "surname" || key == "occupation"){
                             copy[key].activate = true
                         
                         }

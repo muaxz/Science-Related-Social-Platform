@@ -70,6 +70,9 @@ const User = sequlize.define("User",{
     ReportSum:{
         type:Sequlize.INTEGER,
         defaultValue:0
+    },
+    occupation:{
+        type:Sequlize.STRING
     }
     
 })

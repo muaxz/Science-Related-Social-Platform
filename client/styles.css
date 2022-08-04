@@ -1,6 +1,3 @@
-
-
-
  :root {
     --ck-color-image-caption-background: hsl(0, 0%, 97%);
     --ck-color-image-caption-text: hsl(0, 0%, 20%);
@@ -24,11 +21,7 @@
 
 .ck-content{
 width:100%;
-min-height: 500px;
-}
-
-.ck-content-height{
-    min-height: 100px
+min-height: 300px;
 }
 
 
@@ -37,10 +30,11 @@ min-height: 500px;
 }
 
 .ck-content img{
-    max-width: 600px;
-    height: 200px;
+    width:100%;
+    height: 300px;
     object-fit: cover;
-   
+    object-position: center;
+    padding-bottom: 10px;
 }
 
 
@@ -55,11 +49,11 @@ min-height: 500px;
 }
 /* ckeditor5-image/theme/imagestyle.css */
 .ck-content .image-style-side {
-    float: right;
+
     margin-left:10px;
     max-width: 50%;
     margin-bottom: 20px;
-    clear: left;
+   
     
 }
 /* ckeditor5-image/theme/imagestyle.css */

@@ -7,7 +7,7 @@ import {loginreq,resigterreq,sendResetEmail,resetPassword} from "../Api/requests
 import Window from "../components/UI/window";
 import {TextField,Button,InputAdornment,IconButton} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
-import Validate from "validator"
+import Validate from "validator/validator"
 import {AccountCircle,EmailOutlined,Lock,SupervisorAccount,Person,ChevronRight, Assignment,VisibilityOff,Visibility} from "@material-ui/icons"
 import axios from 'axios';
 

@@ -1,4 +1,4 @@
-import React,{useEffect,useState,useContext,useCallback, useRef} from 'react'
+import React,{useEffect,useState,useContext,useCallback, useRef, Suspense} from 'react'
 import styled from "styled-components";
 import {createusercontext} from "../../context/Usercontext"
 import {NightLightP, Porfileimage} from "../../components/styledcomponents/Globalstyles"
@@ -6,11 +6,17 @@ import {Createuserrelation,Getuserprofilecontent,Createrelationreq,UpdateNotific
 import {Button} from "@material-ui/core"
 import Link from "next/link";
 import useScroll from "../../hooks/Scroll";
+import dynamic from "next/dynamic"
 import Window from "../../components/UI/window"
-import { EditRounded, Notifications, NotificationsActive,Settings,Person} from '@material-ui/icons';
+import {Notifications, NotificationsActive,Settings,Person} from '@material-ui/icons';
 import Contentmap from "../../components/pages/Profile/contentmap";
-import Editwindow from "../../components/pages/Profile/Editwindow"
 import Followlist from '../../components/pages/Profile/followlists';
+
+
+const Editwindow = dynamic(()=>import("../../components/pages/Profile/Editwindow"),{
+    suspense:true
+})
+
 
 
 const Exteriordiv=styled.div`
@@ -154,6 +160,7 @@ padding-left:20px;
 export default function Profile({Mydata,Counts,Contentdata,query}){
 
     //use reducer try on it
+    console.log(Mydata)
     const{userdata}=useContext(createusercontext);
     const Preventspam = useRef(true)
     const Preventspam2 = useRef(true)
@@ -381,7 +388,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
             {
                 activeedit &&
 
-                (<Editwindow isWindowforsettings={editforsettings} closefunc={()=>Editwindowhandler(false,true)} editdata={Mydata} active={activeedit} />)
+                (<Suspense fallback=""><Editwindow isWindowforsettings={editforsettings} closefunc={()=>Editwindowhandler(false,true)} editdata={Mydata} active={activeedit} /></Suspense>)
 
             }
             <Innerdiv>
@@ -427,7 +434,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                              <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile={Mydata.mainUrl ?? "/realuserphoto.png"}></Porfileimage>
                          </ProfileImageholder>
                          <NightLightP>{Mydata.firstname + " " + Mydata.lastname}</NightLightP>
-                         <span style={{color:"#6c757d"}}>UI designer</span>
+                         <span style={{color:"#6c757d"}}>{Mydata.occupation}</span>
                          <div style={{display:"flex",marginTop:"10px",marginBottom:"40px"}}>
                             <CountDisplay>
                                 <NightLightP>{Counts.Followedcount}</NightLightP>

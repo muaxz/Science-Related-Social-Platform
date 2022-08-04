@@ -110,7 +110,12 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
         setlogged(true);
         setuserdata(data.Userdata);
         setspinner(true);
-        router.push(`/?accessValue=${data.accessToken}&refreshValue=${data.refreshToken}`);
+        router.push(`/`);
+        const res =  await axios.post(`https://mynextrepo.vercel.app/api/login`,{
+          accessToken:data.accessToken,
+          refreshToken:data.refreshToken
+        })
+        console.log(res)
       }
 
     }catch(err){
@@ -168,12 +173,12 @@ export const logout = async({setlogged,setuserdata,router,setspinner})=>{
   
   try {
 
-      const response = await axios.get("/logout")
+      await axios.get("/logout")
       setlogged(false)
       setuserdata({})
-      router.push("/?state=logout")
+      router.push("/")
+      axios.get("https://mynextrepo.vercel.app/api/logout")
 
-      
   } catch (error) {
 
     router.push("/500")

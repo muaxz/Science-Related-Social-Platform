@@ -26,32 +26,5 @@ Home.layout=(children)=>{
     )
 };
 
-export async function getServerSideProps(context){
-
-    try {
-
-        if(context.query.accessValue){
-            context.res.setHeader("Set-Cookie",[`accessToken=${context.query.accessValue};Path=/;Expires=${new Date(Date.now() + (1000*60*60*24*30)).toUTCString()};HttpOnly;Secure;SameSite=None`,`refreshToken=${context.query.refreshValue};Path=/;Expires=${new Date(Date.now() + (1000*60*60*24*30)).toUTCString()};HttpOnly;Secure;SameSite=None`])
-        }
-
-        if(context.query.state === "logout"){
-            context.res.setHeader("Set-Cookie",[`accessToken=${context.query.accessValue};Max-Age=0;Path=/;HttpOnly;Secure;SameSite=None`,`refreshToken=${context.query.refreshValue};Max-Age=0;Path=/;HttpOnly;Secure;SameSite=None`])
-        }
-
-        return { 
-            props:{content:[]}
-        }
-
-    } catch (error){
-         
-        return {
-            redirect:{
-                destination:"/500"
-            }
-        };
-    
-    }
-}
-
 
 export default Home;
