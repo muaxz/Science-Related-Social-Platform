@@ -79,6 +79,7 @@ align-items:center;
 const ToolBar = styled.div`
 display:flex;
 padding-left:10px;
+padding-top:10px;
 align-items:center;
 padding-right:10px;
 padding-bottom:10px;
@@ -302,7 +303,7 @@ export default function Content({Contentdata,comments,id}){
                            <FlagOutlined></FlagOutlined>
                            <span style={{marginLeft:"5px"}}>Report</span>
                         </ToolBarIconHolder>
-                    </ToolBar>
+                   </ToolBar>
                 </InnerDiv>
             </Exteriorcontent>
             <Commentdiv>

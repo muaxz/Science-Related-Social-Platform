@@ -6,13 +6,11 @@ import dynamic from "next/dynamic"
 import {Button as Corebutton,TextField,InputAdornment,FormControl,Select,MenuItem,FormHelperText} from "@material-ui/core";
 import {Create} from "@material-ui/icons"
 import {createusercontext} from "../../context/Usercontext"
+import ExamplePost from "../../components/pages/Post/postSample"
 import Dropzone from "react-dropzone"
 import {CreateNightMode} from "../../context/Nightmode"
 
 const Window = dynamic(()=>import("../../components/UI/window"))
-
-
-
 
 
 /* ckeditor5-image/theme/imagestyle.css */
@@ -29,7 +27,6 @@ position:relative;
 width:90%;
 margin:20px auto;
 `
-
 
 
 const Exterior=styled.div`
@@ -62,8 +59,10 @@ border-top-left-radius:8px;
 border-bottom-left-radius:8px;
 border-right:2px solid white;
 padding:10px;
+padding-bottom:50px;
 top:65px;
 @media (max-width:900px){
+position:relative;
 }
 `
 const RightPart=styled.div`
@@ -109,6 +108,7 @@ export default function MyEditor({categories,content}){
     const {nightmode} = useContext(CreateNightMode)
     const editorRef = useRef()
     const {userdata} = useContext(createusercontext);
+    const [activeExample,setActiveExample] = useState(false)
     const [ editorLoaded, setEditorLoaded ] = useState( false )
     const { CKE, ClassicEditor } = editorRef.current || {}
     const[errormsg,seterror] = useState(false);
@@ -125,11 +125,6 @@ export default function MyEditor({categories,content}){
         value:content.title || "",
         isValid:true,
         length:70
-      },
-      subtitle:{
-        value:content.subtitle || "",
-        isValid:true,
-        length:50
       },
       description:{
         value:content.description || "",
@@ -226,7 +221,7 @@ export default function MyEditor({categories,content}){
        console.log(mutatedValue["description"].value)
       if((value === "description" || value === "title" || value === "subtitle") && mutatedValue[value].length > 0 || addedValue == 1){
           mutatedValue[value].length += addedValue
-      }else if((value === "description" || value === "title" || value === "subtitle") && mutatedValue[value].length <= 0 ) return
+      }else if((value === "description" || value === "title") && mutatedValue[value].length <= 0 ) return
       
       
        const editorImageElements = document.querySelectorAll("figure")
@@ -304,7 +299,7 @@ export default function MyEditor({categories,content}){
         for (const key in contentpart) {
            dataWillBeSend[key] = contentpart[key].value
         }
-        console.log(dataWillBeSend)
+      
         producereq({
           contentdata:dataWillBeSend,
           seterrmsg:seterror, 
@@ -361,13 +356,12 @@ export default function MyEditor({categories,content}){
             <RightPart>
                 <div>
                     <InputHolder>
-                        <TextField  FormHelperTextProps={{style:{color:nightmode ? "white" : "black"}}} value={contentpart["title"].value} error={!contentpart["title"].isValid} onChange={(e)=>changeHandler(e,"","title")} InputProps={{style:{color:nightmode ? "white" : "black"},endAdornment: <InputAdornment position="end"><Corebutton variant="text" color="secondary" style={{marginRight:"5px",textTransform:"capitalize"}}>Click to See Example</Corebutton>({contentpart["title"].length})<Create style={{color:nightmode ? "white" : "black",marginLeft:"5px"}}></Create></InputAdornment>,}} helperText="This field is mandatory for people to have a better general idea about your post." placeholder="Title" size="small" variant="outlined" fullWidth></TextField>
+                        <TextField  FormHelperTextProps={{style:{color:nightmode ? "white" : "black"}}} value={contentpart["title"].value} error={!contentpart["title"].isValid} onChange={(e)=>changeHandler(e,"","title")} InputProps={{style:{color:nightmode ? "white" : "black"},endAdornment: <InputAdornment position="end"><Corebutton onClick={()=>setActiveExample(1)} variant="text" color="secondary" style={{marginRight:"5px",textTransform:"none"}}>Click for example</Corebutton>({contentpart["title"].length})<Create style={{color:nightmode ? "white" : "black",marginLeft:"5px"}}></Create></InputAdornment>,}} helperText="This field is mandatory for people to have a better general idea about your post." placeholder="Title" size="small" variant="outlined" fullWidth></TextField>
+                        <ExamplePost setActive={()=>setActiveExample(0)} isActive={activeExample === 1 ? true : false} src={"/titlesample.png"}></ExamplePost>
                     </InputHolder>
                     <InputHolder>
-                        <TextField FormHelperTextProps={{style:{color:nightmode ? "white" : "black"}}} value={contentpart["subtitle"].value} onChange={(e)=>changeHandler(e,"","subtitle")} InputProps={{style:{color:nightmode ? "white":  "black"},endAdornment: <InputAdornment position="end"><Corebutton variant="text" color="secondary" style={{marginRight:"5px",textTransform:"capitalize"}}>Click to See Example</Corebutton>({contentpart["subtitle"].length})<Create style={{color:nightmode ? "white" : "black",marginLeft:"5px"}}></Create></InputAdornment>,}} helperText="Optional field" placeholder="Sub Title" size="small" variant="outlined" fullWidth></TextField>
-                    </InputHolder>
-                    <InputHolder>
-                        <TextField FormHelperTextProps={{style:{color:nightmode ? "white" : "black"}}} value={contentpart["description"].value} onChange={(e)=>changeHandler(e,"","description")} InputProps={{style:{color:nightmode ? "white":  "black"},endAdornment: <InputAdornment position="end"><Corebutton variant="text" color="secondary" style={{marginRight:"1px",textTransform:"capitalize"}}>Click to See Example</Corebutton>({contentpart["description"].length})<Create style={{color:nightmode ? "white" : "black",marginLeft:"5px"}}></Create></InputAdornment>,}} helperText="A short sentence for people to understand the theme of the content" placeholder="Description" size="small" variant="outlined" fullWidth></TextField>
+                        <TextField FormHelperTextProps={{style:{color:nightmode ? "white" : "black"}}} value={contentpart["description"].value} onChange={(e)=>changeHandler(e,"","description")} InputProps={{style:{color:nightmode ? "white":  "black"},endAdornment: <InputAdornment position="end"><Corebutton variant="text" color="secondary" onClick={()=>setActiveExample(2)} style={{marginRight:"1px",textTransform:"none"}}>Click for example</Corebutton>({contentpart["description"].length})<Create style={{color:nightmode ? "white" : "black",marginLeft:"5px"}}></Create></InputAdornment>,}} helperText="A short sentence for people to understand the theme of the content" placeholder="Description" size="small" variant="outlined" fullWidth></TextField>
+                        <ExamplePost setActive={()=>setActiveExample(0)} isActive={activeExample === 2 ? true : false} src={"/descriptionpart.png"}></ExamplePost>
                     </InputHolder>
                     <InputHolder>
                           <Dropzone  onDrop={UploadTitleImage}>

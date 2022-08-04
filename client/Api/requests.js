@@ -2,7 +2,7 @@ import axios from "axios";
 import router from "next/router"
 
 
-axios.defaults.baseURL="https://ideasharee.herokuapp.com/";
+axios.defaults.baseURL="https://ideasharee.herokuapp.com";
 
 axios.defaults.withCredentials = true;
 
@@ -51,8 +51,6 @@ axios.interceptors.request.use(function (config) {
 });
 
 
-
-
 export const Errorhandler=({data,seterrmsg,setwindow,setuserdata,setlogged,setspinner})=>{
 
    if(data && data.error){
@@ -81,9 +79,6 @@ export const Errorhandler=({data,seterrmsg,setwindow,setuserdata,setlogged,setsp
    return true;
 }
 
-const RefreshReq = async () =>{
-  return await axios.get("/refresh",{},{withCredentials:true})
-}
 
 export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,seterrmsg,setBackendState,setactive})=>{
     

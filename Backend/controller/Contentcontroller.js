@@ -15,13 +15,12 @@ const {v4} = require("uuid")
 
 exports.produce=async (req,res,next)=>{
  
-  const {title,content,subtitle,catagory,processtype,titlemainUrl,draftContentId,description}=req.body;
+  const {title,content,catagory,processtype,titlemainUrl,draftContentId,description}=req.body;
   const {UserId} = req.userdata;
   
   var mainContent = {
       title:title,
       titleimage:titlemainUrl,
-      subtitle:subtitle,
       content:content,
       phase:processtype,
       CategoryId:catagory,

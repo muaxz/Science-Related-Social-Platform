@@ -171,6 +171,7 @@ export default function Usercontent({params,mydata}){
                                             showwindow={()=>""}
                                             like={[]}//bu bir obje array
                                             retweet={[]}
+                                            description={item.Content.description}
                                             comment={[]}
                                             readlater={[]}//key numarası
                                             followeds={[]}
