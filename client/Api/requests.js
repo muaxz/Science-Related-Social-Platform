@@ -2,7 +2,7 @@ import axios from "axios";
 import router from "next/router"
 
 
-axios.defaults.baseURL="https://ideasharee.herokuapp.com";
+axios.defaults.baseURL="http://localhost:3001";
 
 axios.defaults.withCredentials = true;
 
@@ -85,7 +85,7 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
 
     try{
       
-      const {data} =await axios.post("/login",{userdata:userdata})
+      const {data} = await axios.post("/login",{userdata:userdata})
   
       
       if(data.wrong == "WP"){
@@ -106,11 +106,11 @@ export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,se
         setuserdata(data.Userdata);
         setspinner(true);
         router.push(`/`);
-        const res =  await axios.post(`https://mynextrepo.vercel.app/api/login`,{
+        const res =  await axios.post(`http://localhost:3000/api/login`,{
           accessToken:data.accessToken,
           refreshToken:data.refreshToken
         })
-        console.log(res)
+      
       }
 
     }catch(err){
@@ -172,7 +172,7 @@ export const logout = async({setlogged,setuserdata,router,setspinner})=>{
       setlogged(false)
       setuserdata({})
       router.push("/")
-      axios.get("https://mynextrepo.vercel.app/api/logout")
+      await axios.get("http://localhost:3000/api/logout")
 
   } catch (error) {
 
