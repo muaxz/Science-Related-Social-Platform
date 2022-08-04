@@ -78,7 +78,7 @@ exports.getuserprofile = async (req,res,next)=>{
 
   const {UserId} = req.params;
   var excludedAttributes = ["email","password","ReportSum","Role"]
-  console.log(req.userdata)
+
   if(req.userdata){
 
     var {UserId:CurrentUserId} = req.userdata; 
