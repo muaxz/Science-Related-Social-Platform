@@ -458,7 +458,7 @@ const Login=({mode,token})=>{
                     {
                         actionType == "Register" &&
                         <div style={{display:"flex",textAlign:"left",paddingBottom:"10px"}}>
-                           <p style={{color:"#06d6a0"}}>By proceeding, I agree to Uber's Terms of Use and acknowledge that I have read the <a style={{color:"white"}}  href="https://ideasharee.herokuapp.com/policy" target="_blank">Privacy Policy</a></p>
+                           <p style={{color:"#06d6a0",lineHeight:"25px"}}>By proceeding, I agree to mynextrepo.vercel.app's Terms of Use and acknowledge that I have read the <a style={{color:"white"}}  href="https://ideasharee.herokuapp.com/policy" target="_blank">Privacy Policy</a></p>
                         </div>
                     }
                 </div>    
