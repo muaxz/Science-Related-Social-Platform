@@ -343,7 +343,7 @@ exports.createrelation=async (req,res,next)=>{
 
   try {
     
-    const io = req.app.get("socketio");
+   
     const {PostId,attribute,relationtype,UserIdofcontent}=req.body; 
     const {UserId} = req.userdata 
    
@@ -386,7 +386,6 @@ exports.createrelation=async (req,res,next)=>{
     
             
             //ToDo changable
-            io.sockets.in(UserIdofcontent).emit("Notification","");
             
           }
 

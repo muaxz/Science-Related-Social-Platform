@@ -2,7 +2,7 @@ import axios from "axios";
 import router from "next/router"
 
 
-axios.defaults.baseURL="https://ideasharee.herokuapp.com";
+axios.defaults.baseURL="https://ideasharee.herokuapp.com/"
 
 axios.defaults.withCredentials = true;
 
@@ -547,25 +547,19 @@ export const Createuserrelation=async({UserId,Prevent,FollowedId,checkiffollow})
 
 }
 
-export const Notificationreq=async({UserId,setnavdata,order,navdata,lastrow})=>{
+export const Notificationreq=async({UserId,setnavdata,order,paignation,navdata})=>{
 
   try {
    
     
-    const{data}=await axios.get(`notification/getrows/${UserId}/${order}/${lastrow}`);
-    const Mycurrentdata=[...navdata];
-    const Newdata=data.mydata;
+    const{data}=await axios.get(`notification/getrows/${UserId}/${order}/${paignation}`);
     
-    if(lastrow){
-     
-      setnavdata(Newdata.concat(Mycurrentdata));
-
+    if(paignation){
+      console.log(navdata.concat(data.mydata))
+      setnavdata(navdata.concat(data.mydata))
+    }else{
+      setnavdata(data.mydata);
     }
-    else{
-     
-      setnavdata(Mycurrentdata.concat(Newdata));
-    }
-    
     
   
   } catch (error) {
@@ -578,7 +572,7 @@ export const Notificationreq=async({UserId,setnavdata,order,navdata,lastrow})=>{
 export const NotificationCountreq=async({UserId,setcountdata})=>{
 
   try {
-    console.log(UserId);
+    
 
     const{data}=await axios.get(`notification/getcount/${UserId}`);
 

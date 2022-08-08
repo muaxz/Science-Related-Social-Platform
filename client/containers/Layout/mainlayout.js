@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useContext,Suspense} from 'react'
+import React,{useState,useEffect,useContext,Suspense, useRef} from 'react'
 import styled,{ThemeProvider} from "styled-components";
 import Navigation from "../../components/shared/Navigation/Navbar/Navigation";
 import {Global,Black,SavedInfoDiv} from "../../components/styledcomponents/Globalstyles";
@@ -8,7 +8,6 @@ import {CreateNightMode} from "../../context/Nightmode";
 //import Lefttoolbar from '../../components/shared/Navigation/SideBar/Lefttoolbar';
 import {useRouter} from "next/router"
 import dynamic from "next/dynamic"
-import io from "socket.io-client";
 import Icon from "../../components/UI/Icon";
 import {NotificationCountreq,Notificationreq,UpdateNotificationcount} from "../../Api/requests"
 
@@ -46,29 +45,20 @@ p_Color:"black",
 contentSectionBorderColor:"white"
 }
 
-const socket = io("https://ideasharee.herokuapp.com");
 
 export default function Mainlayout({children}) {
 
     const [active,setactive]=useState(false);
     const [goup,setgoup]=useState(false);
+    const initialFetch = useRef(true)
     const {userdata} = useContext(createusercontext)
     const {nightmode} = useContext(CreateNightMode)
     const {savedWindow,savedWindowText} = useContext(CreateUtilContext)
     const [navdata,setnavdata]=useState([]);
     const [countofdata,setcountdata]=useState(0);
-    const [lastrecord,setlastrecord]=useState(0);
-    const [lastrecordactive,setlastrecordactive]=useState(false);
     const userouter=useRouter();
     
 
-    useEffect(()=>{
-
-        if(userdata.UserId){
-            socket.emit("create",userdata.UserId)
-        }
-        
-    },[userdata])
 
     useEffect(() => {
         setactive(false);  
@@ -86,60 +76,27 @@ export default function Mainlayout({children}) {
           }
 
        })
-
-       if(userdata.UserId){
-
+       if(initialFetch.current && userdata.UserId){
+            initialFetch.current = false;
             NotificationCountreq({
                 setcountdata:setcountdata,
                 UserId:userdata.UserId
             })
+       }
 
-            Notificationreq({
-                setnavdata:setnavdata,
-                UserId:userdata.UserId,
-                order:10,
-                navdata:navdata,
-                lastrow:false,
-            })
+       if(userdata.UserId){
 
-       }   
-
-    },[userdata])
-    
-    useEffect(()=>{
-
-        const listener=()=>{
-            setlastrecordactive(true);
-            setlastrecord(prev=>prev+1);
-            if(userdata.UserId){
-                
+            setInterval(() => {
+                    
                 NotificationCountreq({
                     setcountdata:setcountdata,
                     UserId:userdata.UserId
                 })
 
-             }
-        }
-    
-        socket.on("Notification",listener) 
-
-       
+            },20000);
+       }   
 
     },[userdata])
-
-    useEffect(()=>{
-    
-      if(userdata.UserId && lastrecordactive){
-            Notificationreq({
-                setnavdata:setnavdata,
-                UserId:userdata.UserId,
-                order:countofdata,
-                navdata:navdata,
-                lastrow:true,
-            })
-      }
-
-    },[lastrecord])
 
     const Reloadnav=(order)=>{
 
@@ -148,13 +105,21 @@ export default function Mainlayout({children}) {
             UserId:userdata.UserId,
             order:order,
             navdata:navdata,
-            lastrow:false,
+            paignation:true,
         })
 
     }
 
     const Updatecount=()=>{
-        console.log("updatinnggg");
+
+        Notificationreq({
+            setnavdata:setnavdata,
+            UserId:userdata.UserId,
+            order:0,
+            navdata:navdata,
+            paignation:false,
+        })
+
         setcountdata(0);
         UpdateNotificationcount({UserId:userdata.UserId});
     }
@@ -166,7 +131,7 @@ export default function Mainlayout({children}) {
                 <input id='csrf-token' type='hidden' value=""></input>
                 <Black onClick={()=>setactive(false)} aktif={active}></Black>
                 <SavedInfoDiv active={savedWindow}>{savedWindowText}</SavedInfoDiv>
-                <Navigation Update={Updatecount} Reloadfunc={Reloadnav} Count={countofdata} Data={navdata}></Navigation>
+                <Navigation Update={Updatecount} Reloadfunc={Reloadnav} Count={countofdata} notificationRows={navdata}></Navigation>
                 {
                     userdata.UserId && 
                         (<Suspense fallback={""}>

@@ -8,7 +8,7 @@ const Notificationmodel=require("../models/NotificationModel");
 exports.produce=async (req,res,next)=>{
         //content-userId gerekli
         const {contentdata:{Message,ContentId,UserId,TakerId}}=req.body;
-        const io = req.app.get("socketio");
+    
        
     
       
@@ -29,7 +29,6 @@ exports.produce=async (req,res,next)=>{
                 UserId:UserId,
             })
 
-            io.emit("Notification","notify");
          }
          //istek yapılıp eklendikten sonra trigger
 

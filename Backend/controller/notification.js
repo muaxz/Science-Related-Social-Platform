@@ -6,36 +6,36 @@ const {Op} =require("sequelize")
 
 exports.getrows=async(req,res,next)=>{
 
-    const {UserId,Order,last} =req.params;
+    const {UserId,Order,last} = req.params;
 
   
     //Handle It
     try {
 
-                const data = await NotificationModel.findAll({
-                    where:{
-                        TakerId:{[Op.substring]:`${UserId}`}
-                    },
-                    limit:last == "false" ? parseInt(Order) : 1,
-                    offset:last == "false" ? parseInt(Order)-10 : 0,
-                    order:[["createdAt","DESC"]],
-                    include:[{
-                        model:Usermodel,
-                        attributes:["id","firstname","lastname","mainUrl"]
-                    },
-                    {
-                        model:Contentmodel,
-                        attributes:["id"]
+        const data = await NotificationModel.findAll({
+            where:{
+                TakerId:{[Op.substring]:`${UserId}`}
+            },
+            limit:10,
+            offset:parseInt(Order),
+            order:[["createdAt","DESC"]],
+            include:[{
+                model:Usermodel,
+                attributes:["id","firstname","lastname","mainUrl"]
+            },
+            {
+                model:Contentmodel,
+                attributes:["id"]
 
-                    },
-                    {
-                        model:Commentmodel,
-                        attributes:["id"]
-                    }
-                ]
-                })
+            },
+            {
+                model:Commentmodel,
+                attributes:["id"]
+            }
+        ]
+        })
 
-                return res.json({mydata:data})
+        return res.json({mydata:data})
        
       
         
@@ -97,7 +97,7 @@ exports.Updatecount = async(req,res,next)=>{
 exports.sendReportMessage = async (req,res,next)=>{
 
     const {reportMessage,TakerId,ContentId} = req.body
-    const io = req.app.get("socketio");
+   
   
     try {
 
@@ -109,7 +109,6 @@ exports.sendReportMessage = async (req,res,next)=>{
             UserId:null,
         })
 
-        io.sockets.in(TakerId).emit("Notification","");
         res.json("success");
 
     } catch (error){

@@ -359,7 +359,6 @@ exports.getuserprofilecount = async (req,res,next)=>{
 exports.createuserrelation = async (req,res,next)=>{
   //follower == current user
   const {FollowerId,FollowedId,checkiffollow} = req.body;
-  const io = req.app.get("socketio");
 
   //follower ıd is our current active user
   //tokenm validation git
@@ -394,7 +393,6 @@ exports.createuserrelation = async (req,res,next)=>{
             UserId:FollowerId,
           })
 
-          io.sockets.to(FollowedId).emit("Notification","");
 
         }
     

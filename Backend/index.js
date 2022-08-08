@@ -13,7 +13,6 @@ const Upload=require("./routes/upload");
 const Notification=require("./models/NotificationModel");
 const UserUser=require("./models/UserUser");
 const Myserver=require("http").createServer(app);
-const io = require("socket.io")(Myserver,{cors:["http://localhost:3000","https://mynextrepo.vercel.app"]})
 const Userrouter=require("./routes/userrouter");
 const Notifyrouter=require("./routes/Notificationroute");
 const cookieparser = require("cookie-parser")
@@ -27,14 +26,6 @@ require("dotenv").config();
 
 const port =  process.env.PORT || 3001 
 
-io.on("connection",(socket)=>{ 
-  
-    socket.on("create",(UserId)=>{
-        socket.join(UserId)
-    })
-  //ilk connection oldugunda online olan herkesi odaya kat ayri ayri yerlestir
-})
-
 DB.sync()
 .then(()=>{})
 
@@ -44,7 +35,6 @@ app.get("/policy",(req,res,next)=>{
 app.use(cors({origin:["http://localhost:3000","https://mynextrepo.vercel.app"],credentials:true,exposedHeaders:"csrf-token"}));
 app.use(cookieparser())
 app.use(fileupload())
-app.set("socketio",io)
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 

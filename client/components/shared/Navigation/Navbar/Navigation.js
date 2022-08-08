@@ -168,7 +168,7 @@ color:white;
 `
 
 //ToDo 
-export default function Navigation({Data,Count,Reloadfunc,Update}){
+export default function Navigation({notificationRows,Count,Reloadfunc,Update}){
  
     
     const {logged,spinner,userdata,setspinner,setuserdata,setlogged} = useContext(createusercontext);
@@ -240,9 +240,9 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
     }
 
     const ScrolltoBottom=()=>{
-
+        console.log(notificationRows.length)
         if(Myref.current.scrollTop + Myref.current.offsetHeight >= Myref.current.scrollHeight){
-            Reloadfunc(ordernumber+Data.length);
+            Reloadfunc(notificationRows.length);
         }
 
     }
@@ -425,7 +425,7 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
                             Iconumber !== 0 && visible == true ?
                             <Optionwindow onScroll={ScrolltoBottom} ref={Myref} fornotify={Iconobject["2"].onoff}>
                                 <Inneroption>
-                                    <Navtools UserId={userdata.UserId} Logout={Logout} Navdata={Data} optnumber={Iconumber}></Navtools>
+                                    <Navtools UserId={userdata.UserId} Logout={Logout} Navdata={notificationRows} optnumber={Iconumber}></Navtools>
                                 </Inneroption>
                             </Optionwindow> : null
                         }  
