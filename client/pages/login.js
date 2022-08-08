@@ -5,7 +5,7 @@ import {useRouter} from "next/router"
 import Head from "next/head";
 import {loginreq,resigterreq,sendResetEmail,resetPassword} from "../Api/requests";
 import Window from "../components/UI/window";
-import {TextField,Button,InputAdornment,IconButton} from '@material-ui/core';
+import {TextField,Button,InputAdornment,Checkbox,FormControlLabel} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import Validate from "validator/validator"
 import {AccountCircle,EmailOutlined,Lock,SupervisorAccount,Person,ChevronRight, Assignment,VisibilityOff,Visibility} from "@material-ui/icons"
@@ -151,7 +151,7 @@ const Login=({mode,token})=>{
             icon:""
         }
     })
-    const{setlogged,setuserdata,setspinner}=useContext(createusercontext);
+    const{setlogged,setuserdata,setspinner}=useContext(createusercontext)
     const[currenturl,setcurrent]=useState("");
     const[backendState,setBackendState]=useState("")
     const[errormsg,seterror]=useState(false);
@@ -390,6 +390,9 @@ const Login=({mode,token})=>{
         messageType = "confirm"
         backendMessage = "You successfully signed up. Sign in and start discovering"
     }
+    else if(backendState === "POLICY"){
+        backendMessage = "you need to "
+    }
 
     
     return (
@@ -450,7 +453,13 @@ const Login=({mode,token})=>{
                         }   
 
                     {
-                        actionType == "Login" ? <p onClick={()=>setActionType("ForgetPassword")} style={{color:"#EB3232",cursor:"pointer"}}>Forget Password ?</p> : ""
+                        actionType == "Login" && <p onClick={()=>setActionType("ForgetPassword")} style={{color:"#EB3232",cursor:"pointer"}}>Forget Password ?</p>
+                    }
+                    {
+                        actionType == "Register" &&
+                        <div style={{display:"flex",textAlign:"left",paddingBottom:"10px"}}>
+                           <p style={{color:"#06d6a0"}}>By proceeding, I agree to Uber's Terms of Use and acknowledge that I have read the <a style={{color:"white"}}  href="https://ideasharee.herokuapp.com/policy" target="_blank">Privacy Policy</a></p>
+                        </div>
                     }
                 </div>    
                 <div style={{display:"flex",flex:"3",width:"100%",justifyContent:"center"}}> 

@@ -378,11 +378,10 @@ export default function Navigation({Data,Count,Reloadfunc,Update}){
 
                    <InputHolder style={{display:"flex",alignItems:"center"}}>
                         <Link  href="/login">
-                         <Button variant="contained" style={{marginRight:"10px",textTransform:"capitalize"}} endIcon={<AccountCircle style={{fontSize:"25px"}}></AccountCircle>}>
+                         <Button variant="contained" style={{marginRight:"10px",textTransform:"capitalize"}} color="secondary" endIcon={<AccountCircle style={{fontSize:"25px"}}></AccountCircle>}>
                            Sign In
                          </Button>
                        </Link>
-                       <Button variant="contained"  style={{textTransform:"capitalize"}} endIcon={<Assignment style={{color:"white",borderRadius:"50%",fontSize:"25px"}}></Assignment>} color="secondary">Sign Up</Button>
                        <div style={{display:"flex",marginLeft:"10px"}}>
                             <Icon className="fas fa-moon " Iconconfig={{width:"32px",backcolor:"#DEDEDE",height:"32px",lineheight:"32px"}}></Icon>
                             <div style={{marginLeft:"5px"}}>

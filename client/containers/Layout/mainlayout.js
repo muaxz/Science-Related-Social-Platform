@@ -46,7 +46,7 @@ p_Color:"black",
 contentSectionBorderColor:"white"
 }
 
-const socket = io("https://ideasharee.herokuapp.com",{"connect timeout":2000});
+const socket = io("https://ideasharee.herokuapp.com");
 
 export default function Mainlayout({children}) {
 

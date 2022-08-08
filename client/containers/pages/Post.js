@@ -356,7 +356,7 @@ export default function MyEditor({categories,content}){
             <RightPart>
                 <div>
                     <InputHolder>
-                        <TextField  FormHelperTextProps={{style:{color:nightmode ? "white" : "black"}}} value={contentpart["title"].value} error={!contentpart["title"].isValid} onChange={(e)=>changeHandler(e,"","title")} InputProps={{style:{color:nightmode ? "white" : "black"},endAdornment: <InputAdornment position="end"><Corebutton onClick={()=>setActiveExample(1)} variant="text" color="secondary" style={{marginRight:"5px",textTransform:"none"}}>Click for example</Corebutton>({contentpart["title"].length})<Create style={{color:nightmode ? "white" : "black",marginLeft:"5px"}}></Create></InputAdornment>,}} helperText="This field is mandatory for people to have a better general idea about your post." placeholder="Title" size="small" variant="outlined" fullWidth></TextField>
+                        <TextField  FormHelperTextProps={{style:{color:nightmode ? "white" : "black"}}} value={contentpart["title"].value} error={!contentpart["title"].isValid} onChange={(e)=>changeHandler(e,"","title")} InputProps={{style:{color:nightmode ? "white" : "black"},endAdornment: <InputAdornment position="end">({contentpart["title"].length})<Create style={{color:nightmode ? "white" : "black",marginLeft:"5px"}}></Create></InputAdornment>,}} helperText="This field is mandatory for people to have a better general idea about your post." placeholder="Title" size="small" variant="outlined" fullWidth></TextField>
                         <ExamplePost setActive={()=>setActiveExample(0)} isActive={activeExample === 1 ? true : false} src={"/titlesample.png"}></ExamplePost>
                     </InputHolder>
                     <InputHolder>

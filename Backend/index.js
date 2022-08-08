@@ -19,7 +19,8 @@ const Notifyrouter=require("./routes/Notificationroute");
 const cookieparser = require("cookie-parser")
 const Session = require("express-session")
 const fileupload = require("express-fileupload");
-const Refreshrouter = require("./routes/RefreshToken")
+const Refreshrouter = require("./routes/RefreshToken");
+const path = require("path");
 require("dotenv").config();
 //const csurf = require("csurf");
 //var csrfProtection = csrf({cookie:true})
@@ -37,6 +38,9 @@ io.on("connection",(socket)=>{
 DB.sync()
 .then(()=>{})
 
+app.get("/policy",(req,res,next)=>{
+    return res.sendFile(path.join(__dirname,"privacy.html"))
+})
 app.use(cors({origin:["http://localhost:3000","https://mynextrepo.vercel.app"],credentials:true,exposedHeaders:"csrf-token"}));
 app.use(cookieparser())
 app.use(fileupload())
