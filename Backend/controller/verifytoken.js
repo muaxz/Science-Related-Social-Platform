@@ -14,7 +14,7 @@ const client = new Redis({
 module.exports=async(req,res,next)=>{
 
     const token = req.cookies["accessToken"];
-    
+    console.log(req.cookies["accessToken"])
     if(token){
 
      //burada request objesine yeni bir eleman tanımlayailiyoruz
@@ -22,9 +22,9 @@ module.exports=async(req,res,next)=>{
         jwt.verify(token,process.env.ACCESS_SECRET_KEY,async(err,authdata)=>{
             
             if(err){
-               
+                
                 if(err.name == "TokenExpiredError"){
-                    console.log("insideee expiration error")
+                    console.log("inside expiration error")
                     const refreshToken = req.cookies["refreshToken"];
 
                     const parsedRefreshArray = JSON.parse(await client.get("refreshTokens"))

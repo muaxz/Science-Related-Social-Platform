@@ -156,7 +156,7 @@ exports.sendResetEmail = async(req,res,next)=>{
 
       if(requestedUser != null){
 
-            const passwordToken = jwt.sign({},"resetSecret",{expiresIn:"1h"});
+            const passwordToken = jwt.sign({},process.env.RESET_SECRET_KEY,{expiresIn:"1h"});
             await requestedUser.update({resetPasswordToken:passwordToken})
             await Sendemail(email,{firstname:requestedUser.firstname,surname:requestedUser.lastname,generatedLink:`http://localhost:3000/login?token=${passwordToken}`})
 
@@ -197,7 +197,7 @@ exports.resetPassword = async (req,res,next)=>{
 
    try {
       //special key for reseting password
-      jwt.verify(token,"resetSecret",async (err,data)=>{
+      jwt.verify(token,process.env.RESET_SECRET_KEY,async (err,data)=>{
 
          if(err) return res.json({state:"error"})
 

@@ -706,15 +706,14 @@ export const UpdateNotificationactive = async ({FollowedId,Prevent,FollowerId,cu
 
 }//user alert activated or not
 
-export const UpdateProfile = async ({userdata,typeofupdate,setuploading,setsuccesfulupload,userinfo,setuserinfo})=>{
+export const UpdateProfile = async ({userdata,typeofupdate,setuploading,setsuccesfulupload,userinfo,setuserinfo,setEmailWindow})=>{
   
   try {
           
           const {data} = await axios.post(`/user/updateprofile/${typeofupdate}`,userdata,{withCredentials:true})
-          
+          const copy = {...userinfo}
           if(!data.state){
-
-             const copy = {...userinfo}
+            
              if(data.EMAIL == "Exist"){
                          
                copy["email"].warning = true
@@ -727,14 +726,20 @@ export const UpdateProfile = async ({userdata,typeofupdate,setuploading,setsucce
 
              }
              else if(data.SIZE){
-                console.log("big image size")
-             }else 
-             copy["Currentpassword"].warning = true
 
-             setuserinfo(copy)
+                console.log("big image size")
+
+             }else{
+              copy["Currentpassword"].warning = true
+             }
+          
              
           }else{
 
+              if(data.state === "CODE_SENT"){
+                copy["email"].msg
+                setEmailWindow(true)
+              }
               setsuccesfulupload("SUCCESSFUL")
               setTimeout(() => {
                 setsuccesfulupload("")
@@ -742,10 +747,11 @@ export const UpdateProfile = async ({userdata,typeofupdate,setuploading,setsucce
 
           }
 
+          setuserinfo(copy)
           setuploading(false)
 
   }catch (error) {
-
+    console.log(error)
     router.push("/500")
   }
 }
@@ -912,6 +918,28 @@ export const getCategories = async({setCategories})=>{
     } catch (error){
        router.push("/500")
     }
+}
+
+export const verifyEmailCode = async ({code,newEmail,setEmailWindow})=>{
+     
+     try {
+
+
+       const {data} = await axios.post("/user/verifyEmailCode",{code:code,newEmail:newEmail})
+
+       if(data.state === "invalid"){
+
+           console.log("invalid")
+
+       }else{
+
+           setEmailWindow(false)
+       }
+
+     } catch (error) {
+        router.push("/500")
+     }
+
 }
 
 

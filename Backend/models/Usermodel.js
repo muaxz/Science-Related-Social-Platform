@@ -73,6 +73,9 @@ const User = sequlize.define("User",{
     },
     occupation:{
         type:Sequlize.STRING
+    },
+    emailVerification:{
+        type:Sequlize.INTEGER
     }
     
 })

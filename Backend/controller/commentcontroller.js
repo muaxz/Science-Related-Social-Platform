@@ -7,11 +7,9 @@ const Notificationmodel=require("../models/NotificationModel");
 
 exports.produce=async (req,res,next)=>{
         //content-userId gerekli
-        const {contentdata:{Message,ContentId,UserId,TakerId}}=req.body;
-    
-       
-    
-      
+        const {contentdata:{Message,ContentId,TakerId}}=req.body;
+        const {UserId} = req.userdata
+
         try {  
       
           await Comment.create({

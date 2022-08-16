@@ -11,6 +11,7 @@ const bcrypt=require("bcrypt");
 const Sendemail = require("../MiddleFunctions/SendEmail");
 const CategoryModel = require("../models/CategoryModel")
 const uploadFunction = require("../MiddleFunctions/imageUpload")
+const crypto = require("crypto")
 
 
 //Searching User
@@ -550,10 +551,17 @@ exports.updateprofile = async (req,res,next)=>{
         const searchedEmail = await User.findOne({where:{email:userprofiledata.email}})
 
         if(searchedEmail) return res.json({state:false,EMAIL:"Exist"})
-        
-        Sendemail(currentuser.email,{firstname:currentuser.firstname,surname:currentuser.lastname})
 
-        return res.json({state:"success"})
+        const randomSixDigit = crypto.randomInt(100000,1000000)
+        await currentuser.update({emailVerification:randomSixDigit})
+
+        setTimeout(()=>{
+            currentuser.update({emailVerification:0})
+        },1000*60*5)
+
+        Sendemail(currentuser.email,{firstname:currentuser.firstname,surname:currentuser.lastname,verificationCode:randomSixDigit},false)
+
+        return res.json({state:"CODE_SENT"})
 
        });
     
@@ -616,6 +624,38 @@ exports.reportUser = async(req,res,next)=>{
       return next();
     }
 
+}
+
+exports.verifyEmailCode = async(req,res,next)=>{
+
+  const {UserId} = req.userdata
+  const {code,newEmail} = req.body
+  console.log(newEmail)
+  console.log(code)
+  try {
+
+     const isUserAvailable = await User.findOne({
+        where:{
+          id:UserId,
+          emailVerification:parseInt(code)
+        } 
+      })
+
+      if(isUserAvailable){
+
+        await isUserAvailable.update({email:newEmail,emailVerification:0})
+
+        res.json({state:"success"})
+
+      }else{
+
+        res.json({state:"invalid code"})
+
+      }
+
+  } catch (error) {
+      return next()
+  }
 }
 
 

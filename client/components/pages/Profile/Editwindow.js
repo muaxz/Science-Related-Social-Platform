@@ -6,6 +6,7 @@ import {Black,Porfileimage,Spinner} from "../../styledcomponents/Globalstyles"
 import {TextField,Button} from "@material-ui/core"
 import Cropper from  "react-image-crop"
 import {UpdateProfile} from "../../../Api/requests"
+import VerificationWindow from "../../UI/verificationWindow"
 import Switch from "react-switch"
 import "react-image-crop/dist/ReactCrop.css"
 import Validate from "validator"
@@ -162,6 +163,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         }
     })
     const [image,setimage] = useState(null)
+    const [emailWindow,setEmailWindow] = useState(false)
     const [uploading,setuploading] = useState(false)
     const [succesfulupload,setsuccesfulupload] = useState("")
     const [imagetype,setimagetype] = useState("mainImage")
@@ -218,7 +220,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             label:"E-Posta",
             warning:false,
             multiline:false,
-            msg:"E-postani degistirmek istersen, yeni girdigin adrese bir kod gonderilicek lutfen onu gir.",
+            msg:`To update your email, you need to enter 6-digit verification code that will be sent to ${editdata.email} after you click save.`,
             errormsg:"Gecerli Bir E-posta adresi girin !"
         },
         Currentpassword:{
@@ -406,7 +408,8 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
     const Inputhandler = (key,event,subkey)=>{
 
         const mutated = {...userinfo}
-        if(key == "Notifications"){
+        
+        if(key === "Notifications"){
             mutated[key]["value"][subkey]["value"]= !mutated[key]["value"][subkey]["value"]
         }else{
             mutated[key].value=event.target.value
@@ -524,7 +527,8 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
             setuploading:setuploading,
             setsuccesfulupload:setsuccesfulupload,
             userinfo:userinfo,
-            setuserinfo:setuserinfo
+            setuserinfo:setuserinfo,
+            setEmailWindow:setEmailWindow
         })
 
     }
@@ -553,7 +557,10 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
     return (
         <div>
             <Black onClick={closefunc} aktif={active}/>
-            <Exterior getcropper={iscropperactive} active={active}>
+            {
+                emailWindow ? <VerificationWindow setEmailWindow={setEmailWindow} userEmail={userinfo.email.value}/> : 
+               
+               (<Exterior getcropper={iscropperactive} active={active}>
                 <Inner>
                     <ProfileuploadedDiv successful={succesfulupload == "SUCCESSFUL" ? true : false}>Profile updated successfully</ProfileuploadedDiv>
                     <div style={{position:"absolute",top:isWindowforsettings ? "500px":"250px",right:"40px",zIndex:"300"}}>
@@ -647,7 +654,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                                                                     label={userinfo[item].label}
                                                                     variant="outlined"
                                                                     value={userinfo[item].value}
-                                                                    helperText={!userinfo[item].warning ? userinfo[item].msg : userinfo[item].errormsg}
+                                                                    helperText={userinfo[item].warning ? userinfo[item].errormsg : userinfo[item].msg}
                                                                 ></TextField>
                                                              </Inputholder>)
 
@@ -660,7 +667,9 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
                         </>)
                     }
                 </Inner>
-            </Exterior>
+            </Exterior>)
+            }
+           
         </div>
     )
 }

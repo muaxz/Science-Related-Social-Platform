@@ -14,8 +14,9 @@ router.get("/getuserprofilecontent/:UserId/:ownerpost/:category/:order",Usercont
 router.get("/getusername/:input",Usercontroller.searchGetUser)//Search Bar
 router.post("/deletepost",Usercontroller.deletepost)// draft page
 router.get("/updateusernot/:FollowerId/:FollowedId/:currentactive",Usercontroller.updatenotification)//change it to POST REQUEST TODO
-router.post("/updateprofile/:typeofupdate",Verifytoken,UploadMiddle,Usercontroller.updateprofile)
+router.post("/updateprofile/:typeofupdate",Verifytoken,Usercontroller.updateprofile)
 router.get("/getuserprofilefollowlist/:requestType/:UserId",Usercontroller.getuserprofilefollowlist)
+router.post("/verifyEmailCode",Verifytoken,Usercontroller.verifyEmailCode)
 
 
 
