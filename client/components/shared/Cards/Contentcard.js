@@ -452,7 +452,7 @@ function Contentcard({isHomeCard,categoryType,description,followeds,Animateforco
                                         <Optionholder onClick={()=>createrelationforsmh(postId,foruseroption,"Destroy",indexnum,foruseroption)}>
                                             <Icon className="fas fa-trash-alt fa-sm" Iconconfig={{width:"35px",backcolor:"#DEDEDE",height:"35px",lineheight:"32px"}}></Icon>
                                             <div style={{marginLeft:"8px",color:"#757575"}}>
-                                                <p style={{color:"black"}}>Kaldır</p>
+                                                <p style={{color:"black"}}>Remove</p>
                                                 <p style={{fontSize:"13px"}}>{textforopiton}</p>
                                             </div>
                                         </Optionholder>  
