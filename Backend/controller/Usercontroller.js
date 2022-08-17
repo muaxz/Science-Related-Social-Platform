@@ -133,9 +133,10 @@ exports.getuserprofilecontent = async(req,res,next)=>{
   //TODO change this design later
   if(ownerpost == "true"){
 
-    const Contentdata=await Contentmodel.findAll({
+    const Contentdata = await Contentmodel.findAll({
       where:{
         Userforcontentid:UserId,
+        phase:"Published"
       },
       limit:10,
       offset:parseInt(order),
