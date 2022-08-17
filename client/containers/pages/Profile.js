@@ -24,7 +24,6 @@ padding-top:60px;
 width:100%;
 height:${({noScroll})=>noScroll ? "100vh" : "100%"};
 overflow:${({noScroll})=>noScroll ? "hidden" : "visible"};
-padding-bottom:20px;
 @media (max-width:940px){
     padding-left:0;
 }
@@ -33,7 +32,6 @@ padding-bottom:20px;
 const Innerdiv=styled.div`
 height:100%;
 width:100%;
-
 `
 
 const Imagesection=styled.div`
@@ -476,7 +474,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                                     }
                                 </Optionbar>
                             }   
-                           <div style={{paddingRight:"10px",paddingLeft:"10px",maxWidth:"700px",margin:"auto"}}>
+                           <div style={{paddingRight:"10px",paddingLeft:"10px",maxWidth:"700px",margin:"auto",paddingBottom:"20px"}}>
                                 {
                                   showfollowinglist.length > 0 ? <Followlist type={showfollowinglist} goBackToContent={()=>setshowfollowinglist("")} list={FollowList}></Followlist> : <Contentmap  deleteThePost={prepForDeletion} norecord={query.name} relationfunc={Relationrequest} contentlist={contentdata}/> 
                                 }

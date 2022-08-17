@@ -79,7 +79,6 @@ export const Errorhandler=({data,seterrmsg,setwindow,setuserdata,setlogged,setsp
    return true;
 }
 
-
 export const loginreq=async({setlogged,setspinner,setuserdata,userdata,router,seterrmsg,setBackendState,setactive})=>{
     
 
@@ -256,7 +255,7 @@ export const Producecommentreq=async ({Message,TakerId,setnumbercom,setwindow,Us
 
 }
 
-export const Homereq=async({currentdata,seterrmsg,setwindow,setcontentdata,order,setstopreq,category,paignation,selectionlist,setselection})=>{
+export const Homereq=async({setcontentdata,order,category,paignation,selectionlist,setselection})=>{
  
   try { 
     

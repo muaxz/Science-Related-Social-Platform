@@ -34,7 +34,7 @@ flex-wrap:wrap;
 const Contentholder=styled.div`
 max-width:340px;
 width:100%;
-height:350px;
+min-height:350px;
 padding-right:25px;
 padding-top:25px;
 @media (max-width:1200px){

@@ -51,7 +51,7 @@ export async function getServerSideProps({req,query}){
             
             return {
                 redirect:{
-                    destination:"/404.js"
+                    destination:"/404"
                 }
             };
     

@@ -98,11 +98,7 @@ export default function Home(){
         list:[],
         attribute:"",
     });
-    const [stoprequesting,setstopreq]=useState(false);
-    const [spinner,setspinner]=useState(false);
-  
-
-    
+   
     useEffect(()=>{
 
 
@@ -114,7 +110,6 @@ export default function Home(){
                     currentdata:contentdata,
                     setcontentdata:setcontentdata,
                     order:order, 
-                    setspinner:setspinner,
                     paignation:true,
                     selectionlist:selectionlist,
                     setselection:setselectionlist,
@@ -124,22 +119,6 @@ export default function Home(){
           }
 
     },[order])
-
-
-
-
-    /*
-    const Setslidevalue=(value)=>{
-
-       if(value == "Back" && slidevalue >= 20){
-         setslidevalue(slidevalue-220)
-       } 
-       else if(value == "forward" && slidevalue < 600){
-        setslidevalue(slidevalue+220)
-       }
-    }
-    */
-
 
     useEffect(()=>{
         
