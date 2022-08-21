@@ -2,12 +2,12 @@ const nodemailer = require("nodemailer")
 const hbs = require("nodemailer-express-handlebars")
 const handlebar = require("handlebars")
 const fs = require("fs")
-const { promisify } = require("util")
+
 
 module.exports = async (targetEmail,payload,forPassword)=>{
 
     let transporter = nodemailer.createTransport({
-        host:"smtp-mail.outlook.com",
+        host:"smtp.office365.com",
         port:587,
         auth: {
           user:"bexsd@hotmail.com", // generated ethereal user
