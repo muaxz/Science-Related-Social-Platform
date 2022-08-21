@@ -156,7 +156,8 @@ export default function MyEditor({categories,content}){
               // headers.append("Origin", "http://localhost:3000");
               fetch(`https://ideasharee.herokuapp.com/content/uploadContentImage`, {
                 method: "post",
-                body: body
+                body: body,
+                credentials:"include"
                 // mode: "no-cors"
               })
                 .then((res) => res.json())

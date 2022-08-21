@@ -2,35 +2,26 @@ import axios from "axios";
 import router from "next/router"
 
 
-axios.defaults.baseURL="https://ideasharee.herokuapp.com/"
+axios.defaults.baseURL="http://localhost:3001/"
 
 axios.defaults.withCredentials = true;
 
 axios.interceptors.response.use(function (response) {
   //dont forget to use that checking
-
-  if(typeof window !== "undefined"){
-
-    if(response.headers["csrf-token"] && response.config.method == "post"){
-      //only post methods can set the token again 
-       localStorage.setItem("csrf-token", response.headers["csrf-token"]) 
-
-    }else if(!localStorage.getItem("csrf-token") && response.config.method == "get" && response.headers["csrf-token"]){
-       //setting token once 
-       localStorage.setItem("csrf-token", response.headers["csrf-token"]) 
-
+    console.log(response)
+    if(response.headers["Set-Cookie"]){
+      console.log(response.headers["Set-Cookie"])
     }
-
-  }
   
-  return response;
+    return response;
+
 }, function (error) {
   // Any status codes that falls outside the range of 2xx cause this function to trigger
   // Do something with response error
   return Promise.reject(error);
 });
 
-
+/*
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent
   if(typeof window !== "undefined"){
@@ -49,6 +40,7 @@ axios.interceptors.request.use(function (config) {
   // Do something with request error
   return Promise.reject(error);
 });
+*/
 
 
 export const Errorhandler=({data,seterrmsg,setwindow,setuserdata,setlogged,setspinner})=>{
