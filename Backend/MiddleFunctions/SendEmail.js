@@ -7,7 +7,7 @@ const { promisify } = require("util")
 module.exports = async (targetEmail,payload,forPassword)=>{
 
     let transporter = nodemailer.createTransport({
-        host:"smtp-mail.outlook.com",
+        host:"smtp.gmail.com",
         port:587,
         auth: {
           user:"muazozzer@gmail.com", // generated ethereal user
