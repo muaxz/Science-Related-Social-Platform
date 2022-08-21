@@ -370,7 +370,7 @@ export default function MyEditor({categories,content}){
                                 <section style={{...baseStyle,color:!contentpart.titlemainUrl.isValid ? "red" : "#bdbdbd",borderColor:!contentpart.titlemainUrl.isValid ? "red" : "#2196f3"}}>
                                   <div {...getRootProps()} style={{width:"100%",height:"100%"}}>
                                     <input {...getInputProps()}/>
-                                    <p style={{textAlign:"center",margin:"30px auto"}}>Drag 'n' drop some files here, or click to select files<br></br>for the cover image of your post</p>
+                                    <p style={{textAlign:"center",margin:"30px auto"}}>Drag 'n' drop some files here, or click to select files<br></br>for the thumbnail of your post</p>
                                   </div>
                                 </section>
                               )}

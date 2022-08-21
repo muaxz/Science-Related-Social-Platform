@@ -60,7 +60,7 @@ export default function Navigationtools({optnumber,Navdata,Logout,UserId}){
             {name:"Reshow",idname:"ContentId",desc:"Senin Gönderini İşaretledi.",Icon:"fas fa-thumbtack",color:"#adb5bd",lh:"35px",href:"/content"},
             {name:"Follow",idname:"UserId",desc:"Followed You",Icon:"fas fa-user-plus fa-sm",color:"#ee6055",lh:"30px",href:"/profile"},
             {name:"Comment",idname:"ContentId",desc:"Commented about your post",Icon:"fas fa-comment-dots",color:"#adb5bd",lh:"30px",href:"/content"},
-            {name:"Post",desc:"Published a new post.",Icon:"fas fa-edit",color:"#fca311",lh:"30px"},
+            {name:"Post",idname:"ContentId",desc:"Published a new post.",Icon:"fas fa-edit",color:"#fca311",lh:"30px"},
             {name:"Message",desc:"A feedback from moderation. !",Icon:"",idname:"ContentId",href:"/content"},
         ];
 
