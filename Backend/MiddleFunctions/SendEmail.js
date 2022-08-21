@@ -10,8 +10,8 @@ module.exports = async (targetEmail,payload,forPassword)=>{
         host:"smtp-mail.outlook.com",
         port:587,
         auth: {
-          user:"bexsd@hotmail.com", // generated ethereal user
-          pass:"koy123456aA", // generated ethereal password
+          user:"muazozzer@gmail.com", // generated ethereal user
+          pass:"2231223122aA", // generated ethereal password
         },
       });
       const readHtml = fs.readFileSync(__dirname+(forPassword ? "/password.handlebars" : "/verification.handlebars"),"utf8")
