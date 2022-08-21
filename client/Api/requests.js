@@ -911,7 +911,7 @@ export const getCategories = async({setCategories})=>{
     try {
 
        const {data} = await axios.get(`/content/getCategories/true`)
-       
+       console.log(data)
        setCategories(data.data)
 
     } catch (error){

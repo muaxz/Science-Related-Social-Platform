@@ -8,7 +8,7 @@ router.post("/produce",verifyUser,controller.produce);
 router.delete("/deleteContent/:ContentID",verifyUser,controller.destroyContent);
 router.post("/createrelation",verifyUser,controller.createrelation);//get the whole content for public content page
 router.get("/gethome/:number/:category",controller.gethome);//public short demonstraiton of contents
-router.get("/getCategories/:needImage",verifyUser,controller.getCategories)
+router.get("/getCategories/:needImage",controller.getCategories)
 router.post("/editCategory",verifyUser,controller.editCategory)
 router.get("/usercontent/:catagory/:id/:order",verifyUser,controller.getusercontent)//contents user liked or saved
 router.get("/getReports",verifyUser,controller.getReportedPosts)
