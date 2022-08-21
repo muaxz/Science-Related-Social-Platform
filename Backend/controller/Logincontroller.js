@@ -42,9 +42,9 @@ exports.login = async (req,res,next)=>{
             console.log(process.env.ACCESS_SECRET_KEY)
             if(result == true){
                 
-               jwt.sign({UserId:user.id,UserRole:user.Role,exp: Math.floor(Date.now() / 1000) + 15},process.env.ACCESS_SECRET_KEY,(err,accessToken)=>{
+               jwt.sign({UserId:user.id,UserRole:user.Role,exp: Math.floor(Date.now() / 1000) + (60*5)},process.env.ACCESS_SECRET_KEY,(err,accessToken)=>{
                
-                   jwt.sign({UserId:user.id,UserRole:user.Role},process.env.REFRESH_SECRET_KEY,async (err,refreshToken)=>{
+                   jwt.sign({UserId:user.id,UserRole:user.Role,exp:Math.floor(Date.now() / 1000) + (60*60*24*30)},process.env.REFRESH_SECRET_KEY,async (err,refreshToken)=>{
 
                      res.cookie("accessToken",accessToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"none"})
                      res.cookie("refreshToken",refreshToken,{expires: new Date(Date.now() + (1000*60*60*24*30)),httpOnly:true,path:"/",secure:true,sameSite:"none"})
