@@ -2,7 +2,7 @@ import axios from "axios";
 import router from "next/router"
 
 
-axios.defaults.baseURL="http://localhost:3001/"
+axios.defaults.baseURL="https://ideasharee.herokuapp.com/"
 
 axios.defaults.withCredentials = true;
 
