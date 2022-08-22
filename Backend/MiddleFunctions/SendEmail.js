@@ -13,6 +13,9 @@ module.exports = async (targetEmail,payload,forPassword)=>{
           user:"bexsd@hotmail.com", // generated ethereal user
           pass:"koy123456aA", // generated ethereal password
         },
+        tls:{
+          rejectUnauthorized: false
+        }
       });
       const readHtml = fs.readFileSync(__dirname+(forPassword ? "/password.handlebars" : "/verification.handlebars"),"utf8")
       
