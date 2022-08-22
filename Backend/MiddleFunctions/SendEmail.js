@@ -7,11 +7,11 @@ const fs = require("fs")
 module.exports = async (targetEmail,payload,forPassword)=>{
 
     let transporter = nodemailer.createTransport({
-        host:"smtp.office365.com",
+        host:"smtp.gmail.com",
         port:587,
         auth: {
-          user:"bexsd@hotmail.com", // generated ethereal user
-          pass:"koy123456aA", // generated ethereal password
+          user:"muazozzer@gmail.com", // generated ethereal user
+          pass:"lmaoukkmlmviawdi", // generated ethereal password
         },
         tls:{
           rejectUnauthorized: false
