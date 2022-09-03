@@ -349,7 +349,7 @@ export default function Navigation({notificationRows,Count,Reloadfunc,Update}){
         
                                                 <div style={{display:"flex"}}>
                                                     <div>
-                                                        <Porfileimage profile={item.mainUrl ?? "/realuserphoto.png"} width="45px" height="45px"/>
+                                                        <Porfileimage profile={item.mainUrl ?? "/user.jpg"} width="45px" height="45px"/>
                                                     </div>
                                                     <div style={{paddingLeft:"10px"}}>
                                                         <p style={{fontWeight:"600"}}>{item.firstname+" "+item.lastname}</p>
@@ -415,7 +415,7 @@ export default function Navigation({notificationRows,Count,Reloadfunc,Update}){
                                 query:{name:"Post"}
                             }}> 
                             <div style={{maxWidth:"300px",display:"flex",alignItems:"center"}}>
-                                <Porfileimage width="35px" height="35px" profile={userdata.Userimage || "/realuserphoto.png"}/>
+                                <Porfileimage width="35px" height="35px" profile={userdata.Userimage ?? "/user.jpg"}/>
                                 <p style={{marginLeft:"10px",padding:"7px",backgroundColor:"#52b69a",borderRadius:"25px",color:"white",fontSize:"13px"}}>{capitalize(userdata.Username)+" "+capitalize(userdata.Usersurname)}</p>
                             </div>
                          </Link>

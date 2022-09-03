@@ -577,13 +577,6 @@ function Contentcard({isHomeCard,categoryType,description,followeds,Animateforco
                             }
                             
                             <Toolbar foruser={foruser}>
-                                {
-                                !iscomment && 
-                                (<İconholder howercolor="green" style={{flex:1}}>
-                                        <Icons  howercolor="0, 255, 0, 0.2" ismarked={elements.reshow.ismarked} animation={elements.reshow.animation} color={"green"}  onClick={()=>relationHandler("reshow")}  className="fas fa-retweet fa-sm"></Icons>
-                                        <NightLightP onClick={()=>showwindow(elements["reshow"].array,"Reshow")}>{elements.reshow.number}</NightLightP>
-                                </İconholder>)
-                                }
                                 <İconholder howercolor="red" style={{flex:1}}>
                                     <Icons  howercolor="255, 0, 0,0.2" ismarked={elements.Like.ismarked} animation={elements.Like.animation} color={"#C72121"}  onClick={()=>relationHandler("Like")} className="fas fa-heart fa-sm"></Icons>
                                     <NightLightP  onClick={()=>showwindow(elements["Like"].array,"Like")} >{elements.Like.number}</NightLightP>

@@ -184,10 +184,6 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
             name:"Likes",
             bottom:false,
         },
-        Reshow:{
-            name:"Signs",
-            bottom:false,
-        } 
     })
    
    useEffect(()=>{
@@ -429,7 +425,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                 <Contentpart>
                      <Usersection>
                          <ProfileImageholder>
-                             <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile={Mydata.mainUrl ?? "/realuserphoto.png"}></Porfileimage>
+                             <Porfileimage  style={{border:"4px solid white"}} width="100%" height="100%" profile={Mydata.mainUrl ?? "/user.jpg"}></Porfileimage>
                          </ProfileImageholder>
                          <NightLightP>{Mydata.firstname + " " + Mydata.lastname}</NightLightP>
                          <span style={{color:"#6c757d"}}>{Mydata.occupation}</span>
