@@ -508,7 +508,7 @@ function Contentcard({isHomeCard,categoryType,description,followeds,Animateforco
                                         pathname:`/profile/${userid}`,
                                         query:{name:"Post"}
                                     }}>
-                                    <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={profileimage ?? "/userphoto2.png"}></Porfileimage>
+                                    <Porfileimage width={iscomment ? "40px" : "35px"} height={iscomment ? "40px" : "35px"} profile={profileimage ?? "/user.jpg"}></Porfileimage>
                                     </Link>
                                 </Profileimageholder>
                                 <div style={{marginLeft:"10px",fontSize:"15px",textTransform:"capitalize"}}>
