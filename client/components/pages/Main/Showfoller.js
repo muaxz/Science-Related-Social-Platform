@@ -40,7 +40,7 @@ export default function Showfollower({list,setlist,attribute}) {
     
     switch (attribute) {
         case "Like":
-            Title="Beğeniler"
+            Title="People Liked"
             Icon=<ThumbUp style={{color:"#C72121"}}></ThumbUp>
             break;
         case "Reshow":
