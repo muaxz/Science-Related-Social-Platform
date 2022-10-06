@@ -298,7 +298,7 @@ export default function Navigation({notificationRows,Count,Reloadfunc,Update}){
         searchtype=<div style={{display:"flex",justifyContent:"center",alignItems:"center",height:"100%"}}><Spinner></Spinner></div> 
     }
     else if(searchactive == "Nothing"){
-        searchtype=<div style={{display:"flex",justifyContent:"center",alignItems:"center",height:"100%"}}>Sonuç Bulunamadı.</div> 
+        searchtype=<div style={{display:"flex",justifyContent:"center",alignItems:"center",height:"100%"}}>No results found.</div> 
     }
 
     return (
