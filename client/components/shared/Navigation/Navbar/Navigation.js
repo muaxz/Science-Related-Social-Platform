@@ -313,7 +313,7 @@ export default function Navigation({notificationRows,Count,Reloadfunc,Update}){
                     </Link>
                 </InputHolder>
                <InputHolder  ref={ref2} flex2={"none"} flex={false}>
-                    <Input onKeyUp={Keyupfunction} value={inputvalue} onChange={Changehandler} placeholder="Ara"></Input>
+                    <Input onKeyUp={Keyupfunction} value={inputvalue} onChange={Changehandler} placeholder="Search"></Input>
                     {
                         inputvalue.length <= 0 ?
                         <div style={{position:"absolute",right:"15px",top:"13px",width:"20px"}}>
