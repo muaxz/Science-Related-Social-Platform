@@ -3,8 +3,8 @@ const Redis = require("ioredis")
 require("dotenv")
 
 const client = new Redis({
-    host:"ec2-44-206-156-218.compute-1.amazonaws.com",
-    port:15440,
+    host:"ec2-107-21-212-176.compute-1.amazonaws.com",
+    port:11210,
     password:"p02f1a4d23900a9697de8339827683c998e2bb370467e9070a9353cf970871c36",
     connectTimeout:10000,
     tls:{
