@@ -8,13 +8,13 @@ function Contentmap({contentlist,relationfunc,norecord,deleteThePost}) {
   
     var textfornorecord = ""
     if(norecord == "Reshow"){
-         textfornorecord = "Kullanıcının işaretlediği gönderi yok..."
+         textfornorecord = "No Any Post..."
     }
     else if(norecord == "Post"){
-         textfornorecord = "Kullanıcının hiçbir gönderisi yok..."
+         textfornorecord = "No Any Post..."
     }
     else if(norecord == "Like"){
-         textfornorecord = "Kullanıcının beğendiği gönderi yok..."
+         textfornorecord = "No Any Post Liked..."
     }
     console.log(contentlist)
     return (
