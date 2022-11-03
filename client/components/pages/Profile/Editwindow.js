@@ -208,7 +208,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         CurrentPasswordForEmail:{
             activate:false,
             value:"",
-            label:"Sifreniz",
+            label:"Password",
             warning:false,
             multiline:false,
             msg:"",
@@ -217,7 +217,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         email:{
             activate:false,
             value:editdata.email,
-            label:"E-Posta",
+            label:"E-Mail",
             warning:false,
             multiline:false,
             msg:`To update your email, you need to enter 6-digit verification code that will be sent to ${editdata.email} after you click save.`,
@@ -226,7 +226,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         Currentpassword:{
             activate:false,
             value:"",
-            label:"Eski Sifreniz",
+            label:"Old Password",
             warning:false,
             multiline:false,
             msg:"",
@@ -235,7 +235,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         Newpassword:{
             activate:false,
             value:"",
-            label:"Yeni sifrenizi girin",
+            label:"New Password",
             warning:false,
             multiline:false,
             msg:"",
@@ -244,7 +244,7 @@ export default function Editwindow({isWindowforsettings,updatefunc,active,editda
         ValidationNewpassword:{
             activate:false,
             value:"",
-            label:"Yeni sifrenizi tekrar girin",
+            label:"Reenter New Password",
             warning:false,
             multiline:false,
             msg:"",
