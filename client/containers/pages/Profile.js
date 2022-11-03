@@ -440,7 +440,7 @@ export default function Profile({Mydata,Counts,Contentdata,query}){
                             </CountDisplay>
                             <CountDisplay>
                                 <NightLightP>{Counts.Contentcount}</NightLightP>
-                                <LabelsUnderCounts  >Gönderi</LabelsUnderCounts>
+                                <LabelsUnderCounts>Posts</LabelsUnderCounts>
                             </CountDisplay>
                          </div>
                          <Description style={{width:"80%",margin:"auto"}}>
