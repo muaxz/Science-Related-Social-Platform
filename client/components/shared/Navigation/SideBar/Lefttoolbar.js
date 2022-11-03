@@ -95,8 +95,8 @@ padding:7px;
 const Lefttoolbar=({makeactive,myactive})=>{
     
     const {userdata,logged}=useContext(createusercontext);
-    const firstlist = useRef([{icon:"fas fa-bookmark",desc:"Kaydedilenler",path:`saved`},{icon:"fas fa-thumbs-up",desc:"Beğenilenler",path:`liked`}])
-    const secondlist = useRef([{icon:"fas fa-edit",desc:"Gönderilerim",path:"gönderiler"},{icon:"fas fa-pencil-ruler",desc:"Taslaklar",path:`Drafts`}])
+    const firstlist = useRef([{icon:"fas fa-bookmark",desc:"Saved",path:`saved`},{icon:"fas fa-thumbs-up",desc:"Liked",path:`liked`}])
+    const secondlist = useRef([{icon:"fas fa-edit",desc:"My Posts",path:"gönderiler"},{icon:"fas fa-pencil-ruler",desc:"Draft",path:`Drafts`}])
     const thirdlist = useRef([{icon:"fa-solid fa-flag",desc:"Raporlar",path:`reportcontrol`},{icon:"fa-solid fa-list-check",desc:"Gonderi Kontrol",path:`postcontrol`},{icon:"fa-solid fa-lock",desc:"Admin Panel",path:`adminPanel`}])
     
 
